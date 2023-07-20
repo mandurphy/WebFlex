@@ -1,0 +1,324 @@
+<!doctype html>
+<html lang="uft-8">
+<head>
+    <!--#include file="/public/head.inc"-->
+    <link href="assets/plugins/timepicker/css/bootstrap-timepicker.min.css" rel="stylesheet">
+</head>
+<body>
+<!--#include file="/public/menu.inc"-->
+    <div data-simplebar>
+        <main class="page-content push" id="app" v-cloak>
+            <div class="row">
+                <div class="col-lg-6">
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <div class="card">
+                                <div class="card-header bg-transparent">
+                                    <div class="p-2 mb-0 d-flex align-items-end">
+                                        <cn>视频预览</cn>
+                                        <en>Preview</en>
+                                        <small>
+                                            <cn>推流后可见</cn>
+                                            <en>visible when pushing</en>
+                                        </small>
+                                    </div>
+                                </div>
+                                <div class="card-body">
+                                    <div class="force-aspect-ratio aspect-lg">
+                                        <div class="aspect-ratio-content d-flex flex-column justify-content-between">
+                                            <div class="row">
+                                                <div class="col-lg-12">
+                                                    <w-player :url="playUrl" codec="h264" audio="true" buffer="200"></w-player>
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-lg-12">
+                                                    <div class="rec-bar">
+                                                        <div class="row">
+                                                            <div class="col-4 text-center" style="line-height: 34px;">
+                                                                <strong id="time">[--:--]</strong>
+                                                            </div>
+                                                            <div class="col-7 d-flex align-items-start">
+                                                                <button type="button" class="btn border-3 btn-primary" @click="onPushStart">
+                                                                    <i class="fa-solid fa-video me-1"></i>
+                                                                    <cn>推流</cn>
+                                                                    <en>Push</en>
+                                                                </button>
+                                                                <button type="button" class="btn border-3 btn-default ms-1 disabled" @click="onPushStop">
+                                                                    <i class="fa-solid fa-stop me-1"></i>
+                                                                    <cn>停止</cn>
+                                                                    <en>Stop</en>
+                                                                </button>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-6">
+                    <div class="card">
+                        <div class="card-header bg-transparent">
+                            <div class="p-2 mb-0 d-flex align-items-end">
+                                <cn>基本设置</cn>
+                                <en>Basic config</en>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <div class="force-aspect-ratio">
+                                <div class="aspect-ratio-content d-flex flex-column justify-content-between">
+                                    <div class="row">
+                                        <div class="col-lg-3 offset-lg-1 force-align-center">
+                                            <label>
+                                                <cn>视频源</cn>
+                                                <en>Video source</en>
+                                            </label>
+                                        </div>
+                                        <div class="col-lg-6">
+                                            <select class="form-select" v-model=""></select>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-lg-3 offset-lg-1 force-align-center">
+                                            <label>
+                                                <cn>音频源</cn>
+                                                <en>Audio source</en>
+                                            </label>
+                                        </div>
+                                        <div class="col-lg-6">
+                                            <select class="form-select" v-model=""></select>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-lg-3 offset-lg-1 force-align-center">
+                                            <label>
+                                                <cn>定时开启</cn>
+                                                <en>start time</en>
+                                            </label>
+                                        </div>
+                                        <div class="col-lg-3">
+                                            <select class="form-select" v-model="">
+                                                <option cn="从不" en="never" value="x" v-woption></option>
+                                                <option cn="每天" en="everyday" value="*" v-woption></option>
+                                                <option cn="每周一" en="monday" value="1" v-woption></option>
+                                                <option cn="每周二" en="tuesday" value="2" v-woption></option>
+                                                <option cn="每周三" en="wednesday" value="3" v-woption></option>
+                                                <option cn="每周四" en="thursday" value="4" v-woption></option>
+                                                <option cn="每周五" en="friday" value="5" v-woption></option>
+                                                <option cn="每周六" en="saturday" value="6" v-woption></option>
+                                                <option cn="每周日" en="sunday" value="0" v-woption></option>
+                                            </select>
+                                        </div>
+                                        <div class="col-lg-3">
+                                            <w-timepicker v-model="startPushTime"></w-timepicker>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-lg-3 offset-lg-1 force-align-center">
+                                            <label>
+                                                <cn>定时结束</cn>
+                                                <en>stop time</en>
+                                            </label>
+                                        </div>
+                                        <div class="col-lg-3">
+                                            <select class="form-select" v-model="">
+                                                <option cn="从不" en="never" value="x" v-woption></option>
+                                                <option cn="每天" en="everyday" value="*" v-woption></option>
+                                                <option cn="每周一" en="monday" value="1" v-woption></option>
+                                                <option cn="每周二" en="tuesday" value="2" v-woption></option>
+                                                <option cn="每周三" en="wednesday" value="3" v-woption></option>
+                                                <option cn="每周四" en="thursday" value="4" v-woption></option>
+                                                <option cn="每周五" en="friday" value="5" v-woption></option>
+                                                <option cn="每周六" en="saturday" value="6" v-woption></option>
+                                                <option cn="每周日" en="sunday" value="0" v-woption></option>
+                                            </select>
+                                        </div>
+                                        <div class="col-lg-3">
+                                            <w-timepicker v-model="stopPushTime"></w-timepicker>
+                                        </div>
+                                    </div>
+                                    <div class="hr-container">
+                                        <hr>
+                                        <span class="hr-text">OR</span>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-lg-3 offset-lg-1 force-align-center">
+                                            <label>
+                                                <cn>开机启动</cn>
+                                                <en>auto push</en>
+                                            </label>
+                                        </div>
+                                        <div class="col-lg-6">
+                                            <select class="form-select" v-model="">
+                                                <option cn="关闭" en="OFF" value="false" v-woption></option>
+                                                <option cn="开启" en="ON" value="true" v-woption></option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-lg-12 text-center mt-4">
+                                            <button type="button" class="btn border-3 btn-primary px-5">
+                                                <cn>保存</cn>
+                                                <en>Save</en>
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="card">
+                        <div class="card-header bg-transparent">
+                            <div class="p-2 mb-0 d-flex align-items-end">
+                                <cn>推流设置</cn>
+                                <en>Push config</en>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-lg-2 text-center">
+                                    <cn>描述</cn>
+                                    <en>Description</en>
+                                </div>
+                                <div class="col-lg-7 text-center">
+                                    <cn>推流地址</cn>
+                                    <en>Push Url</en>
+                                </div>
+                                <div class="col-lg-1 text-center">
+                                    <cn>启用</cn>
+                                    <en>Enable</en>
+                                </div>
+                                <div class="col-lg-1 text-center">
+                                    <cn>操作</cn>
+                                    <en>Option</en>
+                                </div>
+                                <div class="col-lg-1 text-center">
+                                    <cn>速度</cn>
+                                    <en>Speed</en>
+                                </div>
+                            </div>
+                            <hr class="my-3">
+                            <div class="row" v-if="Object.keys(pushConf).length > 0" v-for="(item,index) in pushConf.url">
+                                <div class="co-lg-12">
+                                    <div class="row">
+                                        <div class="col-lg-2">
+                                            <input type="text" class="form-control" v-model="item.des">
+                                        </div>
+                                        <div class="col-lg-7">
+                                            <input type="text" class="form-control" v-model="item.path">
+                                        </div>
+                                        <div class="col-lg-1 force-align-center">
+                                            <bootstrap-switch v-model="item.enable"></bootstrap-switch>
+                                        </div>
+                                        <div class="col-lg-1 text-center">
+                                            <button type="button" class="btn border-3 btn-primary" @click="delPushUrl(index)">
+                                                <cn>移除</cn>
+                                                <en>delete</en>
+                                            </button>
+                                        </div>
+                                        <div class="col-lg-1 text-center">
+                                            0kb/s
+                                        </div>
+                                    </div>
+                                    <hr class="my-3">
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-lg-12 text-center">
+                                    <button type="button" class="btn border-3 btn-primary px-5" @click="addPushUrl">
+                                        <cn>添加</cn>
+                                        <en>Add</en>
+                                    </button>
+                                    <button type="button" class="btn border-3 btn-primary px-5 ms-2" @click="saveConf">
+                                        <cn>保存</cn>
+                                        <en>Save</en>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+<!--#include file="/public/footer.inc"-->
+
+<script src="assets/plugins/flvjs/flv.js"></script>
+<script src="assets/plugins/jessibuca/jessibuca.js"></script>
+<script src="assets/plugins/timepicker/js/bootstrap-timepicker.min.js"></script>
+<script type="module">
+    import { rpc,alertMsg } from "./assets/js/helper.js";
+    import { usePushConf } from "./assets/js/confHooks.js";
+    import { bootstrapSwitchComponent,wPlayerComponent,wTimepickerComponent,wOptionDirective } from "./assets/js/vueHelper.js"
+    
+    const {createApp,ref,reactive,watch,watchEffect,computed} = Vue;
+    const app = createApp({
+        directives: {
+          "woption": wOptionDirective
+        },
+        components:{
+            "bootstrap-switch" : bootstrapSwitchComponent,
+            "w-player": wPlayerComponent,
+            "w-timepicker": wTimepickerComponent
+        },
+        setup(props,context) {
+            
+            const { pushConf } = usePushConf();
+            
+            let state = {
+                startPushTime:"00:00",
+                stopPushTime:"00:00",
+                playUrl:ref('http://'+window.location.host+'/flv?app=live&stream=preview')
+            }
+            
+            
+            const onPushStart = () => {
+                rpc( "push.start", null,  data => {
+                    getState();
+                } );
+            }
+            
+            const onPushStop = () => {
+                rpc( "push.start", null, function ( data ) {
+                    getState();
+                } );
+            }
+            
+            const addPushUrl = () => {
+                pushConf.url.push({
+                    "des": "platform "+ (pushConf.url.length+1),
+                    "enable": false,
+                    "path": ""
+                })
+            }
+            
+            const delPushUrl = (index) => {
+                pushConf.url.splice(index,1);
+            }
+            
+            
+            const saveConf = () => {
+                rpc( "push.update", [ JSON.stringify( pushConf, null, 2 ) ], data => {
+                    if ( typeof ( data.error ) != "undefined" )
+                        alertMsg('<cn>保存设置失败</cn><en>Save config failed!</en>', 'error');
+                    else
+                        alertMsg('<cn>保存设置成功</cn><en>Save config success!</en>', 'success');
+                } );
+            }
+            
+            return {...state,pushConf,onPushStart,onPushStop,addPushUrl,delPushUrl,saveConf}
+        }
+    });
+    app.mount('#app');
+</script>
+</body>
+</html>
