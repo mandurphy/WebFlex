@@ -74,59 +74,59 @@ export const func = (url,data) => {
     })
 }
 
-export const rpc = (func, params, callbak, usrdata) => {
-    let jsonrpc = new JsonRpcClient({ ajaxUrl: '/RPC' });
-    if(params===undefined || params===null)
-        params=[];
-
-    if(callbak!==undefined)
-        jsonrpc.call(func, params, function(data){callbak(data,usrdata);}, function(res){console.log(res)});
-    else
-        jsonrpc.call(func, params, function(data){}, function(res){console.log(res)});
+export const rpc = (func, params) => {
+    return new Promise((resolve,reject)=>{
+        let jsonrpc = new JsonRpcClient({ ajaxUrl: '/RPC' });
+        if(params === undefined || params === null)
+            params=[];
+        jsonrpc.call(func, params, data => { resolve(data); }, error =>{ console.log(error);reject(error); });
+    })
 }
 
 export const rpc2 = (func, params, callbak, usrdata) => {
-    let jsonrpc = new JsonRpcClient({ ajaxUrl: '/RPC2' });
-    if(params===undefined || params===null)
-        params=[];
-
-    if(callbak!==undefined)
-        jsonrpc.call(func, params, function(data){callbak(data,usrdata);}, function(res){console.log(res)});
-    else
-        jsonrpc.call(func, params, function(data){}, function(res){console.log(res)});
+    return new Promise((resolve,reject)=>{
+        let jsonrpc = new JsonRpcClient({ ajaxUrl: '/RPC2' });
+        if(params === undefined || params === null)
+            params=[];
+        jsonrpc.call(func, params, data => { resolve(data); }, error =>{ console.log(error);reject(error); });
+    })
 }
 
 export const rpc3 = (func, params, callbak, usrdata) => {
-    let jsonrpc = new JsonRpcClient({ ajaxUrl: '/RPC3' });
-    if(params===undefined || params===null)
-        params=[];
-
-    if(callbak!==undefined)
-        jsonrpc.call(func, params, function(data){callbak(data,usrdata);}, function(res){console.log(res)});
-    else
-        jsonrpc.call(func, params, function(data){}, function(res){console.log(res)});
+    return new Promise((resolve,reject)=>{
+        let jsonrpc = new JsonRpcClient({ ajaxUrl: '/RPC3' });
+        if(params === undefined || params === null)
+            params=[];
+        jsonrpc.call(func, params, data => { resolve(data); }, error =>{ console.log(error);reject(error); });
+    })
 }
 
 export const rpc4 = (func, params, callbak, usrdata) => {
-    let jsonrpc = new JsonRpcClient({ ajaxUrl: '/RP4' });
-    if(params===undefined || params===null)
-        params=[];
-
-    if(callbak!==undefined)
-        jsonrpc.call(func, params, function(data){callbak(data,usrdata);}, function(res){console.log(res)});
-    else
-        jsonrpc.call(func, params, function(data){}, function(res){console.log(res)});
+    return new Promise((resolve,reject)=>{
+        let jsonrpc = new JsonRpcClient({ ajaxUrl: '/RPC4' });
+        if(params === undefined || params === null)
+            params=[];
+        jsonrpc.call(func, params, data => { resolve(data); }, error =>{ console.log(error);reject(error); });
+    })
 }
 
 export const rpc5 = (func, params, callbak, usrdata) => {
-    let jsonrpc = new JsonRpcClient({ ajaxUrl: '/RPC5' });
-    if(params===undefined || params===null)
-        params=[];
+    return new Promise((resolve,reject)=>{
+        let jsonrpc = new JsonRpcClient({ ajaxUrl: '/RPC5' });
+        if(params === undefined || params === null)
+            params=[];
+        jsonrpc.call(func, params, data => { resolve(data); }, error =>{ console.log(error);reject(error); });
+    })
+}
 
-    if(callbak!==undefined)
-        jsonrpc.call(func, params, function(data){callbak(data,usrdata);}, function(res){console.log(res)});
-    else
-        jsonrpc.call(func, params, function(data){}, function(res){console.log(res)});
+// monitor
+export const rpc6 = (func, params) => {
+    return new Promise((resolve,reject)=>{
+        let jsonrpc = new JsonRpcClient({ ajaxUrl: '/RPC6' });
+        if(params === undefined || params === null)
+            params=[];
+        jsonrpc.call(func, params, data => { resolve(data); }, error =>{ console.log(error);reject(error); });
+    })
 }
 
 

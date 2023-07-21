@@ -938,6 +938,10 @@ a {
     color: gray;
 }
 
+.uart .gpio-btn button {
+    margin-top: 18px;
+}
+
 
 
 

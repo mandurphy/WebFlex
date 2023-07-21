@@ -774,12 +774,12 @@
             })
             
             const saveConf = () => {
-                rpc( "enc.update", [ JSON.stringify( defaultConf, null, 2 ) ], data => {
+                rpc( "enc.update", [ JSON.stringify( defaultConf, null, 2 ) ]).then(data => {
                     if ( typeof ( data.error ) != "undefined" )
                         alertMsg('<cn>保存设置失败</cn><en>Save config failed!</en>', 'error');
                     else
                         alertMsg('<cn>保存设置成功</cn><en>Save config success!</en>', 'success');
-                } );
+                });
             }
             
             return {...state,defaultConf,handleEncConf,handleAdvConf,handleVdoConf,handleAdoConf,saveConf}

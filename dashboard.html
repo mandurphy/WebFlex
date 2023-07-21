@@ -197,20 +197,20 @@
               }
               
               const updateNetState = () => {
-                  rpc( "enc.getNetState", null, (data) => {
+                  rpc("enc.getNetState").then(data => {
                       state.rx.value = data.rx;
                       state.tx.value = data.tx;
                       setTimeout(updateNetState, 1000);
-                  } );
+                  });
               }
               
               const updateSysState = () => {
-                  rpc( "enc.getSysState", null, (data) => {
+                  rpc("enc.getSysState").then(data => {
                       state.cpu.value = data.cpu;
                       state.mem.value = data.mem;
                       state.tmp.value = data.temperature;
                       setTimeout(updateSysState, 2000);
-                  } );
+                  });
               }
               
               const makeImgUrl = (id) => {
@@ -218,7 +218,7 @@
               }
               
               const updatePreview = async () => {
-                  rpc("enc.snap", null, ()=>{
+                  rpc("enc.snap").then(()=>{
                       if(state.preview.length === 0) {
                           for(let i=0;i<defaultConf.length;i++) {
                               if (!defaultConf[i].enable  || ( defaultConf[i].type === "net" && !defaultConf[i].net.decodeV))
@@ -227,12 +227,11 @@
                           }
                       }
                   });
-                  
                   setTimeout(updatePreview,500);
               }
               
               const updateInputState = () => {
-                  rpc("enc.getInputState", null, (ret) => {
+                  rpc("enc.getInputState").then(ret => {
                       state.input.splice(0, state.input.length, ...ret);
                       for(let i=0;i<state.input.length;i++) {
                           let ipt = state.input[i];
@@ -241,7 +240,7 @@
                               ipt.info = "" + ipt.height + ( ipt.interlace ? "I" : "P" ) + ipt.framerate;
                           state.input[i] = ipt;
                       }
-                  } );
+                  });
                   setTimeout(updateInputState,3000);
               }
     

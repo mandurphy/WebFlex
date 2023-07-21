@@ -802,7 +802,7 @@
             }
 
             const updatePlayUrl = () => {
-                rpc( "enc.getEPG", null, function ( data ) {
+                rpc("enc.getEPG").then(data => {
                     state.playUrls.splice(0,state.playUrls.length);
                     for(let i=0;i<data.length;i++){
                         state.playUrls.push({
@@ -810,7 +810,7 @@
                             "sub": transURL(data[i].url2)
                         })
                     }
-                } );
+                });
             }
 
             const unwatch_port = watch(portConf, (value) => {
@@ -870,14 +870,14 @@
             }
         
             const saveConf = () => {
-                rpc( "enc.update", [ JSON.stringify( defaultConf, null, 2 ) ], data => {
+                rpc("enc.update", [ JSON.stringify( defaultConf, null, 2 ) ]).then(data => {
                     if ( typeof ( data.error ) != "undefined" ) {
                         alertMsg('<cn>保存设置失败</cn><en>Save config failed!</en>', 'error');
                         return;
                     }
                     alertMsg('<cn>保存设置成功</cn><en>Save config success!</en>', 'success');
                     updatePlayUrl();
-                } );
+                });
             }
         
             return {...state,defaultConf,handleEnableConf,handlePlayUrl,saveConf}

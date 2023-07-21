@@ -282,15 +282,15 @@
             
             
             const onPushStart = () => {
-                rpc( "push.start", null,  data => {
+                rpc("push.start").then(()=>{
                     getState();
-                } );
+                });
             }
             
             const onPushStop = () => {
-                rpc( "push.start", null, function ( data ) {
+                rpc("push.stop").then(()=>{
                     getState();
-                } );
+                });
             }
             
             const addPushUrl = () => {
@@ -307,12 +307,12 @@
             
             
             const saveConf = () => {
-                rpc( "push.update", [ JSON.stringify( pushConf, null, 2 ) ], data => {
+                rpc("push.update", [ JSON.stringify( pushConf, null, 2 ) ]).then(data => {
                     if ( typeof ( data.error ) != "undefined" )
                         alertMsg('<cn>保存设置失败</cn><en>Save config failed!</en>', 'error');
                     else
                         alertMsg('<cn>保存设置成功</cn><en>Save config success!</en>', 'success');
-                } );
+                });
             }
             
             return {...state,pushConf,onPushStart,onPushStop,addPushUrl,delPushUrl,saveConf}

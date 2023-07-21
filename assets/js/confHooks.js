@@ -180,3 +180,25 @@ export const usePushConf = () => {
     return { pushConf }
 }
 
+export const useUartConf = () => {
+
+    let uartConf= reactive({});
+    queryData("config/uart.json").then((conf)=>{
+        Object.assign(uartConf,conf)
+    })
+    return { uartConf }
+}
+
+export const useButtonConf = () => {
+
+    let buttonConf= reactive([]);
+    checkFileExists("config/button.json").then(exists => {
+        if(exists) {
+            queryData("config/button.json").then((conf)=>{
+                buttonConf.splice(0, buttonConf.length, ...conf);
+            })
+        }
+    })
+    return { buttonConf }
+}
+

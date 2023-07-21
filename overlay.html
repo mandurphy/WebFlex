@@ -420,12 +420,12 @@
             
             const saveConf = () => {
                 Object.assign(overlayConf[state.chnIndex.value][state.layIndex.value], state.editData);
-                rpc( "enc.updateOverlay", [ JSON.stringify( overlayConf, null, 2 ) ], data => {
+                rpc("enc.updateOverlay", [ JSON.stringify( overlayConf, null, 2 ) ]).then(data => {
                     if ( typeof ( data.error ) != "undefined" )
                         alertMsg('<cn>保存设置失败</cn><en>Save config failed!</en>', 'error');
                     else
                         alertMsg('<cn>保存设置成功</cn><en>Save config success!</en>', 'success');
-                } );
+                });
             }
             
             return {...state,handleEnableConf,handleOverlayConf,resConf,onEditOverlay,saveConf}
