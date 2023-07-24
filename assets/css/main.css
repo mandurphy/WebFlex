@@ -376,57 +376,57 @@ a {
 
 @media screen and (min-width:1199px) {
 
-    body.toggled .sidebar-wrapper:hover {
+    .menu.toggled .sidebar-wrapper:hover {
 		box-shadow: 0 0.5rem 1rem rgb(0 0 0 / 15%);
 	}
 
-	body.toggled:not(.sidebar-hovered) .sidebar-wrapper .sidebar-header .logo-name {
+	.menu.toggled:not(.sidebar-hovered) .sidebar-wrapper .sidebar-header .logo-name {
 		display: none
 	}
-	body.toggled:not(.sidebar-hovered) .sidebar-wrapper {
+	.menu.toggled:not(.sidebar-hovered) .sidebar-wrapper {
 		width: 70px
 	}
-	body.toggled:not(.sidebar-hovered) .sidebar-wrapper .sidebar-header {
+	.menu.toggled:not(.sidebar-hovered) .sidebar-wrapper .sidebar-header {
 		width: 70px
 	}
-	body.toggled:not(.sidebar-hovered) .sidebar-wrapper .sidebar-header .toggle-icon {
+	.menu.toggled:not(.sidebar-hovered) .sidebar-wrapper .sidebar-header .toggle-icon {
 		display: none
 	}
-    body.toggled .sidebar-wrapper:hover .sidebar-header .sidebar-close {
+    .menu.toggled .sidebar-wrapper:hover .sidebar-header .sidebar-close {
 		display: block
 	}
-	body.toggled:not(.sidebar-hovered) .sidebar-wrapper .sidebar-header {
+	.menu.toggled:not(.sidebar-hovered) .sidebar-wrapper .sidebar-header {
 		justify-content: center
 	}
-	body.toggled:not(.sidebar-hovered) .sidebar-wrapper .sidebar-header {
+	.menu.toggled:not(.sidebar-hovered) .sidebar-wrapper .sidebar-header {
 		width: 70px
 	}
-	body.toggled:not(.sidebar-hovered) .sidebar-wrapper .metismenu a {
+	.menu.toggled:not(.sidebar-hovered) .sidebar-wrapper .metismenu a {
 		justify-content: center
 	}
-	body.toggled:not(.sidebar-hovered) .sidebar-wrapper .metismenu .menu-title {
+	.menu.toggled:not(.sidebar-hovered) .sidebar-wrapper .metismenu .menu-title {
 		display: none
 	}
-	body.toggled:not(.sidebar-hovered) .sidebar-wrapper .metismenu li ul {
+	.menu.toggled:not(.sidebar-hovered) .sidebar-wrapper .metismenu li ul {
 		display: none
 	}
-	body.toggled:not(.sidebar-hovered) .sidebar-wrapper .metismenu li.menu-label {
+	.menu.toggled:not(.sidebar-hovered) .sidebar-wrapper .metismenu li.menu-label {
 		display: none
 	}
-	body.toggled:not(.sidebar-hovered) .sidebar-wrapper .metismenu .has-arrow:after {
+	.menu.toggled:not(.sidebar-hovered) .sidebar-wrapper .metismenu .has-arrow:after {
 		display: none
 	}
-    body.toggled:not(.sidebar-hovered) .sidebar-wrapper .sidebar-bottom {
+    .menu.toggled:not(.sidebar-hovered) .sidebar-wrapper .sidebar-bottom {
 		width: 70px
 	}
-    body.toggled:not(.sidebar-hovered) .sidebar-wrapper .sidebar-bottom .user-info {
+    .menu.toggled:not(.sidebar-hovered) .sidebar-wrapper .sidebar-bottom .user-info {
 		display: none
 	}
-    body.toggled:not(.sidebar-hovered) .sidebar-bottom .dropdown-toggle::after {
+    .menu.toggled:not(.sidebar-hovered) .sidebar-bottom .dropdown-toggle::after {
         display: none;
     }
     
-    body.toggled:not(.sidebar-hovered) .sidebar-bottom .dropdown-toggle {
+    .menu.toggled:not(.sidebar-hovered) .sidebar-bottom .dropdown-toggle {
         justify-content: center;
      }
 
@@ -776,7 +776,6 @@ a {
     height: 100%;
 }
 
-
 .login .page-footer {
     display: none;
 }
@@ -942,7 +941,31 @@ a {
     margin-top: 18px;
 }
 
+.intercom .intercomBtn{
+    width: 80px;
+    height: 80px;
+    display: inline-block;
+    font-size: 40px;
+    line-height: 72px;
+    font-weight: bolder;
+    border: 4px solid #999;
+    border-radius: 8px;
+    background-color: #fff;
+}
 
+.rproxy .mqtt .card-body {
+    padding-bottom: 2rem;
+}
+
+.rproxy textarea {
+    min-height: 150px;
+    margin-bottom: 10px;
+}
+
+.service textarea {
+    min-height: 150px;
+    margin-bottom: 10px;
+}
 
 
 

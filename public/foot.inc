@@ -1,10 +1,5 @@
-<footer class="page-footer">
-    <div class="row">
-        <div class="col-lg-12 d-flex d-flex justify-content-end align-items-center">
-            2018 © LinkPi Studio
-        </div>
-    </div>
-</footer>
+
+<!--#include file="/public/footfoot.inc"-->
 <script src="assets/js/session.js" type="module"></script>
 <script src="assets/plugins/jquery/jquery.min.js"></script>
 <script src="assets/plugins/bootstrap/bootstrap.bundle.min.js"></script>

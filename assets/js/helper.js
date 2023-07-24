@@ -101,6 +101,7 @@ export const rpc3 = (func, params, callbak, usrdata) => {
     })
 }
 
+//mqtt
 export const rpc4 = (func, params, callbak, usrdata) => {
     return new Promise((resolve,reject)=>{
         let jsonrpc = new JsonRpcClient({ ajaxUrl: '/RPC4' });

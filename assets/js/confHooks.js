@@ -202,3 +202,76 @@ export const useButtonConf = () => {
     return { buttonConf }
 }
 
+export const useIntercomConf = () => {
+
+    let intercomConf= reactive({});
+    queryData("config/intercom.json").then((conf)=>{
+        Object.assign(intercomConf,conf)
+    })
+    return { intercomConf }
+}
+
+export const useMqttConf = () => {
+
+    let mqttConf= reactive({});
+    queryData("config/misc/mqtt.json").then((conf)=>{
+        Object.assign(mqttConf,conf)
+    })
+    return { mqttConf }
+}
+
+export const useFrpEnableConf = () => {
+
+    let frpEnableConf= ref(false);
+    queryData("config/rproxy/frp_enable").then((conf)=>{
+        frpEnableConf.value = conf;
+    })
+    return { frpEnableConf }
+}
+
+export const useFrpcConf = () => {
+
+    let frpcConf= ref("");
+    queryData("config/rproxy/frpc.ini").then((conf)=>{
+        frpcConf.value = conf;
+    })
+    return { frpcConf }
+}
+
+export const useServiceConf = () => {
+
+    let serviceConf= ref("");
+    queryData("config/service.json").then((conf)=>{
+        serviceConf.value = conf;
+    })
+    return { serviceConf }
+}
+
+export const useSlsConf = () => {
+
+    let slsConf= ref("");
+    queryData("config/sls.conf").then((conf)=>{
+        slsConf.value = conf;
+    })
+    return { slsConf }
+}
+
+export const useRtmpConf = () => {
+
+    let rtmpConf= ref("");
+    queryData("config/rtmp.conf").then((conf)=>{
+        rtmpConf.value = conf;
+    })
+    return { rtmpConf }
+}
+
+export const useNdiConf = () => {
+
+    let ndiConf= ref("");
+    queryData("config/ndi.json").then((conf)=>{
+        ndiConf.value = JSON.stringify(conf,null,2);
+    })
+    return { ndiConf }
+}
+
+
