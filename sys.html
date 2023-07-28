@@ -211,7 +211,10 @@
                                         </label>
                                     </div>
                                     <div class="col-lg-8">
-                                        <input class="form-control" v-model="wifiPasswd">
+                                        <div class="input-group">
+                                            <input class="form-control" :type="!showPasswd.wifipwd ? 'password' : 'text'" v-model="wifiPasswd">
+                                            <span class="input-group-text input-group-addon force-cursor-pointer" @click="showPasswd.wifipwd = !showPasswd.wifipwd"><i :class="['fa-regular',{'fa-eye-slash':!showPasswd.wifipwd},{'fa-eye':showPasswd.wifipwd}]"></i></span>
+                                        </div>
                                     </div>
                                 </div>
                                 <div class="row mt-4">
@@ -314,7 +317,10 @@
                                             </label>
                                         </div>
                                         <div class="col-lg-6">
-                                            <input class="form-control" v-model="userPasswd.oldpwd">
+                                            <div class="input-group">
+                                                <input class="form-control" :type="!showPasswd.oldpwd ? 'password' : 'text'" v-model="userPasswd.oldpwd">
+                                                <span class="input-group-text input-group-addon force-cursor-pointer" @click="showPasswd.oldpwd = !showPasswd.oldpwd"><i :class="['fa-regular',{'fa-eye-slash':!showPasswd.oldpwd},{'fa-eye':showPasswd.oldpwd}]"></i></span>
+                                            </div>
                                         </div>
                                     </div>
                                     <div class="row mt-3">
@@ -327,7 +333,10 @@
                                             </label>
                                         </div>
                                         <div class="col-lg-6">
-                                            <input class="form-control" v-model="userPasswd.newpwd">
+                                            <div class="input-group">
+                                                <input class="form-control" :type="!showPasswd.newpwd ? 'password' : 'text'" v-model="userPasswd.newpwd">
+                                                <span class="input-group-text input-group-addon force-cursor-pointer" @click="showPasswd.newpwd = !showPasswd.newpwd"><i :class="['fa-regular',{'fa-eye-slash':!showPasswd.newpwd},{'fa-eye':showPasswd.newpwd}]"></i></span>
+                                            </div>
                                         </div>
                                     </div>
                                     <div class="row mt-3">
@@ -338,7 +347,10 @@
                                             </label>
                                         </div>
                                         <div class="col-lg-6">
-                                            <input class="form-control" v-model="userPasswd.confirm">
+                                            <div class="input-group">
+                                                <input class="form-control" :type="!showPasswd.confirm ? 'password' : 'text'" v-model="userPasswd.confirm">
+                                                <span class="input-group-text input-group-addon force-cursor-pointer" @click="showPasswd.confirm = !showPasswd.confirm"><i :class="['fa-regular',{'fa-eye-slash':!showPasswd.confirm},{'fa-eye':showPasswd.confirm}]"></i></span>
+                                            </div>
                                         </div>
                                     </div>
                                     <div class="row mt-3">
@@ -867,9 +879,10 @@
                 wifiList:reactive([]),
                 refreshMark: ref(false),
                 wifiPasswd:ref(""),
+                helpCode:ref(""),
                 wifiConnectStatus:ref("<cn>未连接</cn><en>not connected </en>"),
                 userPasswd:reactive({"oldpwd":"","newpwd":"","confirm":""}),
-                helpCode:ref(""),
+                showPasswd:reactive({"wifipwd":false,"oldpwd":false,"newpwd":false,"confirm":false}),
                 exconfs:reactive({"config": true, "defLays":false, "push": false, "record": false, "port": false, "passwd": false, "videoBuffer": true, "cron": true})
             }
             
@@ -918,6 +931,11 @@
                 })
             });
     
+            const showWifiPasswd = () => {
+                console.log("############");
+                state.showPasswd.wifipwd = !state.showPasswd.wifipwd;
+            }
+            
             const refreshWifi = () => {
                 if(wifiConf.enable) {
                     state.refreshMark.value = true;
@@ -1145,7 +1163,7 @@
             })
             
             return {...state,hardwareConf,netConf,net2Conf,macConf,mac2Conf,wifiConf,
-                videoBufferConf,ssidConf,ntpConf,timezoneConf,portConf,versionConf,handleSysScene,
+                videoBufferConf,ssidConf,ntpConf,timezoneConf,portConf,versionConf,handleSysScene,showWifiPasswd,
                 saveNetConf,saveNet2Conf,saveWifiConf,refreshWifi,connectWifi,updateUserPasswd,updateVideoBufferConf,
                 onTimeAreaChange,syncTimeFromPc,saveSysConf,reboot,resetConf,exportConf,importConf,updatePortConf,startHelp,stopHelp,systemNetTest}
         }
