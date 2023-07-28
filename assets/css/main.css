@@ -780,7 +780,95 @@ a {
     display: none;
 }
 
+.dashboard .w_chart {
+    position: relative;
+    display: inline-block;
+    width: 75px !important;
+    height: 75px !important;
+    text-align: center;
+    font-size: 1.2em;
+}
+
+.dashboard .w_percent {
+    display: inline-block;
+    line-height: 75px !important;
+    z-index: 2;
+    color: #0a0808;
+}
+
+.dashboard .w_percent:after {
+    content: '%';
+    margin-left: 0.1em;
+}
+
+.dashboard .w_chart canvas {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 75px !important;
+    height: 75px !important;
+}
+
+
+
+.dashboard .pie{
+    display:inline-block;
+    text-align:center;
+    width: 100%;
+    max-width:110px;
+    position:relative;
+}
+.dashboard .pie .percent{
+    position:absolute;
+    left:50%;
+    top:50%;
+    margin-top:-15px;
+    height:30px;
+    line-height:30px;
+    width:100px;
+    margin-left:-50px;
+}
+.dashboard .pie canvas {
+    width:100%;
+}
+.dashboard .temperature {
+    padding-bottom: 100%;
+    width: 100%;
+    height: 0;
+    position: relative;
+}
+.dashboard .temperature .bar{
+    position: absolute;
+    top: 0px;
+    bottom: 0px;
+    left: 33%;
+    right: 33%;
+    background: #fb0;
+}
+.dashboard .temperature .bar .percent{
+    color:#fff;
+}
+
+.dashboard .temperature .bar .mask{
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: #ccc;
+}
+
+.dashboard .netState {
+    height:140px;
+    width: 100% !important;
+}
+
+.dashboard .netState canvas {
+    width: 100% !important;
+}
+
 .dashboard .iface{
+    background: #555;
     color: #ddd;
     text-align: center;
     border-radius: 4px;
@@ -811,7 +899,21 @@ a {
     background-position:0px 0px;
 }
 
-.dashboard .disable>div,.disable .info{
+.dashboard .disable .info {
+    filter:alpha(opacity=30);
+    -moz-opacity:0.3;
+    -khtml-opacity: 0.3;
+    opacity: 0.3;
+}
+
+.dashboard .disable .icon {
+    filter:alpha(opacity=30);
+    -moz-opacity:0.3;
+    -khtml-opacity: 0.3;
+    opacity: 0.3;
+}
+
+.dashboard .disable .name {
     filter:alpha(opacity=30);
     -moz-opacity:0.3;
     -khtml-opacity: 0.3;
@@ -874,6 +976,28 @@ a {
 .sys button.search-packet {
     width: 90px;
     height: 35px;
+}
+
+.sys .border-right {
+    border-right: 1px solid #e7e6e6;
+}
+
+.sys .spin {
+    -webkit-animation: spin 1s linear infinite;
+    animation: spin 1s linear infinite;
+}
+
+@-webkit-keyframes spin {
+    to {
+        -webkit-transform: rotate(360deg);
+        transform: rotate(360deg);
+    }
+}
+@keyframes spin {
+    to {
+        -webkit-transform: rotate(360deg);
+        transform: rotate(360deg);
+    }
 }
 
 

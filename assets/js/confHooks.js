@@ -91,7 +91,7 @@ export const useNetConf = () => {
     return { netConf }
 }
 
-export const useNet2Conf = async () => {
+export const useNet2Conf = () => {
 
     let net2Conf= reactive({});
     checkFileExists("config/net2.json").then(exists => {
@@ -272,6 +272,15 @@ export const useNdiConf = () => {
         ndiConf.value = JSON.stringify(conf,null,2);
     })
     return { ndiConf }
+}
+
+export const useSsidConf = () => {
+
+    let ssidConf= reactive({});
+    queryData("config/ssid.json").then((conf)=>{
+        Object.assign(ssidConf,conf)
+    })
+    return { ssidConf }
 }
 
 

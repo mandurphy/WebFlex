@@ -61,7 +61,7 @@ export const queryData = (url) => {
     })
 }
 
-export const func = (url,data) => {
+export const func = (url,data = []) => {
     return new Promise((resolve,reject)=>{
         axios.post('/link/relay.php', {url:url,data:data})
             .then(response => {
@@ -74,6 +74,7 @@ export const func = (url,data) => {
     })
 }
 
+//encoder
 export const rpc = (func, params) => {
     return new Promise((resolve,reject)=>{
         let jsonrpc = new JsonRpcClient({ ajaxUrl: '/RPC' });
@@ -83,6 +84,7 @@ export const rpc = (func, params) => {
     })
 }
 
+//wifi
 export const rpc2 = (func, params, callbak, usrdata) => {
     return new Promise((resolve,reject)=>{
         let jsonrpc = new JsonRpcClient({ ajaxUrl: '/RPC2' });
@@ -92,6 +94,7 @@ export const rpc2 = (func, params, callbak, usrdata) => {
     })
 }
 
+//port
 export const rpc3 = (func, params, callbak, usrdata) => {
     return new Promise((resolve,reject)=>{
         let jsonrpc = new JsonRpcClient({ ajaxUrl: '/RPC3' });
@@ -146,6 +149,26 @@ export const checkFileExists = (url) => {
             reject(new Error('请求出错'));
         };
         xhr.send();
+    });
+}
+
+export const getConfigData = (url,options) => {
+    return new Promise((resolve, reject) => {
+        window.URL = window.URL || window.webkitURL
+        const xhr = new XMLHttpRequest()
+        if (options.responseType) {
+            xhr.responseType = options.responseType
+        }
+        xhr.open('get', 'http://'+location.hostname+'/config/'+url, true)
+        xhr.onreadystatechange = function() {
+            if (xhr.readyState === 4 && xhr.status === 200) {
+                resolve(xhr);
+            }
+        }
+        xhr.onerror = () => {
+            reject(new Error('请求出错'));
+        };
+        xhr.send()
     });
 }
 

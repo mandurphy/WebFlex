@@ -1,7 +1,199 @@
 
+export const wStatusPieChartDirective = {
+    mounted: function (el,bindings,node,prenode){
+        let color = bindings.value.color;
+        $(el).easyPieChart({
+            easing: 'easeOutElastic',
+            delay: 2000,
+            barColor: color,
+            trackColor: '#CCC',
+            scaleColor: false,
+            lineWidth: 20,
+            trackWidth: 16,
+            lineCap: 'butt',
+            width: 50,
+            onStep: function ( from, to, percent ) {
+                $(el).parent().find( '.percent' ).text( Math.round( percent ) + "%" );
+            }
+        });
+    },
+    updated: function (el,bindings,node,prenode) {
+        $(el).data( 'easyPieChart' ).update( bindings.value.val);
+    }
+}
+
+export const wStatusTemperatureDirective = {
+    mounted: function (el,bindings,node,prenode){
+        $(el).css( "background", bindings.value.color);
+    },
+    updated: function (el,bindings,node,prenode) {
+        $(el).find(".mask").css("bottom", bindings.value.val + "%");
+        $(el).find(".percent").text(bindings.value.val + "℃");
+    }
+}
+
+export const wNetFlotChartComponent = {
+    template: `<div class="col-lg-12 netState" ref="netState"> </div>`,
+    props: ['color','maxy','data1','data2'],
+    data(){
+      return {
+          plot: {}
+      }
+    },
+    watch: {
+        data1: {
+            handler(newValue, oldValue) {
+                this.initPlot();
+                this.updatePlot();
+            },
+            deep: true
+        }
+    },
+    methods: {
+        initPlot() {
+            if(Object.keys(this.plot).length === 0) {
+                let color = this.color;
+                let maxy = this.maxy;
+                let data1 = this.data1;
+                let data2 = this.data2;
+                // if(data1.length===0 && data2.length===0) {
+                //     let tx=[],rx = [];
+                //     for ( let i = 0; i < 100; i++ ) {
+                //         tx.push( 0 );
+                //         rx.push( 0 );
+                //     }
+                //     for (let i = 0; i < 100; i++) {
+                //         data1.push([i,tx[i]]);
+                //         data2.push([i,rx[i]]);
+                //     }
+                // }
+                this.plot = $.plot(this.$refs.netState, [
+                        {
+                            data: data1,
+                            lines: {
+                                fill: true
+                            }
+                        },
+                        {
+                            data: data2,
+                            lines: {
+                                show: true
+                            }
+                        }]
+                    ,
+                    {
+                        series: {
+                            lines: {
+                                show: true,
+                                fill: true
+                            },
+                            shadowSize: 0
+                        },
+                        yaxis: {
+                            min: 0,
+                            max: maxy,
+                            tickSize: 160,
+                            tickFormatter: function ( v, axis ) {
+                                if ( axis.max < 1024 )
+                                    return v + "Kb/s";
+                                else {
+                                    v /= 1024;
+
+                                    if ( axis.max < 10240 )
+                                        return v.toFixed( 2 ) + "Mb/s";
+                                    else
+                                        return Math.floor( v ) + "Mb/s";
+                                }
+                            }
+                        },
+                        xaxis: {
+                            show: false
+                        },
+                        grid: {
+                            hoverable: true,
+                            clickable: true,
+                            tickColor: "#eeeeee",
+                            borderWidth: 1,
+                            borderColor: "#cccccc"
+                        },
+                        colors: [ color, "#555" ],
+                        tooltip: false
+                });
+
+                let handle = this;
+                $.fn.tooltip = function () {
+                    let prePoint = null, preLabel = null;
+                    $(this).bind("plothover", function (event, pos, item) {
+                        if (item) {
+                            if ((preLabel !== item.series.label) || (prePoint !== item.dataIndex)) {
+                                prePoint = item.dataIndex;
+                                preLabel = item.series.label;
+                                $("#tooltip").remove();
+
+                                $(this).css({
+                                    "cursor": "pointer"
+                                })
+
+                                let data = item.series.data[item.dataIndex][1];
+                                if(data > 1024)
+                                    data = parseInt(data/1024)+"Mb/s";
+                                else
+                                    data += "kb/s";
+
+                                if (item.seriesIndex === 0)
+                                    handle.showTooltip(item.pageX + 100, item.pageY - 10, color, "<cn>上行</cn><en>upward</en>: " + data);
+                                if (item.seriesIndex === 1)
+                                    handle.showTooltip(item.pageX + 100, item.pageY - 10, color, "<cn>下行</cn><en>downward</en>: " + data);
+                            }
+                        }
+                        else {
+                            prePoint = null;
+                            preLabel = null;
+                            $(this).css({
+                                "cursor": "auto"
+                            });
+                            $("#tooltip").remove();
+                        }
+                    });
+                }
+                $(this.$refs.netState).tooltip();
+            }
+        },
+        updatePlot() {
+            let maxy = this.maxy;
+            let data1 = this.data1;
+            let data2 = this.data2;
+            this.plot.setData([data1, data2]);
+            this.plot.draw();
+            this.plot.getOptions().yaxes[ 0 ].max = maxy;
+            this.plot.getOptions().yaxes[ 0 ].tickSize = Math.floor( maxy / 5 );
+            this.plot.setupGrid();
+        },
+        //提示框
+        showTooltip(x, y, color, contents) {
+            $('<div id="tooltip">' + contents + '</div>').css({
+                position: 'absolute',
+                display: 'none',
+                top: y - 40,
+                left: x - 120,
+                border: '2px solid ' + color,
+                padding: '3px',
+                'font-size': '9px',
+                'border-radius': '5px',
+                'background-color': '#fff',
+                'font-family': 'Verdana, Arial, Helvetica, Tahoma, sans-serif',
+                opacity: 0.9
+            }).appendTo("body").fadeIn(200);
+        }
+    },
+    mounted() {
+        //this.initPlot();
+    }
+}
 
 export const pieChartDirective = {
     mounted(el,bindings,vnode) {
+        console.log(el)
         let bgColor = bindings.value.bgColor;
         let color = bindings.value.color;
         $(el).easyPieChart({
@@ -11,7 +203,7 @@ export const pieChartDirective = {
             trackColor : color,
             scaleColor: false,
             onStep: (from, to, percent) => {
-                $(this.el).find('.w_percent').text(Math.round(percent));
+                $(el).find('.w_percent').text(Math.round(percent));
             }
 
         });

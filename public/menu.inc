@@ -44,6 +44,12 @@
                         </a>
                     </li>
                     <li>
+                        <a href="dashboard1.html">
+                            <div class="parent-icon"><i class="fa fa-tachometer"></i></div>
+                            <div class="menu-title"><cn>设备状态1</cn><en>Dashboard</en></div>
+                        </a>
+                    </li>
+                    <li>
                         <a href="decode.html">
                             <div class="parent-icon"><i class="fa fa-image"></i></div>
                             <div class="menu-title"><cn>解码设置</cn><en>Decode</en></div>

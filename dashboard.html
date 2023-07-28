@@ -5,171 +5,122 @@
  </head>
   <body>
     <!--#include file="/public/menu.inc"-->
-     <main class="page-content dashboard" id="app" v-cloak>
-         <div class="row row-cols-1 row-cols-md-2 row-cols-lg-2 row-cols-xxl-4">
-             <div class="col">
-                 <div class="card radius-10">
-                     <div class="card-body">
-                         <div class="d-flex align-items-center">
-                             <div class="">
-                                 <p class="mb-1"><cn>CPU使用率</cn><en>CPU usage</en></p>
-                                 <h4 class="mb-0 text-pink">542</h4>
-                             </div>
-                             <div class="ms-auto">
-                                 <div class="w_chart" v-pie="{'bgColor':'#dc3545','color':'rgb(231 46 122 / 15%)','val':cpu}">
-                                     <span class="w_percent"></span>
-                                 </div>
-                             </div>
-                         </div>
-                     </div>
-                 </div>
-             </div>
-             <div class="col">
-                 <div class="card radius-10">
-                     <div class="card-body">
-                         <div class="d-flex align-items-center">
-                             <div class="">
-                                 <p class="mb-1"><cn>内存使用率</cn><en>Memory usage</en></p>
-                                 <h4 class="mb-0 text-primary">15K</h4>
-                             </div>
-                             <div class="ms-auto">
-                                 <div class="w_chart" v-pie="{'bgColor':'#0d6efd','color':'rgb(52 97 255 / 15%)','val':mem}">
-                                     <span class="w_percent"></span>
-                                 </div>
-                             </div>
-                         </div>
-                     </div>
-                 </div>
-             </div>
-             <div class="col">
-                 <div class="card radius-10">
-                     <div class="card-body">
-                         <div class="d-flex align-items-center">
-                             <div class="">
-                                 <p class="mb-1"><cn>核心温度</cn><en>Core temperature</en></p>
-                                 <h4 class="mb-0 text-success">59</h4>
-                             </div>
-                             <div class="ms-auto">
-                                 <div class="w_chart" v-pie="{'bgColor':'#198754','color':'rgb(18 191 36 / 15%)','val':tmp}">
-                                     <span class="w_percent"></span>
-                                 </div>
-                             </div>
-                         </div>
-                     </div>
-                 </div>
-             </div>
-             <div class="col">
-                 <div class="card radius-10">
-                     <div class="card-body">
-                         <div class="d-flex align-items-center">
-                             <div class="">
-                                 <p class="mb-1">New Tickets</p>
-                                 <h4 class="mb-0 text-orange">214</h4>
-                             </div>
-                             <div class="ms-auto">
-                                 <div class="w_chart" v-pie="{'bgColor':'#ff6632','color':'rgb(255 102 50 / 15%)','val':tmp}">
-                                     <span class="w_percent"></span>
-                                 </div>
-                             </div>
-                         </div>
-                     </div>
-                 </div>
-             </div>
-         </div><!--end row-->
-
-
-         <div class="row">
-             <div :class="[{'col-lg-6':input.length > 5},{'col-lg-8':input.length <= 5}]">
-                 <div class="card">
-                     <div class="card-header bg-transparent">
-                         <div class="d-flex align-items-center">
-                             <div class="p-2">
-                                 <h6 class="mb-0 fw-bold"><cn>网络状态</cn><en>Network state</en></h6>
-                             </div>
-                         </div>
-                     </div>
-                     <div class="card-body">
-                         <div v-apex="{'data1':tx,'data2':rx}"></div>
-                     </div>
-                 </div>
-             </div>
-             <div :class="[{'col-lg-6':input.length > 5},{'col-lg-4':input.length <= 5}]">
-                 <div class="card w-100">
-                     <div class="card-header bg-transparent">
-                         <div class="d-flex align-items-center">
-                             <div class="p-2">
-                                 <h6 class="mb-0 fw-bold"><cn>端口状态</cn><en>Interface state</en></h6>
-                             </div>
-                         </div>
-                     </div>
-                     <div class="card-body" style="min-height: 406px">
-                         <div class="row">
-                             <div :class="[{'col-lg-6':input.length > 5},{'col-lg-12':input.length <= 5}]">
-                                 <div class="team-list" v-for="(item,index) in getInputs1">
-                                     <div class="d-flex align-items-center gap-3" style="height: 54px">
-                                         <div :class="[{'hdmi':item.protocol==='HDMI'},{'sdi':item.protocol==='SDI'},{'disable':!item.avalible},'text-center']">
-                                             <div class="icon"></div>
-                                         </div>
-                                         <div class="flex-grow-1">
-                                             <h6 :class="['mb-1','fw-bold',{'disable':!item.avalible}]">{{item.name}}</h6>
-                                             <span v-if="item.avalible" class="badge bg-success bg-success-subtle text-success border border-opacity-25 border-success">{{item.info}}</span>
-                                             <span v-else class="badge bg-warning bg-warning-subtle text-warning border border-opacity-25 border-warning">{{item.info}}</span>
-                                         </div>
-                                         <bootstrap-switch v-model="test_switch"></bootstrap-switch>
-                                     </div>
-                                     <hr style="margin: 0.55rem 0">
-                                 </div>
-                             </div>
-                             <div class="col-lg-6" v-show="input.length > 5">
-                                 <div class="team-list" v-for="(item,index) in getInputs2">
-                                     <div class="d-flex align-items-center gap-3" style="height: 54px">
-                                         <div :class="[{'hdmi':item.protocol==='HDMI'},{'sdi':item.protocol==='SDI'},'text-center']">
-                                             <div class="icon"></div>
-                                         </div>
-                                         <div class="flex-grow-1">
-                                             <h6 class="mb-1 fw-bold">{{item.name}}</h6>
-                                             <span v-if="item.avalible" class="badge bg-success bg-success-subtle text-success border border-opacity-25 border-success">{{item.info}}</span>
-                                             <span v-else class="badge bg-warning bg-warning-subtle text-warning border border-opacity-25 border-warning">{{item.info}}</span>
-                                         </div>
-                                         <div class="form-check form-switch form-check-success border-0">
-                                             <input class="form-check-input border-1"  type="checkbox" role="switch" checked="">
-                                         </div>
-                                     </div>
-                                     <hr style="margin: 0.55rem 0">
-                                 </div>
-                             </div>
-                         </div>
-                     </div>
-                 </div>
-             </div>
-         </div>
-         
-         <div class="card">
-             <div class="card-body">
-                 <h6 class="mb-0 text-uppercase"><cn>预览</cn><en>Preview</en><small style="margin-left: 5px;color: grey;font-size: 12px;"><cn>非实时视频，仅预览图片</cn><en>Not a realtime video, picture only</en></small></h6>
-                 <div class="my-3 border-top"></div>
-                 <div class="row row-cols-2 row-cols-lg-5 g-3">
-                     <div v-for="(item,index) in preview" class="col">
-                         <div class="card border-end">
-                             <img :src="makeImgUrl(item.id)" class="card-img-top" alt="...">
-                             <div class="card-body">
-                                 <p class="card-text text-center">{{item.name}}</p>
-                             </div>
-                         </div>
-                     </div>
-                 </div>
-             </div>
-         </div>
-     </main>
+    <div data-simplebar>
+        <main class="page-content dashboard" id="app" v-cloak>
+            <div class="row">
+                <div class="col-lg-6">
+                    <div class="card">
+                        <div class="card-header bg-transparent">
+                            <div class="p-2 mb-0 d-flex align-items-end">
+                                <cn>系统状态</cn>
+                                <en>System state</en>
+                            </div>
+                        </div>
+                        <div class="card-body" >
+                            <div class="row text-center">
+                                <div class="col-lg-4 ">
+                                    <div class="pie">
+                                        <div class="chart" v-chart="{color:theme_color,val:cpu}"></div>
+                                        <span class="percent"></span>
+                                    </div>
+                                    <div>
+                                        <cn>CPU使用率</cn>
+                                        <en>CPU usage</en>
+                                    </div>
+                                </div>
+                                <div class="col-lg-4 text-center">
+                                    <div class="pie">
+                                        <div class="chart" v-chart="{color:theme_color,val:mem}"></div>
+                                        <span class="percent"></span>
+                                    </div>
+                                    <div>
+                                        <cn>内存使用率</cn>
+                                        <en>Memory usage</en>
+                                    </div>
+                                </div>
+                                <div class="col-lg-4 text-center">
+                                    <div class="pie">
+                                        <div class="temperature">
+                                            <div class="bar" v-tmp="{'color':theme_color,'val':tmp}">
+                                                <div class="mask"></div>
+                                                <span class="percent">0℃</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <cn>核心温度</cn>
+                                        <en>Core temperature</en>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+    
+                <div class="col-lg-6">
+                    <div class="card">
+                        <div class="card-header bg-transparent">
+                            <div class="p-2 mb-0 d-flex align-items-end">
+                                <cn>网络状态</cn>
+                                <en>Network state</en>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <w-net v-if="tx.length > 0" :color="theme_color" :maxy="maxy" :data1="tx" :data2="rx"></w-net>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="card">
+                        <div class="card-body iface">
+                            <div v-for="(item,index) in input" :key="index" :class="[{'hdmi':item.protocol==='HDMI'},{'sdi':item.protocol==='SDI'},{'disable':!item.avalible}]">
+                                <span class="info">{{item.info}}</span>
+                                <div class="icon my-1"></div>
+                                <span class="name">{{item.name}}</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row mt-2">
+                <div class="col-lg-12">
+                    <div class="card">
+                        <div class="card-body">
+                            <h6 class="mb-0 text-uppercase"><cn>预览</cn><en>Preview</en><small style="margin-left: 5px;color: grey;font-size: 12px;"><cn>非实时视频，仅预览图片</cn><en>Not a realtime video, picture only</en></small></h6>
+                            <div class="my-3 border-top"></div>
+                            <div class="row row-cols-2 row-cols-lg-5 g-3">
+                                <div v-for="(item,index) in preview" class="col">
+                                    <div class="card border-end">
+                                        <img :src="makeImgUrl(item.id)" class="card-img-top" alt="...">
+                                        <div class="card-body">
+                                            <p class="card-text text-center">{{item.name}}</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
     <!--#include file="/public/foot.inc"-->
 
   <script src="assets/plugins/easyPieChart/jquery.easypiechart.js"></script>
-  <script src="assets/plugins/apex/apexcharts.min.js"></script>
-  <script type="module">
+  <script src="assets/plugins/flotChart/jquery.flot.js"></script>
+  <script src="assets/plugins/flotChart/jquery.flot.tooltip.js"></script>
+  <script src="assets/plugins/flotChart/jquery.flot.resize.js"></script>
+  <script src="assets/plugins/flotChart/jquery.flot.pie.resize.js"></script>
+  <script src="assets/plugins/flotChart/jquery.flot.selection.js"></script>
+  <script src="assets/plugins/flotChart/jquery.flot.stack.js"></script>
+  <script src="assets/plugins/flotChart/jquery.flot.time.js"></script>
 
+  <script type="module">
       import { rpc} from "./assets/js/helper.js";
       import { useDefaultConf,useHardwareConf } from "./assets/js/confHooks.js";
-      import { pieChartDirective,apexChartsDirective,bootstrapSwitchComponent } from "./assets/js/vueHelper.js"
+      import { bootstrapSwitchComponent,wStatusPieChartDirective,wStatusTemperatureDirective,wNetFlotChartComponent } from "./assets/js/vueHelper.js"
 
       const { createApp,ref,reactive,computed,onMounted,toRaw } = Vue;
       const { defaultConf } = useDefaultConf();
@@ -177,29 +128,59 @@
       
       const app  = createApp({
           directives:{
-              "pie":pieChartDirective,
-              "apex":apexChartsDirective
+              "chart": wStatusPieChartDirective,
+              "tmp": wStatusTemperatureDirective
           },
           components:{
-            "bootstrap-switch":bootstrapSwitchComponent
+              "bootstrap-switch":bootstrapSwitchComponent,
+              "w-net":wNetFlotChartComponent
           },
           setup(prop,context){
               
               const state = {
-                  tx : ref(0),
-                  rx : ref(0),
                   cpu: ref(0),
                   tmp: ref(0),
                   mem: ref(0),
+                  maxy: ref(800),
+                  tx : reactive([]),
+                  rx : reactive([]),
+                  data1:reactive([]),
+                  data2:reactive([]),
+                  theme_color:ref("#ffbb00"),
                   preview : reactive([]),
-                  input : reactive([]),
-                  test_switch : ref(true)
+                  input : reactive([])
+              }
+    
+              const getData1 = (d) => {
+                  state.data1.shift();
+                  state.data1.push( d );
+                  state.tx.splice(0);
+                  for (let i = 0; i < 100; i++)
+                      state.tx.push([i,state.data1[i]]);
+              }
+              
+              const getData2 = (d) => {
+                  state.data2.shift();
+                  state.data2.push( d );
+                  state.rx.splice(0);
+                  for (let i = 0; i < 100; i++)
+                      state.rx.push([i,state.data2[i]]);
               }
               
               const updateNetState = () => {
                   rpc("enc.getNetState").then(data => {
-                      state.rx.value = data.rx;
-                      state.tx.value = data.tx;
+                      getData1(data.tx);
+                      getData2(data.rx);
+                      if ( data.tx * 1.3 > state.maxy.value )
+                          state.maxy.value = data.tx * 1.3;
+                      if ( data.rx * 1.3 > state.maxy.value )
+                          state.maxy.value = data.rx * 1.3;
+                      if ( state.maxy.value < 1024 )
+                          state.maxy.value = Math.ceil( state.maxy.value / 100 ) * 100;
+                      else
+                          state.maxy.value = Math.ceil( state.maxy.value / 1024 ) * 1024;
+                      if ( state.maxy.value > 1024000 )
+                          state.maxy.value = 1024000;
                       setTimeout(updateNetState, 1000);
                   });
               }
@@ -235,32 +216,23 @@
                       state.input.splice(0, state.input.length, ...ret);
                       for(let i=0;i<state.input.length;i++) {
                           let ipt = state.input[i];
-                          ipt.info = "no signal";
+                          ipt.info = "- - -";
                           if(ipt.avalible)
                               ipt.info = "" + ipt.height + ( ipt.interlace ? "I" : "P" ) + ipt.framerate;
                           state.input[i] = ipt;
                       }
+                      console.log(state.input);
                   });
                   setTimeout(updateInputState,3000);
               }
-    
-              const getInputs1 = computed(()=>{
-                  return state.input.filter((item,index)=>{
-                      if(index > 4)
-                          return false;
-                      return true;
-                  })
-              })
-    
-              const getInputs2 = computed(()=>{
-                  return state.input.filter((item,index)=>{
-                      if(index <= 4)
-                          return false;
-                      return true;
-                  })
-              })
               
               onMounted(()=>{
+                  if(state.data1.length === 0 && state.data2.length === 0) {
+                      for ( let i = 0; i < 100; i++ ) {
+                          state.data1.push( 0 );
+                          state.data2.push( 0 );
+                      }
+                  }
                   updateSysState();
                   updateNetState();
                   updatePreview();
@@ -269,7 +241,7 @@
               )
               
               return {
-                  ...state, makeImgUrl,getInputs1,getInputs2
+                  ...state, makeImgUrl,
               }
           }
       })
