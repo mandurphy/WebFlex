@@ -38,50 +38,50 @@
             <div class="sidebar-nav">
                 <ul class="metismenu">
                     <li>
-                        <a href="dashboard.html">
+                        <a href="dashboard.php">
                             <div class="parent-icon"><i class="fa fa-tachometer"></i></div>
                             <div class="menu-title"><cn>设备状态</cn><en>Dashboard</en></div>
                         </a>
                     </li>
                     <li>
-                        <a href="dashboard1.html">
+                        <a href="dashboard1.php">
                             <div class="parent-icon"><i class="fa fa-tachometer"></i></div>
                             <div class="menu-title"><cn>设备状态1</cn><en>Dashboard</en></div>
                         </a>
                     </li>
                     <li>
-                        <a href="decode.html">
+                        <a href="decode.php">
                             <div class="parent-icon"><i class="fa fa-image"></i></div>
                             <div class="menu-title"><cn>解码设置</cn><en>Decode</en></div>
                         </a>
                     </li>
                     <li>
-                        <a href="encode.html">
+                        <a href="encode.php">
                             <div class="parent-icon"><i class="fa fa-image"></i></div>
                             <div class="menu-title"><cn>编码设置</cn><en>Encode</en></div>
                         </a>
                     </li>
                     <li>
-                        <a href="stream.html">
+                        <a href="stream.php">
                             <div class="parent-icon"><i class="fa fa-upload"></i></div>
                             <div class="menu-title"><cn>输出设置</cn><en>Stream</en></div>
                         </a>
                     </li>
                     <li>
-                        <a href="overlay.html">
+                        <a href="overlay.php">
                             <div class="parent-icon"><i class="fa-solid fa-wand-magic-sparkles"></i></div>
                             <div class="menu-title"><cn>叠加特效</cn><en>Overlay</en></div>
                         </a>
                     </li>
                     <li>
-                        <a href="mix.html">
+                        <a href="mix.php">
                             <div class="parent-icon"><i class="fa-solid fa-chart-simple"></i></div>
                             <div class="menu-title"><cn>视频混合</cn><en>Video mix</en></div>
                         </a>
                     </li>
 
                     <li>
-                        <a href="sys.html">
+                        <a href="sys.php">
                             <div class="parent-icon"><i class="fa-solid fa-gear"></i></div>
                             <div class="menu-title"><cn>系统设置</cn><en>System</en></div>
                         </a>
@@ -95,43 +95,43 @@
                         </a>
                         <ul>
                             <li>
-                                <a href="ndi.html">
+                                <a href="ndi.php">
                                     <i class="fa-solid fa-desktop"></i>
                                     <div class="menu-title"><cn>NDI解码</cn><en>NDI decode</en></div>
                                 </a>
                             </li>
                             <li>
-                                <a href="record.html">
+                                <a href="record.php">
                                     <i class="fa-solid fa-folder-open"></i>
                                     <div class="menu-title"><cn>文件录制</cn><en>Record</en></div>
                                 </a>
                             </li>
                             <li>
-                                <a href="push.html">
+                                <a href="push.php">
                                     <i class="fa-solid fa-circle-arrow-up"></i>
                                     <div class="menu-title"><cn>多平台直播</cn><en>Multiple Push</en></div>
                                 </a>
                             </li>
                             <li>
-                                <a href="player.html">
+                                <a href="player.php">
                                     <i class="fa-solid fa-circle-play"></i>
                                     <div class="menu-title"><cn>H5 播放器</cn><en>H5 Player</en></div>
                                 </a>
                             </li>
                             <li>
-                                <a href="intercom.html">
+                                <a href="intercom.php">
                                     <i class="fa-solid fa-headset"></i>
                                     <div class="menu-title"><cn>集成通信</cn><en>Intercom</en></div>
                                 </a>
                             </li>
                             <li>
-                                <a href="explorer.html">
+                                <a href="explorer.php">
                                     <i class="fa-brands fa-usb"></i>
                                     <div class="menu-title"><cn>U盘助手</cn><en>Usb Disk</en></div>
                                 </a>
                             </li>
                             <li>
-                                <a href="uart.html">
+                                <a href="uart.php">
                                     <i class="fa-solid fa-link"></i>
                                     <div class="menu-title"><cn>串口、按键</cn><en>Serial, Button</en></div>
                                 </a>
@@ -145,19 +145,19 @@
                         </a>
                         <ul>
                             <li>
-                                <a href="group.html">
+                                <a href="group.php">
                                     <i class="fa-solid fa-server"></i>
                                     <div class="menu-title"><cn>群组设置</cn><en>Group</en></div>
                                 </a>
                             </li>
                             <li>
-                                <a href="rproxy.html">
+                                <a href="rproxy.php">
                                     <i class="fa-solid fa-comments"></i>
                                     <div class="menu-title"><cn>远程访问</cn><en>Reverse Proxy</en></div>
                                 </a>
                             </li>
                             <li>
-                                <a href="service.html">
+                                <a href="service.php">
                                     <i class="fa-solid fa-cloud"></i>
                                     <div class="menu-title"><cn>服务设置</cn><en>Reverse Proxy</en></div>
                                 </a>
@@ -171,37 +171,37 @@
                         </a>
                         <ul>
                             <li>
-                                <a href="gb28181.html">
+                                <a href="gb28181.php">
                                     <i class="fa-solid fa-cloud"></i>
                                     <div class="menu-title">GB28181</div>
                                 </a>
                             </li>
                             <li>
-                                <a href="roi.html">
+                                <a href="roi.php">
                                     <i class="fa-solid fa-circle-user"></i>
                                     <div class="menu-title">ROI</div>
                                 </a>
                             </li>
                             <li>
-                                <a href="insta360.html">
+                                <a href="insta360.php">
                                     <i class="fa-solid fa-camera"></i>
                                     <div class="menu-title">Insta360 Link</div>
                                 </a>
                             </li>
                             <li>
-                                <a href="onvif.html">
+                                <a href="onvif.php">
                                     <i class="fa fa-video-camera"></i>
                                     <div class="menu-title">Onvif PTZ</div>
                                 </a>
                             </li>
                             <li>
-                                <a href="sync.html">
+                                <a href="sync.php">
                                     <i class="fa-solid fa-bars-staggered"></i>
                                     <div class="menu-title"><cn>同步调节</cn><en>Synchronization</en></div>
                                 </a>
                             </li>
                             <li>
-                                <a href="colorKey.html">
+                                <a href="colorKey.php">
                                     <i class="fa fa-cut"></i>
                                     <div class="menu-title"><cn>抠像</cn><en>ColorKey</en></div>
                                 </a>

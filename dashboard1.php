@@ -1,10 +1,11 @@
+<?php include ("./link/session.php") ?>
 <!doctype html>
 <html lang="uft-8">
  <head>
-     <!--#include file="/public/head.inc"-->
+     <?php include ("./public/head.inc") ?>
  </head>
   <body>
-    <!--#include file="/public/menu.inc"-->
+  <?php include ("./public/menu.inc") ?>
      <main class="page-content dashboard" id="app" v-cloak>
          <div class="row row-cols-1 row-cols-md-2 row-cols-lg-2 row-cols-xxl-4 mt-3">
              <div class="col">
@@ -161,7 +162,7 @@
              </div>
          </div>
      </main>
-    <!--#include file="/public/foot.inc"-->
+  <?php include ("./public/foot.inc") ?>
 
   <script src="assets/plugins/easyPieChart/jquery.easypiechart.js"></script>
   <script src="assets/plugins/apex/apexcharts.min.js"></script>

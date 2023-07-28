@@ -1,10 +1,11 @@
+<?php include ("./link/session.php") ?>
 <!doctype html>
 <html lang="uft-8">
  <head>
-     <!--#include file="/public/head.inc"-->
+     <?php include ("./public/head.inc") ?>
  </head>
   <body>
-    <!--#include file="/public/menu.inc"-->
+  <?php include ("./public/menu.inc") ?>
     <div data-simplebar>
         <main class="page-content dashboard" id="app" v-cloak>
             <div class="row">
@@ -106,7 +107,7 @@
             </div>
         </main>
     </div>
-    <!--#include file="/public/foot.inc"-->
+  <?php include ("./public/foot.inc") ?>
 
   <script src="assets/plugins/easyPieChart/jquery.easypiechart.js"></script>
   <script src="assets/plugins/flotChart/jquery.flot.js"></script>

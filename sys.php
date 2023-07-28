@@ -1,10 +1,11 @@
+<?php include ("./link/session.php") ?>
 <!doctype html>
 <html lang="uft-8">
 <head>
-    <!--#include file="/public/head.inc"-->
+    <?php include ("./public/head.inc") ?>
 </head>
 <body>
-<!--#include file="/public/menu.inc"-->
+<?php include ("./public/menu.inc") ?>
 <div data-simplebar class="mb-4">
     <main class="page-content sys" id="app" v-cloak>
         <div class="row">
@@ -839,7 +840,7 @@
         </div>
     </main>
 </div>
-<!--#include file="/public/foot.inc"-->
+<?php include ("./public/foot.inc") ?>
 <script src="assets/plugins/jszip/jszip.js"></script>
 <script src="assets/plugins/jszip/filesaver.min.js"></script>
 <script type="module">

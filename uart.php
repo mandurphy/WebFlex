@@ -1,10 +1,11 @@
+<?php include ("./link/session.php") ?>
 <!doctype html>
 <html lang="uft-8">
 <head>
-    <!--#include file="/public/head.inc"-->
+    <?php include ("./public/head.inc") ?>
 </head>
 <body>
-<!--#include file="/public/menu.inc"-->
+<?php include ("./public/menu.inc") ?>
     <div data-simplebar>
         <main class="page-content uart" id="app" v-cloak>
             <div class="row">
@@ -133,7 +134,7 @@
             </div>
         </main>
     </div>
-    <!--#include file="/public/foot.inc"-->
+<?php include ("./public/foot.inc") ?>
 
 <script type="module">
     import { rpc,rpc6,alertMsg } from "./assets/js/helper.js";

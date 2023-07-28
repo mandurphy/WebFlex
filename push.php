@@ -1,11 +1,12 @@
+<?php include ("./link/session.php") ?>
 <!doctype html>
 <html lang="uft-8">
 <head>
-    <!--#include file="/public/head.inc"-->
+    <?php include ("./public/head.inc") ?>
     <link href="assets/plugins/timepicker/css/bootstrap-timepicker.min.css" rel="stylesheet">
 </head>
 <body>
-<!--#include file="/public/menu.inc"-->
+<?php include ("./public/menu.inc") ?>
     <div data-simplebar>
         <main class="page-content push" id="app" v-cloak>
             <div class="row">
@@ -250,7 +251,7 @@
             </div>
         </main>
     </div>
-<!--#include file="/public/foot.inc"-->
+<?php include ("./public/foot.inc") ?>
 
 <script src="assets/plugins/flvjs/flv.js"></script>
 <script src="assets/plugins/jessibuca/jessibuca.js"></script>

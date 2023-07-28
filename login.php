@@ -1,7 +1,7 @@
 <!doctype html>
 <html lang="en" data-bs-theme="dark">
 <head>
-    <!--#include file="/public/head.inc"-->
+    <?php include ("./public/head.inc") ?>
 </head>
 <body>
 <div class="section-authentication-cover login" id="app">
@@ -30,16 +30,16 @@
                         </div>
 
                         <div class="form-body mt-4">
-                            <form @submit.prevent="onLogin" class="row g-3">
+                            <form class="row g-3" action="/link/action.php" method="post">
                                 <div class="col-12">
                                     <label for="username" class="form-label"><cn>用户名</cn><en>Username</en></label>
-                                    <input type="text" v-model="username" class="form-control  border-3" id="username" placeholder="Enter Username">
+                                    <input type="text" class="form-control  border-3" name="username" placeholder="Enter Username">
                                 </div>
                                 <div class="col-12">
                                     <label for="password" class="form-label"><cn>密码</cn><en>Password</en></label>
                                     <div class="input-group" id="show_hide_password">
-                                        <input :type="inputType" class="form-control border-end-0  border-3" id="password" v-model="password" placeholder="Enter Password">
-                                        <div @click="onSwitch" class="input-group-text bg-transparent  border-3" style="cursor: pointer"><i :class="['fa-regular',{'fa-eye-slash  ':inputType==='password'},{'fa-eye ':inputType!=='password'}]"></i></div>
+                                        <input :type="!showPasswd ? 'password' : 'text'" class="form-control border-end-0  border-3" name="password" placeholder="Enter Password">
+                                        <div class="input-group-text bg-transparent  border-3 force-cursor-pointer" @click="showPasswd = !showPasswd"><i :class="['fa-regular',{'fa-eye-slash':showPasswd},{'fa-eye ':!showPasswd}]"></i></div>
                                     </div>
                                 </div>
                                 <div class="col-md-6">
@@ -55,54 +55,38 @@
                                 </div>
                             </form>
                         </div>
-
                     </div>
                 </div>
             </div>
-
         </div>
     </div>
 </div>
-
-<!--#include file="/public/foot.inc"-->
+<?php include ("./public/foot.inc") ?>
 
 <script type="module">
 
-    import { func,alertMsg } from "./assets/js/helper.js";
+    import { alertMsg,getUrlParam } from "./assets/js/helper.js";
+    const { createApp,ref,onMounted} = Vue;
 
-    const app = Vue.createApp({
-        data() {
-            return {
-                username:"",
-                password:"",
-                inputType:"password"
+    const app = createApp({
+        setup() {
+            let showPasswd = ref(false);
+
+            const removeURLParameter = () => {
+                const urlWithoutParams = window.location.href.split('?')[0];
+                history.replaceState({}, document.title, urlWithoutParams);
             }
-        },
-        methods: {
-            async onLogin() {
-                if(!this.isValid()) {
-                    alertMsg('<cn>用户名密码不能为空</cn><en>Username and password cannot be empty</en>', 'error');
-                    return;
+
+            onMounted(()=>{
+                let param = getUrlParam("u");
+                if(param === "e") {
+                    alertMsg("<cn>账号或密码错误</cn><en>The account or password is incorrect</en>","error")
+                    removeURLParameter();
                 }
-                func("/link/mgr/login/onLogin",{"username":this.username,"password":this.password})
-                    .then((ret)=>{
-                        if(ret.status === "success") {
-                            location.href = "/dashboard.html";
-                            return;
-                        }
-                        alertMsg('<cn>用户名密码错误</cn><en>Username or password is incorrect</en>', 'error');
-                    });
-            },
-            isValid() {
-                return this.username !== '' && this.password !== '';
-            },
-            onSwitch() {
-                if(this.inputType === "password")
-                    this.inputType = "text";
-                else
-                    this.inputType = "password";
-            }
-        }
+
+            })
+            return {showPasswd}
+        },
     });
     app.mount('#app');
 </script>
