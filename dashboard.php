@@ -142,7 +142,7 @@
                   cpu: ref(0),
                   tmp: ref(0),
                   mem: ref(0),
-                  maxy: ref(800),
+                  maxy: ref(0),
                   tx : reactive([]),
                   rx : reactive([]),
                   data1:reactive([]),
@@ -167,11 +167,19 @@
                   for (let i = 0; i < 100; i++)
                       state.rx.push([i,state.data2[i]]);
               }
-              
+
               const updateNetState = () => {
+                  if(state.data1.length === 0 && state.data2.length === 0) {
+                      for ( let i = 0; i < 100; i++ ) {
+                          state.data1.push( 0 );
+                          state.data2.push( 0 );
+                      }
+                  }
                   rpc("enc.getNetState").then(data => {
                       getData1(data.tx);
                       getData2(data.rx);
+
+
                       if ( data.tx * 1.3 > state.maxy.value )
                           state.maxy.value = data.tx * 1.3;
                       if ( data.rx * 1.3 > state.maxy.value )
@@ -182,6 +190,7 @@
                           state.maxy.value = Math.ceil( state.maxy.value / 1024 ) * 1024;
                       if ( state.maxy.value > 1024000 )
                           state.maxy.value = 1024000;
+
                       setTimeout(updateNetState, 1000);
                   });
               }
@@ -227,12 +236,6 @@
               }
               
               onMounted(()=>{
-                  if(state.data1.length === 0 && state.data2.length === 0) {
-                      for ( let i = 0; i < 100; i++ ) {
-                          state.data1.push( 0 );
-                          state.data2.push( 0 );
-                      }
-                  }
                   updateSysState();
                   updateNetState();
                   updatePreview();

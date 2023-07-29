@@ -79,7 +79,7 @@ export const wNetFlotChartComponent = {
                         },
                         yaxis: {
                             min: 0,
-                            max: maxy,
+                            max: 800,
                             tickSize: 160,
                             tickFormatter: function ( v, axis ) {
                                 if ( axis.max < 1024 )
@@ -148,14 +148,16 @@ export const wNetFlotChartComponent = {
             }
         },
         updatePlot() {
-            let maxy = this.maxy;
-            let data1 = this.data1;
-            let data2 = this.data2;
-            this.plot.setData([data1, data2]);
-            this.plot.draw();
-            this.plot.getOptions().yaxes[ 0 ].max = maxy;
-            this.plot.getOptions().yaxes[ 0 ].tickSize = Math.floor( maxy / 5 );
-            this.plot.setupGrid();
+            if(Object.keys(this.plot).length !== 0) {
+                let maxy = this.maxy;
+                let data1 = this.data1;
+                let data2 = this.data2;
+                this.plot.setData([data1, data2]);
+                this.plot.draw();
+                this.plot.getOptions().yaxes[ 0 ].max = maxy;
+                this.plot.getOptions().yaxes[ 0 ].tickSize = Math.floor( maxy / 5 );
+                this.plot.setupGrid();
+            }
         },
         //提示框
         showTooltip(x, y, color, contents) {
@@ -175,15 +177,14 @@ export const wNetFlotChartComponent = {
         }
     },
     mounted() {
-        this.$nextTick(() => {
+        setTimeout(()=>{
             this.initPlot();
-        });
+        },100)
     }
 }
 
 export const pieChartDirective = {
     mounted(el,bindings,vnode) {
-        console.log(el)
         let bgColor = bindings.value.bgColor;
         let color = bindings.value.color;
         $(el).easyPieChart({
