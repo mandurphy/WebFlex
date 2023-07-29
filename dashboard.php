@@ -75,7 +75,7 @@
             <div class="row">
                 <div class="col-lg-12">
                     <div class="card">
-                        <div class="card-body iface">
+                        <div class="card-body iface py-3">
                             <div v-for="(item,index) in input" :key="index" :class="[{'hdmi':item.protocol==='HDMI'},{'sdi':item.protocol==='SDI'},{'disable':!item.avalible}]">
                                 <span class="info">{{item.info}}</span>
                                 <div class="icon my-1"></div>
@@ -91,7 +91,7 @@
                         <div class="card-body">
                             <h6 class="mb-0 text-uppercase"><cn>预览</cn><en>Preview</en><small style="margin-left: 5px;color: grey;font-size: 12px;"><cn>非实时视频，仅预览图片</cn><en>Not a realtime video, picture only</en></small></h6>
                             <div class="my-3 border-top"></div>
-                            <div class="row row-cols-2 row-cols-lg-5 g-3">
+                            <div class="row row-cols-2 row-cols-lg-4 g-3">
                                 <div v-for="(item,index) in preview" class="col">
                                     <div class="card border-end">
                                         <img :src="makeImgUrl(item.id)" class="card-img-top" alt="...">
@@ -222,7 +222,6 @@
                               ipt.info = "" + ipt.height + ( ipt.interlace ? "I" : "P" ) + ipt.framerate;
                           state.input[i] = ipt;
                       }
-                      console.log(state.input);
                   });
                   setTimeout(updateInputState,3000);
               }

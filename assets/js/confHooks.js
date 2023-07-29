@@ -283,4 +283,15 @@ export const useSsidConf = () => {
     return { ssidConf }
 }
 
+export const useWpaConf = () => {
+
+    let wpaConf= ref("");
+    checkFileExists("config/wpa.json").then(exists => {
+        queryData("config/wpa.conf").then((conf)=>{
+            wpaConf.value = conf;
+        })
+    })
+    return { wpaConf }
+}
+
 

@@ -1,3 +1,4 @@
+<?php include ("./link/session.php") ?>
 <!doctype html>
 <html lang="en" data-bs-theme="dark">
 <head>
@@ -66,10 +67,10 @@
 <script type="module">
 
     import { alertMsg,getUrlParam } from "./assets/js/helper.js";
-    const { createApp,ref,onMounted} = Vue;
+    const { createApp,ref,onMounted } = Vue;
 
     const app = createApp({
-        setup() {
+        setup(props,context) {
             let showPasswd = ref(false);
 
             const removeURLParameter = () => {
@@ -85,7 +86,7 @@
                 }
 
             })
-            return {showPasswd}
+            return { showPasswd }
         },
     });
     app.mount('#app');

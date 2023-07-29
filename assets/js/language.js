@@ -1,7 +1,7 @@
 
-import {useLanguageConf} from "./confHooks.js";
+import { useLanguageConf } from "./confHooks.js";
 
-window.addEventListener("load", async () => {
+window.addEventListener("load",  () => {
 
     let { languageConf } = useLanguageConf();
     const lang = languageConf["lang"];

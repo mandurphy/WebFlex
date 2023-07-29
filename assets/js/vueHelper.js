@@ -43,7 +43,6 @@ export const wNetFlotChartComponent = {
     watch: {
         data1: {
             handler(newValue, oldValue) {
-                this.initPlot();
                 this.updatePlot();
             },
             deep: true
@@ -56,17 +55,6 @@ export const wNetFlotChartComponent = {
                 let maxy = this.maxy;
                 let data1 = this.data1;
                 let data2 = this.data2;
-                // if(data1.length===0 && data2.length===0) {
-                //     let tx=[],rx = [];
-                //     for ( let i = 0; i < 100; i++ ) {
-                //         tx.push( 0 );
-                //         rx.push( 0 );
-                //     }
-                //     for (let i = 0; i < 100; i++) {
-                //         data1.push([i,tx[i]]);
-                //         data2.push([i,rx[i]]);
-                //     }
-                // }
                 this.plot = $.plot(this.$refs.netState, [
                         {
                             data: data1,
@@ -187,7 +175,9 @@ export const wNetFlotChartComponent = {
         }
     },
     mounted() {
-        //this.initPlot();
+        this.$nextTick(() => {
+            this.initPlot();
+        });
     }
 }
 

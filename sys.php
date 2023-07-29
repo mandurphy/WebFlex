@@ -231,7 +231,8 @@
                                 </div>
                                 <div class="row mt-4">
                                     <div class="col-lg-12 text-center">
-                                        <button type="button" class="btn border-3 btn-primary px-4" @click="connectWifi"><cn>连接</cn><en>Connect</en></button>
+                                        <button type="button" class="btn border-3 btn-primary px-4 me-2" @click="connectWifi"><cn>连接</cn><en>Connect</en></button>
+                                        <button type="button" class="btn border-3 btn-primary px-4" @click="disConnectWifi"><cn>断开</cn><en>Connect</en></button>
                                     </div>
                                 </div>
                             </div>
@@ -846,10 +847,10 @@
 <script type="module">
     
     import { rpc2,rpc3,alertMsg,func,queryData,getConfigData } from "./assets/js/helper.js";
-    import { useHardwareConf,useNetConf,useNet2Conf,useWifiConf,useMacConf,useMac2Conf,useVideoBufferConf,useNtpConf,useTimezoneConf,usePortConf,useVersionConf,useSsidConf } from "./assets/js/confHooks.js";
+    import { useHardwareConf,useNetConf,useNet2Conf,useWifiConf,useMacConf,useMac2Conf,useVideoBufferConf,useNtpConf,useTimezoneConf,usePortConf,useVersionConf,useSsidConf,useWpaConf } from "./assets/js/confHooks.js";
     import { bootstrapSwitchComponent,wOptionDirective } from "./assets/js/vueHelper.js"
     
-    const {createApp,ref,reactive,watch,computed,onMounted} = Vue;
+    const {createApp,ref,reactive,watch,watchEffect,computed,onMounted} = Vue;
     const app = createApp({
         directives:{
             "woption": wOptionDirective
@@ -871,6 +872,7 @@
             const { portConf } = usePortConf();
             const { versionConf } = useVersionConf();
             const { ssidConf } = useSsidConf();
+            const { wpaConf } = useWpaConf();
             
             let state = {
                 sysTime: ref("1970-01-01 08:00:00"),
@@ -881,6 +883,7 @@
                 refreshMark: ref(false),
                 wifiPasswd:ref(""),
                 helpCode:ref(""),
+                wifiConnectId:ref(-1),
                 wifiConnectStatus:ref("<cn>未连接</cn><en>not connected </en>"),
                 userPasswd:reactive({"oldpwd":"","newpwd":"","confirm":""}),
                 showPasswd:reactive({"wifipwd":false,"oldpwd":false,"newpwd":false,"confirm":false}),
@@ -899,9 +902,45 @@
                 onTimeAreaChange();
                 unwatch();
             })
+
+            const handleWifiList = () => {
+                rpc2( "wifi.wifiList", null).then(data => {
+                    if ( typeof ( data.error ) != "undefined" ) {
+                        alertMsg('<cn>通信错误</cn><en>Connect failed!</en>', 'error');
+                        return;
+                    }
+                    for(let i=0;i<data.length;i++) {
+                        let item = data[i];
+                        if(item.flags === "[CURRENT]") {
+                            state.wifiConnectStatus.value = "<cn>已连接</cn><en>connected</en> " + item.ssid;
+                            state.wifiConnectId.value = item.id;
+                            const regex = /network={([\s\S]*?)}/g;
+                            let match;
+                            while ((match = regex.exec(wpaConf.value)) !== null) {
+                                const networkObjStr = match[1].trim();
+                                const lines = networkObjStr.split("\n");
+                                const networkObj = {};
+                                for (const line of lines) {
+                                    let [key, value] = line.split("=");
+                                    value = value.trim();
+                                    value = value.replace(/^"(.*)"$/, '$1');
+                                    networkObj[key.trim()] = value;
+                                }
+                                if(networkObj["ssid"] === item.ssid) {
+                                    if(networkObj.hasOwnProperty("psk")) {
+                                        state.wifiPasswd.value = networkObj["psk"];
+                                        break;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                } );
+            }
             
             const unwatch_wifi = watch(wifiConf,value=>{
                 if(wifiConf.enable) {
+
                     rpc2( "wifi.scanWifi", null).then(data => {
                         if ( typeof ( data.error ) != "undefined" ) {
                             alertMsg('<cn>通信错误</cn><en>Connect failed!</en>', 'error');
@@ -909,18 +948,7 @@
                         }
                         state.wifiList.splice(0, state.wifiList.length, ...data);
                     }).then(()=>{
-                        rpc2( "wifi.wifiList", null).then(data => {
-                            if ( typeof ( data.error ) != "undefined" ) {
-                                alertMsg('<cn>通信错误</cn><en>Connect failed!</en>', 'error');
-                                return;
-                            }
-                            for(let i=0;i<data.length;i++) {
-                                let item = data[i];
-                                if(item.flags === "[CURRENT]") {
-                                    state.wifiConnectStatus.value = "<cn>已连接</cn><en>connected</en> " + item.ssid;
-                                }
-                            }
-                        } );
+                        handleWifiList();
                     });
                 }
                 unwatch_wifi();
@@ -931,40 +959,80 @@
                     return item !== "used";
                 })
             });
-    
-            const showWifiPasswd = () => {
-                console.log("############");
-                state.showPasswd.wifipwd = !state.showPasswd.wifipwd;
-            }
             
             const refreshWifi = () => {
                 if(wifiConf.enable) {
                     state.refreshMark.value = true;
                     rpc2( "wifi.update", [ wifiConf ]).then(data => {
-                        rpc2( "wifi.scanWifi", null).then(data => {
-                            if ( typeof ( data.error ) != "undefined" ) {
-                                alertMsg('<cn>通信错误</cn><en>Connect failed!</en>', 'error');
-                                return;
-                            }
-                            setTimeout(()=>{
-                                state.refreshMark.value = false;
-                                state.wifiList.splice(0, state.wifiList.length, ...data);
-                                if(state.wifiList.length >0)
-                                    ssidConf.ssid = state.wifiList[0].ssid;
-                            },1500);
-                        });
-                    });
+                        if ( typeof ( data.error ) !== "undefined" ) {
+                            alertMsg('<cn>保存设置失败</cn><en>Save config failed!</en>', 'error');
+                            return;
+                        }
+                        let count = 0;
+                        let loopTimer = setInterval(()=>{
+                            rpc2( "wifi.scanWifi", null).then(data => {
+                                if ( typeof ( data.error ) != "undefined" ) {
+                                    alertMsg('<cn>通信错误</cn><en>Connect failed!</en>', 'error');
+                                    return;
+                                }
+                                count++;
+                                if(data.length > 0 || count > 15) {
+                                    state.wifiList.splice(0, state.wifiList.length, ...data);
+                                    if(state.wifiList.length >0)
+                                        ssidConf.ssid = state.wifiList[0].ssid;
+                                    clearInterval(loopTimer);
+                                    setTimeout(()=>{
+                                        state.refreshMark.value = false;
+                                    },500);
+                                }
+                            });
+                        },1000)
+                    } );
                 }
+                else
+                    alertMsg('<cn>请先启用Wifi</cn><en>Please enable wifi first</en>', 'error');
             }
     
             const connectWifi = () => {
+                rpc2( "wifi.wifiList", null).then(data => {
+                    if ( typeof ( data.error ) != "undefined" ) {
+                        alertMsg('<cn>通信错误</cn><en>Connect failed!</en>', 'error');
+                        return;
+                    }
+                    for(let i=0;i<data.length;i++) {
+                        let item = data[i];
+                        if(item.flags === "[CURRENT]") {
+                            state.wifiConnectStatus.value = "<cn>已连接</cn><en>connected</en> " + item.ssid;
+                            state.wifiConnectId.value = item.id;
+                        }
+                    }
+                } );
+
+
+
                 rpc2( "wifi.addWifi", [ssidConf.ssid,state.wifiPasswd.value]).then(data =>{
                     if ( typeof ( data.error ) != "undefined" ) {
                         alertMsg('<cn>通信错误</cn><en>Connect failed!</en>', 'error');
                         return;
                     }
-                    alertMsg('<cn>连接成功</cn><en>Connect successfully!</en>', 'error');
+                    alertMsg('<cn>连接成功</cn><en>Connect successfully!</en>', 'success');
                 });
+            }
+
+            const disConnectWifi = () => {
+                if(state.wifiConnectId.value === -1) {
+                    alertMsg('<cn>没有找到已连接的Wifi</cn><en>No connected Wifi found</en>', 'warning');
+                    return;
+                }
+                rpc2( "wifi.setWifi", ["disable_network", state.wifiConnectId+""]).then(data => {
+                    if ( typeof ( data.error ) != "undefined" ) {
+                        alertMsg('<cn>通信错误</cn><en>Connect failed!</en>', 'error');
+                        return;
+                    }
+                    state.wifiConnectId.value = -1;
+                    state.wifiConnectStatus.value = "<cn>未连接</cn><en>not connected </en>";
+                    alertMsg('<cn>Wifi 已断开</cn><en>Wifi disconnect successfully!</en>', 'success');
+                } );
             }
     
             const saveNetConf = () => {
@@ -1164,8 +1232,8 @@
             })
             
             return {...state,hardwareConf,netConf,net2Conf,macConf,mac2Conf,wifiConf,
-                videoBufferConf,ssidConf,ntpConf,timezoneConf,portConf,versionConf,handleSysScene,showWifiPasswd,
-                saveNetConf,saveNet2Conf,saveWifiConf,refreshWifi,connectWifi,updateUserPasswd,updateVideoBufferConf,
+                videoBufferConf,ssidConf,ntpConf,timezoneConf,portConf,versionConf,handleSysScene,
+                saveNetConf,saveNet2Conf,saveWifiConf,refreshWifi,connectWifi,disConnectWifi,updateUserPasswd,updateVideoBufferConf,
                 onTimeAreaChange,syncTimeFromPc,saveSysConf,reboot,resetConf,exportConf,importConf,updatePortConf,startHelp,stopHelp,systemNetTest}
         }
     });
