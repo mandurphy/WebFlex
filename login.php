@@ -23,7 +23,7 @@
                     <div class="card-body p-sm-5">
                         <div class="row">
                             <div class="col-lg-12 text-center">
-                                <img src="assets/images/logo1.png" class="mb-3" width="300">
+                                <img src="assets/images/logo-lg.png" class="mb-3" width="300">
                             </div>
                         </div>
                         <div class="separator section-padding mt-3">
