@@ -718,8 +718,8 @@
         setup(props,context) {
             
             const { defaultConf } = useDefaultConf();
-            
-            let state = {
+
+            const state = {
                 globalData : reactive({})
             }
             

@@ -127,8 +127,8 @@
             const { mqttConf } = useMqttConf();
             const { frpEnableConf } = useFrpEnableConf();
             const { frpcConf } = useFrpcConf();
-            
-            let state = {
+
+            const state = {
                 mqttConnect : ref("<cn>未连接</cn><en>not connected</en>")
             }
             

@@ -106,8 +106,8 @@
         setup(props,context) {
             
             const { defaultConf } = useDefaultConf();
-            
-            let state = {
+
+            const state = {
                 chnIndex: ref(-1),
                 chnImgUrl: ref("assets/images/nosignal.jpg"),
             }

@@ -274,8 +274,8 @@
         setup(props,context) {
             
             const { pushConf } = usePushConf();
-            
-            let state = {
+
+            const state = {
                 startPushTime:"00:00",
                 stopPushTime:"00:00",
                 playUrl:ref('http://'+window.location.host+'/flv?app=live&stream=preview')

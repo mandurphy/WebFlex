@@ -330,13 +330,13 @@
     const menu = createApp({
        setup() {
 
-           let state = {
+           const state = {
                isMenuToggled : ref(false),
                isSidebarHovered: ref(false)
            }
 
            const onLogout = () => {
-               func("/link/mgr/login/onLogout",[])
+               func("/link/mgr/login/onLogout")
                    .then((ret)=>{
                        if(ret.status === "success")
                            location.href = "/";
@@ -358,8 +358,7 @@
            };
 
            const onCloseSidebar = () => {
-               const menu = document.querySelector('menu');
-               menu.classList.remove('toggled');
+               state.isMenuToggled.value = false;
            }
 
            onMounted(()=>{

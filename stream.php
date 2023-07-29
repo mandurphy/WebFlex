@@ -746,8 +746,8 @@
         
             const { defaultConf } = useDefaultConf();
             const { portConf } = usePortConf();
-        
-            let state = {
+
+            const state = {
                 globalData : reactive({}),
                 playUrls:reactive([])
             }

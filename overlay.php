@@ -376,8 +376,8 @@
             const { defaultConf } = useDefaultConf();
             const { overlayConf } = useOverlayConf();
             const { resConf } = useResConf();
-            
-            let state = {
+
+            const state = {
                 chnIndex : ref(-1),
                 chnImgUrl : ref(""),
                 editData: reactive({}),

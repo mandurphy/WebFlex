@@ -1,4 +1,3 @@
-<?php include ("./link/session.php") ?>
 <!doctype html>
 <html lang="en" data-bs-theme="dark">
 <head>
@@ -66,7 +65,7 @@
 
 <script type="module">
 
-    import { alertMsg,getUrlParam } from "./assets/js/helper.js";
+    import { func,alertMsg,getUrlParam } from "./assets/js/helper.js";
     const { createApp,ref,onMounted } = Vue;
 
     const app = createApp({
@@ -84,6 +83,11 @@
                     alertMsg("<cn>账号或密码错误</cn><en>The account or password is incorrect</en>","error")
                     removeURLParameter();
                 }
+
+                func("/link/mgr/login/hadLogin").then( status => {
+                    if(status.data)
+                        location.href = "/dashboard.php";
+                })
 
             })
             return { showPasswd }

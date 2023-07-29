@@ -309,8 +309,8 @@
         setup(props,context) {
     
             const { intercomConf } = useIntercomConf();
-            
-            let state = {
+
+            const state = {
                 deviceList: reactive([
                     { id: 1, title: 'offline', content: '1' },
                     { id: 2, title: 'offline', content: '2' },

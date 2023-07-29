@@ -72,8 +72,8 @@
         setup(props,context) {
             
             const { defaultConf } = useDefaultConf();
-            
-            let state = {
+
+            const state = {
                 activeChnId : ref(0),
                 playerUrl: ref(""),
                 playerCodec: ref(""),

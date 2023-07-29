@@ -444,8 +444,8 @@
             const { defaultConf } = useDefaultConf();
             const { defLaysConf } = useDefLaysConf();
             const { hardwareConf } = useHardwareConf();
-            
-            let state = {
+
+            const state = {
                 chnImgUrl: ref(""),
                 curLayId: ref(-1),
                 mixIndex: ref(-1)
