@@ -21,11 +21,22 @@
             <div class="col-12 col-xl-5 col-xxl-4 auth-cover-right align-items-center justify-content-center">
                 <div class="card rounded-0 m-3 mb-0 border-0">
                     <div class="card-body p-sm-5">
-                        <img src="assets/images/logo.png" class="mb-4" width="126" alt="" style="margin-left: -20px">
-                        <h6 class="fw-bold" style="white-space:pre-wrap"><cn>灵派  让科技更简单</cn></h6>
+                        <div class="row">
+                            <div class="col-lg-12 text-center">
+                                <img src="assets/images/logo1.png" class="mb-3" width="300">
+                            </div>
+                        </div>
                         <div class="separator section-padding mt-3">
                             <div class="line"></div>
-                            <p class="mb-0 fw-bold">AND</p>
+                            <div class="px-2">
+                                <div class="loading">
+                                    <div></div>
+                                    <div></div>
+                                    <div></div>
+                                    <div></div>
+                                    <div></div>
+                                </div>
+                            </div>
                             <div class="line"></div>
                         </div>
 
