@@ -285,10 +285,25 @@ export const useSsidConf = () => {
 
 export const useWpaConf = () => {
 
-    let wpaConf= ref("");
+    let wpaConf= reactive([]);
     checkFileExists("config/wpa.json").then(exists => {
         queryData("config/wpa.conf").then((conf)=>{
-            wpaConf.value = conf;
+            const networkList = [];
+            const regex = /network={([\s\S]*?)}/g;
+            let match;
+            while ((match = regex.exec(conf)) !== null) {
+                const networkObjStr = match[1].trim();
+                const lines = networkObjStr.split("\n");
+                const networkObj = {};
+                for (const line of lines) {
+                    let [key, value] = line.split("=");
+                    value = value.trim();
+                    value = value.replace(/^"(.*)"$/, '$1');
+                    networkObj[key.trim()] = value;
+                }
+                networkList.push(networkObj);
+            }
+            wpaConf.splice(0, wpaConf.length, ...networkList);
         })
     })
     return { wpaConf }
