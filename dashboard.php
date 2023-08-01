@@ -20,34 +20,21 @@
                         <div class="card-body" >
                             <div class="row row-cols-3 text-center">
                                 <div class="col-lg-4 ">
-                                    <div class="pie">
-                                        <div class="chart" v-chart="{color:theme_color,val:cpu}"></div>
-                                        <span class="percent"></span>
-                                    </div>
+                                    <pie-chart :value="cpu" :color="theme_color"></pie-chart>
                                     <div>
                                         <cn>CPU使用率</cn>
                                         <en>CPU usage</en>
                                     </div>
                                 </div>
                                 <div class="col-lg-4 text-center">
-                                    <div class="pie">
-                                        <div class="chart" v-chart="{color:theme_color,val:mem}"></div>
-                                        <span class="percent"></span>
-                                    </div>
+                                    <pie-chart :value="mem" :color="theme_color"></pie-chart>
                                     <div>
                                         <cn>内存使用率</cn>
                                         <en>Memory usage</en>
                                     </div>
                                 </div>
                                 <div class="col-lg-4 text-center">
-                                    <div class="pie">
-                                        <div class="temperature">
-                                            <div class="bar" v-tmp="{'color':theme_color,'val':tmp}">
-                                                <div class="mask"></div>
-                                                <span class="percent">0℃</span>
-                                            </div>
-                                        </div>
-                                    </div>
+                                    <tmp-compt :value="tmp" :color="theme_color"></tmp-compt>
                                     <div>
                                         <cn>核心温度</cn>
                                         <en>Core temperature</en>
@@ -123,20 +110,18 @@
   <script type="module">
       import { rpc } from "./assets/js/helper.js";
       import { useDefaultConf,useHardwareConf } from "./assets/js/confHooks.js";
-      import { bootstrapSwitchComponent,wStatusPieChartDirective,wStatusTemperatureDirective,netFlotChartComponent } from "./assets/js/vueHelper.js"
+      import { bootstrapSwitchComponent,statusPieChartComponent,statusTemperatureComponent,netFlotChartComponent } from "./assets/js/vueHelper.js"
 
       const { createApp,ref,reactive,computed,onMounted,toRaw } = Vue;
       const { defaultConf } = useDefaultConf();
       const { hardwareConf } = useHardwareConf();
       
       const app  = createApp({
-          directives:{
-              "chart": wStatusPieChartDirective,
-              "tmp": wStatusTemperatureDirective
-          },
           components:{
               "bootstrap-switch":bootstrapSwitchComponent,
-              "net-chart":netFlotChartComponent
+              "net-chart":netFlotChartComponent,
+              "pie-chart":statusPieChartComponent,
+              "tmp-compt":statusTemperatureComponent
           },
           setup(prop,context){
 
@@ -264,9 +249,7 @@
                 }
               )
 
-              return {
-                  ...state, makeImgUrl,handleChnVolume
-              }
+              return {...state, makeImgUrl,handleChnVolume}
           }
       })
       app.mount('#app')

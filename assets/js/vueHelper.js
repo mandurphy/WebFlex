@@ -1,59 +1,5 @@
 
-const { ref,watch,watchEffect,computed,onMounted } = Vue;
-
-export const wStatusPieChartDirective = {
-    mounted(el,bindings,node,prenode){
-        let color = bindings.value.color;
-        $(el).easyPieChart({
-            easing: 'easeOutElastic',
-            delay: 2000,
-            barColor: color,
-            trackColor: '#CCC',
-            scaleColor: false,
-            lineWidth: 20,
-            trackWidth: 16,
-            lineCap: 'butt',
-            width: 50,
-            onStep:( from, to, percent ) => {
-                $(el).parent().find( '.percent' ).text( Math.round( percent ) + "%" );
-            }
-        });
-    },
-    updated(el,bindings,node,prenode) {
-        $(el).data( 'easyPieChart' ).update( bindings.value.val);
-    }
-}
-
-export const wStatusTemperatureDirective = {
-    mounted(el,bindings,node,prenode){
-        $(el).css( "background", bindings.value.color);
-    },
-    updated(el,bindings,node,prenode) {
-        $(el).find(".mask").css("bottom", bindings.value.val + "%");
-        $(el).find(".percent").text(bindings.value.val + "℃");
-    }
-}
-
-export const pieChartDirective = {
-    mounted(el,bindings,vnode) {
-        let bgColor = bindings.value.bgColor;
-        let color = bindings.value.color;
-        $(el).easyPieChart({
-            easing: 'easeOutBounce',
-            barColor : bgColor,
-            lineWidth: 7,
-            trackColor : color,
-            scaleColor: false,
-            onStep: (from, to, percent) => {
-                $(el).find('.w_percent').text(Math.round(percent));
-            }
-
-        });
-    },
-    updated(el,bindings,node) {
-        $(el).data( 'easyPieChart' ).update( bindings.value.val);
-    }
-};
+const { ref,toRefs,watch,watchEffect,computed,onMounted,nextTick } = Vue;
 
 export const apexChartsDirective = {
     mounted(el,bindings,node) {
@@ -137,6 +83,34 @@ export const apexChartsDirective = {
     }
 }
 
+export const pieChartDirective = {
+    mounted(el,bindings,vnode) {
+        let bgColor = bindings.value.bgColor;
+        let color = bindings.value.color;
+        $(el).easyPieChart({
+            easing: 'easeOutBounce',
+            barColor : bgColor,
+            lineWidth: 7,
+            trackColor : color,
+            scaleColor: false,
+            onStep: (from, to, percent) => {
+                $(el).find('.w_percent').text(Math.round(percent));
+            }
+
+        });
+    },
+    updated(el,bindings,node) {
+        $(el).data( 'easyPieChart' ).update( bindings.value.val);
+    }
+};
+
+
+
+
+
+
+
+
 
 export const languageOptionDirective = {
     mounted(el, binding, vnode) {
@@ -149,6 +123,75 @@ export const languageOptionDirective = {
         });
         const config = { attributes: true };
         observer.observe(html, config);
+    }
+};
+
+export const statusTemperatureComponent = {
+    template: `<div class="pie">
+                    <div class="temperature">
+                        <div class="bar">
+                            <div class="mask" ref="tmp_mask"></div>
+                            <span class="percent" ref="tmp_text">0℃</span>
+                        </div>
+                    </div>
+                </div>`,
+    props: ['value','color'],
+    setup(props, context) {
+
+        const tmp_mask = ref(null);
+        const tmp_text = ref(null);
+
+        const { value } = toRefs(props);
+
+        watch(value,()=>{
+            tmp_mask.value.style.bottom = props.value + '%';
+            tmp_text.value.textContent = props.value + '℃';
+        })
+
+        onMounted(()=>{
+            tmp_mask.value.parentElement.style.background = props.color;
+        })
+
+        return { tmp_mask,tmp_text }
+    }
+};
+
+
+export const statusPieChartComponent = {
+    template: `<div class="pie">
+                    <div class="chart" ref="pie_chart"></div>
+                    <span class="percent" ref="pie_text"></span>
+               </div>`,
+    props: ['value','color'],
+    setup(props, context) {
+
+        const pie_chart = ref(null);
+        const pie_text = ref(null);
+
+        const { value } = toRefs(props);
+
+        watch(value,()=>{
+            $(pie_chart.value).data( 'easyPieChart' ).update( props.value);
+        })
+
+        onMounted(()=>{
+            $(pie_chart.value).easyPieChart({
+                easing: 'easeOutElastic',
+                delay: 2000,
+                barColor: props.color,
+                trackColor: '#CCC',
+                scaleColor: false,
+                lineWidth: 20,
+                trackWidth: 16,
+                lineCap: 'butt',
+                width: 50,
+                onStep: (from, to, percent) => {
+                    pie_text.value.textContent = Math.round(percent) + "%";
+                }
+            });
+        })
+
+        return { pie_chart,pie_text }
     }
 };
 
@@ -290,8 +333,8 @@ export const netFlotChartComponent = {
             updatePlot();
         },{deep: true})
 
-        onMounted(()=>{
-            setTimeout(initPlot,100);
+        nextTick(()=>{
+            initPlot();
         })
 
         return {net_chart}

@@ -808,10 +808,7 @@
         setup(props,context) {
             
             const { defaultConf } = useDefaultConf();
-
-            const state = {
-                globalData : reactive({})
-            }
+            const globalData = reactive({})
             
             const unwatch = watch(defaultConf, (value) => {
                 for (let i = 0; i < defaultConf.length; i++) {
@@ -829,9 +826,13 @@
                         }
                     }
                 }
-                
-                Object.assign(state.globalData, defaultConf[0]);
+                Object.assign(globalData, defaultConf[0]);
                 unwatch();
+            });
+
+            const unwatch1 = watch(defaultConf, (value) => {
+
+                unwatch1();
             });
             
             const handleEncConf = computed(()=>{
@@ -873,7 +874,7 @@
                 });
             }
             
-            return {...state,defaultConf,handleEncConf,handleAdvConf,handleVdoConf,handleAdoConf,handleNetConf,saveConf}
+            return {globalData,defaultConf,handleEncConf,handleAdvConf,handleVdoConf,handleAdoConf,handleNetConf,saveConf}
         }
     });
     app.mount('#app');
