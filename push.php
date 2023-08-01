@@ -29,7 +29,7 @@
                                         <div class="aspect-ratio-content d-flex flex-column justify-content-between">
                                             <div class="row">
                                                 <div class="col-lg-12">
-                                                    <w-player :url="playUrl" codec="h264" audio="true" buffer="200"></w-player>
+                                                    <flv-player :url="playUrl" codec="h264" audio="true" buffer="200"></flv-player>
                                                 </div>
                                             </div>
                                             <div class="row">
@@ -104,19 +104,19 @@
                                         </div>
                                         <div class="col-lg-3">
                                             <select class="form-select" v-model="">
-                                                <option cn="从不" en="never" value="x" v-woption></option>
-                                                <option cn="每天" en="everyday" value="*" v-woption></option>
-                                                <option cn="每周一" en="monday" value="1" v-woption></option>
-                                                <option cn="每周二" en="tuesday" value="2" v-woption></option>
-                                                <option cn="每周三" en="wednesday" value="3" v-woption></option>
-                                                <option cn="每周四" en="thursday" value="4" v-woption></option>
-                                                <option cn="每周五" en="friday" value="5" v-woption></option>
-                                                <option cn="每周六" en="saturday" value="6" v-woption></option>
-                                                <option cn="每周日" en="sunday" value="0" v-woption></option>
+                                                <option cn="从不" en="never" value="x" v-language-option></option>
+                                                <option cn="每天" en="everyday" value="*" v-language-option></option>
+                                                <option cn="每周一" en="monday" value="1" v-language-option></option>
+                                                <option cn="每周二" en="tuesday" value="2" v-language-option></option>
+                                                <option cn="每周三" en="wednesday" value="3" v-language-option></option>
+                                                <option cn="每周四" en="thursday" value="4" v-language-option></option>
+                                                <option cn="每周五" en="friday" value="5" v-language-option></option>
+                                                <option cn="每周六" en="saturday" value="6" v-language-option></option>
+                                                <option cn="每周日" en="sunday" value="0" v-language-option></option>
                                             </select>
                                         </div>
                                         <div class="col-lg-3">
-                                            <w-timepicker v-model="startPushTime"></w-timepicker>
+                                            <timepicker v-model="startPushTime"></timepicker>
                                         </div>
                                     </div>
                                     <div class="row">
@@ -128,19 +128,19 @@
                                         </div>
                                         <div class="col-lg-3">
                                             <select class="form-select" v-model="">
-                                                <option cn="从不" en="never" value="x" v-woption></option>
-                                                <option cn="每天" en="everyday" value="*" v-woption></option>
-                                                <option cn="每周一" en="monday" value="1" v-woption></option>
-                                                <option cn="每周二" en="tuesday" value="2" v-woption></option>
-                                                <option cn="每周三" en="wednesday" value="3" v-woption></option>
-                                                <option cn="每周四" en="thursday" value="4" v-woption></option>
-                                                <option cn="每周五" en="friday" value="5" v-woption></option>
-                                                <option cn="每周六" en="saturday" value="6" v-woption></option>
-                                                <option cn="每周日" en="sunday" value="0" v-woption></option>
+                                                <option cn="从不" en="never" value="x" v-language-option></option>
+                                                <option cn="每天" en="everyday" value="*" v-language-option></option>
+                                                <option cn="每周一" en="monday" value="1" v-language-option></option>
+                                                <option cn="每周二" en="tuesday" value="2" v-language-option></option>
+                                                <option cn="每周三" en="wednesday" value="3" v-language-option></option>
+                                                <option cn="每周四" en="thursday" value="4" v-language-option></option>
+                                                <option cn="每周五" en="friday" value="5" v-language-option></option>
+                                                <option cn="每周六" en="saturday" value="6" v-language-option></option>
+                                                <option cn="每周日" en="sunday" value="0" v-language-option></option>
                                             </select>
                                         </div>
                                         <div class="col-lg-3">
-                                            <w-timepicker v-model="stopPushTime"></w-timepicker>
+                                            <timepicker v-model="stopPushTime"></timepicker>
                                         </div>
                                     </div>
                                     <div class="hr-container">
@@ -156,8 +156,8 @@
                                         </div>
                                         <div class="col-lg-6">
                                             <select class="form-select" v-model="">
-                                                <option cn="关闭" en="OFF" value="false" v-woption></option>
-                                                <option cn="开启" en="ON" value="true" v-woption></option>
+                                                <option cn="关闭" en="OFF" value="false" v-language-option></option>
+                                                <option cn="开启" en="ON" value="true" v-language-option></option>
                                             </select>
                                         </div>
                                     </div>
@@ -259,17 +259,17 @@
 <script type="module">
     import { rpc,alertMsg } from "./assets/js/helper.js";
     import { usePushConf } from "./assets/js/confHooks.js";
-    import { bootstrapSwitchComponent,wPlayerComponent,wTimepickerComponent,wOptionDirective } from "./assets/js/vueHelper.js"
+    import { bootstrapSwitchComponent,flvPlayerComponent,timepickerComponent,languageOptionDirective } from "./assets/js/vueHelper.js"
     
     const {createApp,ref,reactive,watch,watchEffect,computed} = Vue;
     const app = createApp({
         directives: {
-          "woption": wOptionDirective
+          "language-option": languageOptionDirective
         },
         components:{
             "bootstrap-switch" : bootstrapSwitchComponent,
-            "w-player": wPlayerComponent,
-            "w-timepicker": wTimepickerComponent
+            "flv-player": flvPlayerComponent,
+            "timepicker": timepickerComponent
         },
         setup(props,context) {
             

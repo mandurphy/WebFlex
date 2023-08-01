@@ -15,7 +15,7 @@
                         <a class="nav-link active" data-bs-toggle="tab" href="#tab1" role="tab" aria-selected="true">
                             <div class="d-flex align-items-center">
                                 <div class="tab-icon"><i class="fa-solid fa-code-fork me-1"></i></i></div>
-                                <div class="tab-title"><cn>网口1</cn><en>LAN1</en></div>
+                                <div class="tab-title"><cn>网口</cn><en>LAN1</en></div>
                             </div>
                         </a>
                     </li>
@@ -475,15 +475,15 @@
                             </div>
                             <div class="col-lg-3" v-model="cronDay">
                                 <select class="form-select">
-                                    <option cn="从不" en="never" value="x" v-woption></option>
-                                    <option cn="每天" en="everyday" value="*" v-woption></option>
-                                    <option cn="每周一" en="monday" value="1" v-woption></option>
-                                    <option cn="每周二" en="tuesday" value="2" v-woption></option>
-                                    <option cn="每周三" en="wednesday" value="3" v-woption></option>
-                                    <option cn="每周四" en="thursday" value="4" v-woption></option>
-                                    <option cn="每周五" en="friday" value="5" v-woption></option>
-                                    <option cn="每周六" en="saturday" value="6" v-woption></option>
-                                    <option cn="每周日" en="sunday" value="0" v-woption></option>
+                                    <option cn="从不" en="never" value="x" v-language-option></option>
+                                    <option cn="每天" en="everyday" value="*" v-language-option></option>
+                                    <option cn="每周一" en="monday" value="1" v-language-option></option>
+                                    <option cn="每周二" en="tuesday" value="2" v-language-option></option>
+                                    <option cn="每周三" en="wednesday" value="3" v-language-option></option>
+                                    <option cn="每周四" en="thursday" value="4" v-language-option></option>
+                                    <option cn="每周五" en="friday" value="5" v-language-option></option>
+                                    <option cn="每周六" en="saturday" value="6" v-language-option></option>
+                                    <option cn="每周日" en="sunday" value="0" v-language-option></option>
                                 </select>
                             </div>
                             <div class="col-lg-3">
@@ -854,12 +854,12 @@
     
     import { rpc2,rpc3,alertMsg,func,queryData,getConfigData } from "./assets/js/helper.js";
     import { useHardwareConf,useNetConf,useNet2Conf,useWifiConf,useMacConf,useMac2Conf,useVideoBufferConf,useNtpConf,useTimezoneConf,usePortConf,useVersionConf,useSsidConf,useWpaConf } from "./assets/js/confHooks.js";
-    import { bootstrapSwitchComponent,wOptionDirective } from "./assets/js/vueHelper.js"
+    import { bootstrapSwitchComponent,languageOptionDirective } from "./assets/js/vueHelper.js"
     
     const {createApp,ref,reactive,watch,watchEffect,computed,onMounted} = Vue;
     const app = createApp({
         directives:{
-            "woption": wOptionDirective
+            "language-option": languageOptionDirective
         },
         components:{
             "bootstrap-switch" : bootstrapSwitchComponent,
@@ -880,7 +880,7 @@
             const { ssidConf } = useSsidConf();
             const { wpaConf } = useWpaConf();
             
-            let state = {
+            const state = {
                 sysTime: ref("1970-01-01 08:00:00"),
                 timeCitys: reactive([]),
                 cronDay: ref("never"),
@@ -919,7 +919,7 @@
                     for(let i=0;i<data.length;i++) {
                         let item = data[i];
                         console.log(data);
-                        if(item.flags === "[CURRENT]" || item.flags == "[DISABLED]") {
+                        if(item.flags === "[CURRENT]" || item.flags === "[DISABLED]") {
                             state.wifiConnectStatus.value = false;
                             if(item.flags === "[CURRENT]")
                                 state.wifiConnectStatus.value = true;
@@ -1068,7 +1068,7 @@
     
             const saveWifiConf = tip => {
                 rpc2( "wifi.update", [ wifiConf ]).then(data => {
-                    if(tip != "noTip") {
+                    if(tip !== "noTip") {
                         if ( typeof ( data.error ) !== "undefined" ) {
                             alertMsg('<cn>保存设置失败</cn><en>Save config failed!</en>', 'error');
                         } else {

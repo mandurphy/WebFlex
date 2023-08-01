@@ -982,6 +982,12 @@ a {
     opacity: 0.3;
 }
 
+.dashboard .chn-volume {
+    width:0;
+    background-color:#88BB4A;
+    height:5px;
+}
+
 .encoder.page-content {
     margin-bottom: 2.5rem;
 }

@@ -69,7 +69,7 @@
                                      <bootstrap-switch v-model="globalData.stream.udp.enable" ></bootstrap-switch>
                                  </div>
                                  <div class="col-2">
-                                     <w-input type="text" class="form-control" v-model:value1="globalData.stream.udp.ip" v-model:value2="globalData.stream.udp.port" split=":"></w-input>
+                                     <multiple-input type="text" class="form-control" v-model:value1="globalData.stream.udp.ip" v-model:value2="globalData.stream.udp.port" split=":"></multiple-input>
                                  </div>
                                  <div class="col force-align-center">
                                      <bootstrap-switch v-model="globalData.stream.push.enable" ></bootstrap-switch>
@@ -98,7 +98,7 @@
                                      <bootstrap-switch v-model="globalData.stream2.udp.enable" ></bootstrap-switch>
                                  </div>
                                  <div class="col-2">
-                                     <w-input type="text" class="form-control" v-model:value1="globalData.stream2.udp.ip" v-model:value2="globalData.stream2.udp.port" split=":"></w-input>
+                                     <multiple-input type="text" class="form-control" v-model:value1="globalData.stream2.udp.ip" v-model:value2="globalData.stream2.udp.port" split=":"></multiple-input>
                                  </div>
                                  <div class="col force-align-center">
                                      <bootstrap-switch v-model="globalData.stream2.push.enable" ></bootstrap-switch>
@@ -247,7 +247,7 @@
                                      <bootstrap-switch v-model="item.stream.udp.enable" ></bootstrap-switch>
                                  </div>
                                  <div class="col-2">
-                                     <w-input type="text" class="form-control" v-model:value1="item.stream.udp.ip" v-model:value2="item.stream.udp.port" split=":"></w-input>
+                                     <multiple-input type="text" class="form-control" v-model:value1="item.stream.udp.ip" v-model:value2="item.stream.udp.port" split=":"></multiple-input>
                                  </div>
                                  <div class="col force-align-center">
                                      <bootstrap-switch v-model="item.stream.push.enable" ></bootstrap-switch>
@@ -274,7 +274,7 @@
                                      <bootstrap-switch v-model="item.stream2.udp.enable" ></bootstrap-switch>
                                  </div>
                                  <div class="col-2">
-                                     <w-input type="text" class="form-control" v-model:value1="item.stream2.udp.ip" v-model:value2="item.stream2.udp.port" split=":"></w-input>
+                                     <multiple-input type="text" class="form-control" v-model:value1="item.stream2.udp.ip" v-model:value2="item.stream2.udp.port" split=":"></multiple-input>
                                  </div>
                                  <div class="col force-align-center">
                                      <bootstrap-switch v-model="item.stream2.push.enable" ></bootstrap-switch>
@@ -733,14 +733,13 @@
 
     import { rpc,alertMsg } from "./assets/js/helper.js";
     import { useDefaultConf,usePortConf } from "./assets/js/confHooks.js";
-    import { bootstrapSwitchComponent,wInputComponent,wSelectComponent } from "./assets/js/vueHelper.js"
+    import { bootstrapSwitchComponent,multipleInputComponent } from "./assets/js/vueHelper.js"
 
     const {createApp,ref,reactive,toRefs,watch,computed} = Vue;
     const app = createApp({
         components:{
             "bootstrap-switch" : bootstrapSwitchComponent,
-            "w-select": wSelectComponent,
-            "w-input": wInputComponent
+            "multiple-input": multipleInputComponent
         },
         setup(props,context) {
         

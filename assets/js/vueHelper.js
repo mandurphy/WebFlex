@@ -1,6 +1,8 @@
 
+const { ref,watch,watchEffect,computed,onMounted } = Vue;
+
 export const wStatusPieChartDirective = {
-    mounted: function (el,bindings,node,prenode){
+    mounted(el,bindings,node,prenode){
         let color = bindings.value.color;
         $(el).easyPieChart({
             easing: 'easeOutElastic',
@@ -12,174 +14,23 @@ export const wStatusPieChartDirective = {
             trackWidth: 16,
             lineCap: 'butt',
             width: 50,
-            onStep: function ( from, to, percent ) {
+            onStep:( from, to, percent ) => {
                 $(el).parent().find( '.percent' ).text( Math.round( percent ) + "%" );
             }
         });
     },
-    updated: function (el,bindings,node,prenode) {
+    updated(el,bindings,node,prenode) {
         $(el).data( 'easyPieChart' ).update( bindings.value.val);
     }
 }
 
 export const wStatusTemperatureDirective = {
-    mounted: function (el,bindings,node,prenode){
+    mounted(el,bindings,node,prenode){
         $(el).css( "background", bindings.value.color);
     },
-    updated: function (el,bindings,node,prenode) {
+    updated(el,bindings,node,prenode) {
         $(el).find(".mask").css("bottom", bindings.value.val + "%");
         $(el).find(".percent").text(bindings.value.val + "℃");
-    }
-}
-
-export const wNetFlotChartComponent = {
-    template: `<div class="col-lg-12 netState" ref="netState"> </div>`,
-    props: ['color','maxy','data1','data2'],
-    data(){
-      return {
-          plot: {}
-      }
-    },
-    watch: {
-        data1: {
-            handler(newValue, oldValue) {
-                this.updatePlot();
-            },
-            deep: true
-        }
-    },
-    methods: {
-        initPlot() {
-            if(Object.keys(this.plot).length === 0) {
-                let color = this.color;
-                let maxy = this.maxy;
-                let data1 = this.data1;
-                let data2 = this.data2;
-                this.plot = $.plot(this.$refs.netState, [
-                        {
-                            data: data1,
-                            lines: {
-                                fill: true
-                            }
-                        },
-                        {
-                            data: data2,
-                            lines: {
-                                show: true
-                            }
-                        }]
-                    ,
-                    {
-                        series: {
-                            lines: {
-                                show: true,
-                                fill: true
-                            },
-                            shadowSize: 0
-                        },
-                        yaxis: {
-                            min: 0,
-                            max: 800,
-                            tickSize: 160,
-                            tickFormatter: function ( v, axis ) {
-                                if ( axis.max < 1024 )
-                                    return v + "Kb/s";
-                                else {
-                                    v /= 1024;
-
-                                    if ( axis.max < 10240 )
-                                        return v.toFixed( 2 ) + "Mb/s";
-                                    else
-                                        return Math.floor( v ) + "Mb/s";
-                                }
-                            }
-                        },
-                        xaxis: {
-                            show: false
-                        },
-                        grid: {
-                            hoverable: true,
-                            clickable: true,
-                            tickColor: "#eeeeee",
-                            borderWidth: 1,
-                            borderColor: "#cccccc"
-                        },
-                        colors: [ color, "#555" ],
-                        tooltip: false
-                });
-
-                let handle = this;
-                $.fn.tooltip = function () {
-                    let prePoint = null, preLabel = null;
-                    $(this).bind("plothover", function (event, pos, item) {
-                        if (item) {
-                            if ((preLabel !== item.series.label) || (prePoint !== item.dataIndex)) {
-                                prePoint = item.dataIndex;
-                                preLabel = item.series.label;
-                                $("#tooltip").remove();
-
-                                $(this).css({
-                                    "cursor": "pointer"
-                                })
-
-                                let data = item.series.data[item.dataIndex][1];
-                                if(data > 1024)
-                                    data = parseInt(data/1024)+"Mb/s";
-                                else
-                                    data += "kb/s";
-
-                                if (item.seriesIndex === 0)
-                                    handle.showTooltip(item.pageX + 100, item.pageY - 10, color, "<cn>上行</cn><en>upward</en>: " + data);
-                                if (item.seriesIndex === 1)
-                                    handle.showTooltip(item.pageX + 100, item.pageY - 10, color, "<cn>下行</cn><en>downward</en>: " + data);
-                            }
-                        }
-                        else {
-                            prePoint = null;
-                            preLabel = null;
-                            $(this).css({
-                                "cursor": "auto"
-                            });
-                            $("#tooltip").remove();
-                        }
-                    });
-                }
-                $(this.$refs.netState).tooltip();
-            }
-        },
-        updatePlot() {
-            if(Object.keys(this.plot).length !== 0) {
-                let maxy = this.maxy;
-                let data1 = this.data1;
-                let data2 = this.data2;
-                this.plot.setData([data1, data2]);
-                this.plot.draw();
-                this.plot.getOptions().yaxes[ 0 ].max = maxy;
-                this.plot.getOptions().yaxes[ 0 ].tickSize = Math.floor( maxy / 5 );
-                this.plot.setupGrid();
-            }
-        },
-        //提示框
-        showTooltip(x, y, color, contents) {
-            $('<div id="tooltip">' + contents + '</div>').css({
-                position: 'absolute',
-                display: 'none',
-                top: y - 40,
-                left: x - 120,
-                border: '2px solid ' + color,
-                padding: '3px',
-                'font-size': '9px',
-                'border-radius': '5px',
-                'background-color': '#fff',
-                'font-family': 'Verdana, Arial, Helvetica, Tahoma, sans-serif',
-                opacity: 0.9
-            }).appendTo("body").fadeIn(200);
-        }
-    },
-    mounted() {
-        setTimeout(()=>{
-            this.initPlot();
-        },100)
     }
 }
 
@@ -286,144 +137,303 @@ export const apexChartsDirective = {
     }
 }
 
-export const bootstrapSwitchComponent = {
-    template: `<input type="checkbox" class="switch form-control" ref="switch">`,
-    props: ['modelValue','size'],
-    mounted() {
-        let handle = this;
-        let size = this.size === undefined ? "small" : this.size;
-        $(this.$refs.switch).bootstrapSwitch({
-            "state": handle.modelValue,
-            "size": size,
-            onInit(dom,event,state) {
-                $(handle.$refs.switch).on('focus.bootstrapSwitch',() => {
-                    this.$wrapper.removeClass("bootstrap-switch-focused")
-                })
-            },
-            onSwitchChange(event,state) {
-                handle.$emit('update:modelValue', state);
-            }
-        })
-    },
-    beforeUnmount() {
-        $(this.$refs.switch).bootstrapSwitch('destroy');
-    }
-};
 
-export const wOptionDirective = {
-    mounted(el,bindings,vnode) {
+export const languageOptionDirective = {
+    mounted(el, binding, vnode) {
         const html = document.querySelector('html');
-        const lang = html.getAttribute("data-bs-language");
+        const lang = html.getAttribute('data-bs-language');
         el.textContent = el.getAttribute(lang);
+        const observer = new MutationObserver(() => {
+            const lang = html.getAttribute('data-bs-language');
+            el.textContent = el.getAttribute(lang);
+        });
+        const config = { attributes: true };
+        observer.observe(html, config);
     }
 };
 
-export const wSelectComponent = {
+
+export const netFlotChartComponent = {
+    template: `<div class="col-lg-12 netState" ref="net_chart"> </div>`,
+    props: ['color','maxy','data1','data2'],
+    setup(props,context) {
+        const net_chart = ref(null);
+        let plot = {};
+
+        const showTooltip = (x, y, color, contents) => {
+            $('<div id="tooltip">' + contents + '</div>').css({
+                position: 'absolute',
+                display: 'none',
+                top: y - 40,
+                left: x - 120,
+                border: '2px solid ' + color,
+                padding: '3px',
+                'font-size': '9px',
+                'border-radius': '5px',
+                'background-color': '#fff',
+                'font-family': 'Verdana, Arial, Helvetica, Tahoma, sans-serif',
+                opacity: 0.9
+            }).appendTo("body").fadeIn(200);
+        }
+
+        const initPlot = () => {
+            if(Object.keys(plot).length === 0) {
+                let color = props.color;
+                let data1 = props.data1;
+                let data2 = props.data2;
+                plot = $.plot(net_chart.value, [
+                        {
+                            data: data1,
+                            lines: {
+                                fill: true
+                            }
+                        },
+                        {
+                            data: data2,
+                            lines: {
+                                show: true
+                            }
+                        }]
+                    ,
+                    {
+                        series: {
+                            lines: {
+                                show: true,
+                                fill: true
+                            },
+                            shadowSize: 0
+                        },
+                        yaxis: {
+                            min: 0,
+                            max: 800,
+                            tickSize: 160,
+                            tickFormatter: ( v, axis ) => {
+                                if ( axis.max < 1024 )
+                                    return v + "Kb/s";
+                                else {
+                                    v /= 1024;
+
+                                    if ( axis.max < 10240 )
+                                        return v.toFixed( 2 ) + "Mb/s";
+                                    else
+                                        return Math.floor( v ) + "Mb/s";
+                                }
+                            }
+                        },
+                        xaxis: {
+                            show: false
+                        },
+                        grid: {
+                            hoverable: true,
+                            clickable: true,
+                            tickColor: "#eeeeee",
+                            borderWidth: 1,
+                            borderColor: "#cccccc"
+                        },
+                        colors: [ color, "#555" ],
+                        tooltip: false
+                    });
+
+                $.fn.tooltip = () => {
+                    let prePoint = null, preLabel = null;
+                    $(this).bind("plothover", (event, pos, item) => {
+                        if (item) {
+                            if ((preLabel !== item.series.label) || (prePoint !== item.dataIndex)) {
+                                prePoint = item.dataIndex;
+                                preLabel = item.series.label;
+                                $("#tooltip").remove();
+
+                                $(this).css({
+                                    "cursor": "pointer"
+                                })
+
+                                let data = item.series.data[item.dataIndex][1];
+                                if(data > 1024)
+                                    data = parseInt(data/1024)+"Mb/s";
+                                else
+                                    data += "kb/s";
+
+                                if (item.seriesIndex === 0)
+                                    showTooltip(item.pageX + 100, item.pageY - 10, color, "<cn>上行</cn><en>upward</en>: " + data);
+                                if (item.seriesIndex === 1)
+                                    showTooltip(item.pageX + 100, item.pageY - 10, color, "<cn>下行</cn><en>downward</en>: " + data);
+                            }
+                        }
+                        else {
+                            prePoint = null;
+                            preLabel = null;
+                            $(this).css({
+                                "cursor": "auto"
+                            });
+                            $("#tooltip").remove();
+                        }
+                    });
+                }
+                $(net_chart.value).tooltip();
+            }
+        }
+
+        const updatePlot = () => {
+            if(Object.keys(plot).length !== 0) {
+                let maxy = props.maxy;
+                let data1 = props.data1;
+                let data2 = props.data2;
+                plot.setData([data1, data2]);
+                plot.draw();
+                plot.getOptions().yaxes[ 0 ].max = maxy;
+                plot.getOptions().yaxes[ 0 ].tickSize = Math.floor( maxy / 5 );
+                plot.setupGrid();
+            }
+        }
+
+        watch(props.data1,()=>{
+            updatePlot();
+        },{deep: true})
+
+        onMounted(()=>{
+            setTimeout(initPlot,100);
+        })
+
+        return {net_chart}
+    }
+}
+
+
+export const bootstrapSwitchComponent = {
+    template: `<input type="checkbox" class="switch form-control" ref="bs_switch">`,
+    props: ['modelValue','size'],
+    setup(props, context) {
+
+        const size = props.size === undefined ? "small" : props.size;
+        const bs_switch = ref(null);
+
+        onMounted(()=>{
+            $(bs_switch.value).bootstrapSwitch({
+                "state": props.modelValue,
+                "size": size,
+                onInit(dom,event,state) {
+                    $(bs_switch.value).on('focus.bootstrapSwitch',() => {
+                        this.$wrapper.removeClass("bootstrap-switch-focused")
+                    })
+                },
+                onSwitchChange(event,state) {
+                    context.emit('update:modelValue', state);
+                }
+            })
+        })
+
+        return { bs_switch }
+    }
+};
+
+
+export const multipleSelectComponent = {
     template: `<select class="form-select" v-model="selectValue" @change="onSelectChange">
                     <slot></slot>
                </select>`,
     props: ['value1',"value2","split"],
-    data(){
-      return {
-          selectValue:""
-      }
-    },
-    methods: {
-        onSelectChange() {
-            let [value1,value2] = this.selectValue.split(this.split);
+    setup(props,context){
+
+        let selectValue = ref("");
+        const onSelectChange = () =>{
+            let [value1,value2] = selectValue.value.split(this.split);
             value1 = isNaN(Number(value1)) ? value1 : Number(value1);
             value2 = isNaN(Number(value2)) ? value2 : Number(value2);
-            this.$emit('update:value1', value1);
-            this.$emit('update:value2', value2);
+            context.emit('update:value1', value1);
+            context.emit('update:value2', value2);
         }
-    },
-    mounted() {
-        this.selectValue = this.value1 + this.split + this.value2;
+
+        onMounted(()=>{
+            selectValue.value = props.value1 + props.split + props.value2;
+        })
+
+        return {selectValue,onSelectChange}
     }
 };
 
-export const wInputComponent = {
+
+export const multipleInputComponent = {
     template: `<input type="text" class="form-control" v-model="selectValue" @change="onInputChange">`,
     props: ['value1',"value2","split"],
-    data(){
-        return {
-            selectValue:""
-        }
-    },
-    methods: {
-        onInputChange() {
-            let [value1,value2] = this.selectValue.split(this.split);
+    setup(props,context) {
 
+        let selectValue = ref("");
+        const onSelectChange = () =>{
+            let [value1,value2] = selectValue.value.split(this.split);
             value1 = isNaN(Number(value1)) ? value1 : Number(value1);
             value2 = isNaN(Number(value2)) ? value2 : Number(value2);
-
-            this.$emit('update:value1', value1);
-            this.$emit('update:value2', value2);
+            context.emit('update:value1', value1);
+            context.emit('update:value2', value2);
         }
-    },
-    mounted() {
-        this.selectValue = this.value1 + this.split + this.value2;
+
+        onMounted(()=>{
+            selectValue.value = props.value1 + props.split + props.value2;
+        })
+
+        return {selectValue,onSelectChange}
     }
 };
 
-export const wSliderComponent = {
+
+export const nouiSliderComponent = {
     template: `<div class="slider-wrap" ref="slider"></div>`,
     props: ['modelValue', 'min', 'max', 'step','fix'],
-    data() {
-      return {
-          slider:{},
-          handle:{}
-      }
-    },
-    methods: {
-        showTooltip() {
-            let tooltip = this.handle.querySelector(".noUi-tooltip")
+    setup(props,context) {
+        const slider = ref(null);
+        let handle = ref(null);
+
+        const showTooltip = () => {
+            let tooltip = handle.value.querySelector(".noUi-tooltip")
             tooltip.style.display = 'block';
-        },
-        hideTooltip() {
-            let tooltip = this.handle.querySelector(".noUi-tooltip")
+        }
+
+        const hideTooltip = () => {
+            let tooltip = handle.value.querySelector(".noUi-tooltip")
             tooltip.style.display = 'none';
-        },
-        formatTooltipValue(value) {
-            if(Number(this.fix) === 0)
+        }
+
+        const formatTooltipValue = value => {
+            if(Number(props.fix) === 0)
                 value = parseInt(value);
             else
-                value = parseFloat(value).toFixed(Number(this.fix));
+                value = parseFloat(value).toFixed(Number(props.fix));
             return value;
         }
-    },
-    mounted() {
-        this.slider = this.$refs.slider;
-        noUiSlider.create(this.slider, {
-            start: Number(this.modelValue),
-            connect: [true, false],
-            tooltips: {
-                to: this.formatTooltipValue,
-            },
-            range: {'min': Number(this.min), 'max': Number(this.max)},
-            step: Number(this.step)
-        });
 
-        this.handle = this.slider.querySelector('.noUi-handle');
-        this.hideTooltip();
+        onMounted(()=>{
+            noUiSlider.create(slider.value, {
+                start: Number(props.modelValue),
+                connect: [true, false],
+                tooltips: {
+                    to: formatTooltipValue,
+                },
+                range: {'min': Number(props.min), 'max': Number(props.max)},
+                step: Number(props.step)
+            });
 
-        this.slider.addEventListener('mouseenter', () => {
-           this.showTooltip();
-        });
+            handle.value = slider.value.querySelector('.noUi-handle');
+            hideTooltip();
 
-        this.slider.addEventListener('mouseleave', () => {
-            this.hideTooltip();
-        });
+            slider.value.addEventListener('mouseenter', () => {
+                showTooltip();
+            });
 
-        this.slider.noUiSlider.on('slide', (values, mark) => {
-            this.$emit('update:modelValue', values[mark]);
-        });
+            slider.value.addEventListener('mouseleave', () => {
+                hideTooltip();
+            });
+
+            slider.value.noUiSlider.on('slide', (values, mark) => {
+                context.emit('update:modelValue', values[mark]);
+            });
+        })
+
+        return { slider }
     }
 };
 
 
-export const wPlayerComponent = {
-    template: `<div style="width:100%; padding-bottom: 56.25%;  position: relative;" ref="player">
+export const flvPlayerComponent = {
+    template: `<div style="width:100%; padding-bottom: 56.25%;  position: relative;" ref="flv">
                     <video autoplay controls muted style="width:100%;height: 100%; position: absolute; background: #555;" ref="video"></video>
                     <div style="position: absolute;width: 100%;height: 100%" ref="jess"></div>
                     <div class="force-video-cloud">
@@ -431,117 +441,120 @@ export const wPlayerComponent = {
                     </div>
               </div>`,
     props: ['url','codec','audio','buffer'],
-    data() {
-        return {
-            player:{}
-        }
-    },
-    watch: {
-        url(newVal, lastVal) {
-            this.destoryPlayer();
-            this.initPlayer();
-        },
-        codec(newVal, lastVal) {
-            this.destoryPlayer();
-            this.initPlayer();
-        },
-        buffer(newVal, lastVal) {
-            this.destoryPlayer();
-            this.initPlayer();
-        }
-    },
-    methods: {
-        initPlayer() {
+    setup(props,context) {
 
-            if(this.url === "" || this.codec === "" || this.audio === "")
+        const flv = ref(null);
+        const video = ref(null);
+        const jess = ref(null);
+        let player = {};
+
+        watchEffect(()=>{
+            if(props.url !== "" && props.codec !== "" && props.audio !== "" && props.buffer !== "") {
+                destoryPlayer();
+                initPlayer();
+            }
+        })
+
+        const initPlayer = () => {
+            if(props.url === "" || props.codec === "" || props.audio === "")
                 return;
 
-            if(this.codec === "h265") {
-                this.$refs.video.style.display = 'none';
-                this.$refs.jess.style.display = 'block';
-                this.player =  new Jessibuca({
-                    container: this.$refs.jess,
-                    videoBuffer: this.buffer/1000,
+            if(props.codec === "h265") {
+                video.value.style.display = 'none';
+                jess.value.style.display = 'block';
+                player =  new Jessibuca({
+                    container: jess.value,
+                    videoBuffer: props.buffer/1000,
                     decoder: "assets/plugins/jessibuca/decoder.js",
                     isResize: false,
-                    audio: JSON.parse(this.audio),
+                    audio: JSON.parse(props.audio),
                     operateBtns: {
                         fullscreen: true,
                         play: true,
-                        audio: JSON.parse(this.audio),
+                        audio: JSON.parse(props.audio),
                     },
                     forceNoOffscreen: true,
                     isNotMute: false,
                 });
-                this.player.play(this.url);
-                this.player.on("play", (flag) => {
-                    let cloud = this.$refs.player.querySelector(".force-video-cloud");
+                player.play(props.url);
+                player.on("play", (flag) => {
+                    let cloud = flv.value.querySelector(".force-video-cloud");
                     cloud.style.display = 'none'
                 })
             } else {
-                this.$refs.video.style.display = 'block';
-                this.$refs.jess.style.display = 'none';
-                this.player = flvjs.createPlayer({
+                video.value.style.display = 'block';
+                jess.value.style.display = 'none';
+                player = flvjs.createPlayer({
                     type: 'flv',
-                    audio: JSON.parse(this.audio),
-                    url: this.url
+                    audio: JSON.parse(props.audio),
+                    url: props.url
                 });
-                this.player.attachMediaElement(this.$refs.video);
-                this.player.load(); //加载
-                this.player.play();
-            }
-        },
-        destoryPlayer() {
-            if(Object.keys(this.player).length > 0) {
-                if(this.player.hasOwnProperty("unload")) {
-                    this.player.unload();
-                    this.player.detachMediaElement();
-                }
-                this.player.destroy();
-                this.player = {};
-            }
-            let cloud = this.$refs.player.querySelector(".force-video-cloud");
-            cloud.style.display = 'flex'
-        },
-        checkDelay() {
-            if (Object.keys(this.player).length > 0 && this.player.hasOwnProperty("buffered") && this.player.buffered.length > 0) {
-                if (this.player.buffered.end(0) - this.player.currentTime > 1.5) {
-                    this.player.currentTime = this.player.buffered.end(0) - 0.2
-                }
+                player.attachMediaElement(video.value);
+                player.load();
+                player.play();
+
+                video.value.addEventListener("canplay",() => {
+                    let cloud = flv.value.querySelector(".force-video-cloud");
+                    cloud.style.display = 'none'
+                });
             }
         }
+        const destoryPlayer = () => {
+            if(Object.keys(player).length > 0) {
+                if(player.hasOwnProperty("unload")) {
+                    player.unload();
+                    player.detachMediaElement();
+                }
+                player.destroy();
+                player = {};
+            }
+            let cloud = flv.value.querySelector(".force-video-cloud");
+            cloud.style.display = 'flex';
+            video.value.removeEventListener("canplay",()=>{});
+        }
+        const checkDelay = () => {
+            if (Object.keys(player).length > 0 && player.hasOwnProperty("buffered") && player.buffered.length > 0) {
+                if (player.buffered.end(0) - player.currentTime > 1.5) {
+                    player.currentTime = player.buffered.end(0) - 0.2
+                }
+            }
+            setTimeout(checkDelay,1000);
+        }
 
-    },
-    mounted() {
-        this.destoryPlayer();
-        this.initPlayer();
-        this.checkDelay();
-        this.$refs.video.addEventListener("canplay",() => {
-            let cloud = this.$refs.player.querySelector(".force-video-cloud");
-            cloud.style.display = 'none'
-        });
+        onMounted(()=>{
+            initPlayer();
+            checkDelay();
+        })
+
+        return {flv,video,jess}
     }
 };
 
-export const wTimepickerComponent = {
+export const timepickerComponent = {
     template: `<div class="input-group bootstrap-timepicker">
                     <input type="text" class="form-control" ref="timepicker">
                     <span class="input-group-text input-group-addon"><i class="fa-regular fa-clock"></i></span>
                </div>`,
     props: ['modelValue'],
-    mounted() {
-        $(this.$refs.timepicker).timepicker({
-            minuteStep: 1,
-            defaultTime: this.modelValue,
-            showMeridian: false,
-            icons: {
-                up: 'fa-solid fa-angle-up',
-                down: 'fa-solid fa-angle-down'
-            },
-        });
+    setup(props,context){
+        const timepicker = ref(null);
+        onMounted(()=>{
+            $(timepicker.value).timepicker({
+                minuteStep: 1,
+                defaultTime: props.modelValue,
+                showMeridian: false,
+                icons: {
+                    up: 'fa-solid fa-angle-up',
+                    down: 'fa-solid fa-angle-down'
+                },
+            });
 
-        $(this.$refs.timepicker).on("changeTime.timepicker", event => {
-            this.$emit('update:modelValue', event.time.value);
-        });
+            $(timepicker.value).on("changeTime.timepicker", event => {
+                context.emit('update:modelValue', event.time.value);
+            });
+        })
+
+        return {timepicker}
     }
 };
+

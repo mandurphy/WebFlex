@@ -18,7 +18,7 @@
                             </div>
                         </div>
                         <div class="card-body" >
-                            <div class="row text-center">
+                            <div class="row row-cols-3 text-center">
                                 <div class="col-lg-4 ">
                                     <div class="pie">
                                         <div class="chart" v-chart="{color:theme_color,val:cpu}"></div>
@@ -67,7 +67,7 @@
                             </div>
                         </div>
                         <div class="card-body">
-                            <w-net v-if="tx.length > 0" :color="theme_color" :maxy="maxy" :data1="tx" :data2="rx"></w-net>
+                            <net-chart v-if="tx.length > 0" :color="theme_color" :maxy="maxy" :data1="tx" :data2="rx"></net-chart>
                         </div>
                     </div>
                 </div>
@@ -95,6 +95,8 @@
                                 <div v-for="(item,index) in preview" class="col">
                                     <div class="card border-end">
                                         <img :src="makeImgUrl(item.id)" class="card-img-top" alt="...">
+                                        <div class="chn-volume" :style="{'width':handleChnVolume(item.id,'L')}"></div>
+                                        <div class="chn-volume" :style="{'width':handleChnVolume(item.id,'R')}"></div>
                                         <div class="card-body">
                                             <p class="card-text text-center">{{item.name}}</p>
                                         </div>
@@ -119,9 +121,9 @@
   <script src="assets/plugins/flotChart/jquery.flot.time.js"></script>
 
   <script type="module">
-      import { rpc} from "./assets/js/helper.js";
+      import { rpc } from "./assets/js/helper.js";
       import { useDefaultConf,useHardwareConf } from "./assets/js/confHooks.js";
-      import { bootstrapSwitchComponent,wStatusPieChartDirective,wStatusTemperatureDirective,wNetFlotChartComponent } from "./assets/js/vueHelper.js"
+      import { bootstrapSwitchComponent,wStatusPieChartDirective,wStatusTemperatureDirective,netFlotChartComponent } from "./assets/js/vueHelper.js"
 
       const { createApp,ref,reactive,computed,onMounted,toRaw } = Vue;
       const { defaultConf } = useDefaultConf();
@@ -134,10 +136,10 @@
           },
           components:{
               "bootstrap-switch":bootstrapSwitchComponent,
-              "w-net":wNetFlotChartComponent
+              "net-chart":netFlotChartComponent
           },
           setup(prop,context){
-              
+
               const state = {
                   cpu: ref(0),
                   tmp: ref(0),
@@ -149,9 +151,10 @@
                   data2:reactive([]),
                   theme_color:ref("#ffbb00"),
                   preview : reactive([]),
-                  input : reactive([])
+                  input : reactive([]),
+                  volume: reactive([])
               }
-    
+
               const getData1 = (d) => {
                   state.data1.shift();
                   state.data1.push( d );
@@ -159,7 +162,7 @@
                   for (let i = 0; i < 100; i++)
                       state.tx.push([i,state.data1[i]]);
               }
-              
+
               const getData2 = (d) => {
                   state.data2.shift();
                   state.data2.push( d );
@@ -178,8 +181,6 @@
                   rpc("enc.getNetState").then(data => {
                       getData1(data.tx);
                       getData2(data.rx);
-
-
                       if ( data.tx * 1.3 > state.maxy.value )
                           state.maxy.value = data.tx * 1.3;
                       if ( data.rx * 1.3 > state.maxy.value )
@@ -190,11 +191,10 @@
                           state.maxy.value = Math.ceil( state.maxy.value / 1024 ) * 1024;
                       if ( state.maxy.value > 1024000 )
                           state.maxy.value = 1024000;
-
-                      setTimeout(updateNetState, 1000);
+                      setTimeout(updateNetState, 500);
                   });
               }
-              
+
               const updateSysState = () => {
                   rpc("enc.getSysState").then(data => {
                       state.cpu.value = data.cpu;
@@ -203,24 +203,44 @@
                       setTimeout(updateSysState, 2000);
                   });
               }
-              
+
               const makeImgUrl = (id) => {
                   return "snap/snap" + id + ".jpg?rnd=" + Math.random();
               }
-              
+
               const updatePreview = async () => {
-                  rpc("enc.snap").then(()=>{
-                      if(state.preview.length === 0) {
-                          for(let i=0;i<defaultConf.length;i++) {
-                              if (!defaultConf[i].enable  || ( defaultConf[i].type === "net" && !defaultConf[i].net.decodeV))
-                                  continue;
-                              state.preview.push(defaultConf[i]);
-                          }
+                  if(state.preview.length === 0) {
+                      for(let i=0;i<defaultConf.length;i++) {
+                          if (!defaultConf[i].enable  || ( defaultConf[i].type === "net" && !defaultConf[i].net.decodeV))
+                              continue;
+                          state.preview.push(defaultConf[i]);
                       }
-                  });
-                  setTimeout(updatePreview,500);
+                  }
+                  setTimeout(() => rpc("enc.snap"),300);
+                  setTimeout(updatePreview,800);
               }
-              
+
+              const handleChnVolume = (chnId,type) => {
+                  let volume = state.volume.filter((item,index)=>{
+                      return chnId === index;
+                  })
+                  let retVal = 0;
+                  if(volume.length > 0)
+                      retVal = volume[0][type] * 100/96;
+                  return retVal + "%";
+              }
+
+              const updateVolume = () => {
+                  rpc( "enc.getVolume").then(data => {
+                      state.volume.splice(0,state.volume.length,...data);
+                  });
+
+                  if(window.location.host === "wx.linkpi.cn")
+                      setTimeout(updateVolume,1000);
+                  else
+                      setTimeout(updateVolume,500);
+              }
+
               const updateInputState = () => {
                   rpc("enc.getInputState").then(ret => {
                       state.input.splice(0, state.input.length, ...ret);
@@ -234,17 +254,18 @@
                   });
                   setTimeout(updateInputState,3000);
               }
-              
+
               onMounted(()=>{
                   updateSysState();
                   updateNetState();
                   updatePreview();
                   updateInputState();
+                  updateVolume();
                 }
               )
-              
+
               return {
-                  ...state, makeImgUrl,
+                  ...state, makeImgUrl,handleChnVolume
               }
           }
       })

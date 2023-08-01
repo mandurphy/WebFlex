@@ -39,7 +39,7 @@
                     </div>
                     <div class="row">
                         <div class="col-lg-12 mt-2 mb-2">
-                            <w-player :url="playerUrl" :codec="playerCodec" :audio="playerAudio" :buffer="bufferTime"></w-player>
+                            <flv-player :url="playerUrl" :codec="playerCodec" :audio="playerAudio" :buffer="bufferTime"></flv-player>
                         </div>
                     </div>
                     <div class="row mt-5">
@@ -62,12 +62,12 @@
 <script src="assets/plugins/jessibuca/jessibuca.js"></script>
 <script type="module">
     import { useDefaultConf } from "./assets/js/confHooks.js";
-    import { wPlayerComponent } from "./assets/js/vueHelper.js"
+    import { flvPlayerComponent } from "./assets/js/vueHelper.js"
     
     const {createApp,ref,reactive,watch,watchEffect,computed,onMounted} = Vue;
     const app = createApp({
         components:{
-            "w-player": wPlayerComponent
+            "flv-player": flvPlayerComponent
         },
         setup(props,context) {
             

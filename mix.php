@@ -67,7 +67,7 @@
                                         <div class="d-flex align-items-center gap-1 border-0 px-2 py-1">
                                             <div class="flex-grow-1">
                                                 <select class="form-select" v-model="defaultConf[mixIndex].srcV[index]" @change="saveConf('noTip')">
-                                                    <option value="-1" cn="空" en="none" v-option></option>
+                                                    <option value="-1" cn="空" en="none" v-language-option></option>
                                                     <option v-for="(it,index) in handleLayoutChnSelect(defaultConf[mixIndex].srcV[index])" :value="it.id">{{it.name}}</option>
                                                 </select>
                                             </div>
@@ -240,7 +240,7 @@
                                         </label>
                                     </div>
                                     <div class="col-lg-6">
-                                        <w-slider v-model="defaultConf[mixIndex].output.csc.luma" min="0" max="100" step="1" fix="0"></w-slider>
+                                        <noui-slider v-model="defaultConf[mixIndex].output.csc.luma" min="0" max="100" step="1" fix="0"></noui-slider>
                                     </div>
                                 </div>
                                 <div class="row mt-4">
@@ -251,7 +251,7 @@
                                         </label>
                                     </div>
                                     <div class="col-lg-6">
-                                        <w-slider v-model="defaultConf[mixIndex].output.csc.contrast" min="0" max="100" step="1" fix="0"></w-slider>
+                                        <noui-slider v-model="defaultConf[mixIndex].output.csc.contrast" min="0" max="100" step="1" fix="0"></noui-slider>
                                     </div>
                                 </div>
                                 <div class="row mt-4">
@@ -262,7 +262,7 @@
                                         </label>
                                     </div>
                                     <div class="col-lg-6">
-                                        <w-slider v-model="defaultConf[mixIndex].output.csc.saturation" min="0" max="100" step="1" fix="0"></w-slider>
+                                        <noui-slider v-model="defaultConf[mixIndex].output.csc.saturation" min="0" max="100" step="1" fix="0"></noui-slider>
                                     </div>
                                 </div>
                                 <div class="row mt-4">
@@ -273,7 +273,7 @@
                                         </label>
                                     </div>
                                     <div class="col-lg-6">
-                                        <w-slider v-model="defaultConf[mixIndex].output.csc.hue" min="0" max="100" step="1" fix="0"></w-slider>
+                                        <noui-slider v-model="defaultConf[mixIndex].output.csc.hue" min="0" max="100" step="1" fix="0"></noui-slider>
                                     </div>
                                 </div>
                             </div>
@@ -373,7 +373,7 @@
                                         </label>
                                     </div>
                                     <div class="col-lg-6">
-                                        <w-slider v-model="defaultConf[mixIndex].output2.csc.luma" min="0" max="100" step="1" fix="0"></w-slider>
+                                        <noui-slider v-model="defaultConf[mixIndex].output2.csc.luma" min="0" max="100" step="1" fix="0"></noui-slider>
                                     </div>
                                 </div>
                                 <div class="row mt-4">
@@ -384,7 +384,7 @@
                                         </label>
                                     </div>
                                     <div class="col-lg-6">
-                                        <w-slider v-model="defaultConf[mixIndex].output2.csc.contrast" min="0" max="100" step="1" fix="0"></w-slider>
+                                        <noui-slider v-model="defaultConf[mixIndex].output2.csc.contrast" min="0" max="100" step="1" fix="0"></noui-slider>
                                     </div>
                                 </div>
                                 <div class="row mt-4">
@@ -395,7 +395,7 @@
                                         </label>
                                     </div>
                                     <div class="col-lg-6">
-                                        <w-slider v-model="defaultConf[mixIndex].output2.csc.saturation" min="0" max="100" step="1" fix="0"></w-slider>
+                                        <noui-slider v-model="defaultConf[mixIndex].output2.csc.saturation" min="0" max="100" step="1" fix="0"></noui-slider>
                                     </div>
                                 </div>
                                 <div class="row mt-4">
@@ -406,7 +406,7 @@
                                         </label>
                                     </div>
                                     <div class="col-lg-6">
-                                        <w-slider v-model="defaultConf[mixIndex].output2.csc.hue" min="0" max="100" step="1" fix="0"></w-slider>
+                                        <noui-slider v-model="defaultConf[mixIndex].output2.csc.hue" min="0" max="100" step="1" fix="0"></noui-slider>
                                     </div>
                                 </div>
                             </div>
@@ -428,16 +428,16 @@
     
     import { rpc,alertMsg } from "./assets/js/helper.js";
     import { useDefaultConf,useDefLaysConf,useHardwareConf } from "./assets/js/confHooks.js";
-    import { bootstrapSwitchComponent,wSliderComponent,wOptionDirective } from "./assets/js/vueHelper.js"
+    import { bootstrapSwitchComponent,nouiSliderComponent,languageOptionDirective } from "./assets/js/vueHelper.js"
     
     const {createApp,ref,reactive,watchEffect,computed} = Vue;
     const app = createApp({
         directives:{
-            "option": wOptionDirective
+            "language-option": languageOptionDirective
         },
         components:{
             "bootstrap-switch" : bootstrapSwitchComponent,
-            "w-slider": wSliderComponent
+            "noui-slider": nouiSliderComponent
         },
         setup(props,context) {
             

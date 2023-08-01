@@ -201,7 +201,7 @@
                                             </label>
                                         </div>
                                         <div class="col-lg-6">
-                                            <w-slider v-model="editData.move" min="-20" max="20" step="1" fix="0"></w-slider>
+                                            <noui-slider v-model="editData.move" min="-20" max="20" step="1" fix="0"></noui-slider>
                                         </div>
                                     </div>
                                     <div class="row mt-4">
@@ -212,7 +212,7 @@
                                             </label>
                                         </div>
                                         <div class="col-lg-6">
-                                            <w-slider v-model="editData.x" min="0" max="1" step="0.001" fix="3"></w-slider>
+                                            <noui-slider v-model="editData.x" min="0" max="1" step="0.001" fix="3"></noui-slider>
                                         </div>
                                     </div>
                                     <div class="row mt-4">
@@ -223,7 +223,7 @@
                                             </label>
                                         </div>
                                         <div class="col-lg-6">
-                                            <w-slider v-model="editData.y" min="0" max="1" step="0.001" fix="3"></w-slider>
+                                            <noui-slider v-model="editData.y" min="0" max="1" step="0.001" fix="3"></noui-slider>
                                         </div>
                                     </div>
                                     <div class="row mt-4" v-if="editData.type === 'text' || editData.type === 'mask' || editData.type === 'rect' || editData.type === 'border'">
@@ -234,7 +234,7 @@
                                             </label>
                                         </div>
                                         <div class="col-lg-6">
-                                            <w-slider v-model="editData.w" min="0" max="1" step="0.001" fix="3"></w-slider>
+                                            <noui-slider v-model="editData.w" min="0" max="1" step="0.001" fix="3"></noui-slider>
                                         </div>
                                     </div>
                                     <div class="row mt-4" v-if="editData.type === 'mask' || editData.type === 'rect' || editData.type === 'border'">
@@ -245,7 +245,7 @@
                                             </label>
                                         </div>
                                         <div class="col-lg-6">
-                                            <w-slider v-model="editData.h" min="0" max="1" step="0.001" fix="3"></w-slider>
+                                            <noui-slider v-model="editData.h" min="0" max="1" step="0.001" fix="3"></noui-slider>
                                         </div>
                                     </div>
                                     <div class="row mt-4" v-if="editData.type === 'border'">
@@ -256,7 +256,7 @@
                                             </label>
                                         </div>
                                         <div class="col-lg-6">
-                                            <w-slider v-model="editData.border" min="1" max="50" step="1" fix="0"></w-slider>
+                                            <noui-slider v-model="editData.border" min="1" max="50" step="1" fix="0"></noui-slider>
                                         </div>
                                     </div>
                                     <div class="row mt-4" id="color" v-if="editData.type !== 'pic' && editData.type !== 'mask'">
@@ -289,7 +289,7 @@
                                             </label>
                                         </div>
                                         <div class="col-lg-6">
-                                            <w-slider v-model="editData.scale" min="0.1" max="4" step="0.01" fix="2"></w-slider>
+                                            <noui-slider v-model="editData.scale" min="0.1" max="4" step="0.01" fix="2"></noui-slider>
                                         </div>
                                     </div>
                                     <div class="row mt-4" v-if="editData.type !== 'mask'">
@@ -300,7 +300,7 @@
                                             </label>
                                         </div>
                                         <div class="col-lg-6">
-                                            <w-slider v-model="editData.alpha" min="0" max="1" step="0.01" fix="2"></w-slider>
+                                            <noui-slider v-model="editData.alpha" min="0" max="1" step="0.01" fix="2"></noui-slider>
                                         </div>
                                     </div>
                                     <div class="row text-center mt-4">
@@ -363,13 +363,13 @@
 <script type="module">
     import { rpc,alertMsg } from "./assets/js/helper.js";
     import { useDefaultConf,useOverlayConf,useResConf } from "./assets/js/confHooks.js";
-    import { bootstrapSwitchComponent,wSliderComponent } from "./assets/js/vueHelper.js"
+    import { bootstrapSwitchComponent,nouiSliderComponent } from "./assets/js/vueHelper.js"
     
     const {createApp,ref,reactive,watch,watchEffect,computed} = Vue;
     const app = createApp({
         components:{
             "bootstrap-switch" : bootstrapSwitchComponent,
-            "w-slider": wSliderComponent
+            "noui-slider": nouiSliderComponent
         },
         setup(props,context) {
             

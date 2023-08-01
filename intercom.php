@@ -169,11 +169,11 @@
                                 </div>
                                 <div class="col-lg-6">
                                     <select class="form-select" v-model="intercomConf.intercom.vad">
-                                        <option value="-1" cn="按键发言" en="Press to speak" v-woption></option>
-                                        <option value="0" cn="常开" en="Keep open" v-woption></option>
-                                        <option value="40" cn="低" en="Low" v-woption></option>
-                                        <option value="50" cn="中" en="Mid" v-woption></option>
-                                        <option value="65" cn="高" en="High" v-woption></option>
+                                        <option value="-1" cn="按键发言" en="Press to speak" v-language-option></option>
+                                        <option value="0" cn="常开" en="Keep open" v-language-option></option>
+                                        <option value="40" cn="低" en="Low" v-language-option></option>
+                                        <option value="50" cn="中" en="Mid" v-language-option></option>
+                                        <option value="65" cn="高" en="High" v-language-option></option>
                                     </select>
                                 </div>
                             </div>
@@ -296,12 +296,12 @@
 <script type="module">
     import { rpc,alertMsg } from "./assets/js/helper.js";
     import { useIntercomConf } from "./assets/js/confHooks.js";
-    import { bootstrapSwitchComponent,wOptionDirective } from "./assets/js/vueHelper.js"
+    import { bootstrapSwitchComponent,languageOptionDirective } from "./assets/js/vueHelper.js"
     
     const {createApp,ref,reactive,watch,watchEffect,computed,onMounted} = Vue;
     const app = createApp({
         directives: {
-          "woption": wOptionDirective
+            "language-option": languageOptionDirective
         },
         components:{
             "bootstrap-switch" : bootstrapSwitchComponent

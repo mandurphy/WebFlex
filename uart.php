@@ -106,17 +106,17 @@
                                 </div>
                                 <div class="col-lg-4">
                                     <select class="form-select" v-model="item.click">
-                                        <option value="push.start" cn="开始推流" en="Start push" v-woption></option>
-                                        <option value="push.stop" cn="停止推流" en="Stop push" v-woption></option>
-                                        <option value="rec.start" cn="开始录制" en="Start record" v-woption></option>
-                                        <option value="rec.stop" cn="停止录制" en="Stop record" v-woption></option>
-                                        <option value="" cn="无" en="None" v-woption></option>
+                                        <option value="push.start" cn="开始推流" en="Start push" v-language-option></option>
+                                        <option value="push.stop" cn="停止推流" en="Stop push" v-language-option></option>
+                                        <option value="rec.start" cn="开始录制" en="Start record" v-language-option></option>
+                                        <option value="rec.stop" cn="停止录制" en="Stop record" v-language-option></option>
+                                        <option value="" cn="无" en="None" v-language-option></option>
                                     </select>
                                 </div>
                                 <div class="col-lg-3">
                                     <select class="form-select" v-model="item.press">
                                         <option value="enc.setNetDhcp">DHCP</option>
-                                        <option value="" cn="无" en="None" v-woption></option>
+                                        <option value="" cn="无" en="None" v-language-option></option>
                                     </select>
                                 </div>
                             </div>
@@ -139,12 +139,12 @@
 <script type="module">
     import { rpc,rpc6,alertMsg } from "./assets/js/helper.js";
     import { useHardwareConf,useButtonConf,useUartConf } from "./assets/js/confHooks.js";
-    import { bootstrapSwitchComponent,wOptionDirective } from "./assets/js/vueHelper.js"
+    import { bootstrapSwitchComponent,languageOptionDirective } from "./assets/js/vueHelper.js"
     
     const {createApp,ref,reactive,watch,watchEffect,computed} = Vue;
     const app = createApp({
         directives: {
-          "woption": wOptionDirective
+          "language-option": languageOptionDirective
         },
         components:{
             "bootstrap-switch" : bootstrapSwitchComponent

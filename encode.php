@@ -59,7 +59,7 @@
                                     <div class="col-11">
                                         <div class="row">
                                             <div class="col-2">
-                                                <w-select v-model:value1="globalData.encv.width" v-model:value2="globalData.encv.height" split="x">
+                                                <multiple-select v-model:value1="globalData.encv.width" v-model:value2="globalData.encv.height" split="x">
                                                     <option value="-1x-1">auto</option>
                                                     <option value="3840x2160">4K</option>
                                                     <option value="1920x1080">1080p</option>
@@ -68,16 +68,16 @@
                                                     <option value="1080x1920">1080x1920</option>
                                                     <option value="720x1280">720x1280</option>
                                                     <option value="360x640">360x640</option>
-                                                </w-select>
+                                                </multiple-select>
                                             </div>
                                             <div class="col-2">
-                                                <w-select v-model:value1="globalData.encv.codec" v-model:value2="globalData.encv.profile" split=",">
+                                                <multiple-select v-model:value1="globalData.encv.codec" v-model:value2="globalData.encv.profile" split=",">
                                                     <option value="h264,base">H.264 Base</option>
                                                     <option value="h264,main">H.264 Main</option>
                                                     <option value="h264,high">H.264 High</option>
                                                     <option value="h265,main">H.265 Main</option>
                                                     <option value="close,base">Close</option>
-                                                </w-select>
+                                                </multiple-select>
                                             </div>
                                             <div class="col">
                                                 <select class="form-select" v-model="globalData.encv.rcmode">
@@ -88,13 +88,13 @@
                                                 </select>
                                             </div>
                                             <div class="col">
-                                                <input type="text" class="form-control" v-model="globalData.encv.bitrate">
+                                                <input type="text" class="form-control" v-model.trim.lazy="globalData.encv.bitrate">
                                             </div>
                                             <div class="col">
-                                                <input type="text" class="form-control" v-model="globalData.encv.framerate">
+                                                <input type="text" class="form-control" v-model.trim.lazy="globalData.encv.framerate">
                                             </div>
                                             <div class="col">
-                                                <input type="text" class="form-control" v-model="globalData.encv.gop">
+                                                <input type="text" class="form-control" v-model.trim.lazy="globalData.encv.gop">
                                             </div>
                                         </div>
                                     </div>
@@ -108,7 +108,7 @@
                                     <div class="col-11">
                                         <div class="row">
                                             <div class="col-2">
-                                                <w-select v-model:value1="globalData.encv2.width" v-model:value2="globalData.encv2.height" split="x">
+                                                <multiple-select v-model:value1="globalData.encv2.width" v-model:value2="globalData.encv2.height" split="x">
                                                     <option value="-1x-1">auto</option>
                                                     <option value="3840x2160">4K</option>
                                                     <option value="1920x1080">1080p</option>
@@ -117,16 +117,16 @@
                                                     <option value="1080x1920">1080x1920</option>
                                                     <option value="720x1280">720x1280</option>
                                                     <option value="360x640">360x640</option>
-                                                </w-select>
+                                                </multiple-select>
                                             </div>
                                             <div class="col-2">
-                                                <w-select v-model:value1="globalData.encv2.codec" v-model:value2="globalData.encv2.profile" split=",">
+                                                <multiple-select v-model:value1="globalData.encv2.codec" v-model:value2="globalData.encv2.profile" split=",">
                                                     <option value="h264,base">H.264 Base</option>
                                                     <option value="h264,main">H.264 Main</option>
                                                     <option value="h264,high">H.264 High</option>
                                                     <option value="h265,main">H.265 Main</option>
                                                     <option value="close,base">Close</option>
-                                                </w-select>
+                                                </multiple-select>
                                             </div>
                                             <div class="col">
                                                 <select class="form-select" v-model="globalData.encv2.rcmode">
@@ -137,13 +137,13 @@
                                                 </select>
                                             </div>
                                             <div class="col">
-                                                <input type="text" class="form-control" v-model="globalData.encv2.bitrate">
+                                                <input type="text" class="form-control" v-model.trim.lazy="globalData.encv2.bitrate">
                                             </div>
                                             <div class="col">
-                                                <input type="text" class="form-control" v-model="globalData.encv2.framerate">
+                                                <input type="text" class="form-control" v-model.trim.lazy="globalData.encv2.framerate">
                                             </div>
                                             <div class="col">
-                                                <input type="text" class="form-control" v-model="globalData.encv2.gop">
+                                                <input type="text" class="form-control" v-model.trim.lazy="globalData.encv2.gop">
                                             </div>
                                         </div>
                                     </div>
@@ -196,7 +196,7 @@
                                                     <option value="pcma">PCMA</option>
                                                     <option value="mp2">MPEG2</option>
                                                     <option value="mp3">MP3</option>
-                                                    <option value="close" cn="关闭" en="close" v-woption></option>
+                                                    <option value="close" cn="关闭" en="close" v-language-option></option>
                                                 </select>
                                             </div>
                                             <div class="col">
@@ -226,12 +226,12 @@
                                             </div>
                                             <div class="col">
                                                 <select class="form-select" v-model="globalData.enca.channels">
-                                                    <option cn="单声道" en="mono" value="1" v-woption></option>
-                                                    <option cn="立体声" en="stereo" value="2" v-woption></option>
+                                                    <option cn="单声道" en="mono" value="1" v-language-option></option>
+                                                    <option cn="立体声" en="stereo" value="2" v-language-option></option>
                                                 </select>
                                             </div>
                                             <div class="col">
-                                                <input type="text" class="form-control" v-model="globalData.enca.bitrate">
+                                                <input type="text" class="form-control" v-model.trim.lazy="globalData.enca.bitrate">
                                             </div>
                                         </div>
                                     </div>
@@ -287,6 +287,14 @@
                             </div>
                         </a>
                     </li>
+                    <li class="nav-item" role="presentation">
+                        <a class="nav-link" data-bs-toggle="tab" href="#tab5" role="tab" aria-selected="false">
+                            <div class="d-flex align-items-center">
+                                <div class="tab-icon"><i class="fa-brands fa-internet-explorer me-1"></i></div>
+                                <div class="tab-title"><cn>网络输入</cn><en>Network stream</en></div>
+                            </div>
+                        </a>
+                    </li>
                 </ul>
                 <div class="tab-content py-3 pe-2 ps-2">
                     <div class="tab-pane fade show active" id="tab1" role="tabpanel">
@@ -329,10 +337,10 @@
                             <div class="col-lg-12">
                                 <div class="row">
                                     <div class="col-2 text-center">
-                                        <input type="text" class="form-control" v-model="item.name">
+                                        <input type="text" class="form-control" v-model.trim.lazy="item.name">
                                     </div>
                                     <div class="col-2">
-                                        <w-select v-model:value1="item.encv.width" v-model:value2="item.encv.height" split="x">
+                                        <multiple-select v-model:value1="item.encv.width" v-model:value2="item.encv.height" split="x">
                                             <option value="-1x-1">auto</option>
                                             <option value="3840x2160">4K</option>
                                             <option value="1920x1080">1080p</option>
@@ -341,16 +349,16 @@
                                             <option value="1080x1920">1080x1920</option>
                                             <option value="720x1280">720x1280</option>
                                             <option value="360x640">360x640</option>
-                                        </w-select>
+                                        </multiple-select>
                                     </div>
                                     <div class="col-2">
-                                        <w-select v-model:value1="item.encv.codec" v-model:value2="item.encv.profile" split=",">
+                                        <multiple-select v-model:value1="item.encv.codec" v-model:value2="item.encv.profile" split=",">
                                             <option value="h264,base">H.264 Base</option>
                                             <option value="h264,main">H.264 Main</option>
                                             <option value="h264,high">H.264 High</option>
                                             <option value="h265,main">H.265 Main</option>
                                             <option value="close,base">Close</option>
-                                        </w-select>
+                                        </multiple-select>
                                     </div>
                                     <div class="col">
                                         <select class="form-select" v-model="item.encv.rcmode">
@@ -361,13 +369,13 @@
                                         </select>
                                     </div>
                                     <div class="col">
-                                        <input type="text" class="form-control" v-model="item.encv.bitrate">
+                                        <input type="text" class="form-control" v-model.trim.lazy="item.encv.bitrate">
                                     </div>
                                     <div class="col">
-                                        <input type="text" class="form-control" v-model="item.encv.framerate">
+                                        <input type="text" class="form-control" v-model.trim.lazy="item.encv.framerate">
                                     </div>
                                     <div class="col">
-                                        <input type="text" class="form-control" v-model="item.encv.gop">
+                                        <input type="text" class="form-control" v-model.trim.lazy="item.encv.gop">
                                     </div>
                                     <div class="col force-align-center">
                                         <bootstrap-switch v-model="item.enable" ></bootstrap-switch>
@@ -376,7 +384,7 @@
                                 <div class="row mt-1">
                                     <div class="col-2 text-center"></div>
                                     <div class="col-2">
-                                        <w-select v-model:value1="item.encv2.width" v-model:value2="item.encv2.height" split="x">
+                                        <multiple-select v-model:value1="item.encv2.width" v-model:value2="item.encv2.height" split="x">
                                             <option value="-1x-1">auto</option>
                                             <option value="3840x2160">4K</option>
                                             <option value="1920x1080">1080p</option>
@@ -385,16 +393,16 @@
                                             <option value="1080x1920">1080x1920</option>
                                             <option value="720x1280">720x1280</option>
                                             <option value="360x640">360x640</option>
-                                        </w-select>
+                                        </multiple-select>
                                     </div>
                                     <div class="col-2">
-                                        <w-select v-model:value1="item.encv2.codec" v-model:value2="item.encv2.profile" split=",">
+                                        <multiple-select v-model:value1="item.encv2.codec" v-model:value2="item.encv2.profile" split=",">
                                             <option value="h264,base">H.264 Base</option>
                                             <option value="h264,main">H.264 Main</option>
                                             <option value="h264,high">H.264 High</option>
                                             <option value="h265,main">H.265 Main</option>
                                             <option value="close,base">Close</option>
-                                        </w-select>
+                                        </multiple-select>
                                     </div>
                                     <div class="col">
                                         <select class="form-select" v-model="item.encv2.rcmode">
@@ -405,13 +413,13 @@
                                         </select>
                                     </div>
                                     <div class="col">
-                                        <input type="text" class="form-control" v-model="item.encv2.bitrate">
+                                        <input type="text" class="form-control" v-model.trim.lazy="item.encv2.bitrate">
                                     </div>
                                     <div class="col">
-                                        <input type="text" class="form-control" v-model="item.encv2.framerate">
+                                        <input type="text" class="form-control" v-model.trim.lazy="item.encv2.framerate">
                                     </div>
                                     <div class="col">
-                                        <input type="text" class="form-control" v-model="item.encv2.gop">
+                                        <input type="text" class="form-control" v-model.trim.lazy="item.encv2.gop">
                                     </div>
                                     <div class="col force-align-center">
                                         <bootstrap-switch v-model="item.enable2" ></bootstrap-switch>
@@ -462,13 +470,13 @@
                             <div class="col-lg-12">
                                 <div class="row">
                                     <div class="col-2 text-center">
-                                        <input type="text" class="form-control" v-model="item.name">
+                                        <input type="text" class="form-control" v-model.trim.lazy="item.name">
                                     </div>
                                     <div class="col">
-                                        <input type="text" class="form-control" v-model="item.encv.width">
+                                        <input type="text" class="form-control" v-model.trim.lazy="item.encv.width">
                                     </div>
                                     <div class="col">
-                                        <input type="text" class="form-control" v-model="item.encv.height">
+                                        <input type="text" class="form-control" v-model.trim.lazy="item.encv.height">
                                     </div>
                                     <div class="col-2">
                                         <select class="form-control" v-model="item.encv.gopmode">
@@ -479,16 +487,16 @@
                                         </select>
                                     </div>
                                     <div class="col">
-                                        <input type="text" class="form-control" v-model="item.encv.minqp">
+                                        <input type="text" class="form-control" v-model.trim.lazy="item.encv.minqp">
                                     </div>
                                     <div class="col">
-                                        <input type="text" class="form-control" v-model="item.encv.maxqp">
+                                        <input type="text" class="form-control" v-model.trim.lazy="item.encv.maxqp">
                                     </div>
                                     <div class="col">
-                                        <input type="text" class="form-control" v-model="item.encv.Iqp">
+                                        <input type="text" class="form-control" v-model.trim.lazy="item.encv.Iqp">
                                     </div>
                                     <div class="col">
-                                        <input type="text" class="form-control" v-model="item.encv.Pqp">
+                                        <input type="text" class="form-control" v-model.trim.lazy="item.encv.Pqp">
                                     </div>
                                     <div class="col force-align-center">
                                         <bootstrap-switch v-model="item.encv.lowLatency" ></bootstrap-switch>
@@ -497,10 +505,10 @@
                                 <div class="row mt-1">
                                     <div class="col-2 text-center"></div>
                                     <div class="col">
-                                        <input type="text" class="form-control" v-model="item.encv2.width">
+                                        <input type="text" class="form-control" v-model.trim.lazy="item.encv2.width">
                                     </div>
                                     <div class="col">
-                                        <input type="text" class="form-control" v-model="item.encv2.height">
+                                        <input type="text" class="form-control" v-model.trim.lazy="item.encv2.height">
                                     </div>
                                     <div class="col-2">
                                         <select class="form-control" v-model="item.encv2.gopmode">
@@ -511,16 +519,16 @@
                                         </select>
                                     </div>
                                     <div class="col">
-                                        <input type="text" class="form-control" v-model="item.encv2.minqp">
+                                        <input type="text" class="form-control" v-model.trim.lazy="item.encv2.minqp">
                                     </div>
                                     <div class="col">
-                                        <input type="text" class="form-control" v-model="item.encv2.maxqp">
+                                        <input type="text" class="form-control" v-model.trim.lazy="item.encv2.maxqp">
                                     </div>
                                     <div class="col">
-                                        <input type="text" class="form-control" v-model="item.encv2.Iqp">
+                                        <input type="text" class="form-control" v-model.trim.lazy="item.encv2.Iqp">
                                     </div>
                                     <div class="col">
-                                        <input type="text" class="form-control" v-model="item.encv2.Pqp">
+                                        <input type="text" class="form-control" v-model.trim.lazy="item.encv2.Pqp">
                                     </div>
                                     <div class="col force-align-center">
                                         <bootstrap-switch v-model="item.encv2.lowLatency" ></bootstrap-switch>
@@ -570,7 +578,7 @@
                             <div class="col-lg-12">
                                 <div class="row">
                                     <div class="col-2 text-center">
-                                        <input type="text" class="form-control" v-model="item.name">
+                                        <input type="text" class="form-control" v-model.trim.lazy="item.name">
                                     </div>
                                     <div class="col-2">
                                         <select class="form-select" v-model="item.cap.rotate">
@@ -581,16 +589,16 @@
                                         </select>
                                     </div>
                                     <div class="col-2">
-                                        <input type="text" class="form-control" v-model="item.cap.crop.L">
+                                        <input type="text" class="form-control" v-model.trim.lazy="item.cap.crop.L">
                                     </div>
                                     <div class="col">
-                                        <input type="text" class="form-control" v-model="item.cap.crop.R">
+                                        <input type="text" class="form-control" v-model.trim.lazy="item.cap.crop.R">
                                     </div>
                                     <div class="col">
-                                        <input type="text" class="form-control" v-model="item.cap.crop.T">
+                                        <input type="text" class="form-control" v-model.trim.lazy="item.cap.crop.T">
                                     </div>
                                     <div class="col">
-                                        <input type="text" class="form-control" v-model="item.cap.crop.B">
+                                        <input type="text" class="form-control" v-model.trim.lazy="item.cap.crop.B">
                                     </div>
                                     <div class="col force-align-center">
                                         <bootstrap-switch v-model="item.cap.deinterlace" v-if="item.type==='vi'"></bootstrap-switch>
@@ -639,7 +647,7 @@
                             <div class="col-lg-12">
                                 <div class="row">
                                     <div class="col-2 text-center">
-                                        <input type="text" class="form-control" v-model="item.name">
+                                        <input type="text" class="form-control" v-model.trim.lazy="item.name">
                                     </div>
                                     <div class="col">
                                         <select class="form-select" v-model="item.enca.codec">
@@ -647,7 +655,7 @@
                                             <option value="pcma">PCMA</option>
                                             <option value="mp2">MPEG2</option>
                                             <option value="mp3">MP3</option>
-                                            <option value="close" cn="关闭" en="close" v-woption></option>
+                                            <option value="close" cn="关闭" en="close" v-language-option></option>
                                         </select>
                                     </div>
                                     <div class="col">
@@ -677,12 +685,94 @@
                                     </div>
                                     <div class="col">
                                         <select class="form-select" v-model="item.enca.channels">
-                                            <option cn="单声道" en="mono" value="1" v-woption></option>
-                                            <option cn="立体声" en="stereo" value="2" v-woption></option>
+                                            <option cn="单声道" en="mono" value="1" v-language-option></option>
+                                            <option cn="立体声" en="stereo" value="2" v-language-option></option>
                                         </select>
                                     </div>
                                     <div class="col">
-                                        <input type="text" class="form-control" v-model="item.enca.bitrate">
+                                        <input type="text" class="form-control" v-model.trim.lazy="item.enca.bitrate">
+                                    </div>
+                                </div>
+                                <hr >
+                            </div>
+                        </div>
+                    </div>
+                    <div class="tab-pane fade" id="tab5" role="tabpanel">
+                        <div class="row">
+                            <div class="col-2 text-center">
+                                <cn>频道名称</cn>
+                                <en>channel name</en>
+                            </div>
+                            <div class="col-3 text-center">
+                                <cn>流地址</cn>
+                                <en>stream url</en>
+                            </div>
+                            <div class="col text-center">
+                                <cn>帧率</cn>
+                                <en>framerate</en>
+                            </div>
+                            <div class="col text-center">
+                                <cn>缓冲模式</cn>
+                                <en>buffer mode</en>
+                            </div>
+                            <div class="col text-center">
+                                <cn>缓冲时间</cn>
+                                <en>buffer time</en>
+                            </div>
+                            <div class="col text-center">
+                                <cn>协议</cn>
+                                <en>protocol</en>
+                            </div>
+                            <div class="col text-center">
+                                <cn>视频解码</cn>
+                                <en>video decode</en>
+                            </div>
+                            <div class="col text-center">
+                                <cn>音频解码</cn>
+                                <en>audio decode</en>
+                            </div>
+                            <div class="col text-center">
+                                <cn>开关</cn>
+                                <en>enable</en>
+                            </div>
+                        </div>
+                        <hr >
+                        <div class="row mt-1" v-for="(item,index) in handleNetConf">
+                            <div class="col-lg-12">
+                                <div class="row">
+                                    <div class="col-2 text-center">
+                                        <input type="text" class="form-control" v-model.trim.lazy="item.name">
+                                    </div>
+                                    <div class="col-4">
+                                        <input type="text" class="form-control" v-model.trim.lazy="item.net.path">
+                                    </div>
+                                    <div class="col">
+                                        <input type="text" class="form-control" v-model.trim.lazy="item.net.framerate">
+                                    </div>
+                                    <div class="col">
+                                        <select class="form-select" v-model="item.net.bufferMode">
+                                            <option value="0" cn="一般" en="Normal" v-language-option></option>
+                                            <option value="1" cn="实时" en="NoBuffer" v-language-option></option>
+                                            <option value="2" cn="同步" en="Sync" v-language-option></option>
+                                        </select>
+                                    </div>
+                                    <div class="col">
+                                        <input type="text" class="form-control" v-model.trim.lazy="item.net.minDelay">
+                                    </div>
+                                    <div class="col">
+                                        <select class="form-select" v-model="item.net.protocol">
+                                            <option value="udp">UDP</option>
+                                            <option value="tcp">TCP</option>
+                                        </select>
+                                    </div>
+                                    <div class="col force-align-center">
+                                        <bootstrap-switch v-model="item.net.decodeV"></bootstrap-switch>
+                                    </div>
+                                    <div class="col force-align-center">
+                                        <bootstrap-switch v-model="item.net.decodeA"></bootstrap-switch>
+                                    </div>
+                                    <div class="col force-align-center">
+                                        <bootstrap-switch v-model="item.net.enable"></bootstrap-switch>
                                     </div>
                                 </div>
                                 <hr >
@@ -704,16 +794,16 @@
     
     import { rpc,alertMsg } from "./assets/js/helper.js";
     import { useDefaultConf } from "./assets/js/confHooks.js";
-    import { bootstrapSwitchComponent,wSelectComponent,wOptionDirective } from "./assets/js/vueHelper.js"
+    import { bootstrapSwitchComponent,multipleSelectComponent,languageOptionDirective } from "./assets/js/vueHelper.js"
     
-    const {createApp,reactive,watch,computed} = Vue;
+    const {createApp,reactive,watch,computed,onMounted} = Vue;
     const app = createApp({
         directives:{
-            "woption": wOptionDirective
+            "language-option": languageOptionDirective
         },
         components:{
             "bootstrap-switch" : bootstrapSwitchComponent,
-            "w-select": wSelectComponent
+            "multiple-select": multipleSelectComponent
         },
         setup(props,context) {
             
@@ -746,9 +836,7 @@
             
             const handleEncConf = computed(()=>{
                 return defaultConf.filter((item,index)=>{
-                    if((item.type==='net' && item.net.decodeV) || (item.type!=='net' && item.encv!==undefined))
-                        return true;
-                    return false;
+                    return !!((item.type === 'net' && item.net.decodeV) || (item.type !== 'net' && item.encv !== undefined));
                 })
             })
             
@@ -760,17 +848,19 @@
             
             const handleVdoConf = computed(()=>{
                 return defaultConf.filter((item,index)=>{
-                    if(item.type==='net' || item.type==='vi')
-                        return true;
-                    return false;
+                    return item.type === 'net' || item.type === 'vi';
                 })
             })
             
             const handleAdoConf = computed(()=>{
                 return defaultConf.filter((item,index)=>{
-                    if((item.type==='net' && item.net.decodeA) || (item.type!=='net' && item.enca!==undefined))
-                        return true;
-                    return false;
+                    return !!((item.type === 'net' && item.net.decodeA) || (item.type !== 'net' && item.enca !== undefined));
+                })
+            })
+
+            const handleNetConf = computed(()=>{
+                return defaultConf.filter((item,index)=>{
+                    return item.type === 'net';
                 })
             })
             
@@ -783,7 +873,7 @@
                 });
             }
             
-            return {...state,defaultConf,handleEncConf,handleAdvConf,handleVdoConf,handleAdoConf,saveConf}
+            return {...state,defaultConf,handleEncConf,handleAdvConf,handleVdoConf,handleAdoConf,handleNetConf,saveConf}
         }
     });
     app.mount('#app');
