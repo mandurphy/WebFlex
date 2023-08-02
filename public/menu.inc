@@ -1,5 +1,5 @@
 <div id="menu">
-    <menu :class="['menu',{'toggled': isMenuToggled},{'sidebar-hovered': isSidebarHovered}]">
+    <menu :class="['menu',{'sidebar-hovered': isSidebarHovered}]">
         <header class="top-header">
             <nav class="navbar navbar-expand justify-content-between">
                 <div class="btn-toggle-menu" @click="onToggleMenu">
@@ -326,7 +326,7 @@
 
 <script type="module">
     import { func } from "../assets/js/helper.js";
-    const { createApp,ref,onMounted } = Vue;
+    const { createApp,ref,watchEffect,onMounted } = Vue;
     const menu = createApp({
        setup() {
 
@@ -342,6 +342,14 @@
                            location.href = "/";
                    });
            }
+
+           watchEffect(()=>{
+               const body = document.querySelector('body');
+               if(state.isMenuToggled.value)
+                   body.classList.add('toggled');
+               else
+                   body.classList.remove('toggled');
+           })
 
            const onToggleMenu = () => {
                state.isMenuToggled.value = !state.isMenuToggled.value;

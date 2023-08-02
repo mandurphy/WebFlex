@@ -3,6 +3,7 @@
 <html lang="uft-8">
 <head>
     <?php include ("./public/head.inc") ?>
+    <link href="assets/plugins/confirm/css/jquery-confirm.min.css" rel="stylesheet">
 </head>
 <body>
 <?php include ("./public/menu.inc") ?>
@@ -61,7 +62,7 @@
                                             <div class="col-2">
                                                 <multiple-select v-model:value1="globalConf.encv.width" v-model:value2="globalConf.encv.height" split="x">
                                                     <option value="-1x-1">auto</option>
-                                                    <option value="3840x2160">4K</option>
+                                                    <option v-if="Object.keys(hardwareConf).length > 0 && hardwareConf.capability.encode.maxSize === '4k'" value="3840x2160">4K</option>
                                                     <option value="1920x1080">1080p</option>
                                                     <option value="1280x720">720p</option>
                                                     <option value="640x360">360p</option>
@@ -110,7 +111,7 @@
                                             <div class="col-2">
                                                 <multiple-select v-model:value1="globalConf.encv2.width" v-model:value2="globalConf.encv2.height" split="x">
                                                     <option value="-1x-1">auto</option>
-                                                    <option value="3840x2160">4K</option>
+                                                    <option v-if="Object.keys(hardwareConf).length > 0 && hardwareConf.capability.encode.maxSize === '4k'" value="3840x2160">4K</option>
                                                     <option value="1920x1080">1080p</option>
                                                     <option value="1280x720">720p</option>
                                                     <option value="640x360">360p</option>
@@ -275,7 +276,7 @@
                             </div>
                         </a>
                     </li>
-                    <li class="nav-item" role="presentation">
+                    <li class="nav-item" role="presentation" v-if="Object.keys(hardwareConf).length > 0 && hardwareConf.chip == '3559A' && hardwareConf.chip == '3516E'">
                         <a class="nav-link" data-bs-toggle="tab" href="#tab3" role="tab" aria-selected="false">
                             <div class="d-flex align-items-center">
                                 <div class="tab-icon"><i class="fa-regular fa-image me-1"></i></div>
@@ -346,7 +347,7 @@
                                     <div class="col-2">
                                         <multiple-select v-model:value1="item.encv.width" v-model:value2="item.encv.height" split="x">
                                             <option value="-1x-1">auto</option>
-                                            <option value="3840x2160">4K</option>
+                                            <option v-if="Object.keys(hardwareConf).length > 0 && hardwareConf.capability.encode.maxSize === '4k'" value="3840x2160">4K</option>
                                             <option value="1920x1080">1080p</option>
                                             <option value="1280x720">720p</option>
                                             <option value="640x360">360p</option>
@@ -390,7 +391,7 @@
                                     <div class="col-2">
                                         <multiple-select v-model:value1="item.encv2.width" v-model:value2="item.encv2.height" split="x">
                                             <option value="-1x-1">auto</option>
-                                            <option value="3840x2160">4K</option>
+                                            <option v-if="Object.keys(hardwareConf).length > 0 && hardwareConf.capability.encode.maxSize === '4k'" value="3840x2160">4K</option>
                                             <option value="1920x1080">1080p</option>
                                             <option value="1280x720">720p</option>
                                             <option value="640x360">360p</option>
@@ -487,7 +488,7 @@
                                             <option value="0">Normal</option>
                                             <option value="1">SmartP</option>
                                             <option value="2">DualP</option>
-                                            <option value="3">BiPredB</option>
+                                            <option v-if="Object.keys(hardwareConf).length > 0 && hardwareConf.capability.encode.BFrame" value="3">BiPredB</option>
                                         </select>
                                     </div>
                                     <div class="col">
@@ -519,7 +520,7 @@
                                             <option value="0">Normal</option>
                                             <option value="1">SmartP</option>
                                             <option value="2">DualP</option>
-                                            <option value="3">BiPredB</option>
+                                            <option v-if="Object.keys(hardwareConf).length > 0 && hardwareConf.capability.encode.BFrame" value="3">BiPredB</option>
                                         </select>
                                     </div>
                                     <div class="col">
@@ -801,10 +802,10 @@
     </main>
 </div>
 <?php include ("./public/foot.inc") ?>
-
+<script src="assets/plugins/confirm/js/jquery-confirm.min.js"></script>
 <script type="module">
     
-    import { rpc,alertMsg,extend,deepCopy } from "./assets/js/helper.js";
+    import { rpc,alertMsg,extend,deepCopy,confirm } from "./assets/js/helper.js";
     import { useDefaultConf,useHardwareConf } from "./assets/js/confHooks.js";
     import { bootstrapSwitchComponent,multipleSelectComponent,languageOptionDirective } from "./assets/js/vueHelper.js"
 
@@ -887,12 +888,44 @@
             }
             
             const saveDefaultConf = () => {
-                rpc( "enc.update", [ JSON.stringify( defaultConf, null, 2 ) ]).then(data => {
-                    if ( typeof ( data.error ) != "undefined" )
-                        alertMsg('<cn>保存设置失败</cn><en>Save config failed!</en>', 'error');
-                    else
-                        alertMsg('<cn>保存设置成功</cn><en>Save config success!</en>', 'success');
-                });
+
+                const saveConfig = () => {
+                    rpc( "enc.update", [ JSON.stringify( defaultConf, null, 2 ) ]).then(data => {
+                        if ( typeof ( data.error ) != "undefined" )
+                            alertMsg('<cn>保存设置失败</cn><en>Save config failed!</en>', 'error');
+                        else
+                            alertMsg('<cn>保存设置成功</cn><en>Save config success!</en>', 'success');
+                    });
+                }
+
+                const maxENC = hardwareConf.capability.encode.maxPixel;
+                let sum=0;
+                for ( let i = 0; i < defaultConf.length; i++ ) {
+                    if(defaultConf[i].enable && defaultConf[i].encv !== undefined){
+                        if(defaultConf[i].encv.codec !== "close")
+                            sum+=defaultConf[i].encv.width*defaultConf[i].encv.height*defaultConf[i].encv.framerate;
+                        if(defaultConf[i].enable2 && defaultConf[i].encv2.codec !== "close"){
+                            sum+=defaultConf[i].encv2.width*defaultConf[i].encv2.height*defaultConf[i].encv2.framerate;
+                        }
+                    }
+                }
+
+                if(maxENC > 0 || sum > maxENC) {
+                    confirm( {
+                        title: '<cn>警告</cn><en>Warning</en>',
+                        content: '<cn>超出编码性能上限，请调整编码参数！</cn><en>The limit of encode performance is exceeded. Please adjust the encode parameters!</en>',
+                        buttons: {
+                            ok: {
+                                text: "<cn>知道了</cn><en>I know</en>",
+                                btnClass: 'btn-primary',
+                                keys: [ 'enter' ],
+                                action: () => saveConfig()
+                            }
+                        }
+                    } );
+                    return;
+                }
+                saveConfig();
             }
             
             return {globalConf,defaultConf,hardwareConf,

@@ -862,13 +862,7 @@
                 unwatch_default();
             });
 
-            const handleEnableConf = computed(()=>{
-                return defaultConf.filter((item,index)=>{
-                    if(item.enable || item.enable2)
-                        return true;
-                    return false;
-                })
-            })
+            const handleEnableConf = computed(() => defaultConf.filter((item,index) => !!(item.enable || item.enable2)));
 
             const handlePlayUrl = (index,type)=>{
                 if(state.playUrls.length > index)

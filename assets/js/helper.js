@@ -48,6 +48,10 @@ export const alertMsg = (message, type = "success", size = "mini") => {
     });
 }
 
+export const confirm = (options) => {
+    $.confirm(options);
+}
+
 export const queryData = (url) => {
     return new Promise((resolve,reject)=>{
         axios.get(url)

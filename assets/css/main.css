@@ -223,7 +223,6 @@ a {
     left: 70px;
 }
 
-
 /* side navigation */
 
 .sidebar-wrapper .sidebar-nav {
@@ -376,67 +375,59 @@ a {
 
 @media screen and (min-width:1199px) {
 
-    .menu.toggled .sidebar-wrapper:hover {
+    .toggled .menu .sidebar-wrapper:hover {
 		box-shadow: 0 0.5rem 1rem rgb(0 0 0 / 15%);
 	}
 
-	.menu.toggled:not(.sidebar-hovered) .sidebar-wrapper .sidebar-header .logo-name {
+	.toggled .menu:not(.sidebar-hovered) .sidebar-wrapper .sidebar-header .logo-name {
 		display: none
 	}
-	.menu.toggled:not(.sidebar-hovered) .sidebar-wrapper {
+	.toggled .menu:not(.sidebar-hovered) .sidebar-wrapper {
 		width: 70px
 	}
-	.menu.toggled:not(.sidebar-hovered) .sidebar-wrapper .sidebar-header {
+	.toggled .menu:not(.sidebar-hovered) .sidebar-wrapper .sidebar-header {
 		width: 70px
 	}
-	.menu.toggled:not(.sidebar-hovered) .sidebar-wrapper .sidebar-header .toggle-icon {
+	.toggled .menu:not(.sidebar-hovered) .sidebar-wrapper .sidebar-header .toggle-icon {
 		display: none
 	}
-    .menu.toggled .sidebar-wrapper:hover .sidebar-header .sidebar-close {
+    .toggled .menu .sidebar-wrapper:hover .sidebar-header .sidebar-close {
 		display: block
 	}
-	.menu.toggled:not(.sidebar-hovered) .sidebar-wrapper .sidebar-header {
+	.toggled .menu:not(.sidebar-hovered) .sidebar-wrapper .sidebar-header {
 		justify-content: center
 	}
-	.menu.toggled:not(.sidebar-hovered) .sidebar-wrapper .sidebar-header {
+	.toggled .menu:not(.sidebar-hovered) .sidebar-wrapper .sidebar-header {
 		width: 70px
 	}
-	.menu.toggled:not(.sidebar-hovered) .sidebar-wrapper .metismenu a {
+	.toggled .menu:not(.sidebar-hovered) .sidebar-wrapper .metismenu a {
 		justify-content: center
 	}
-	.menu.toggled:not(.sidebar-hovered) .sidebar-wrapper .metismenu .menu-title {
+	.toggled .menu:not(.sidebar-hovered) .sidebar-wrapper .metismenu .menu-title {
 		display: none
 	}
-	.menu.toggled:not(.sidebar-hovered) .sidebar-wrapper .metismenu li ul {
+	.toggled .menu:not(.sidebar-hovered) .sidebar-wrapper .metismenu li ul {
 		display: none
 	}
-	.menu.toggled:not(.sidebar-hovered) .sidebar-wrapper .metismenu li.menu-label {
+	.toggled .menu:not(.sidebar-hovered) .sidebar-wrapper .metismenu li.menu-label {
 		display: none
 	}
-	.menu.toggled:not(.sidebar-hovered) .sidebar-wrapper .metismenu .has-arrow:after {
+	.toggled .menu:not(.sidebar-hovered) .sidebar-wrapper .metismenu .has-arrow:after {
 		display: none
 	}
-    .menu.toggled:not(.sidebar-hovered) .sidebar-wrapper .sidebar-bottom {
+    .toggled .menu:not(.sidebar-hovered) .sidebar-wrapper .sidebar-bottom {
 		width: 70px
 	}
-    .menu.toggled:not(.sidebar-hovered) .sidebar-wrapper .sidebar-bottom .user-info {
+    .toggled .menu:not(.sidebar-hovered) .sidebar-wrapper .sidebar-bottom .user-info {
 		display: none
 	}
-    .menu.toggled:not(.sidebar-hovered) .sidebar-bottom .dropdown-toggle::after {
+    .toggled .menu:not(.sidebar-hovered) .sidebar-bottom .dropdown-toggle::after {
         display: none;
     }
-    
-    .menu.toggled:not(.sidebar-hovered) .sidebar-bottom .dropdown-toggle {
+
+    .toggled .menu:not(.sidebar-hovered) .sidebar-bottom .dropdown-toggle {
         justify-content: center;
      }
-
-     .email-toggle-btn {
-		display: none!important
-	}
-	.chat-toggle-btn {
-		display: none!important
-	}
-	
 }
 
 
@@ -694,6 +685,21 @@ a {
     font-size: 12px;
     color: gray;
     margin-left: 0.3rem;
+}
+
+
+.jconfirm-box-container {
+    margin: 0 auto;
+}
+
+.jc-bs3-container {
+    position: fixed !important;
+    right: 0;
+    max-width: calc(100% - 260px);
+}
+
+.toggled .jc-bs3-container {
+    max-width: calc(100% - 70px);
 }
 
 .force-align-center {
