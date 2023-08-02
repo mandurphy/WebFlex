@@ -19,7 +19,7 @@
                     </div>
                     <div class="card-body overflow-auto" >
                         <div class="row">
-                            <div class="col-lg-12" v-if="Object.keys(globalData).length !== 0">
+                            <div class="col-lg-12" v-if="Object.keys(globalConf).length !== 0">
                                 <div class="row">
                                     <div class="col-1"></div>
                                     <div class="col-11">
@@ -59,7 +59,7 @@
                                     <div class="col-11">
                                         <div class="row">
                                             <div class="col-2">
-                                                <multiple-select v-model:value1="globalData.encv.width" v-model:value2="globalData.encv.height" split="x">
+                                                <multiple-select v-model:value1="globalConf.encv.width" v-model:value2="globalConf.encv.height" split="x">
                                                     <option value="-1x-1">auto</option>
                                                     <option value="3840x2160">4K</option>
                                                     <option value="1920x1080">1080p</option>
@@ -71,7 +71,7 @@
                                                 </multiple-select>
                                             </div>
                                             <div class="col-2">
-                                                <multiple-select v-model:value1="globalData.encv.codec" v-model:value2="globalData.encv.profile" split=",">
+                                                <multiple-select v-model:value1="globalConf.encv.codec" v-model:value2="globalConf.encv.profile" split=",">
                                                     <option value="h264,base">H.264 Base</option>
                                                     <option value="h264,main">H.264 Main</option>
                                                     <option value="h264,high">H.264 High</option>
@@ -80,7 +80,7 @@
                                                 </multiple-select>
                                             </div>
                                             <div class="col">
-                                                <select class="form-select" v-model="globalData.encv.rcmode">
+                                                <select class="form-select" v-model="globalConf.encv.rcmode">
                                                     <option value="cbr">CBR</option>
                                                     <option value="vbr">VBR</option>
                                                     <option value="avbr">AVBR</option>
@@ -88,13 +88,13 @@
                                                 </select>
                                             </div>
                                             <div class="col">
-                                                <input type="text" class="form-control" v-model.trim.lazy="globalData.encv.bitrate">
+                                                <input type="text" class="form-control" v-model.trim.lazy="globalConf.encv.bitrate">
                                             </div>
                                             <div class="col">
-                                                <input type="text" class="form-control" v-model.trim.lazy="globalData.encv.framerate">
+                                                <input type="text" class="form-control" v-model.trim.lazy="globalConf.encv.framerate">
                                             </div>
                                             <div class="col">
-                                                <input type="text" class="form-control" v-model.trim.lazy="globalData.encv.gop">
+                                                <input type="text" class="form-control" v-model.trim.lazy="globalConf.encv.gop">
                                             </div>
                                         </div>
                                     </div>
@@ -108,7 +108,7 @@
                                     <div class="col-11">
                                         <div class="row">
                                             <div class="col-2">
-                                                <multiple-select v-model:value1="globalData.encv2.width" v-model:value2="globalData.encv2.height" split="x">
+                                                <multiple-select v-model:value1="globalConf.encv2.width" v-model:value2="globalConf.encv2.height" split="x">
                                                     <option value="-1x-1">auto</option>
                                                     <option value="3840x2160">4K</option>
                                                     <option value="1920x1080">1080p</option>
@@ -120,7 +120,7 @@
                                                 </multiple-select>
                                             </div>
                                             <div class="col-2">
-                                                <multiple-select v-model:value1="globalData.encv2.codec" v-model:value2="globalData.encv2.profile" split=",">
+                                                <multiple-select v-model:value1="globalConf.encv2.codec" v-model:value2="globalConf.encv2.profile" split=",">
                                                     <option value="h264,base">H.264 Base</option>
                                                     <option value="h264,main">H.264 Main</option>
                                                     <option value="h264,high">H.264 High</option>
@@ -129,7 +129,7 @@
                                                 </multiple-select>
                                             </div>
                                             <div class="col">
-                                                <select class="form-select" v-model="globalData.encv2.rcmode">
+                                                <select class="form-select" v-model="globalConf.encv2.rcmode">
                                                     <option value="cbr">CBR</option>
                                                     <option value="vbr">VBR</option>
                                                     <option value="avbr">AVBR</option>
@@ -137,13 +137,13 @@
                                                 </select>
                                             </div>
                                             <div class="col">
-                                                <input type="text" class="form-control" v-model.trim.lazy="globalData.encv2.bitrate">
+                                                <input type="text" class="form-control" v-model.trim.lazy="globalConf.encv2.bitrate">
                                             </div>
                                             <div class="col">
-                                                <input type="text" class="form-control" v-model.trim.lazy="globalData.encv2.framerate">
+                                                <input type="text" class="form-control" v-model.trim.lazy="globalConf.encv2.framerate">
                                             </div>
                                             <div class="col">
-                                                <input type="text" class="form-control" v-model.trim.lazy="globalData.encv2.gop">
+                                                <input type="text" class="form-control" v-model.trim.lazy="globalConf.encv2.gop">
                                             </div>
                                         </div>
                                     </div>
@@ -191,7 +191,7 @@
                                     <div class="col-11">
                                         <div class="row">
                                             <div class="col">
-                                                <select class="form-select" v-model="globalData.enca.codec">
+                                                <select class="form-select" v-model="globalConf.enca.codec">
                                                     <option value="aac">AAC</option>
                                                     <option value="pcma">PCMA</option>
                                                     <option value="mp2">MPEG2</option>
@@ -200,10 +200,14 @@
                                                 </select>
                                             </div>
                                             <div class="col">
-                                                <select class="form-select audioSrc" v-model="globalData.enca.audioSrc"></select>
+                                                <select class="form-select" v-model="globalConf.enca.audioSrc">
+                                                    <option value="source">Default</option>
+                                                    <option v-if="Object.keys(hardwareConf).length > 0 && hardwareConf.function.line" value="line">Line</option>
+                                                    <option v-for="(item,index) in defaultConf" :key="index" :value="item.id">{{item.name}}</option>
+                                                </select>
                                             </div>
                                             <div class="col">
-                                                <select class="form-select" v-model="globalData.enca.gain">
+                                                <select class="form-select" v-model="globalConf.enca.gain">
                                                     <option value="24">+24dB</option>
                                                     <option value="18">+18dB</option>
                                                     <option value="12">+12dB</option>
@@ -216,7 +220,7 @@
                                                 </select>
                                             </div>
                                             <div class="col">
-                                                <select class="form-select" v-model="globalData.enca.samplerate">
+                                                <select class="form-select" v-model="globalConf.enca.samplerate">
                                                     <option value="-1">auto</option>
                                                     <option value="16000">16K</option>
                                                     <option value="32000">32K</option>
@@ -225,13 +229,13 @@
                                                 </select>
                                             </div>
                                             <div class="col">
-                                                <select class="form-select" v-model="globalData.enca.channels">
+                                                <select class="form-select" v-model="globalConf.enca.channels">
                                                     <option cn="单声道" en="mono" value="1" v-language-option></option>
                                                     <option cn="立体声" en="stereo" value="2" v-language-option></option>
                                                 </select>
                                             </div>
                                             <div class="col">
-                                                <input type="text" class="form-control" v-model.trim.lazy="globalData.enca.bitrate">
+                                                <input type="text" class="form-control" v-model.trim.lazy="globalConf.enca.bitrate">
                                             </div>
                                         </div>
                                     </div>
@@ -241,7 +245,7 @@
                                 </div>
                                 <div class="row text-center">
                                     <div class="col-lg-12">
-                                        <button type="button" class="btn  border-3 btn-primary me-2"><cn>应用到本地</cn><en>Save to local</en></button>
+                                        <button type="button" class="btn  border-3 btn-primary me-2" @click="saveGlobalConfByLocal"><cn>应用到本地</cn><en>Save to local</en></button>
                                         <button type="button" class="btn  border-3 btn-primary"><cn>应用到群组</cn><en>Save to group</en></button>
                                     </div>
                                 </div>
@@ -659,7 +663,10 @@
                                         </select>
                                     </div>
                                     <div class="col">
-                                        <select class="form-select audioSrc" v-model="item.enca.audioSrc"></select>
+                                        <select class="form-select" v-model="item.enca.audioSrc">
+                                            <option v-if="Object.keys(hardwareConf).length > 0 && hardwareConf.function.line" value="line">Line</option>
+                                            <option v-for="(item,index) in defaultConf" :key="index" :value="item.id">{{item.name}}</option>
+                                        </select>
                                     </div>
                                     <div class="col">
                                         <select class="form-select" v-model="item.enca.gain">
@@ -743,7 +750,7 @@
                                     <div class="col-2 text-center">
                                         <input type="text" class="form-control" v-model.trim.lazy="item.name">
                                     </div>
-                                    <div class="col-4">
+                                    <div class="col-3">
                                         <input type="text" class="form-control" v-model.trim.lazy="item.net.path">
                                     </div>
                                     <div class="col">
@@ -781,7 +788,12 @@
                     </div>
                     
                     <div class="row">
-                        <button type="button" @click="saveConf" class="col-2 offset-5 btn border-3 btn-primary text-center"><cn>保存</cn><en>Save</en></button>
+                        <div class="col-lg-12 text-center">
+                            <button type="button" class="btn btn-primary border-3 px-5" @click="saveDefaultConf">
+                                <cn>保存</cn>
+                                <en>Save</en>
+                            </button>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -792,11 +804,11 @@
 
 <script type="module">
     
-    import { rpc,alertMsg } from "./assets/js/helper.js";
-    import { useDefaultConf } from "./assets/js/confHooks.js";
+    import { rpc,alertMsg,extend,deepCopy } from "./assets/js/helper.js";
+    import { useDefaultConf,useHardwareConf } from "./assets/js/confHooks.js";
     import { bootstrapSwitchComponent,multipleSelectComponent,languageOptionDirective } from "./assets/js/vueHelper.js"
-    
-    const {createApp,reactive,watch,computed,onMounted} = Vue;
+
+    const {createApp,reactive,watch,toRefs,computed,onMounted} = Vue;
     const app = createApp({
         directives:{
             "language-option": languageOptionDirective
@@ -808,8 +820,9 @@
         setup(props,context) {
             
             const { defaultConf } = useDefaultConf();
-            const globalData = reactive({})
-            
+            const { hardwareConf } = useHardwareConf();
+            let globalConf = reactive({});
+
             const unwatch = watch(defaultConf, (value) => {
                 for (let i = 0; i < defaultConf.length; i++) {
                     if (defaultConf[i].type === "net" ) {
@@ -826,13 +839,8 @@
                         }
                     }
                 }
-                Object.assign(globalData, defaultConf[0]);
+                Object.assign(globalConf, deepCopy(defaultConf[0]));
                 unwatch();
-            });
-
-            const unwatch1 = watch(defaultConf, (value) => {
-
-                unwatch1();
             });
             
             const handleEncConf = computed(()=>{
@@ -864,8 +872,21 @@
                     return item.type === 'net';
                 })
             })
+
+            const saveGlobalConfByLocal = () => {
+                for ( let i = 0; i < defaultConf.length; i++ ) {
+                    if (defaultConf[i].encv === undefined || defaultConf[i].enca === undefined )
+                        continue;
+                    extend(defaultConf[i].encv, deepCopy(globalConf.encv));
+                    extend(defaultConf[i].encv2, deepCopy(globalConf.encv2));
+                    extend(defaultConf[i].enca, deepCopy(globalConf.enca));
+                    if(defaultConf[i].enca.audioSrc === "source")
+                        defaultConf[i].enca.audioSrc = defaultConf[i].id;
+                }
+                saveDefaultConf();
+            }
             
-            const saveConf = () => {
+            const saveDefaultConf = () => {
                 rpc( "enc.update", [ JSON.stringify( defaultConf, null, 2 ) ]).then(data => {
                     if ( typeof ( data.error ) != "undefined" )
                         alertMsg('<cn>保存设置失败</cn><en>Save config failed!</en>', 'error');
@@ -874,7 +895,9 @@
                 });
             }
             
-            return {globalData,defaultConf,handleEncConf,handleAdvConf,handleVdoConf,handleAdoConf,handleNetConf,saveConf}
+            return {globalConf,defaultConf,hardwareConf,
+                handleEncConf, handleAdvConf,handleVdoConf,handleAdoConf,
+                handleNetConf,saveGlobalConfByLocal,saveDefaultConf}
         }
     });
     app.mount('#app');

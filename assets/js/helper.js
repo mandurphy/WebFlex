@@ -172,6 +172,20 @@ export const getConfigData = (url,options) => {
     });
 }
 
+export const extend = (target, ...sources) => {
+    if (!target) return {};
+
+    sources.forEach(source => {
+        if (source) {
+            Object.assign(target, source);
+        }
+    });
+
+    return target;
+}
+
+export const deepCopy = (obj) => JSON.parse(JSON.stringify(obj));
+
 
 
 

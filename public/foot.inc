@@ -1,6 +1,6 @@
 
 <?php include ("./public/footfoot.inc") ?>
-<script src="assets/js/language.js" type="module"></script>
+<script src="assets/js/loader.js" type="module"></script>
 <script src="assets/plugins/jquery/jquery.min.js"></script>
 <script src="assets/plugins/bootstrap/bootstrap.bundle.min.js"></script>
 <script src="assets/plugins/vue/vue.global.prod.js"></script>

@@ -193,7 +193,7 @@
                   return "snap/snap" + id + ".jpg?rnd=" + Math.random();
               }
 
-              const updatePreview = async () => {
+              const updatePreview = () => {
                   if(state.preview.length === 0) {
                       for(let i=0;i<defaultConf.length;i++) {
                           if (!defaultConf[i].enable  || ( defaultConf[i].type === "net" && !defaultConf[i].net.decodeV))

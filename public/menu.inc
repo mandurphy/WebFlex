@@ -365,9 +365,6 @@
                $(".metismenu").metisMenu();
                new SimpleBar(document.querySelector(".sidebar-nav"));
 
-               const html = document.querySelector('html');
-               html.setAttribute('data-bs-theme', "default");
-
                let as = document.querySelectorAll(".sidebar-wrapper .metismenu li a");
                for (let i = 0; i < as.length; i++) {
                    if (as[i].href === window.location.href) {

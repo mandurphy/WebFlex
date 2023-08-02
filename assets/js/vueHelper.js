@@ -106,21 +106,20 @@ export const pieChartDirective = {
 
 
 
-
-
-
-
-
-
 export const languageOptionDirective = {
     mounted(el, binding, vnode) {
-        const html = document.querySelector('html');
-        const lang = html.getAttribute('data-bs-language');
-        el.textContent = el.getAttribute(lang);
-        const observer = new MutationObserver(() => {
+
+        const update = () => {
             const lang = html.getAttribute('data-bs-language');
             el.textContent = el.getAttribute(lang);
+        }
+
+        const html = document.querySelector('html');
+        update();
+        const observer = new MutationObserver(() => {
+            update();
         });
+
         const config = { attributes: true };
         observer.observe(html, config);
     }
@@ -334,7 +333,7 @@ export const netFlotChartComponent = {
         },{deep: true})
 
         nextTick(()=>{
-            initPlot();
+            setTimeout(initPlot,100);
         })
 
         return {net_chart}
@@ -349,6 +348,12 @@ export const bootstrapSwitchComponent = {
 
         const size = props.size === undefined ? "small" : props.size;
         const bs_switch = ref(null);
+
+        const { modelValue } = toRefs(props);
+
+        watch(modelValue,()=>{
+            $(bs_switch.value).bootstrapSwitch('state', modelValue.value, true);
+        })
 
         onMounted(()=>{
             $(bs_switch.value).bootstrapSwitch({
@@ -401,8 +406,15 @@ export const multipleInputComponent = {
     setup(props,context) {
 
         let selectValue = ref("");
-        const onSelectChange = () =>{
-            let [value1,value2] = selectValue.value.split(this.split);
+
+        const { value1,value2 } = toRefs(props);
+
+        watchEffect(()=>{
+            selectValue.value = value1.value + props.split + value2.value;
+        })
+
+        const onInputChange = () =>{
+            let [value1,value2] = selectValue.value.split(props.split);
             value1 = isNaN(Number(value1)) ? value1 : Number(value1);
             value2 = isNaN(Number(value2)) ? value2 : Number(value2);
             context.emit('update:value1', value1);
@@ -413,7 +425,7 @@ export const multipleInputComponent = {
             selectValue.value = props.value1 + props.split + props.value2;
         })
 
-        return {selectValue,onSelectChange}
+        return {selectValue,onInputChange}
     }
 };
 

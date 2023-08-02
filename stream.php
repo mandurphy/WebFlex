@@ -19,7 +19,7 @@
                  </div>
                  <div class="card-body overflow-auto" >
                      <div class="row">
-                         <div class="col-lg-12" v-if="Object.keys(globalData).length !== 0">
+                         <div class="col-lg-12" v-if="Object.keys(globalConf).length !== 0">
                              <div class="row">
                                  <div class="col-2"></div>
                                  <div class="col text-center">
@@ -54,25 +54,25 @@
                                      <en>Main protocol</en>
                                  </div>
                                  <div class="col force-align-center">
-                                     <bootstrap-switch v-model="globalData.stream.http" ></bootstrap-switch>
+                                     <bootstrap-switch v-model="globalConf.stream.http" ></bootstrap-switch>
                                  </div>
                                  <div class="col force-align-center">
-                                     <bootstrap-switch v-model="globalData.stream.hls" ></bootstrap-switch>
+                                     <bootstrap-switch v-model="globalConf.stream.hls" ></bootstrap-switch>
                                  </div>
                                  <div class="col force-align-center">
-                                     <bootstrap-switch v-model="globalData.stream.rtmp" ></bootstrap-switch>
+                                     <bootstrap-switch v-model="globalConf.stream.rtmp" ></bootstrap-switch>
                                  </div>
                                  <div class="col force-align-center">
-                                     <bootstrap-switch v-model="globalData.stream.rtsp.enable" ></bootstrap-switch>
+                                     <bootstrap-switch v-model="globalConf.stream.rtsp.enable" ></bootstrap-switch>
                                  </div>
                                  <div class="col force-align-center">
-                                     <bootstrap-switch v-model="globalData.stream.udp.enable" ></bootstrap-switch>
+                                     <bootstrap-switch v-model="globalConf.stream.udp.enable" ></bootstrap-switch>
                                  </div>
                                  <div class="col-2">
-                                     <multiple-input type="text" class="form-control" v-model:value1="globalData.stream.udp.ip" v-model:value2="globalData.stream.udp.port" split=":"></multiple-input>
+                                     <multiple-input type="text" class="form-control" v-model:value1="globalConf.stream.udp.ip" v-model:value2="globalConf.stream.udp.port" split=":"></multiple-input>
                                  </div>
                                  <div class="col force-align-center">
-                                     <bootstrap-switch v-model="globalData.stream.push.enable" ></bootstrap-switch>
+                                     <bootstrap-switch v-model="globalConf.stream.push.enable" ></bootstrap-switch>
                                  </div>
                                  <div class="col"></div>
                              </div>
@@ -83,32 +83,32 @@
                                      <en>Sub protocol</en>
                                  </div>
                                  <div class="col force-align-center">
-                                     <bootstrap-switch v-model="globalData.stream2.http" ></bootstrap-switch>
+                                     <bootstrap-switch v-model="globalConf.stream2.http" ></bootstrap-switch>
                                  </div>
                                  <div class="col force-align-center">
-                                     <bootstrap-switch v-model="globalData.stream2.hls" ></bootstrap-switch>
+                                     <bootstrap-switch v-model="globalConf.stream2.hls" ></bootstrap-switch>
                                  </div>
                                  <div class="col force-align-center">
-                                     <bootstrap-switch v-model="globalData.stream2.rtmp" ></bootstrap-switch>
+                                     <bootstrap-switch v-model="globalConf.stream2.rtmp" ></bootstrap-switch>
                                  </div>
                                  <div class="col force-align-center">
-                                     <bootstrap-switch v-model="globalData.stream2.rtsp.enable" ></bootstrap-switch>
+                                     <bootstrap-switch v-model="globalConf.stream2.rtsp.enable" ></bootstrap-switch>
                                  </div>
                                  <div class="col force-align-center">
-                                     <bootstrap-switch v-model="globalData.stream2.udp.enable" ></bootstrap-switch>
+                                     <bootstrap-switch v-model="globalConf.stream2.udp.enable" ></bootstrap-switch>
                                  </div>
                                  <div class="col-2">
-                                     <multiple-input type="text" class="form-control" v-model:value1="globalData.stream2.udp.ip" v-model:value2="globalData.stream2.udp.port" split=":"></multiple-input>
+                                     <multiple-input type="text" class="form-control" v-model:value1="globalConf.stream2.udp.ip" v-model:value2="globalConf.stream2.udp.port" split=":"></multiple-input>
                                  </div>
                                  <div class="col force-align-center">
-                                     <bootstrap-switch v-model="globalData.stream2.push.enable" ></bootstrap-switch>
+                                     <bootstrap-switch v-model="globalConf.stream2.push.enable" ></bootstrap-switch>
                                  </div>
                                  <div class="col"></div>
                              </div>
                              <hr class="mt-4 mb-4">
                              <div class="row text-center">
                                  <div class="col-lg-12">
-                                     <button type="button" class="btn  border-3 btn-primary me-2"><cn>应用到本地</cn><en>Save to local</en></button>
+                                     <button type="button" class="btn  border-3 btn-primary me-2" @click="saveGlobalConfByLocal"><cn>应用到本地</cn><en>Save to local</en></button>
                                      <button type="button" class="btn  border-3 btn-primary"><cn>应用到群组</cn><en>Save to group</en></button>
                                  </div>
                              </div>
@@ -720,7 +720,12 @@
                      </div>
                  </div>
                  <div class="row">
-                     <button type="button" @click="saveConf" class="col-2 offset-5 btn border-3 btn-primary text-center"><cn>保存</cn><en>Save</en></button>
+                     <div class="col-lg-12 text-center">
+                         <button type="button" class="btn btn-primary border-3 px-5" @click="saveDefaultConf">
+                             <cn>保存</cn>
+                             <en>Save</en>
+                         </button>
+                     </div>
                  </div>
              </div>
          </div>
@@ -731,7 +736,7 @@
 
 <script type="module">
 
-    import { rpc,alertMsg } from "./assets/js/helper.js";
+    import { rpc,alertMsg,extend,deepCopy } from "./assets/js/helper.js";
     import { useDefaultConf,usePortConf } from "./assets/js/confHooks.js";
     import { bootstrapSwitchComponent,multipleInputComponent } from "./assets/js/vueHelper.js"
 
@@ -747,7 +752,7 @@
             const { portConf } = usePortConf();
 
             const state = {
-                globalData : reactive({}),
+                globalConf : reactive({}),
                 playUrls:reactive([])
             }
             
@@ -851,7 +856,9 @@
                     }
                 }
     
-                Object.assign(state.globalData, defaultConf[0]);
+                Object.assign(state.globalConf, deepCopy(defaultConf[0]));
+                state.globalConf.stream.udp.port += "+";
+                state.globalConf.stream2.udp.port += "+";
                 unwatch_default();
             });
 
@@ -868,8 +875,31 @@
                     return state.playUrls[index][type];
                 return "";
             }
+
+            const saveGlobalConfByLocal = () => {
+                for ( let i = 0; i < defaultConf.length; i++ ) {
+                    if (defaultConf[i].stream === undefined )
+                        continue;
+                    extend(defaultConf[i].stream, deepCopy(state.globalConf.stream));
+                    extend(defaultConf[i].stream2, deepCopy(state.globalConf.stream2));
+                    let port1 = defaultConf[i].stream.udp.port;
+                    if(port1.indexOf("+") > 0) {
+                        port1 = port1.replace(/[+\s]/g, '');
+                        port1 = isNaN(Number(port1)) ? (3000+i) : (Number(port1)+i);
+                        defaultConf[i].stream.udp.port = port1;
+                    }
+
+                    let port2 = defaultConf[i].stream2.udp.port;
+                    if(port2.indexOf("+") > 0) {
+                        port2 = port2.replace(/[+\s]/g, '');
+                        port2 = isNaN(Number(port2)) ? (3000+i) : (Number(port2)+i);
+                        defaultConf[i].stream2.udp.port = port2;
+                    }
+                }
+                saveDefaultConf();
+            }
         
-            const saveConf = () => {
+            const saveDefaultConf = () => {
                 rpc("enc.update", [ JSON.stringify( defaultConf, null, 2 ) ]).then(data => {
                     if ( typeof ( data.error ) != "undefined" ) {
                         alertMsg('<cn>保存设置失败</cn><en>Save config failed!</en>', 'error');
@@ -880,7 +910,7 @@
                 });
             }
         
-            return {...state,defaultConf,handleEnableConf,handlePlayUrl,saveConf}
+            return {...state,defaultConf,handleEnableConf,handlePlayUrl,saveGlobalConfByLocal,saveDefaultConf}
         }
     });
     app.mount('#app');
