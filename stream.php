@@ -25,7 +25,7 @@
                                  <div class="col text-center">
                                      HTTP
                                  </div>
-                                 <div class="col text-center">
+                                 <div v-if="Object.keys(hardwareConf).length > 0 && hardwareConf.function.hls" class="col text-center">
                                      HLS
                                  </div>
                                  <div class="col text-center">
@@ -56,7 +56,7 @@
                                  <div class="col force-align-center">
                                      <bootstrap-switch v-model="globalConf.stream.http" ></bootstrap-switch>
                                  </div>
-                                 <div class="col force-align-center">
+                                 <div v-if="Object.keys(hardwareConf).length > 0 && hardwareConf.function.hls" class="col force-align-center">
                                      <bootstrap-switch v-model="globalConf.stream.hls" ></bootstrap-switch>
                                  </div>
                                  <div class="col force-align-center">
@@ -85,7 +85,7 @@
                                  <div class="col force-align-center">
                                      <bootstrap-switch v-model="globalConf.stream2.http" ></bootstrap-switch>
                                  </div>
-                                 <div class="col force-align-center">
+                                 <div v-if="Object.keys(hardwareConf).length > 0 && hardwareConf.function.hls" class="col force-align-center">
                                      <bootstrap-switch v-model="globalConf.stream2.hls" ></bootstrap-switch>
                                  </div>
                                  <div class="col force-align-center">
@@ -138,7 +138,7 @@
                          </div>
                      </a>
                  </li>
-                 <li class="nav-item" role="presentation">
+                 <li v-if="Object.keys(hardwareConf).length > 0 && hardwareConf.function.hls" class="nav-item" role="presentation">
                      <a class="nav-link" data-bs-toggle="tab" href="#tab3" role="tab" aria-selected="false">
                          <div class="d-flex align-items-center">
                              <div class="tab-icon"><i class="fa-solid fa-gear me-1"></i></div>
@@ -155,7 +155,7 @@
                      </a>
                  </li>
     
-                 <li class="nav-item" role="presentation">
+                 <li v-if="Object.keys(hardwareConf).length > 0 && hardwareConf.function.srt" class="nav-item" role="presentation">
                      <a class="nav-link" data-bs-toggle="tab" href="#tab5" role="tab" aria-selected="false">
                          <div class="d-flex align-items-center">
                              <div class="tab-icon"><i class="fa-solid fa-gear me-1"></i></div>
@@ -163,7 +163,7 @@
                          </div>
                      </a>
                  </li>
-                 <li class="nav-item" role="presentation">
+                 <li v-if="Object.keys(hardwareConf).length > 0 && hardwareConf.function.ndi" class="nav-item" role="presentation">
                      <a class="nav-link" data-bs-toggle="tab" href="#tab6" role="tab" aria-selected="false">
                          <div class="d-flex align-items-center">
                              <div class="tab-icon"><i class="fa-solid fa-gear me-1"></i></div>
@@ -198,7 +198,7 @@
                          <div class="col text-center">
                              HTTP
                          </div>
-                         <div class="col text-center">
+                         <div v-if="Object.keys(hardwareConf).length > 0 && hardwareConf.function.hls" class="col text-center">
                              HLS
                          </div>
                          <div class="col text-center">
@@ -229,12 +229,12 @@
                          <div class="col-lg-12">
                              <div class="row">
                                  <div class="col-2 text-center">
-                                     <input type="text" class="form-control" v-model="item.name">
+                                     <input type="text" class="form-control" v-model.trim.lazy="item.name">
                                  </div>
                                  <div class="col force-align-center">
                                      <bootstrap-switch v-model="item.stream.http" ></bootstrap-switch>
                                  </div>
-                                 <div class="col force-align-center">
+                                 <div v-if="Object.keys(hardwareConf).length > 0 && hardwareConf.function.hls" class="col force-align-center">
                                      <bootstrap-switch v-model="item.stream.hls" ></bootstrap-switch>
                                  </div>
                                  <div class="col force-align-center">
@@ -253,7 +253,7 @@
                                      <bootstrap-switch v-model="item.stream.push.enable" ></bootstrap-switch>
                                  </div>
                                  <div class="col-2">
-                                     <input class="form-control" v-model="item.stream.push.path">
+                                     <input class="form-control" v-model.trim.lazy="item.stream.push.path">
                                  </div>
                              </div>
                              <div class="row mt-1">
@@ -261,7 +261,7 @@
                                  <div class="col force-align-center">
                                      <bootstrap-switch v-model="item.stream2.http" ></bootstrap-switch>
                                  </div>
-                                 <div class="col force-align-center">
+                                 <div v-if="Object.keys(hardwareConf).length > 0 && hardwareConf.function.hls" class="col force-align-center">
                                      <bootstrap-switch v-model="item.stream2.hls" ></bootstrap-switch>
                                  </div>
                                  <div class="col force-align-center">
@@ -280,7 +280,7 @@
                                      <bootstrap-switch v-model="item.stream2.push.enable" ></bootstrap-switch>
                                  </div>
                                  <div class="col-2">
-                                     <input class="form-control" v-model="item.stream2.push.path">
+                                     <input class="form-control" v-model.trim.lazy="item.stream2.push.path">
                                  </div>
                              </div>
                              <hr >
@@ -336,33 +336,33 @@
                          <div class="col-lg-12">
                              <div class="row">
                                  <div class="col text-center">
-                                     <input type="text" class="form-control" v-model="item.name">
+                                     <input type="text" class="form-control" v-model.trim.lazy="item.name">
                                  </div>
                                  <div class="col-10">
                                      <div class="row">
                                          <div class="col">
-                                             <input type="text" class="form-control" v-model="item.ts.mpegts_start_pid">
+                                             <input type="text" class="form-control" v-model.trim.lazy="item.ts.mpegts_start_pid">
                                          </div>
                                          <div class="col">
-                                             <input type="text" class="form-control" v-model="item.stream.udp.ttl">
+                                             <input type="text" class="form-control" v-model.trim.lazy="item.stream.udp.ttl">
                                          </div>
                                          <div class="col">
                                              <bootstrap-switch v-model="item.stream.udp.flowCtrl"></bootstrap-switch>
                                          </div>
                                          <div class="col">
-                                             <input type="text" class="form-control" v-model="item.stream.udp.bandwidth">
+                                             <input type="text" class="form-control" v-model.trim.lazy="item.stream.udp.bandwidth">
                                          </div>
                                          <div class="col">
-                                             <input type="text" class="form-control" v-model="item.ts.mpegts_pmt_start_pid">
+                                             <input type="text" class="form-control" v-model.trim.lazy="item.ts.mpegts_pmt_start_pid">
                                          </div>
                                          <div class="col">
-                                             <input type="text" class="form-control" v-model="item.ts.mpegts_service_id">
+                                             <input type="text" class="form-control" v-model.trim.lazy="item.ts.mpegts_service_id">
                                          </div>
                                          <div class="col">
-                                             <input type="text" class="form-control" v-model="item.ts.mpegts_transport_stream_id">
+                                             <input type="text" class="form-control" v-model.trim.lazy="item.ts.mpegts_transport_stream_id">
                                          </div>
                                          <div class="col">
-                                             <input type="text" class="form-control" v-model="item.ts.mpegts_original_network_id">
+                                             <input type="text" class="form-control" v-model.trim.lazy="item.ts.mpegts_original_network_id">
                                          </div>
                                          <div class="col-2">
                                              <select class="form-select" v-model="item.ts.tsSize">
@@ -416,19 +416,19 @@
                          <div class="col-lg-12">
                              <div class="row">
                                  <div class="col-2 text-center">
-                                     <input type="text" class="form-control" v-model="item.name">
+                                     <input type="text" class="form-control" v-model.trim.lazy="item.name">
                                  </div>
                                  <div class="col-2">
-                                     <input type="text" class="form-control" v-model="item.hls.hls_time">
+                                     <input type="text" class="form-control" v-model.trim.lazy="item.hls.hls_time">
                                  </div>
                                  <div class="col-2">
-                                     <input type="text" class="form-control" v-model="item.hls.hls_list_size">
+                                     <input type="text" class="form-control" v-model.trim.lazy="item.hls.hls_list_size">
                                  </div>
                                  <div class="col-2">
-                                     <input type="text" class="form-control" v-model="item.hls.hls_base_url">
+                                     <input type="text" class="form-control" v-model.trim.lazy="item.hls.hls_base_url">
                                  </div>
                                  <div class="col-2">
-                                     <input type="text" class="form-control" v-model="item.hls.hls_filename">
+                                     <input type="text" class="form-control" v-model.trim.lazy="item.hls.hls_filename">
                                  </div>
                              </div>
                              <hr >
@@ -463,13 +463,13 @@
                          <div class="col-lg-12">
                              <div class="row">
                                  <div class="col-2 text-center">
-                                     <input type="text" class="form-control" v-model="item.name">
+                                     <input type="text" class="form-control" v-model.trim.lazy="item.name">
                                  </div>
                                  <div class="col-2">
-                                     <input type="text" class="form-control" v-model="item.stream.rtsp.name">
+                                     <input type="text" class="form-control" v-model.trim.lazy="item.stream.rtsp.name">
                                  </div>
                                  <div class="col-2">
-                                     <input type="text" class="form-control" v-model="item.stream.rtsp.passwd">
+                                     <input type="text" class="form-control" v-model.trim.lazy="item.stream.rtsp.passwd">
                                  </div>
                                  <div class="col-1">
                                      <bootstrap-switch v-model="item.stream.rtsp.auth"></bootstrap-switch>
@@ -520,7 +520,7 @@
                          <div class="col-lg-12">
                              <div class="row">
                                  <div class="col-2 text-center">
-                                     <input type="text" class="form-control" v-model="item.name">
+                                     <input type="text" class="form-control" v-model.trim.lazy="item.name">
                                  </div>
                                  <div class="col">
                                      <select class="form-select" v-model="item.stream.srt.mode">
@@ -530,19 +530,19 @@
                                      </select>
                                  </div>
                                  <div class="col">
-                                     <input type="text" class="form-control" v-model="item.stream.srt.ip">
+                                     <input type="text" class="form-control" v-model.trim.lazy="item.stream.srt.ip">
                                  </div>
                                  <div class="col">
-                                     <input type="text" class="form-control" v-model="item.stream.srt.streamid">
+                                     <input type="text" class="form-control" v-model.trim.lazy="item.stream.srt.streamid">
                                  </div>
                                  <div class="col">
-                                     <input type="text" class="form-control" v-model="item.stream.srt.port">
+                                     <input type="text" class="form-control" v-model.trim.lazy="item.stream.srt.port">
                                  </div>
                                  <div class="col">
-                                     <input type="text" class="form-control" v-model="item.stream.srt.latency">
+                                     <input type="text" class="form-control" v-model.trim.lazy="item.stream.srt.latency">
                                  </div>
                                  <div class="col">
-                                     <input type="text" class="form-control" v-model="item.stream.srt.passwd">
+                                     <input type="text" class="form-control" v-model.trim.lazy="item.stream.srt.passwd">
                                  </div>
                                  <div class="col force-align-center">
                                      <bootstrap-switch v-model="item.stream.srt.enable"></bootstrap-switch>
@@ -576,13 +576,13 @@
                          <div class="col-lg-12">
                              <div class="row">
                                  <div class="col-2 text-center">
-                                     <input type="text" class="form-control" v-model="item.name">
+                                     <input type="text" class="form-control" v-model.trim.lazy="item.name">
                                  </div>
                                  <div class="col-2">
-                                     <input type="text" class="form-control" v-model="item.ndi.name">
+                                     <input type="text" class="form-control" v-model.trim.lazy="item.ndi.name">
                                  </div>
                                  <div class="col-2">
-                                     <input type="text" class="form-control" v-model="item.ndi.group">
+                                     <input type="text" class="form-control" v-model.trim.lazy="item.ndi.group">
                                  </div>
                                  <div class="col-1 force-align-center">
                                      <bootstrap-switch v-model="item.ndi.enable"></bootstrap-switch>
@@ -614,10 +614,10 @@
                          <div class="col-lg-12">
                              <div class="row">
                                  <div class="col-2 text-center">
-                                     <input type="text" class="form-control" v-model="item.name">
+                                     <input type="text" class="form-control" v-model.trim.lazy="item.name">
                                  </div>
                                  <div class="col-2">
-                                     <input type="text" class="form-control" v-model="item.stream.push.hevc_id">
+                                     <input type="text" class="form-control" v-model.trim.lazy="item.stream.push.hevc_id">
                                  </div>
                                  <div class="col-2">
                                      <select class="form-select" v-model="item.stream.push.format">
@@ -630,13 +630,13 @@
                                      </select>
                                  </div>
                                  <div class="col-1 text-center">
-                                     <span class="info">0</span>kb/s
+                                     <span>{{handlePushSpeed(index*2)}} kb/s</span>
                                  </div>
                              </div>
                              <div class="row mt-1">
                                  <div class="col-2 text-center"></div>
                                  <div class="col-2">
-                                     <input type="text" class="form-control" v-model="item.stream2.push.hevc_id">
+                                     <input type="text" class="form-control" v-model.trim.lazy="item.stream2.push.hevc_id">
                                  </div>
                                  <div class="col-2">
                                      <select class="form-select" v-model="item.stream2.push.format">
@@ -649,7 +649,7 @@
                                      </select>
                                  </div>
                                  <div class="col-1 text-center">
-                                     <span class="info">0</span>kb/s
+                                     <span>{{handlePushSpeed(index*2+1)}} kb/s</span>
                                  </div>
                              </div>
                              <hr >
@@ -692,12 +692,12 @@
                          <div class="col-lg-12">
                              <div class="row">
                                  <div class="col-2 text-center">
-                                     <input type="text" class="form-control" v-model="item.name">
+                                     <input type="text" class="form-control" v-model.trim.lazy="item.name">
                                  </div>
                                  <div class="col-5">
                                      <div class="row">
                                          <div class="col-3">
-                                             <input type="text" class="form-control" v-model="item.stream.suffix">
+                                             <input type="text" class="form-control" v-model.trim.lazy="item.stream.suffix">
                                          </div>
                                          <div class="col">
                                              <div class="play-url" v-html="handlePlayUrl(index,'main')"></div>
@@ -707,7 +707,7 @@
                                  <div class="col-5">
                                      <div class="row">
                                          <div class="col-3">
-                                             <input type="text" class="form-control" v-model="item.stream.suffix">
+                                             <input type="text" class="form-control" v-model.trim.lazy="item.stream.suffix">
                                          </div>
                                          <div class="col">
                                              <div class="play-url" v-html="handlePlayUrl(index,'sub')"></div>
@@ -737,10 +737,10 @@
 <script type="module">
 
     import { rpc,alertMsg,extend,deepCopy } from "./assets/js/helper.js";
-    import { useDefaultConf,usePortConf } from "./assets/js/confHooks.js";
+    import { useDefaultConf,useHardwareConf,usePortConf } from "./assets/js/confHooks.js";
     import { bootstrapSwitchComponent,multipleInputComponent } from "./assets/js/vueHelper.js"
 
-    const {createApp,ref,reactive,toRefs,watch,computed} = Vue;
+    const {createApp,ref,reactive,toRefs,watch,watchEffect,computed} = Vue;
     const app = createApp({
         components:{
             "bootstrap-switch" : bootstrapSwitchComponent,
@@ -749,11 +749,13 @@
         setup(props,context) {
         
             const { defaultConf } = useDefaultConf();
+            const { hardwareConf } = useHardwareConf();
             const { portConf } = usePortConf();
 
             const state = {
                 globalConf : reactive({}),
-                playUrls:reactive([])
+                playUrls:reactive([]),
+                pushSpeed: reactive([])
             }
             
             const getport = (list,type) => {
@@ -818,49 +820,59 @@
                 });
             }
 
-            const unwatch_port = watch(portConf, (value) => {
-                updatePlayUrl();
-                unwatch_port();
-            });
+            const getPushSpeed = () => {
+                rpc("enc.getPushSpeed").then(data => {
+                    state.pushSpeed.splice(0, state.pushSpeed.length, ...data);
+                });
+                setTimeout(getPushSpeed,2000);
+            }
 
-            const unwatch_default = watch(defaultConf, (value) => {
-                for (let i = 0; i < defaultConf.length; i++) {
-                    if(defaultConf[i].hasOwnProperty("stream")) {
-                        let rtsp = defaultConf[i].stream.rtsp;
-                        if(!rtsp.hasOwnProperty("enable")) {
-                            rtsp = {
-                                enable : rtsp,
-                                name: "admin",
-                                passwd: "admin",
-                                auth: false
+            const unwatch = watchEffect(()=>{
+                if(Object.keys(defaultConf).length > 0 && Object.keys(portConf).length >0) {
+                    for (let i = 0; i < defaultConf.length; i++) {
+                        if(defaultConf[i].hasOwnProperty("stream")) {
+                            let rtsp = defaultConf[i].stream.rtsp;
+                            if(!rtsp.hasOwnProperty("enable")) {
+                                rtsp = {
+                                    enable : rtsp,
+                                    name: "admin",
+                                    passwd: "admin",
+                                    auth: false
+                                }
+                                defaultConf[i].stream.rtsp = rtsp;
                             }
-                            defaultConf[i].stream.rtsp = rtsp;
+
+                            if(!defaultConf[i].stream.hasOwnProperty("suffix"))
+                                defaultConf[i].stream.suffix = "stream"+defaultConf[i].id;
                         }
-            
-                        if(!defaultConf[i].stream.hasOwnProperty("suffix"))
-                            defaultConf[i].stream.suffix = "stream"+defaultConf[i].id;
-                    }
-                    if(defaultConf[i].hasOwnProperty("stream2")) {
-                        let rtsp = defaultConf[i].stream2.rtsp;
-                        if(!rtsp.hasOwnProperty("enable")) {
-                            rtsp = {
-                                enable : rtsp,
-                                name: "admin",
-                                passwd: "admin",
-                                auth: false
+                        if(defaultConf[i].hasOwnProperty("stream2")) {
+                            let rtsp = defaultConf[i].stream2.rtsp;
+                            if(!rtsp.hasOwnProperty("enable")) {
+                                rtsp = {
+                                    enable : rtsp,
+                                    name: "admin",
+                                    passwd: "admin",
+                                    auth: false
+                                }
+                                defaultConf[i].stream2.rtsp = rtsp;
                             }
-                            defaultConf[i].stream2.rtsp = rtsp;
+                            if(!defaultConf[i].stream2.hasOwnProperty("suffix"))
+                                defaultConf[i].stream2.suffix = "sub"+defaultConf[i].id;
                         }
-                        if(!defaultConf[i].stream2.hasOwnProperty("suffix"))
-                            defaultConf[i].stream2.suffix = "sub"+defaultConf[i].id;
                     }
+
+                    Object.assign(state.globalConf, deepCopy(defaultConf[0]));
+                    state.globalConf.stream.udp.port += "+";
+                    state.globalConf.stream2.udp.port += "+";
+                    updatePlayUrl();
+                    getPushSpeed();
+                    unwatch();
                 }
-    
-                Object.assign(state.globalConf, deepCopy(defaultConf[0]));
-                state.globalConf.stream.udp.port += "+";
-                state.globalConf.stream2.udp.port += "+";
-                unwatch_default();
-            });
+            })
+
+            const handlePushSpeed = (index) => {
+                return state.pushSpeed[index];
+            }
 
             const handleEnableConf = computed(() => defaultConf.filter((item,index) => !!(item.enable || item.enable2)));
 
@@ -904,7 +916,7 @@
                 });
             }
         
-            return {...state,defaultConf,handleEnableConf,handlePlayUrl,saveGlobalConfByLocal,saveDefaultConf}
+            return {...state,defaultConf,hardwareConf,handleEnableConf,handlePlayUrl,handlePushSpeed,saveGlobalConfByLocal,saveDefaultConf}
         }
     });
     app.mount('#app');

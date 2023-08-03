@@ -910,7 +910,7 @@
                     }
                 }
 
-                if(maxENC > 0 || sum > maxENC) {
+                if(maxENC > 0 && sum > maxENC) {
                     confirm( {
                         title: '<cn>警告</cn><en>Warning</en>',
                         content: '<cn>超出编码性能上限，请调整编码参数！</cn><en>The limit of encode performance is exceeded. Please adjust the encode parameters!</en>',

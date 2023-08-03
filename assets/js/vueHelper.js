@@ -410,20 +410,28 @@ export const multipleInputComponent = {
         const { value1,value2 } = toRefs(props);
 
         watchEffect(()=>{
+            if(typeof value1.value === "string")
+                value1.value = value1.value.trim();
+            if(typeof value2.value === "string")
+                value2.value = value2.value.trim();
             selectValue.value = value1.value + props.split + value2.value;
         })
 
         const onInputChange = () =>{
-            let [value1,value2] = selectValue.value.split(props.split);
-            value1 = isNaN(Number(value1)) ? value1 : Number(value1);
-            value2 = isNaN(Number(value2)) ? value2 : Number(value2);
-            context.emit('update:value1', value1);
-            context.emit('update:value2', value2);
-        }
+            let [val1,val2] = selectValue.value.split(props.split);
+            val1 = isNaN(Number(val1)) ? val1 : Number(val1);
+            val2 = isNaN(Number(val2)) ? val2 : Number(val2);
 
-        onMounted(()=>{
-            selectValue.value = props.value1 + props.split + props.value2;
-        })
+            if(typeof val1 === "string")
+                val1 = val1.trim();
+            if(typeof val2 === "string")
+                val2 = val2.trim();
+
+            context.emit('update:value1', val1);
+            context.emit('update:value2', val2);
+
+            selectValue.value = val1 + props.split + val2;
+        }
 
         return {selectValue,onInputChange}
     }
