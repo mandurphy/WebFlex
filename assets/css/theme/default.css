@@ -4,13 +4,15 @@
 	--bs-body-bg-semi: #212529;
     --bs-body-bg-semi-2:#191b1e;
     --bs-light-text-semi: #f8f9fa;
-    --bs-light-semi-2: #32363b;
-    --bs-simplebar: #727477;
+
 	--bs-border-color-translucent-semi: rgba(255, 255, 255, 0.15);
+    --bs-border-color: #dee2e6;
 
     --bs-body-bg-color: #f0f0f4;
     --bs-body-bg: #ffffff;
 
+    --bs-default-simplebar-color: #727477;
+    --bs-default-auth-border-color:#495057;
     --bs-default-body-color:#555;
     --bs-default-bg-color:#ffbb00;
     --bs-default-acitve-color:#eeaa00;
@@ -43,7 +45,7 @@
 /*}*/
 
 [data-bs-theme=default] .simplebar-scrollbar:before {
-    background-color: var(--bs-simplebar);
+    background-color: var(--bs-default-simplebar-color);
 }
 
 /* sidebar */
@@ -295,13 +297,66 @@
 }
 
 
-
-
-
-
-
-
-
-[data-bs-theme=dark] .auth-cover-right {
+/*login.php*/
+[data-bs-theme=default] .auth-cover-right {
     background-color: var(--bs-body-bg-semi);
 }
+
+[data-bs-theme=default] .auth-cover-right .card {
+    background-color: var(--bs-body-bg-semi);
+}
+
+[data-bs-theme=default] .auth-cover-right .form-control {
+    color: var(--bs-body-bg-color);
+    background-color: var(--bs-body-bg-semi);
+    border: 3px solid var(--bs-default-auth-border-color);
+}
+
+[data-bs-theme=default] .auth-cover-right label {
+    color: var(--bs-body-color-semi);
+}
+
+[data-bs-theme=default] .auth-cover-right input:-webkit-autofill {
+    transition: background-color 5000s ease-in-out 0s;
+    -webkit-text-fill-color: var(--bs-body-color-semi);
+    caret-color: var(--bs-body-color-semi);
+}
+
+[data-bs-theme=default] .auth-cover-right .input-group-text {
+    color: var(--bs-body-color-semi);
+}
+
+[data-bs-theme=default] .auth-cover-right ::placeholder {
+    color: var(--bs-body-color-semi);
+}
+
+[data-bs-theme=default] .auth-cover-right input:focus {
+    outline: none;
+    box-shadow: none;
+}
+
+[data-bs-theme=default] .form-check-primary .form-check-input {
+    background-color: var(--bs-body-bg-semi);
+}
+
+[data-bs-theme=default] .form-check-primary .form-check-input:checked {
+    background-color: var(--bs-default-bg-color);
+    border-color: var(--bs-default-acitve-color);
+}
+
+[data-bs-theme=default] .form-check-primary .form-check-input:not(:checked):not(:focus) {
+    --bs-form-switch-bg: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='-4 -4 8 8'%3e%3ccircle r='3' fill='rgba%28255, 255, 255, 0.25%29'/%3e%3c/svg%3e");
+}
+
+[data-bs-theme=default] .form-check-primary .form-check-input:not(:checked):focus {
+    border-color: var(--bs-default-auth-border-color);
+    --bs-form-switch-bg: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='-4 -4 8 8'%3e%3ccircle r='3' fill='rgba%28255, 255, 255, 0.25%29'/%3e%3c/svg%3e");
+    outline: 0;
+}
+
+[data-bs-theme=default] .form-check-primary .form-check-input:checked:focus {
+    border-color: var(--bs-default-acitve-color);
+    outline: 0;
+}
+
+

@@ -496,12 +496,8 @@ a {
     z-index: 2;
     transition: ease-out .3s;
     color: #bbb8b8;
+    font-size: 12px;
 }
-
-
-
-
-/* Components */
 
 .dropdown-menu {
     box-shadow: 0 0.5rem 1rem rgb(0 0 0 / 15%);
@@ -535,10 +531,6 @@ a {
     min-height: 100vh;
 }
 
-
-
-/* utilities */
-
 .font-text1 {
     font-size: 0.8rem;
 }
@@ -551,9 +543,6 @@ a {
     font-size: 12px;
 }
 
-.theme-icons {
-    background-color: #fff;
-}
 .font-20 {
     font-size: 20px;
 }
@@ -573,8 +562,6 @@ a {
     border: 0px solid rgb(255 255 255 / 0%);
     color: var(--bs-body-color)
 }
-
-/* Responsive */
 
 @media only screen and (max-width: 1199px) {
 
@@ -597,9 +584,6 @@ a {
     .sidebar-wrapper .sidebar-header .sidebar-close {
         display: block;
     }
-
-
-    /* Toogle in responsive */
 
     .toggled .sidebar-wrapper {
         width: 260px;
@@ -637,21 +621,6 @@ a {
     .toggled .page-content {
         margin-left: 0;
     }
-
-    .toggled .overlay {
-		position: fixed;
-		top: 0;
-		right: 0;
-		bottom: 0;
-		left: 0;
-		background: #000;
-		opacity: .5;
-		z-index: 5;
-		display: block;
-		cursor: move;
-		transition: all .23s ease-out
-	}
-
   }
 
 
@@ -696,6 +665,10 @@ a {
     position: fixed !important;
     right: 0;
     max-width: calc(100% - 260px);
+}
+
+input[type="password"]::-ms-reveal{
+    display:none;
 }
 
 .toggled .jc-bs3-container {
@@ -842,10 +815,6 @@ a {
     100% {
         transform: scaley(1);
     }
-}
-
-.login .page-footer {
-    display: none !important;
 }
 
 .dashboard .w_chart {

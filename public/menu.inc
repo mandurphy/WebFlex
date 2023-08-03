@@ -25,7 +25,7 @@
         <aside class="sidebar-wrapper" @mouseenter="onMouseEnter" @mouseleave="onMouseLeave">
             <div class="sidebar-header">
                 <div class="logo-icon">
-                    <img src="assets/images/logo-icon.png" class="logo-img" alt="">
+                    <img src="assets/images/logo-sm.png" class="logo-img" alt="">
                 </div>
                 <div class="logo-name flex-grow-1">
                     <h5 class="mb-0 fw-bold">LinkPi</h5>
@@ -233,10 +233,6 @@
                 </ul>
             </div>
         </aside>
-
-        <!--start overlay-->
-        <div class="overlay btn-toggle-menu"></div>
-        <!--end overlay-->
 
         <!-- Search Modal -->
         <div class="modal" id="searchModal" tabindex="-1">
