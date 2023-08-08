@@ -728,6 +728,12 @@ input[type="password"]::-ms-reveal{
     justify-content: center;
 }
 
+.force-align-right {
+    display:flex;
+    align-items:center;
+    justify-content: end;
+}
+
 .force-card-title {
     font-size: 16px;
     font-weight: 600 !important;

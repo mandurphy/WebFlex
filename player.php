@@ -39,7 +39,7 @@
                     </div>
                     <div class="row">
                         <div class="col-lg-12 mt-2 mb-2">
-                            <flv-player :url="playerUrl" :codec="playerCodec" :audio="playerAudio" :buffer="bufferTime"></flv-player>
+                            <flv-player :url="playerUrl" :codec="playerCodec" :audio="playerAudio" :buffer="bufferTime" canplay="true"></flv-player>
                         </div>
                     </div>
                     <div class="row mt-5">
@@ -89,6 +89,7 @@
                         state.playerUrl.value = 'http://'+window.location.host+'/flv?app=live&stream='+item.stream.suffix;
                         state.playerCodec.value = item.encv.codec;
                         state.playerAudio.value = item.enca.codec !== "close";
+                        console.log(state.playerUrl)
                         break;
                     }
                 }

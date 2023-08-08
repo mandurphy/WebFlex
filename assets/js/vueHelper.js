@@ -499,22 +499,36 @@ export const flvPlayerComponent = {
     template: `<div style="width:100%; padding-bottom: 56.25%;  position: relative;" ref="flv">
                     <video autoplay controls muted style="width:100%;height: 100%; position: absolute; background: #555;" ref="video"></video>
                     <div style="position: absolute;width: 100%;height: 100%" ref="jess"></div>
-                    <div class="force-video-cloud">
+                    <div class="force-video-cloud" ref="cloud">
                         <div class="loading"></div>
                     </div>
               </div>`,
-    props: ['url','codec','audio','buffer'],
+    props: ['url','codec','audio','buffer','canplay'],
     setup(props,context) {
 
+        const { url,codec,audio,buffer,canplay } = toRefs(props);
         const flv = ref(null);
         const video = ref(null);
         const jess = ref(null);
+        const cloud = ref(null);
+
         let player = {};
+        let hadInitPlayer = false;
 
         watchEffect(()=>{
-            if(props.url !== "" && props.codec !== "" && props.audio !== "" && props.buffer !== "") {
-                destoryPlayer();
-                initPlayer();
+            let hadPlay = canplay.value;
+            if(hadPlay === undefined)
+                hadPlay = true;
+
+            if(hadPlay) {
+                if(url.value !== "" && codec.value !== "" && audio.value !== "" && buffer.value !== "") {
+                    if(hadInitPlayer)
+                        destoryPlayer();
+                    setTimeout(initPlayer,300);
+                }
+            } else {
+                if(hadInitPlayer)
+                    destoryPlayer();
             }
         })
 
@@ -527,40 +541,39 @@ export const flvPlayerComponent = {
                 jess.value.style.display = 'block';
                 player =  new Jessibuca({
                     container: jess.value,
-                    videoBuffer: props.buffer/1000,
+                    videoBuffer: buffer.value/1000,
                     decoder: "assets/plugins/jessibuca/decoder.js",
                     isResize: false,
-                    audio: JSON.parse(props.audio),
+                    audio: JSON.parse(audio.value),
                     operateBtns: {
                         fullscreen: true,
                         play: true,
-                        audio: JSON.parse(props.audio),
+                        audio: JSON.parse(audio.value),
                     },
                     forceNoOffscreen: true,
                     isNotMute: false,
                 });
-                player.play(props.url);
+                player.play(url.value);
                 player.on("play", (flag) => {
-                    let cloud = flv.value.querySelector(".force-video-cloud");
-                    cloud.style.display = 'none'
+                    cloud.value.style.display = 'none'
                 })
             } else {
                 video.value.style.display = 'block';
                 jess.value.style.display = 'none';
                 player = flvjs.createPlayer({
                     type: 'flv',
-                    audio: JSON.parse(props.audio),
-                    url: props.url
+                    audio: JSON.parse(audio.value),
+                    url: url.value
                 });
                 player.attachMediaElement(video.value);
                 player.load();
                 player.play();
 
                 video.value.addEventListener("canplay",() => {
-                    let cloud = flv.value.querySelector(".force-video-cloud");
-                    cloud.style.display = 'none'
+                    cloud.value.style.display = 'none'
                 });
             }
+            hadInitPlayer = true;
         }
         const destoryPlayer = () => {
             if(Object.keys(player).length > 0) {
@@ -571,9 +584,9 @@ export const flvPlayerComponent = {
                 player.destroy();
                 player = {};
             }
-            let cloud = flv.value.querySelector(".force-video-cloud");
-            cloud.style.display = 'flex';
+            cloud.value.style.display = 'flex';
             video.value.removeEventListener("canplay",()=>{});
+            hadInitPlayer = false;
         }
         const checkDelay = () => {
             if (Object.keys(player).length > 0 && player.hasOwnProperty("buffered") && player.buffered.length > 0) {
@@ -585,11 +598,10 @@ export const flvPlayerComponent = {
         }
 
         onMounted(()=>{
-            initPlayer();
             checkDelay();
         })
 
-        return {flv,video,jess}
+        return {flv,video,jess,cloud}
     }
 };
 
@@ -601,6 +613,12 @@ export const timepickerComponent = {
     props: ['modelValue'],
     setup(props,context){
         const timepicker = ref(null);
+        const { modelValue } = toRefs(props);
+
+        watch(modelValue,()=>{
+            $(timepicker.value).timepicker('setTime', modelValue.value);
+        })
+
         onMounted(()=>{
             $(timepicker.value).timepicker({
                 minuteStep: 1,

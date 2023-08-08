@@ -72,4 +72,45 @@ class System extends Basic
         return $this->handleRet($output,'success','执行成功','exec successfully');
     }
 
+
+    public function getPushCrontab()
+    {
+        exec( "crontab -u root -l | grep '/link/web/link/timer/autoPush.php start'",$output1);
+        exec( "crontab -u root -l | grep '/link/web/link/timer/autoPush.php stop'",$output2);
+        return $this->handleRet(['start'=>$output1[0],'stop'=>$output2[0]],'success','执行成功','exec successfully');
+    }
+
+    public function setPushCrontab($param)
+    {
+        $start = $param['start'];
+        if ( isset( $start[ 'day' ] ) && isset( $start[ 'time' ] ) ) {
+            if ( $start[ 'day' ] == "x" )
+            {
+                exec("sed -i '2s/.*/ /' /var/spool/cron/crontabs/root");
+                exec("cp -a /var/spool/cron/crontabs/root /link/config/auto/root.cron");
+            }
+            else {
+                $tm = explode(":", $start[ 'time' ]);
+                $cron = intval($tm[1]).' ' . intval($tm[0]) . ' * * ' . $start[ 'day' ];
+                exec("sed -i '2s/.*/".$cron." \/usr\/php\/bin\/php \/link\/web\/link\/timer\/autoPush.php start/' /var/spool/cron/crontabs/root");
+                exec("cp -a /var/spool/cron/crontabs/root /link/config/auto/root.cron");
+            }
+        }
+
+        $stop = $param['stop'];
+        if ( isset( $stop[ 'day' ] ) && isset( $stop[ 'time' ] ) ) {
+            if ( $stop[ 'day' ] == "x" )
+            {
+                exec("sed -i '3s/.*/ /' /var/spool/cron/crontabs/root");
+                exec("cp -a /var/spool/cron/crontabs/root /link/config/auto/root.cron");
+            }
+            else {
+                $tm = explode(":", $stop[ 'time' ]);
+                $cron = intval($tm[1]).' ' . intval($tm[0]) . ' * * ' . $stop[ 'day' ];
+                exec("sed -i '3s/.*/".$cron." \/usr\/php\/bin\/php \/link\/web\/link\/timer\/autoPush.php stop/' /var/spool/cron/crontabs/root");
+                exec("cp -a /var/spool/cron/crontabs/root /link/config/auto/root.cron");
+            }
+        }
+        return $this->handleRet("",'success','保存成功','save successfully');
+    }
 }

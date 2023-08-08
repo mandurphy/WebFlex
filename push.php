@@ -29,7 +29,7 @@
                                         <div class="aspect-ratio-content d-flex flex-column justify-content-between">
                                             <div class="row">
                                                 <div class="col-lg-12">
-                                                    <flv-player :url="playUrl" codec="h264" audio="true" buffer="200"></flv-player>
+                                                    <flv-player :url="playUrl" codec="h264" audio="true" buffer="200" :canplay="hadPlayed"></flv-player>
                                                 </div>
                                             </div>
                                             <div class="row">
@@ -37,15 +37,15 @@
                                                     <div class="rec-bar">
                                                         <div class="row">
                                                             <div class="col-4 text-center" style="line-height: 34px;">
-                                                                <strong id="time">[--:--]</strong>
+                                                                <strong>{{pushTimeCount}}</strong>
                                                             </div>
                                                             <div class="col-7 d-flex align-items-start">
-                                                                <button type="button" class="btn border-3 btn-primary" @click="onPushStart">
+                                                                <button type="button" :class="['btn border-3',{'btn-primary':!pushState.pushing},{'btn-default disabled':pushState.pushing}]" @click="onPushStart">
                                                                     <i class="fa-solid fa-video me-1"></i>
                                                                     <cn>推流</cn>
                                                                     <en>Push</en>
                                                                 </button>
-                                                                <button type="button" class="btn border-3 btn-default ms-1 disabled" @click="onPushStop">
+                                                                <button type="button" :class="['btn border-3 ms-1',{'btn-primary':pushState.pushing},{'btn-default disabled':!pushState.pushing}]" @click="onPushStop">
                                                                     <i class="fa-solid fa-stop me-1"></i>
                                                                     <cn>停止</cn>
                                                                     <en>Stop</en>
@@ -72,38 +72,58 @@
                         </div>
                         <div class="card-body">
                             <div class="force-aspect-ratio">
-                                <div class="aspect-ratio-content d-flex flex-column justify-content-between">
+                                <div class="aspect-ratio-content d-flex flex-column justify-content-between" v-if="Object.keys(pushConf).length > 0">
                                     <div class="row">
-                                        <div class="col-lg-3 offset-lg-1 force-align-center">
+                                        <div class="col-lg-3 offset-lg-1 force-align-right pe-4">
                                             <label>
                                                 <cn>视频源</cn>
                                                 <en>Video source</en>
                                             </label>
                                         </div>
                                         <div class="col-lg-6">
-                                            <select class="form-select" v-model=""></select>
+                                            <select class="form-select" v-model="pushConf.srcV" @change="onChangeSrcV">
+                                                <option v-for="(item,index) in handleEnableConf" :value="item.id">{{item.name}}</option>
+                                            </select>
                                         </div>
                                     </div>
                                     <div class="row">
-                                        <div class="col-lg-3 offset-lg-1 force-align-center">
+                                        <div class="col-lg-3 offset-lg-1 force-align-right pe-4">
                                             <label>
                                                 <cn>音频源</cn>
                                                 <en>Audio source</en>
                                             </label>
                                         </div>
                                         <div class="col-lg-6">
-                                            <select class="form-select" v-model=""></select>
+                                            <select class="form-select" v-model="pushConf.srcA">
+                                                <option value="-1" cn="无" en="None" v-language-option></option>
+                                                <option v-for="(item,index) in handleEnableConf" :value="item.id">{{item.name}}</option>
+                                            </select>
                                         </div>
                                     </div>
                                     <div class="row">
-                                        <div class="col-lg-3 offset-lg-1 force-align-center">
+                                        <div class="col-lg-3 offset-lg-1 force-align-right pe-4">
+                                            <label>
+                                                <cn>码流</cn>
+                                                <en>Stream</en>
+                                            </label>
+                                        </div>
+                                        <div class="col-lg-6">
+                                            <select class="form-select" v-model="pushConf.srcV_chn">
+                                                <option value="main" cn="主码流" en="Main Stream" v-language-option></option>
+                                                <option v-if="defaultSubEnable" value="sub" cn="辅码流" en="Sub Stream" v-language-option></option>
+                                                <option v-else value="sub" cn="辅码流(未启用)" en="Sub Stream(not enable)" v-language-option></option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-lg-3 offset-lg-1 force-align-right pe-4">
                                             <label>
                                                 <cn>定时开启</cn>
                                                 <en>start time</en>
                                             </label>
                                         </div>
                                         <div class="col-lg-3">
-                                            <select class="form-select" v-model="">
+                                            <select class="form-select" v-model="pushCron.start.day">
                                                 <option cn="从不" en="never" value="x" v-language-option></option>
                                                 <option cn="每天" en="everyday" value="*" v-language-option></option>
                                                 <option cn="每周一" en="monday" value="1" v-language-option></option>
@@ -116,18 +136,18 @@
                                             </select>
                                         </div>
                                         <div class="col-lg-3">
-                                            <timepicker v-model="startPushTime"></timepicker>
+                                            <timepicker v-model="pushCron.start.time"></timepicker>
                                         </div>
                                     </div>
                                     <div class="row">
-                                        <div class="col-lg-3 offset-lg-1 force-align-center">
+                                        <div class="col-lg-3 offset-lg-1 force-align-right pe-4">
                                             <label>
                                                 <cn>定时结束</cn>
                                                 <en>stop time</en>
                                             </label>
                                         </div>
                                         <div class="col-lg-3">
-                                            <select class="form-select" v-model="">
+                                            <select class="form-select" v-model="pushCron.stop.day">
                                                 <option cn="从不" en="never" value="x" v-language-option></option>
                                                 <option cn="每天" en="everyday" value="*" v-language-option></option>
                                                 <option cn="每周一" en="monday" value="1" v-language-option></option>
@@ -140,7 +160,7 @@
                                             </select>
                                         </div>
                                         <div class="col-lg-3">
-                                            <timepicker v-model="stopPushTime"></timepicker>
+                                            <timepicker v-model="pushCron.stop.time"></timepicker>
                                         </div>
                                     </div>
                                     <div class="hr-container">
@@ -148,14 +168,14 @@
                                         <span class="hr-text">OR</span>
                                     </div>
                                     <div class="row">
-                                        <div class="col-lg-3 offset-lg-1 force-align-center">
+                                        <div class="col-lg-3 offset-lg-1 force-align-right pe-4">
                                             <label>
                                                 <cn>开机启动</cn>
                                                 <en>auto push</en>
                                             </label>
                                         </div>
                                         <div class="col-lg-6">
-                                            <select class="form-select" v-model="">
+                                            <select class="form-select" v-model="pushConf.autorun">
                                                 <option cn="关闭" en="OFF" value="false" v-language-option></option>
                                                 <option cn="开启" en="ON" value="true" v-language-option></option>
                                             </select>
@@ -163,7 +183,7 @@
                                     </div>
                                     <div class="row">
                                         <div class="col-lg-12 text-center mt-4">
-                                            <button type="button" class="btn border-3 btn-primary px-5">
+                                            <button type="button" class="btn border-3 btn-primary px-5" @click="savePushConf">
                                                 <cn>保存</cn>
                                                 <en>Save</en>
                                             </button>
@@ -227,7 +247,7 @@
                                             </button>
                                         </div>
                                         <div class="col-lg-1 text-center">
-                                            0kb/s
+                                            {{getPushSpeed(index)}} kb/s
                                         </div>
                                     </div>
                                     <hr class="my-3">
@@ -239,7 +259,7 @@
                                         <cn>添加</cn>
                                         <en>Add</en>
                                     </button>
-                                    <button type="button" class="btn border-3 btn-primary px-5 ms-2" @click="saveConf">
+                                    <button type="button" class="btn border-3 btn-primary px-5 ms-2" @click="savePushConf">
                                         <cn>保存</cn>
                                         <en>Save</en>
                                     </button>
@@ -257,11 +277,11 @@
 <script src="assets/plugins/jessibuca/jessibuca.js"></script>
 <script src="assets/plugins/timepicker/js/bootstrap-timepicker.min.js"></script>
 <script type="module">
-    import { rpc,alertMsg } from "./assets/js/helper.js";
-    import { usePushConf } from "./assets/js/confHooks.js";
+    import { rpc,func,alertMsg } from "./assets/js/helper.js";
+    import { useDefaultConf,usePushConf } from "./assets/js/confHooks.js";
     import { bootstrapSwitchComponent,flvPlayerComponent,timepickerComponent,languageOptionDirective } from "./assets/js/vueHelper.js"
     
-    const {createApp,ref,reactive,watch,watchEffect,computed} = Vue;
+    const {createApp,ref,reactive,watch,watchEffect,computed,onMounted} = Vue;
     const app = createApp({
         directives: {
           "language-option": languageOptionDirective
@@ -272,25 +292,107 @@
             "timepicker": timepickerComponent
         },
         setup(props,context) {
-            
+
+            const { defaultConf } = useDefaultConf();
             const { pushConf } = usePushConf();
 
             const state = {
-                startPushTime:"00:00",
-                stopPushTime:"00:00",
-                playUrl:ref('http://'+window.location.host+'/flv?app=live&stream=preview')
+                defaultSubEnable:ref(null),
+                hadPlayed:ref(false),
+                playUrl:ref('http://'+window.location.host+'/flv?app=live&stream=preview'),
+                pushTimeCount:ref("00:00:00"),
+                updateTime:0,
+                pushCron: reactive({
+                    start:{
+                        day:"x",
+                        time:"00:00"
+                    },
+                    stop: {
+                        day:"x",
+                        time:"00:00"
+                    }
+                }),
+                pushState:reactive({
+                    duration:0,
+                    pushing:false,
+                    speed:[]
+                }),
             }
-            
+
+            const handleEnableConf = computed(()=>{
+               return defaultConf.filter((item,index) => {
+                   if(item.enable && state.defaultSubEnable.value === null)
+                       state.defaultSubEnable.value = item.enable2;
+                   return !!item.enable;
+               })
+            });
+
+            const handlePushCrontab = () => {
+                func("/link/mgr/system/handlePushCrontab").then(result => {
+                    const keys = Object.keys(result.data);
+                    keys.forEach(key => {
+                        const value = result.data[key];
+                        if(value === null)
+                            return;
+                        let list = value.split(" ");
+                        if(list.length === 8) {
+                            state.pushCron[key].day = list[4];
+                            state.pushCron[key].time = list[1]+":"+list[0];
+                        }
+                    });
+                })
+            }
+
+            const onChangeSrcV = () => {
+                defaultConf.filter((item,index) => {
+                    if(item.id === pushConf.srcV)
+                        state.defaultSubEnable.value = item.enable2;
+                    return true;
+                })
+            }
+
+            const handlePushState = () => {
+                rpc("push.getState").then(data => {
+                    Object.assign(state.pushState, data);
+                    state.updateTime = new Date().getTime() / 1000;
+                    state.hadPlayed.value = state.pushState.pushing;
+                });
+                setTimeout(handlePushState,2000);
+            }
+
+            const getPushSpeed = index => {
+                return state.pushState.speed[index];
+            }
+
+            const handlePushTimeCount = () => {
+                if (state.pushState.pushing) {
+                    const fix = num => {
+                        if ( num < 10 )
+                            return '0' + num;
+                        else
+                            return num;
+                    }
+                    let now = new Date();
+                    let diff = now.getTime() / 1000 - state.updateTime + state.pushState.duration/1000;
+                    let h = Math.floor(diff / 3600);
+                    let m = Math.floor( diff % 3600 / 60 );
+                    let s = Math.floor( diff % 60 );
+                    state.pushTimeCount.value = "[" + fix(h) + ":" + fix( m ) + ":" + fix( s ) + "]"
+                } else {
+                    state.pushTimeCount.value = "[--:--:--]";
+                }
+                setTimeout(handlePushTimeCount,1000);
+            }
             
             const onPushStart = () => {
                 rpc("push.start").then(()=>{
-                    getState();
+                    handlePushState();
                 });
             }
             
             const onPushStop = () => {
                 rpc("push.stop").then(()=>{
-                    getState();
+                    handlePushState();
                 });
             }
             
@@ -305,18 +407,27 @@
             const delPushUrl = (index) => {
                 pushConf.url.splice(index,1);
             }
-            
-            
-            const saveConf = () => {
+
+            const savePushConf = () => {
                 rpc("push.update", [ JSON.stringify( pushConf, null, 2 ) ]).then(data => {
-                    if ( typeof ( data.error ) != "undefined" )
+                    if ( typeof ( data.error ) !== "undefined" ) {
                         alertMsg('<cn>保存设置失败</cn><en>Save config failed!</en>', 'error');
-                    else
-                        alertMsg('<cn>保存设置成功</cn><en>Save config success!</en>', 'success');
+                        return;
+                    }
+                    func("/link/mgr/system/setPushCrontab",state.pushCron).then(data => {
+                        if(data.status === "success")
+                            alertMsg('<cn>保存设置成功</cn><en>Save config success!</en>', 'success');
+                    })
                 });
             }
+
+            onMounted(() => {
+                handlePushCrontab();
+                handlePushState();
+                handlePushTimeCount();
+            })
             
-            return {...state,pushConf,onPushStart,onPushStop,addPushUrl,delPushUrl,saveConf}
+            return {...state,pushConf,onChangeSrcV,onPushStart,onPushStop,addPushUrl,delPushUrl,handleEnableConf,getPushSpeed,savePushConf}
         }
     });
     app.mount('#app');
