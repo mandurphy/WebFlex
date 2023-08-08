@@ -11,3 +11,5 @@
 <script src="assets/plugins/notifications/js/notification-custom-script.js"></script>
 <script src="assets/plugins/simplebar/js/simplebar.min.js"></script>
 <script src="assets/plugins/switch/js/bootstrap-switch.js"></script>
+<script src="assets/plugins/vueColor/vue-color.min.js"></script>
+<script src="assets/plugins/popper/popper.min.js"></script>

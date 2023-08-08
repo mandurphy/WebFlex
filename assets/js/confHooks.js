@@ -41,10 +41,13 @@ export const useOverlayConf = () => {
 export const useResConf = () => {
 
     let resConf = reactive([]);
-    queryData("res/").then((conf)=>{
-        resConf.splice(0, resConf.length, ...conf);
-    })
-    return { resConf }
+    const updateResConf = () => {
+        queryData("res/").then((conf)=>{
+            resConf.splice(0, resConf.length, ...conf);
+        })
+    }
+    updateResConf()
+    return { resConf,updateResConf }
 }
 
 export const useDefLaysConf = () => {

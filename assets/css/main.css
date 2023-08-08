@@ -15,14 +15,12 @@ body {
     height: 100%;
 }
 
-a {
-    text-decoration: none;
+[data-simplebar] .simplebar-mask {
+    z-index: unset;
 }
 
-
-::placeholder {
-    font-size: 14px;
-    opacity: 0.5 !important;
+a {
+    text-decoration: none;
 }
 
 
@@ -675,6 +673,55 @@ input[type="password"]::-ms-reveal{
     max-width: calc(100% - 70px);
 }
 
+.color-picker .popper {
+    background: lightgrey;
+    padding: 5px;
+    border-radius: 4px;
+    display: none;
+}
+
+.color-picker .popper[data-show] {
+    display: block;
+    z-index: 9;
+}
+
+.color-picker .arrow {
+    width: 0;
+    height: 0;
+}
+
+.color-picker .popper[data-popper-placement^='top'] > .arrow {
+    bottom: -7px;
+    border-left: 4px solid transparent;
+    border-right: 4px solid transparent;
+    border-top: 8px solid lightgrey;
+}
+
+.color-picker .popper[data-popper-placement^='bottom'] > .arrow {
+    top: -7px;
+    border-left: 4px solid transparent;
+    border-right: 4px solid transparent;
+    border-bottom: 8px solid lightgrey;
+}
+
+.color-picker .popper[data-popper-placement^='left'] > .arrow {
+    right: -7px;
+    border-top: 4px solid transparent;
+    border-bottom: 4px solid transparent;
+    border-left: 8px solid lightgrey;
+}
+
+.color-picker .popper[data-popper-placement^='right'] > .arrow {
+    left: -7px;
+    border-top: 4px solid transparent;
+    border-bottom: 4px solid transparent;
+    border-right: 8px solid lightgrey;
+}
+
+.modal-lg {
+    max-width: 700px;
+}
+
 .force-align-center {
     display:flex;
     align-items:center;
@@ -754,7 +801,6 @@ input[type="password"]::-ms-reveal{
     height: 100%;
 }
 
-
 .login .loading, .login .loading > div {
     position: relative;
     box-sizing: border-box;
@@ -815,6 +861,13 @@ input[type="password"]::-ms-reveal{
     100% {
         transform: scaley(1);
     }
+}
+
+.login .back-login {
+    background-image: url("/assets/images/back-login.png");
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center;
 }
 
 .dashboard .w_chart {

@@ -1,5 +1,5 @@
 
-const { ref,toRefs,watch,watchEffect,computed,onMounted,nextTick } = Vue;
+const { ref,reactive,toRefs,watch,watchEffect,computed,onMounted,nextTick } = Vue;
 
 export const apexChartsDirective = {
     mounted(el,bindings,node) {
@@ -620,4 +620,228 @@ export const timepickerComponent = {
         return {timepicker}
     }
 };
+
+export const vueColorPickerComponent = {
+    template: `<div class="color-picker" v-click-outside="clickOutside">
+                  <input class="form-control" type="text" v-model.trim.lazy="pickerColor" ref="picker" @change="pickerColorChange">
+                  <div ref="popper" class="popper">
+                      <sketch-picker v-model="sketchColor"></sketch-picker>
+                  <div class="arrow" data-popper-arrow></div>
+                </div>
+              </div>`,
+    props: ['modelValue','direct'],
+    components: {
+        "sketch-picker": VueColor.Sketch
+    },
+    directives: {
+        "click-outside": {
+            mounted(el, binding) {
+                const eventHandler = (e) => {
+                    if (el.contains(e.target)) {
+                        return false
+                    }
+                    if (binding.value && typeof binding.value === 'function') {
+                        binding.value(e)
+                    }
+                }
+                el.__click_outside__ = eventHandler
+                document.addEventListener('click', eventHandler)
+            },
+            beforeUnmount(el) {
+                document.removeEventListener('click', el.__click_outside__)
+                delete el.__click_outside__
+            }
+        }
+    },
+    setup(props,context){
+
+        const state = {
+            picker: ref(null),
+            popper: ref(null),
+            pickerColor: ref(""),
+            sketchColor: ref(""),
+            partyPopper : {}
+        }
+
+        watch(state.sketchColor,()=>{
+            if(state.sketchColor.value.hasOwnProperty("hex")) {
+                state.pickerColor.value = state.sketchColor.value.hex;
+                context.emit('update:modelValue', state.pickerColor.value);
+            }
+        });
+
+        const pickerColorChange = () => {
+            state.sketchColor.value = state.pickerColor.value;
+            context.emit('update:modelValue', state.pickerColor.value);
+        }
+
+        const showPopper = () => {
+            state.popper.value.setAttribute('data-show', '');
+            state.partyPopper.setOptions((options) => ({
+                ...options,
+                modifiers: [
+                    ...options.modifiers,
+                    { name: 'eventListeners', enabled: true },
+                ],
+            }));
+            state.partyPopper.update();
+        }
+
+        const hidePopper = () => {
+            if(Object.keys(state.partyPopper).length > 0) {
+                state.popper.value.removeAttribute('data-show');
+                state.partyPopper.setOptions((options) => ({
+                    ...options,
+                    modifiers: [
+                        ...options.modifiers,
+                        { name: 'eventListeners', enabled: false },
+                    ],
+                }));
+            }
+        }
+
+        const clickOutside = (event) => {
+            hidePopper();
+        }
+
+        nextTick(()=>{
+            state.partyPopper = Popper.createPopper(state.picker.value, state.popper.value, {
+                placement: props.direct,
+                modifiers: [
+                    {
+                        name: 'offset',
+                        options: {
+                            offset: [0, 8],
+                        },
+                    },
+                    {
+                        name: 'computeStyles',
+                        options: {
+                            gpuAcceleration: false,
+                            adaptive: false
+                        }
+                    }
+                ],
+            });
+            state.picker.value.addEventListener("focus", showPopper);
+        })
+
+        onMounted(()=>{
+            state.pickerColor.value = props.modelValue;
+        });
+
+        return {...state,clickOutside,pickerColorChange}
+    }
+};
+
+export const uploadModalComponent = {
+    template: `<div :class="['modal',{'fade':modalFade===undefined ? false : JSON.parse(modalFade)}]"  tabindex="-1" aria-hidden="true" ref="modal">
+                    <div class="modal-dialog modal-lg modal-dialog-centered">
+                      <div class="modal-content">
+                        <div class="modal-header">
+                          <h5 class="modal-title">{{modalTitle}}</h5>
+                          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                           <input type="file" ref="uploadFile" name="uploadFile" multiple />
+                        </div>
+                      </div>
+                    </div>
+               </div>`,
+    props:['modalTitle','modalShow','modalFade','uploadTip',"uploadAction",'uploadAllow','uploadCount'],
+    setup(props,context) {
+
+        const { modalShow,modalFade } = toRefs(props);
+
+        const state = {
+            modal : ref(null),
+            modalTitle : ref(""),
+            uploadFile: ref(null),
+            uploadTip: "",
+            show : false,
+            bsModal : {},
+            uploadLang: "zh"
+        }
+
+        watch(modalShow,()=>{
+            state.show = !state.show;
+            if(state.show)
+                state.bsModal.show();
+            else
+                state.bsModal.hide();
+        })
+
+        const initBsModal = () => {
+            state.bsModal = new bootstrap.Modal(state.modal.value);
+            if(modalShow.value) {
+                state.bsModal.show();
+                state.show = true;
+            } else {
+                state.bsModal.hide();
+                state.show = false;
+            }
+            state.modal.value.addEventListener('hide.bs.modal',() => {
+                state.show = false;
+            });
+        }
+
+        const updateLangText = () => {
+            const html = document.querySelector('html');
+            let lang = html.getAttribute('data-bs-language');
+            const [tip1,tip2] = props.uploadTip.split("&");
+            if(lang === "cn" || tip2 === undefined)
+                state.uploadTip = tip1;
+            else
+                state.uploadTip = tip2;
+
+            const [title1,title2] = props.modalTitle.split("&");
+            if(lang === "cn" || title2 === undefined)
+                state.modalTitle.value = title1;
+            else
+                state.modalTitle.value = title2;
+
+            state.uploadLang = lang;
+            if(lang === "cn")
+                state.uploadLang = "zh";
+        }
+
+        const initUploadFile = () => {
+            $(state.uploadFile.value).fileinput({
+                language: state.uploadLang,
+                theme: "fa6",
+                dropZoneTitle: state.uploadTip,
+                showClose: false,
+                browseClass:"btn btn-primary btn-df",
+                allowedFileExtensions: eval('('+props.uploadAllow+')'),
+                uploadUrl: props.uploadAction,
+                maxFileCount: isNaN(Number(props.uploadCount)) ? 1 : Number(props.uploadCount)
+            });
+
+            $(state.uploadFile.value).on('fileuploaded', function(event, data) {
+                state.bsModal.hide();
+                state.show = false;
+                $(state.uploadFile.value).fileinput('clear');
+                context.emit("upload-success")
+            });
+
+            $(state.uploadFile.value).on('fileuploaderror', function(event, data, msg) {
+                if(data.jqXHR.responseText) {
+                    var errMsg = eval(data.jqXHR.responseText);
+                    context.emit("upload-error",errMsg);
+                }
+            });
+        }
+
+        nextTick(()=>{
+            const html = document.querySelector('html');
+            html.addEventListener("loaded",()=>{
+                updateLangText();
+                initBsModal();
+                initUploadFile();
+            })
+        })
+
+        return { ...state,modalFade }
+    },
+}
 

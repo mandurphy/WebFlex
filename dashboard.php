@@ -79,7 +79,7 @@
                             <h6 class="mb-0 text-uppercase"><cn>预览</cn><en>Preview</en><small style="margin-left: 5px;color: grey;font-size: 12px;"><cn>非实时视频，仅预览图片</cn><en>Not a realtime video, picture only</en></small></h6>
                             <div class="my-3 border-top"></div>
                             <div class="row row-cols-2 row-cols-lg-4 g-3">
-                                <div v-for="(item,index) in preview" class="col">
+                                <div v-for="(item,index) in preview" :key="index" class="col">
                                     <div class="card border-end">
                                         <img :src="makeImgUrl(item.id)" class="card-img-top" alt="...">
                                         <div class="chn-volume" :style="{'width':handleChnVolume(item.id,'L')}"></div>

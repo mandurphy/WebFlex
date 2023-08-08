@@ -332,7 +332,7 @@
                          </div>
                      </div>
                      <hr >
-                     <div class="row mt-1" v-for="(item,index) in handleEnableConf">
+                     <div class="row mt-1" v-for="(item,index) in handleEnableConf" :key="item.id">
                          <div class="col-lg-12">
                              <div class="row">
                                  <div class="col text-center">
@@ -412,7 +412,7 @@
                          </div>
                      </div>
                      <hr >
-                     <div class="row mt-1" v-for="(item,index) in handleEnableConf">
+                     <div class="row mt-1" v-for="(item,index) in handleEnableConf" :key="item.id">
                          <div class="col-lg-12">
                              <div class="row">
                                  <div class="col-2 text-center">
@@ -459,7 +459,7 @@
                          </div>
                      </div>
                      <hr >
-                     <div class="row mt-1" v-for="(item,index) in handleEnableConf">
+                     <div class="row mt-1" v-for="(item,index) in handleEnableConf" :key="item.id">
                          <div class="col-lg-12">
                              <div class="row">
                                  <div class="col-2 text-center">
@@ -516,7 +516,7 @@
                          </div>
                      </div>
                      <hr >
-                     <div class="row mt-1" v-for="(item,index) in handleEnableConf">
+                     <div class="row mt-1" v-for="(item,index) in handleEnableConf" :key="item.id">
                          <div class="col-lg-12">
                              <div class="row">
                                  <div class="col-2 text-center">
@@ -572,7 +572,7 @@
                          </div>
                      </div>
                      <hr >
-                     <div class="row mt-1" v-for="(item,index) in handleEnableConf">
+                     <div class="row mt-1" v-for="(item,index) in handleEnableConf" :key="item.id">
                          <div class="col-lg-12">
                              <div class="row">
                                  <div class="col-2 text-center">
@@ -610,7 +610,7 @@
                          </div>
                      </div>
                      <hr >
-                     <div class="row mt-1" v-for="(item,index) in handleEnableConf">
+                     <div class="row mt-1" v-for="(item,index) in handleEnableConf" :key="item.id">
                          <div class="col-lg-12">
                              <div class="row">
                                  <div class="col-2 text-center">
@@ -688,7 +688,7 @@
                          </div>
                      </div>
                      <hr >
-                     <div class="row mt-1" v-for="(item,index) in handleEnableConf">
+                     <div class="row mt-1" v-for="(item,index) in handleEnableConf" :key="item.id">
                          <div class="col-lg-12">
                              <div class="row">
                                  <div class="col-2 text-center">

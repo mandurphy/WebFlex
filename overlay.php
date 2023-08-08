@@ -4,6 +4,8 @@
 <head>
     <?php include ("./public/head.inc") ?>
     <link href="assets/plugins/nouislider/css/nouislider.min.css" rel="stylesheet">
+    <link href="assets/plugins/confirm/css/jquery-confirm.min.css" rel="stylesheet">
+    <link href="assets/plugins/fileinput/css/fileinput.min.css" rel="stylesheet" >
 </head>
 <body>
 <?php include ("./public/menu.inc") ?>
@@ -18,7 +20,7 @@
                                     <div class="row">
                                         <div class="col-lg-12">
                                             <select class="form-select" v-model="chnIndex">
-                                                <option v-for="(item,index) in handleEnableConf" :value="item.id">{{item.name}}</option>
+                                                <option v-for="(item,index) in handleEnableConf" :key="item.id" :value="item.id">{{item.name}}</option>
                                             </select>
                                         </div>
                                     </div>
@@ -40,14 +42,49 @@
                                                 <en>Effect list</en>
                                             </label>
                                         </div>
-                                        <div class="dropdown ms-auto">
-                                            <button type="button" class="btn-option dropdown-toggle dropdown-toggle-nocaret cursor-pointer" data-bs-toggle="dropdown"><i class="fa-solid fa-ellipsis-vertical "></i>
+                                        <div class="dropdown ms-auto force-cursor-pointer">
+                                            <button type="button" class="btn border-3 btn-primary btn-sm dropdown-toggle dropdown-toggle-nocaret" data-bs-toggle="dropdown">
+                                                <i class="fa-solid fa-plus me-1"></i>
+                                                <label class="force-cursor-pointer">
+                                                    <cn>添加</cn>
+                                                    <en>Add</en>
+                                                </label>
                                             </button>
                                             <ul class="dropdown-menu">
                                                 <li>
-                                                    <a class="dropdown-item" href="javascript:;">
-                                                        <cn>添加特效</cn>
-                                                        <en>New effect</en>
+                                                    <a class="dropdown-item" @click="addOverlay('pic')">
+                                                        <cn>水印</cn>
+                                                        <en>Pic</en>
+                                                    </a>
+                                                </li>
+                                                <li>
+                                                    <a class="dropdown-item" @click="addOverlay('text')">
+                                                        <cn>字幕</cn>
+                                                        <en>Text</en>
+                                                    </a>
+                                                </li>
+                                                <li>
+                                                    <a class="dropdown-item" @click="addOverlay('mask')">
+                                                        <cn>马赛克</cn>
+                                                        <en>Mosaic</en>
+                                                    </a>
+                                                </li>
+                                                <li>
+                                                    <a class="dropdown-item" @click="addOverlay('time')">
+                                                        <cn>时间</cn>
+                                                        <en>Time</en>
+                                                    </a>
+                                                </li>
+                                                <li>
+                                                    <a class="dropdown-item" @click="addOverlay('rect')">
+                                                        <cn>矩形</cn>
+                                                        <en>Rect</en>
+                                                    </a>
+                                                </li>
+                                                <li>
+                                                    <a class="dropdown-item" @click="addOverlay('border')">
+                                                        <cn>边框</cn>
+                                                        <en>Border</en>
                                                     </a>
                                                 </li>
                                             </ul>
@@ -57,7 +94,7 @@
                                 <div class="card-body" >
                                     <div class="row">
                                         <div class="team-list col-lg-12 ps-4">
-                                            <div v-for="(item,index) in handleOverlayConf">
+                                            <div v-for="(item,index) in handleOverlayConf" :key="item.id">
                                                 <div :class="['row align-items-center border-start border-4 px-2',layIndex !== index ? 'border-grey' : 'border-warning']">
                                                     <div class="col-1">
                                                         <div>#{{index+1}}</div>
@@ -95,8 +132,8 @@
                                                         <div>x:{{item.x}},y:{{item.y}}</div>
                                                     </div>
                                                     <div class="col-3 force-align-center">
-                                                        <button type="button" class="btn border-3 btn-primary btn-sm" @click="onEditOverlay(index)"><i class="fa-solid fa-wand-magic me-1"></i><cn>编辑</cn><en>Edit</en></button>
-                                                        <button type="button" class="btn border-3 btn-primary btn-sm ms-2" @click="onEditOverlay(index)"><i class="fa-solid fa-wand-magic me-1"></i><cn>编辑</cn><en>Edit</en></button>
+                                                        <button type="button" class="btn border-3 btn-primary btn-sm" @click="editOverlay(index)"><i class="fa-solid fa-brush me-1"></i><cn>编辑</cn><en>Edit</en></button>
+                                                        <button type="button" class="btn border-3 btn-primary btn-sm ms-2" @click="delOverlay(index)"><i class="fa-regular fa-trash-can me-1"></i><cn>删除</cn><en>Delete</en></button>
                                                     </div>
                                                 </div>
                                                 <hr>
@@ -156,7 +193,7 @@
                                         </div>
                                         <div class="col-lg-6">
                                             <select class="form-select" v-model="editData.content">
-                                                <option v-for=""></option>
+                                                <option v-for="(item,index) in handlePngConf" :key="index" :value="item.path">{{item.name}}</option>
                                             </select>
                                         </div>
                                     </div>
@@ -168,7 +205,7 @@
                                             </label>
                                         </div>
                                         <div class="col-lg-6">
-                                            <input class="form-control"  type="text" v-model="editData.content" />
+                                            <input class="form-control"  type="text" v-model.trim.lazy="editData.content" />
                                         </div>
                                     </div>
                                     <div class="row mt-4" v-if="editData.type === 'time'">
@@ -179,7 +216,7 @@
                                             </label>
                                         </div>
                                         <div class="col-lg-6">
-                                            <input class="form-control" type="text" v-model="editData.content" />
+                                            <input class="form-control" type="text" v-model.trim.lazy="editData.content" />
                                         </div>
                                     </div>
                                     <div class="row mt-4" v-if="editData.type === 'time' || editData.type === 'text'">
@@ -190,7 +227,9 @@
                                             </label>
                                         </div>
                                         <div class="col-lg-6">
-                                            <select class="form-control"></select>
+                                            <select class="form-select" v-model="editData.font">
+                                                <option v-for="(item,index) in handleFontConf" :key="index" :value="item.path">{{item.name}}</option>
+                                            </select>
                                         </div>
                                     </div>
                                     <div class="row mt-4" v-if="editData.type === 'text'">
@@ -267,7 +306,7 @@
                                             </label>
                                         </div>
                                         <div class="col-lg-6">
-                                            <input class="form-control" class="form-control" type="text"/>
+                                            <picker-color v-model="editData.color" direct="bottom"></picker-color>
                                         </div>
                                     </div>
                                     <div class="row mt-4" v-if="editData.type === 'text' || editData.type === 'time'">
@@ -278,7 +317,7 @@
                                             </label>
                                         </div>
                                         <div class="col-lg-6">
-                                            <input class="form-control" class="form-control" type="text"/>
+                                            <picker-color v-model="editData.bgColor" direct="bottom"></picker-color>
                                         </div>
                                     </div>
                                     <div class="row mt-4" v-if="editData.type === 'text' || editData.type === 'time' || editData.type === 'pic'">
@@ -304,7 +343,7 @@
                                         </div>
                                     </div>
                                     <div class="row text-center mt-4">
-                                        <button type="button" class="btn border-3 btn-primary me-2 col-lg-2 offset-lg-5" @click="saveConf"><cn>保存</cn><en>Save</en></button>
+                                        <button type="button" class="btn border-3 btn-primary me-2 col-lg-2 offset-lg-5" @click="saveOverlayConf"><cn>保存</cn><en>Save</en></button>
                                     </div>
                                 </div>
                             </div>
@@ -319,30 +358,27 @@
                                                 <en>Resource</en>
                                             </label>
                                         </div>
-                                        <div class="dropdown ms-auto">
-                                            <button type="button" class="btn-option dropdown-toggle dropdown-toggle-nocaret cursor-pointer" data-bs-toggle="dropdown"><i class="fa-solid fa-ellipsis-vertical "></i>
+                                        <div class="ms-auto">
+                                            <button class="btn border-2 btn-primary btn-sm" @click="uploadRes">
+                                                <i class="fa-solid fa-upload me-1"></i>
+                                                <label class="force-cursor-pointer">
+                                                    <cn>上传</cn>
+                                                    <en>Upload</en>
+                                                </label>
                                             </button>
-                                            <ul class="dropdown-menu">
-                                                <li>
-                                                    <a class="dropdown-item" href="javascript:;">
-                                                        <cn>上传资源</cn>
-                                                        <en>Upload</en>
-                                                    </a>
-                                                </li>
-                                            </ul>
                                         </div>
                                     </div>
                                 </div>
                                 <div class="card-body" >
                                     <div class="row">
                                         <div class="team-list col-lg-12">
-                                            <div class="p-0 m-0" v-for="(item,index) in resConf">
+                                            <div class="p-0 m-0" v-for="(item,index) in resConf" :key="index">
                                                 <div class="row align-items-center px-2" >
                                                     <div class="col-8 text-center force-text-overflow">
                                                         <span>{{item.name}}</span>
                                                     </div>
                                                     <div class="col-4 force-align-center">
-                                                        <button type="button" class="btn border-3 btn-primary btn-sm"><i class="fa-regular fa-trash-can me-1"></i><cn>删除</cn><en>Delete</en></button>
+                                                        <button type="button" class="btn border-3 btn-primary btn-sm" @click="delCurrentRes(item.name)"><i class="fa-regular fa-trash-can me-1"></i><cn>删除</cn><en>Delete</en></button>
                                                     </div>
                                                 </div>
                                                 <hr>
@@ -355,34 +391,49 @@
                     </div>
                 </div>
             </div>
+            <upload-modal modal-title="上传资源&Upload" :modal-show="showModal" modal-fade="true"
+                          upload-allow="['png','ttf']" upload-action="/link/upd/uploadRes.php" upload-count="2"
+                          upload-tip="请把资源拖到此处，仅支持png图片，ttf格式字体...&Please drag the resourse here..."
+                          @upload-success="uploadSuccess" @upload-error="uploadError">
+            </upload-modal>
         </main>
     </div>
 <?php include ("./public/foot.inc") ?>
 
 <script src="assets/plugins/nouislider/js/nouislider.min.js"></script>
+<script src="assets/plugins/confirm/js/jquery-confirm.min.js"></script>
+<script src="assets/plugins/fileinput/js/fileinput.js"></script>
+<script src="assets/plugins/fileinput/js/locales/zh.js"></script>
+<script src="assets/plugins/fileinput/themes/fa6/theme.min.js"></script>
 <script type="module">
-    import { rpc,alertMsg } from "./assets/js/helper.js";
+    import { rpc,alertMsg,confirm,func } from "./assets/js/helper.js";
     import { useDefaultConf,useOverlayConf,useResConf } from "./assets/js/confHooks.js";
-    import { bootstrapSwitchComponent,nouiSliderComponent } from "./assets/js/vueHelper.js"
-    
-    const {createApp,ref,reactive,watch,watchEffect,computed} = Vue;
+    import { bootstrapSwitchComponent,nouiSliderComponent,vueColorPickerComponent,uploadModalComponent } from "./assets/js/vueHelper.js"
+
+    const {createApp,ref,reactive,watch,watchEffect,computed,onMounted} = Vue;
     const app = createApp({
         components:{
             "bootstrap-switch" : bootstrapSwitchComponent,
-            "noui-slider": nouiSliderComponent
+            "noui-slider": nouiSliderComponent,
+            "picker-color": vueColorPickerComponent,
+            "upload-modal": uploadModalComponent
         },
         setup(props,context) {
             
             const { defaultConf } = useDefaultConf();
             const { overlayConf } = useOverlayConf();
-            const { resConf } = useResConf();
+            const { resConf,updateResConf } = useResConf();
 
             const state = {
                 chnIndex : ref(-1),
                 chnImgUrl : ref(""),
                 editData: reactive({}),
-                layIndex : ref(-1)
+                layIndex : ref(-1),
+                colors : ref('#194d33'),
+                showModal: ref(false),
+                modalTitle:ref(""),
             }
+
             
             const updateChnImage = () => {
                 state.chnImgUrl.value = "snap/snap" + state.chnIndex.value + ".jpg?rnd=" + Math.random();
@@ -399,7 +450,25 @@
             const handleOverlayConf = computed(()=>{
                 return overlayConf[state.chnIndex.value];
             });
-            
+
+            const handlePngConf = computed(()=>{
+               return resConf.filter((item,index) => {
+                   if(item.name.includes(".png")) {
+                       item.path = "/link/res/"+item.name;
+                       return true;
+                   }
+               })
+            });
+
+            const handleFontConf = computed(()=>{
+                return resConf.filter((item,index) => {
+                    if(item.name.includes(".ttf")) {
+                        item.path = "/link/res/"+item.name;
+                        return true;
+                    }
+                })
+            });
+
             const unwatch = watchEffect(()=>{
                 if(Object.keys(defaultConf).length > 0 && Object.keys(overlayConf).length > 0) {
                     for(let i=0;i<defaultConf.length;i++) {
@@ -408,18 +477,98 @@
                             break;
                         }
                     }
-                    onEditOverlay(0);
+                    editOverlay(0);
                     updateChnImage();
                     unwatch();
                 }
             })
             
-            const onEditOverlay = (idx) => {
+            const editOverlay = (idx) => {
                 state.layIndex.value = idx;
                 Object.assign(state.editData, overlayConf[state.chnIndex.value][idx]);
             }
+
+            const delOverlay = idx => {
+                confirm( {
+                    title: '<cn>删除特效</cn><en>Delete effect</en>',
+                    content: '<cn>是否确认删除特效？</cn><en>Delete effect?</en>',
+                    buttons: {
+                        ok: {
+                            text: "<cn>确认删除</cn><en>Confirm</en>",
+                            btnClass: 'btn-primary',
+                            keys: [ 'enter' ],
+                            action: () => {
+                                overlayConf[state.chnIndex.value].splice(idx, 1);
+                                saveOverlayConf();
+                            }
+                        },
+                        cancel: {
+                            text: "<cn>取消</cn><en>Cancel</en>",
+                            action: () => {
+                                console.log( 'the user clicked cancel' );
+                            }
+                        }
+
+                    }
+                } );
+            }
+            const addOverlay = type => {
+                let lay={
+                    type: type,
+                    x: 0,
+                    y: 0,
+                    h: 0,
+                    w: 0,
+                    scale: 1,
+                    content: "",
+                    enable: false,
+                    color: "#000000",
+                    alpha: 1,
+                    font: "/link/res/font.ttf"
+                };
+                if(lay.type === "time")
+                    lay.content="yyyy-MM-dd hh:mm:ss";
+
+                overlayConf[state.chnIndex.value].push(lay);
+                editOverlay(overlayConf[state.chnIndex.value].length-1)
+            }
+
+            const delCurrentRes = resName => {
+                confirm( {
+                    title: '<cn>删除资源</cn><en>Delete effect</en>',
+                    content: '<cn>是否确认删除</cn><en>Delete effect</en> '+ resName + '?',
+                    buttons: {
+                        ok: {
+                            text: "<cn>确认删除</cn><en>Confirm</en>",
+                            btnClass: 'btn-primary',
+                            keys: [ 'enter' ],
+                            action: () => {
+                                func("/link/mgr/root/delResFile",resName).then(data => {
+                                    updateResConf();
+                                });
+                            }
+                        },
+                        cancel: {
+                            text: "<cn>取消</cn><en>Cancel</en>"
+                        }
+
+                    }
+                } );
+            }
+
+            const uploadRes = () => {
+                state.showModal.value = !state.showModal.value;
+            }
+
+            const uploadSuccess = () => {
+                updateResConf();
+            }
+
+            const uploadError = errMsg => {
+                alertMsg(errMsg, 'error');
+            }
             
-            const saveConf = () => {
+            const saveOverlayConf = () => {
                 Object.assign(overlayConf[state.chnIndex.value][state.layIndex.value], state.editData);
                 rpc("enc.updateOverlay", [ JSON.stringify( overlayConf, null, 2 ) ]).then(data => {
                     if ( typeof ( data.error ) != "undefined" )
@@ -428,8 +577,9 @@
                         alertMsg('<cn>保存设置成功</cn><en>Save config success!</en>', 'success');
                 });
             }
-            
-            return {...state,handleEnableConf,handleOverlayConf,resConf,onEditOverlay,saveConf}
+
+            return {...state,handleEnableConf,handleOverlayConf,handlePngConf,handleFontConf,resConf,
+                editOverlay,delOverlay,addOverlay,delCurrentRes,uploadRes,uploadSuccess,uploadError,saveOverlayConf}
         }
     });
     app.mount('#app');
