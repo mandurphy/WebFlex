@@ -722,6 +722,10 @@ input[type="password"]::-ms-reveal{
     max-width: 700px;
 }
 
+.img-svg svg {
+    stroke:green;
+}
+
 .force-align-center {
     display:flex;
     align-items:center;
@@ -1062,12 +1066,26 @@ input[type="password"]::-ms-reveal{
     outline: none;
 }
 
+.sys a {
+    border: none !important;
+}
+
 .sys .tab-content {
    padding-bottom: 19px !important;
 }
 .sys button.change {
     padding-top: 5px !important;
     padding-bottom: 4px !important;
+}
+
+.sys button.btn-clear{
+    outline: none;
+    border: none;
+    background: none;
+}
+
+.sys button.btn-clear:focus {
+    outline: none;
 }
 
 .sys button.net-test {
@@ -1100,6 +1118,19 @@ input[type="password"]::-ms-reveal{
         -webkit-transform: rotate(360deg);
         transform: rotate(360deg);
     }
+}
+
+.sys .logModal {
+    height: 100%;
+}
+.sys .logModal .close {
+    position: absolute;
+    top: -5px;
+    right: 15px;
+    color: #999999;
+}
+.sys .logModal .simplebar-track.simplebar-horizontal {
+    display: none;
 }
 
 

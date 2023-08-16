@@ -1,10 +1,11 @@
 
-import { queryData,checkFileExists } from "./helper.js";
-const { ref,reactive } = Vue;
+import {queryData, checkFileExists, func, alertMsg, rpc2, rpc3, deepCopy} from "./helper.js";
+// const { ref,reactive } = Vue;
+import { ref,reactive } from "../plugins/vue/vue.esm.prod.js";
 
 export const useDefaultConf = () => {
 
-    let defaultConf = reactive([]);
+    const defaultConf = reactive([]);
     queryData("config/config.json").then((conf)=>{
         defaultConf.splice(0, defaultConf.length, ...conf);
     });
@@ -13,7 +14,7 @@ export const useDefaultConf = () => {
 
 export const useHardwareConf = () => {
 
-    let hardwareConf = reactive({});
+    const hardwareConf = reactive({});
     queryData("config/hardware.json").then((conf)=>{
         Object.assign(hardwareConf, conf);
     })
@@ -22,16 +23,26 @@ export const useHardwareConf = () => {
 
 export const usePortConf = () => {
 
-    let portConf = reactive({});
+    const portConf = reactive({});
     queryData("config/port.json").then((conf)=>{
         Object.assign(portConf, conf);
     })
+
+    const updatePortConf = () => {
+        rpc3("update", [JSON.stringify( portConf, null, 2 )]).then(data => {
+            if ( typeof ( data.error ) !== "undefined" )
+                alertMsg('<cn>保存设置失败</cn><en>Save config failed!</en>', 'error');
+            else
+                alertMsg('<cn>保存设置成功</cn><en>Save config successfully!</en>', 'success');
+        });
+    }
+
     return { portConf }
 }
 
 export const useOverlayConf = () => {
 
-    let overlayConf = reactive([]);
+    const overlayConf = reactive([]);
     queryData("config/auto/overlay.json").then((conf)=>{
         overlayConf.splice(0, overlayConf.length, ...conf);
     })
@@ -40,7 +51,7 @@ export const useOverlayConf = () => {
 
 export const useResConf = () => {
 
-    let resConf = reactive([]);
+    const resConf = reactive([]);
     const updateResConf = () => {
         queryData("res/").then((conf)=>{
             resConf.splice(0, resConf.length, ...conf);
@@ -52,7 +63,7 @@ export const useResConf = () => {
 
 export const useDefLaysConf = () => {
 
-    let defLaysConf = reactive([]);
+    const defLaysConf = reactive([]);
     queryData("config/defLays.json").then((conf)=>{
         defLaysConf.splice(0, defLaysConf.length, ...conf);
     })
@@ -72,7 +83,7 @@ export const useLanguageConf = () => {
         }
     }
 
-    let languageConf = reactive({});
+    const languageConf = reactive({});
     let conf = {"lang":"cn"}
 
     try {
@@ -85,98 +96,127 @@ export const useLanguageConf = () => {
     return { languageConf }
 }
 
-export const useNetConf = () => {
 
-    let netConf= reactive({});
-    queryData("config/net.json").then((conf)=>{
-        Object.assign(netConf, conf);
+export const usetNetManagerConf = () => {
+    const netManagerConf = reactive({});
+    queryData("config/netManager.json").then((conf)=>{
+        Object.assign(netManagerConf, conf);
     })
-    return { netConf }
+
+    const updateNetManagerConf = (param) => {
+        const adapter = {};
+        deepCopy(param).forEach(item => {
+            if(item.type !== "dongle") {
+                const dev = item.dev;
+                delete item.dev;
+                delete item.type;
+                adapter[dev] = item;
+            }
+        });
+        netManagerConf.interface = adapter;
+        rpc2("net.update",[JSON.stringify(netManagerConf,null,2)]).then(data=>{
+            if(data)
+                alertMsg('<cn>保存设置成功</cn><en>Save config successfully!</en>', 'success');
+            else
+                alertMsg('<cn>保存设置失败</cn><en>Save config failed!</en>', 'error');
+        })
+    }
+
+    return { netManagerConf,updateNetManagerConf }
 }
 
-export const useNet2Conf = () => {
-
-    let net2Conf= reactive({});
-    checkFileExists("config/net2.json").then(exists => {
-        if(exists) {
-            queryData("config/net2.json").then((conf)=>{
-                Object.assign(net2Conf, conf);
-            })
-        }
-    })
-    return { net2Conf }
-}
-
-export const useWifiConf = () => {
-
-    let wifiConf= reactive({});
-    queryData("config/wifi.json").then((conf)=>{
-        Object.assign(wifiConf, conf);
-    })
-    return { wifiConf }
-}
-
-export const useMacConf = () => {
-
-    let macConf= ref("");
-    queryData("config/mac").then((conf)=>{
-        macConf.value = conf;
-    })
-    return { macConf }
-}
-
-export const useMac2Conf = () => {
-
-    let mac2Conf= ref("");
-    checkFileExists("config/mac2").then(exists => {
-        if(exists) {
-            queryData("config/mac2").then((conf)=>{
-                mac2Conf.value = conf;
-            })
-        }
-    })
-    return { mac2Conf }
+export const usePasswordConf = () => {
+    const updateUserPasswd = param => {
+        func("/link/mgr/conf/updatePasswdConf",param).then((data)=>{
+            if(data.status === "success")
+                alertMsg(data.msg, 'success');
+            else
+                alertMsg(data.msg, 'error');
+        });
+    }
+    return { updateUserPasswd }
 }
 
 export const useVideoBufferConf = () => {
 
-    let videoBufferConf= reactive({});
+    const videoBufferConf= reactive({});
     queryData("config/videoBuffer.json").then((conf)=>{
         Object.assign(videoBufferConf,conf)
     })
-    return { videoBufferConf }
+
+    const updateVideoBufferConf = () => {
+        func("/link/mgr/conf/updateVideoBufferConf",videoBufferConf).then((data)=>{
+            if(data.status === "success")
+                alertMsg('<cn>保存设置成功</cn><en>Save config successfully!</en>', 'success');
+            else
+                alertMsg('<cn>保存设置失败</cn><en>Save config failed!</en>', 'error');
+        });
+    }
+    return { videoBufferConf,updateVideoBufferConf }
 }
 
 export const useNtpConf = () => {
 
-    let ntpConf= reactive({});
+    const ntpConf= reactive({});
     queryData("config/ntp.json").then((conf)=>{
         Object.assign(ntpConf,conf)
     })
-    return { ntpConf }
+
+    const updateNtpConf = (noTip) => {
+        func("/link/mgr/conf/updateNtpConf", ntpConf).then(data =>{
+            if(noTip !== "noTip") {
+                if(data.status === "success")
+                    alertMsg('<cn>保存设置成功</cn><en>Save config successfully!</en>', 'success');
+                else
+                    alertMsg('<cn>保存设置失败</cn><en>Save config failed!</en>', 'error');
+            }
+        });
+    }
+    return { ntpConf,updateNtpConf }
 }
 
 export const useTimezoneConf = () => {
 
-    let timezoneConf= reactive({});
+    const timezoneConf= reactive({});
     queryData("config/misc/timezone/tzselect.json").then((conf)=>{
         Object.assign(timezoneConf,conf)
     })
-    return { timezoneConf }
+
+    const updateTimezoneConf = (noTip) => {
+        func("/link/mgr/conf/updateTimezoneConf", timezoneConf).then(date =>{
+            if(noTip !== "noTip") {
+                if(data.status === "success")
+                    alertMsg('<cn>保存设置成功</cn><en>Save config successfully!</en>', 'success');
+                else
+                    alertMsg('<cn>保存设置失败</cn><en>Save config failed!</en>', 'error');
+            }
+        })
+    }
+
+    return { timezoneConf,updateTimezoneConf }
 }
 
 export const useVersionConf = () => {
 
-    let versionConf= reactive({});
+    const versionConf= reactive({});
     queryData("config/version.json").then((conf)=>{
         Object.assign(versionConf,conf)
     })
     return { versionConf }
 }
 
+export const useVerLogsConf = () => {
+
+    const verLogsConf= reactive([]);
+    queryData("config/verLogs.json").then((conf)=>{
+        verLogsConf.splice(0, verLogsConf.length, ...conf);
+    })
+    return { verLogsConf }
+}
+
 export const usePushConf = () => {
 
-    let pushConf= reactive({});
+    const pushConf= reactive({});
     queryData("config/push.json").then((conf)=>{
         Object.assign(pushConf,conf)
     })
@@ -185,7 +225,7 @@ export const usePushConf = () => {
 
 export const useUartConf = () => {
 
-    let uartConf= reactive({});
+    const uartConf= reactive({});
     queryData("config/uart.json").then((conf)=>{
         Object.assign(uartConf,conf)
     })
@@ -194,7 +234,7 @@ export const useUartConf = () => {
 
 export const useButtonConf = () => {
 
-    let buttonConf= reactive([]);
+    const buttonConf= reactive([]);
     checkFileExists("config/button.json").then(exists => {
         if(exists) {
             queryData("config/button.json").then((conf)=>{
@@ -207,7 +247,7 @@ export const useButtonConf = () => {
 
 export const useIntercomConf = () => {
 
-    let intercomConf= reactive({});
+    const intercomConf= reactive({});
     queryData("config/intercom.json").then((conf)=>{
         Object.assign(intercomConf,conf)
     })
@@ -216,7 +256,7 @@ export const useIntercomConf = () => {
 
 export const useMqttConf = () => {
 
-    let mqttConf= reactive({});
+    const mqttConf= reactive({});
     queryData("config/misc/mqtt.json").then((conf)=>{
         Object.assign(mqttConf,conf)
     })
@@ -225,7 +265,7 @@ export const useMqttConf = () => {
 
 export const useFrpEnableConf = () => {
 
-    let frpEnableConf= ref(false);
+    const frpEnableConf= ref(false);
     queryData("config/rproxy/frp_enable").then((conf)=>{
         frpEnableConf.value = conf;
     })
@@ -234,7 +274,7 @@ export const useFrpEnableConf = () => {
 
 export const useFrpcConf = () => {
 
-    let frpcConf= ref("");
+    const frpcConf= ref("");
     queryData("config/rproxy/frpc.ini").then((conf)=>{
         frpcConf.value = conf;
     })
@@ -243,7 +283,7 @@ export const useFrpcConf = () => {
 
 export const useServiceConf = () => {
 
-    let serviceConf= ref("");
+    const serviceConf= ref("");
     queryData("config/service.json").then((conf)=>{
         serviceConf.value = conf;
     })
@@ -252,7 +292,7 @@ export const useServiceConf = () => {
 
 export const useSlsConf = () => {
 
-    let slsConf= ref("");
+    const slsConf= ref("");
     queryData("config/sls.conf").then((conf)=>{
         slsConf.value = conf;
     })
@@ -261,7 +301,7 @@ export const useSlsConf = () => {
 
 export const useRtmpConf = () => {
 
-    let rtmpConf= ref("");
+    const rtmpConf= ref("");
     queryData("config/rtmp.conf").then((conf)=>{
         rtmpConf.value = conf;
     })
@@ -270,7 +310,7 @@ export const useRtmpConf = () => {
 
 export const useNdiConf = () => {
 
-    let ndiConf= ref("");
+    const ndiConf= ref("");
     queryData("config/ndi.json").then((conf)=>{
         ndiConf.value = JSON.stringify(conf,null,2);
     })
@@ -279,7 +319,7 @@ export const useNdiConf = () => {
 
 export const useSsidConf = () => {
 
-    let ssidConf= reactive({});
+    const ssidConf= reactive({});
     queryData("config/ssid.json").then((conf)=>{
         Object.assign(ssidConf,conf)
     })
@@ -288,26 +328,28 @@ export const useSsidConf = () => {
 
 export const useWpaConf = () => {
 
-    let wpaConf= reactive([]);
-    checkFileExists("config/wpa.json").then(exists => {
-        queryData("config/wpa.conf").then((conf)=>{
-            const networkList = [];
-            const regex = /network={([\s\S]*?)}/g;
-            let match;
-            while ((match = regex.exec(conf)) !== null) {
-                const networkObjStr = match[1].trim();
-                const lines = networkObjStr.split("\n");
-                const networkObj = {};
-                for (const line of lines) {
-                    let [key, value] = line.split("=");
-                    value = value.trim();
-                    value = value.replace(/^"(.*)"$/, '$1');
-                    networkObj[key.trim()] = value;
+    const wpaConf= reactive([]);
+    checkFileExists("config/wpa.conf").then(exists => {
+        if(exists) {
+            queryData("config/wpa.conf").then((conf)=>{
+                const networkList = [];
+                const regex = /network={([\s\S]*?)}/g;
+                let match;
+                while ((match = regex.exec(conf)) !== null) {
+                    const networkObjStr = match[1].trim();
+                    const lines = networkObjStr.split("\n");
+                    const networkObj = {};
+                    for (const line of lines) {
+                        let [key, value] = line.split("=");
+                        value = value.trim();
+                        value = value.replace(/^"(.*)"$/, '$1');
+                        networkObj[key.trim()] = value;
+                    }
+                    networkList.push(networkObj);
                 }
-                networkList.push(networkObj);
-            }
-            wpaConf.splice(0, wpaConf.length, ...networkList);
-        })
+                wpaConf.splice(0, wpaConf.length, ...networkList);
+            })
+        }
     })
     return { wpaConf }
 }

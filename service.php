@@ -119,8 +119,8 @@
     import { rpc4,alertMsg } from "./assets/js/helper.js";
     import { useServiceConf,useSlsConf,useRtmpConf,useNdiConf } from "./assets/js/confHooks.js";
     import { bootstrapSwitchComponent } from "./assets/js/vueHelper.js"
-    
-    const {createApp,ref,reactive,watch,watchEffect,computed,onMounted} = Vue;
+    import {createApp,ref,reactive,watch,watchEffect,computed,onMounted} from "./assets/plugins/vue/vue.esm.prod.js";
+
     const app = createApp({
         components:{
             "bootstrap-switch" : bootstrapSwitchComponent

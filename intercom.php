@@ -297,8 +297,8 @@
     import { rpc,alertMsg } from "./assets/js/helper.js";
     import { useIntercomConf } from "./assets/js/confHooks.js";
     import { bootstrapSwitchComponent,languageOptionDirective } from "./assets/js/vueHelper.js"
-    
-    const {createApp,ref,reactive,watch,watchEffect,computed,onMounted} = Vue;
+    import {createApp,ref,reactive,watch,watchEffect,computed,onMounted} from "./assets/plugins/vue/vue.esm.prod.js";
+
     const app = createApp({
         directives: {
             "language-option": languageOptionDirective

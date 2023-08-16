@@ -112,7 +112,7 @@
       import { useDefaultConf,useHardwareConf } from "./assets/js/confHooks.js";
       import { bootstrapSwitchComponent,statusPieChartComponent,statusTemperatureComponent,netFlotChartComponent } from "./assets/js/vueHelper.js"
 
-      const { createApp,ref,reactive,computed,onMounted,toRaw } = Vue;
+      import { createApp,ref,reactive,onMounted } from "./assets/plugins/vue/vue.esm.prod.js";
       const { defaultConf } = useDefaultConf();
       const { hardwareConf } = useHardwareConf();
       

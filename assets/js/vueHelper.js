@@ -1,5 +1,7 @@
 
-const { ref,reactive,toRefs,watch,watchEffect,computed,onMounted,nextTick } = Vue;
+import {ref,reactive,toRefs,watch,watchEffect,computed,onMounted,nextTick} from "../plugins/vue/vue.esm.prod.js";
+import * as vueColor from '../plugins/vueColor/vue.color.esm.js'
+import * as Popper from "../plugins/popper/popper.esm.js"
 
 export const apexChartsDirective = {
     mounted(el,bindings,node) {
@@ -332,7 +334,7 @@ export const netFlotChartComponent = {
             updatePlot();
         },{deep: true})
 
-        nextTick(()=>{
+        onMounted(()=>{
             setTimeout(initPlot,100);
         })
 
@@ -649,7 +651,7 @@ export const vueColorPickerComponent = {
               </div>`,
     props: ['modelValue','direct'],
     components: {
-        "sketch-picker": VueColor.Sketch
+        "sketch-picker": vueColor.Sketch
     },
     directives: {
         "click-outside": {
@@ -678,8 +680,10 @@ export const vueColorPickerComponent = {
             popper: ref(null),
             pickerColor: ref(""),
             sketchColor: ref(""),
-            partyPopper : {}
+            partyPopper: {},
+            popperOptions: reactive({})
         }
+
 
         watch(state.sketchColor,()=>{
             if(state.sketchColor.value.hasOwnProperty("hex")) {
@@ -839,7 +843,7 @@ export const uploadModalComponent = {
                 state.bsModal.hide();
                 state.show = false;
                 $(state.uploadFile.value).fileinput('clear');
-                context.emit("upload-success")
+                context.emit("upload-success",data)
             });
 
             $(state.uploadFile.value).on('fileuploaderror', function(event, data, msg) {
@@ -850,7 +854,7 @@ export const uploadModalComponent = {
             });
         }
 
-        nextTick(()=>{
+        onMounted(()=>{
             const html = document.querySelector('html');
             html.addEventListener("loaded",()=>{
                 updateLangText();
@@ -860,6 +864,284 @@ export const uploadModalComponent = {
         })
 
         return { ...state,modalFade }
-    },
+    }
+}
+
+
+export const customModalComponent = {
+    template: `<div :class="['modal',{'fade':modalFade===undefined ? false : JSON.parse(modalFade)}]"  tabindex="-1" aria-hidden="true" ref="modal">
+                    <div class="modal-dialog modal-lg modal-dialog-centered">
+                      <div class="modal-content" style="position: absolute;width: 100%;height: 100%;">
+                        <div class="modal-header" v-if="hadHeader === undefined || JSON.parse(hadHeader)">
+                          <h5 class="modal-title">{{modalTitle}}</h5>
+                          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div :class="['modal-body',bodyClass]">
+<!--                            <div ref="simplebar" style="width: 100%;height: 100%;">-->
+                                <slot></slot>
+<!--                            </div>-->
+                        </div>
+                        <div class="modal-footer" v-if="hadFooter === undefined || JSON.parse(hadFooter)">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                            <button type="button" class="btn btn-primary">Save changes</button>
+                          </div>
+                      </div>
+                    </div>
+               </div>`,
+    props:['hadHeader','hadFooter','modalTitle','modalShow','modalFade','bodyClass'],
+    setup(props,context) {
+
+        const { modalShow,modalFade } = toRefs(props);
+
+        const state = {
+            modal: ref(null),
+            simplebar: ref(null),
+            modalTitle: ref(""),
+            show: false,
+            bsModal: {},
+        }
+
+        watch(modalShow,()=>{
+            state.show = !state.show;
+            if(state.show)
+                state.bsModal.show();
+            else
+                state.bsModal.hide();
+        })
+
+        const initBsModal = () => {
+            state.bsModal = new bootstrap.Modal(state.modal.value);
+            if(modalShow.value) {
+                state.bsModal.show();
+                state.show = true;
+            } else {
+                state.bsModal.hide();
+                state.show = false;
+            }
+            state.modal.value.addEventListener('hide.bs.modal',() => {
+                state.show = false;
+            });
+        }
+
+        const updateLangText = () => {
+            const html = document.querySelector('html');
+            let lang = html.getAttribute('data-bs-language');
+            if(props.modalTitle !== undefined) {
+                const [title1,title2] = props.modalTitle.split("&");
+                if(lang === "cn" || title2 === undefined)
+                    state.modalTitle.value = title1;
+                else
+                    state.modalTitle.value = title2;
+            }
+        }
+
+        onMounted(()=>{
+            //new SimpleBar(state.simplebar.value);
+            const html = document.querySelector('html');
+            html.addEventListener("loaded",()=>{
+                updateLangText();
+                initBsModal();
+            })
+        })
+
+        return { ...state,modalFade }
+    }
+}
+
+export const wifiViewComponent = {
+    template: `<div>
+                    <div v-if="icon === 'wifi'">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-wifi" :width="width" :height="height" viewBox="0 0 24 24" :stroke-width="strokeWidth" :stroke="stroke" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                            <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+                            <path d="M12 18l.01 0" />
+                            <path d="M9.172 15.172a4 4 0 0 1 5.656 0" />
+                            <path d="M6.343 12.343a8 8 0 0 1 11.314 0" />
+                            <path d="M3.515 9.515c4.686 -4.687 12.284 -4.687 17 0" />
+                        </svg>
+                    </div>
+                    <div v-if="icon === 'wifi-1'">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-wifi" :width="width" :height="height" viewBox="0 0 24 24" :stroke-width="strokeWidth" :stroke="stroke" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                            <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+                            <path d="M12 18l.01 0" :stroke="color"/>
+                            <path d="M9.172 15.172a4 4 0 0 1 5.656 0"/>
+                            <path d="M6.343 12.343a8 8 0 0 1 11.314 0"/>
+                            <path d="M3.515 9.515c4.686 -4.687 12.284 -4.687 17 0" />
+                        </svg>
+                    </div>
+                    <div v-if="icon === 'wifi-2'">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-wifi" :width="width" :height="height" viewBox="0 0 24 24" :stroke-width="strokeWidth" :stroke="stroke" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                            <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+                            <path d="M12 18l.01 0" :stroke="color"/>
+                            <path d="M9.172 15.172a4 4 0 0 1 5.656 0" :stroke="color"/>
+                            <path d="M6.343 12.343a8 8 0 0 1 11.314 0"/>
+                            <path d="M3.515 9.515c4.686 -4.687 12.284 -4.687 17 0" />
+                        </svg>
+                    </div>
+                    <div v-if="icon === 'wifi-3'">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-wifi" :width="width" :height="height" viewBox="0 0 24 24" :stroke-width="strokeWidth" :stroke="stroke" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                            <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+                            <path d="M12 18l.01 0" :stroke="color"/>
+                            <path d="M9.172 15.172a4 4 0 0 1 5.656 0" :stroke="color"/>
+                            <path d="M6.343 12.343a8 8 0 0 1 11.314 0" :stroke="color"/>
+                            <path d="M3.515 9.515c4.686 -4.687 12.284 -4.687 17 0" />
+                        </svg>
+                    </div>
+                    <div v-if="icon === 'wifi-4'">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-wifi" :width="width" :height="height" viewBox="0 0 24 24" :stroke-width="strokeWidth" :stroke="stroke" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                            <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+                            <path d="M12 18l.01 0" :stroke="color"/>
+                            <path d="M9.172 15.172a4 4 0 0 1 5.656 0" :stroke="color"/>
+                            <path d="M6.343 12.343a8 8 0 0 1 11.314 0" :stroke="color"/>
+                            <path d="M3.515 9.515c4.686 -4.687 12.284 -4.687 17 0" :stroke="color"/>
+                        </svg>
+                    </div>
+                    <div v-if="icon === 'wifi-off'">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-wifi-off" :width="width" :height="height" viewBox="0 0 24 24" :stroke-width="strokeWidth" :stroke="stroke" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                            <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+                            <path d="M12 18l.01 0" />
+                            <path d="M9.172 15.172a4 4 0 0 1 5.656 0" />
+                            <path d="M6.343 12.343a7.963 7.963 0 0 1 3.864 -2.14m4.163 .155a7.965 7.965 0 0 1 3.287 2" />
+                            <path d="M3.515 9.515a12 12 0 0 1 3.544 -2.455m3.101 -.92a12 12 0 0 1 10.325 3.374" />
+                            <path d="M3 3l18 18" />
+                        </svg>
+                    </div>  
+               </div>`,
+    props:['icon','width','height','stroke','strokeWidth','color'],
+    setup(props,context) {
+        const { stroke,icon,color } = toRefs(props);
+
+        const state = {
+            icon: ref("wifi"),
+            width: ref(20),
+            height: ref(20),
+            stroke: ref("#2c3e50"),
+            strokeWidth: ref(2),
+            color: ref("#cccccc")
+        }
+
+        watchEffect(()=>{
+            if(stroke.value !== undefined)
+                state.stroke.value = stroke.value;
+            if(icon.value !== undefined)
+                state.icon.value = icon.value;
+            if(color.value !== undefined)
+                state.color.value = color.value;
+        })
+
+        onMounted(()=>{
+            if(props.width !== undefined)
+                state.width.value = props.width;
+            if(props.height !== undefined)
+                state.height.value = props.height;
+            if(props.strokeWidth !== undefined)
+                state.strokeWidth.value = props.strokeWidth;
+        })
+
+        return { ...state }
+    }
+}
+
+
+export const antenanViewComponent = {
+    template: `<div>
+                    <div v-if="icon === 'antenan'">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-antenna-bars-5" :width="width" :height="height" viewBox="0 0 24 24" :stroke-width="strokeWidth" :stroke="stroke" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                          <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+                          <path d="M6 18l0 -3" />
+                          <path d="M10 18l0 -6" />
+                          <path d="M14 18l0 -9" />
+                          <path d="M18 18l0 -12" />
+                        </svg>
+                    </div>
+                    <div v-if="icon === 'antenan-0'">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-antenna-bars-5" :width="width" :height="height" viewBox="0 0 24 24" :stroke-width="strokeWidth" :stroke="stroke" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                          <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+                          <path d="M6 18l0 -3" />
+                          <path d="M10 18l0 -6" />
+                          <path d="M14 18l0 -9" />
+                          <path d="M18 18l0 -12" />
+                        </svg>
+                    </div>
+                    <div v-if="icon === 'antenan-1'">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-antenna-bars-5" :width="width" :height="height" viewBox="0 0 24 24" :stroke-width="strokeWidth" :stroke="stroke" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                          <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+                          <path d="M6 18l0 -3" :stroke="color"/>
+                          <path d="M10 18l0 -6"/>
+                          <path d="M14 18l0 -9"/>
+                          <path d="M18 18l0 -12" />
+                        </svg>
+                    </div>
+                    <div v-if="icon === 'antenan-2'">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-antenna-bars-5" :width="width" :height="height" viewBox="0 0 24 24" :stroke-width="strokeWidth" :stroke="stroke" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                          <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+                          <path d="M6 18l0 -3" :stroke="color"/>
+                          <path d="M10 18l0 -6" :stroke="color"/>
+                          <path d="M14 18l0 -9" />
+                          <path d="M18 18l0 -12" />
+                        </svg>
+                    </div>
+                    <div v-if="icon === 'antenan-3'">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-antenna-bars-5" :width="width" :height="height" viewBox="0 0 24 24" :stroke-width="strokeWidth" :stroke="stroke" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                          <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+                          <path d="M6 18l0 -3" :stroke="color"/>
+                          <path d="M10 18l0 -6" :stroke="color"/>
+                          <path d="M14 18l0 -9" :stroke="color"/>
+                          <path d="M18 18l0 -12" />
+                        </svg>
+                    </div>
+                    <div v-if="icon === 'antenan-4'">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-antenna-bars-5" :width="width" :height="height" viewBox="0 0 24 24" :stroke-width="strokeWidth" :stroke="stroke" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                          <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+                          <path d="M6 18l0 -3" :stroke="color"/>
+                          <path d="M10 18l0 -6" :stroke="color"/>
+                          <path d="M14 18l0 -9" :stroke="color"/>
+                          <path d="M18 18l0 -12" :stroke="color"/>
+                        </svg>
+                    </div>
+                    <div v-if="icon === 'antenan-off'">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-antenna-bars-off" :width="width" :height="height" viewBox="0 0 24 24" :stroke-width="strokeWidth" :stroke="stroke" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                          <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+                          <path d="M6 18v-3" />
+                          <path d="M10 18v-6" />
+                          <path d="M14 18v-4" />
+                          <path d="M14 10v-1" />
+                          <path d="M18 14v-8" />
+                          <path d="M3 3l18 18" />
+                        </svg>
+                    </div>  
+               </div>`,
+    props:['icon','width','height','stroke','strokeWidth','color'],
+    setup(props,context) {
+        const { stroke,icon,color } = toRefs(props);
+
+        const state = {
+            icon: ref("antenan"),
+            width: ref(20),
+            height: ref(20),
+            stroke: ref("#2c3e50"),
+            strokeWidth: ref(2),
+            color: ref("#cccccc")
+        }
+
+        watchEffect(()=>{
+            if(stroke.value !== undefined)
+                state.stroke.value = stroke.value;
+            if(icon.value !== undefined)
+                state.icon.value = icon.value;
+            if(color.value !== undefined)
+                state.color.value = color.value;
+        })
+
+        onMounted(()=>{
+            if(props.width !== undefined)
+                state.width.value = props.width;
+            if(props.height !== undefined)
+                state.height.value = props.height;
+            if(props.strokeWidth !== undefined)
+                state.strokeWidth.value = props.strokeWidth;
+        })
+
+        return { ...state }
+    }
 }
 

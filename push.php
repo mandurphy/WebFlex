@@ -232,10 +232,10 @@
                                 <div class="co-lg-12">
                                     <div class="row">
                                         <div class="col-lg-2">
-                                            <input type="text" class="form-control" v-model="item.des">
+                                            <input type="text" class="form-control" v-model.trim.lazy="item.des">
                                         </div>
                                         <div class="col-lg-7">
-                                            <input type="text" class="form-control" v-model="item.path">
+                                            <input type="text" class="form-control" v-model.trim.lazy="item.path">
                                         </div>
                                         <div class="col-lg-1 force-align-center">
                                             <bootstrap-switch v-model="item.enable"></bootstrap-switch>
@@ -280,8 +280,8 @@
     import { rpc,func,alertMsg } from "./assets/js/helper.js";
     import { useDefaultConf,usePushConf } from "./assets/js/confHooks.js";
     import { bootstrapSwitchComponent,flvPlayerComponent,timepickerComponent,languageOptionDirective } from "./assets/js/vueHelper.js"
-    
-    const {createApp,ref,reactive,watch,watchEffect,computed,onMounted} = Vue;
+    import {createApp,ref,reactive,computed,onMounted} from "./assets/plugins/vue/vue.esm.prod.js";
+
     const app = createApp({
         directives: {
           "language-option": languageOptionDirective

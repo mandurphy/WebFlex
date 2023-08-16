@@ -3,6 +3,8 @@
 <html lang="uft-8">
 <head>
     <?php include ("./public/head.inc") ?>
+    <link href="assets/plugins/confirm/css/jquery-confirm.min.css" rel="stylesheet">
+    <link href="assets/plugins/fileinput/css/fileinput.min.css" rel="stylesheet" >
 </head>
 <body>
 <?php include ("./public/menu.inc") ?>
@@ -11,294 +13,329 @@
         <div class="row">
             <div class="col-lg-6">
                 <ul class="nav nav-tabs nav-primary" role="tablist">
-                    <li class="nav-item" role="presentation">
-                        <a class="nav-link active" data-bs-toggle="tab" href="#tab1" role="tab" aria-selected="true">
-                            <div class="d-flex align-items-center">
-                                <div class="tab-icon"><i class="fa-solid fa-code-fork me-1"></i></i></div>
-                                <div class="tab-title"><cn>网口</cn><en>LAN1</en></div>
+                    <li class="nav-item" role="presentation" v-for="(item,index) in handleValidNetDevice" :key="index">
+                        <a :class="['nav-link',{'active':index===0}]" data-bs-toggle="tab" :href="'#tab'+(index+1)" role="tab" aria-selected="true">
+                            <div v-if="item.type === 'lan'" class="d-flex align-items-center">
+                                <div class="tab-icon"><i :class="['fa-solid me-1',{'fa-code-merge':index%2===1},{'fa-code-fork':index%2===0}]"></i></i></div>
+                                <div class="tab-title">
+                                    <cn>网口</cn>
+                                    <en>LAN</en>
+                                    <span v-if="index > 0">{{index+1}}</span>
+                                </div>
+                            </div>
+                            <div v-else-if="item.type === 'wifi'" class="d-flex align-items-center">
+                                <wifi-icon :icon="'wifi-'+(item.rssi > 3 ? 4 : (item.rssi < 3 ? (item.rssi === 0 ? 0 : 2) : 3))" width="20" height="20" stroke="#cccccc" color="#777777" stroke-width="2.3"></wifi-icon>
+                                <div class="tab-title">
+                                    <cn>无线网</cn>
+                                    <en>WIFI</en>
+                                </div>
+                            </div>
+                            <div v-else class="d-flex align-items-center">
+                                <antenan-icon :icon="'antenan-'+(item.rssi > 3 ? 4 : (item.rssi < 3 ? (item.rssi === 0 ? 0 : 2) : 3))" width="20" height="20" stroke="#cccccc" color="#777777" stroke-width="2.3"></antenan-icon>
+                                <div class="tab-title">
+                                    <cn>移动网络</cn>
+                                    <en>Cellular network</en>
+                                </div>
                             </div>
                         </a>
                     </li>
-                    <li class="nav-item" role="presentation" v-if="Object.keys(hardwareConf).length > 0 && hardwareConf.capability.eth1">
-                        <a class="nav-link" data-bs-toggle="tab" href="#tab2" role="tab" aria-selected="false">
+
+                    <li v-if="!handleValidNetDevice.some(item => item.type === 'wifi')" class="nav-item force-cursor-pointer" ref="wifiHandler">
+                        <a class="nav-link">
                             <div class="d-flex align-items-center">
-                                <div class="tab-icon"><i class="fa-solid fa-code-merge me-1"></i></i></div>
-                                <div class="tab-title"><cn>网口2</cn><en>LAN2</en></div>
+                                <wifi-icon icon="wifi-off" width="20" height="20" stroke="#999999" stroke-width="2.3"></wifi-icon>
+                                <div class="tab-title">
+                                    <cn>无线网</cn>
+                                    <en>WIFI</en>
+                                </div>
                             </div>
                         </a>
                     </li>
-                    <li class="nav-item" role="presentation" v-if="Object.keys(hardwareConf).length > 0 && hardwareConf.function.wifi">
-                        <a class="nav-link" data-bs-toggle="tab" href="#tab3" role="tab" aria-selected="false">
+
+                    <li v-if="!handleValidNetDevice.some(item => item.type === 'dongle')" class="nav-item force-cursor-pointer" ref="antenanHandler">
+                        <a class="nav-link">
                             <div class="d-flex align-items-center">
-                                <div class="tab-icon"><i class="fa-solid fa-wifi me-1"></i></i></div>
-                                <div class="tab-title"><cn>无线网</cn><en>WIFI</en></div>
+                                <antenan-icon icon="antenan-off" width="20" height="20" stroke="#999999" stroke-width="2.3"></antenan-icon>
+                                <div class="tab-title">
+                                    <cn>移动网络</cn>
+                                    <en>Cellular network</en>
+                                </div>
                             </div>
                         </a>
                     </li>
                 </ul>
+
                 <div class="tab-content py-3 pe-2 ps-2">
-                    <div class="tab-pane fade show active" id="tab1" role="tabpanel" v-if="Object.keys(netConf).length > 0">
-                        <div class="row mt-3">
-                            <div class="col-lg-2 offset-lg-1 force-align-center">
-                                <label>
-                                    DHCP
-                                </label>
-                            </div>
-                            <div class="col-lg-5">
-                                <bootstrap-switch v-model="netConf.dhcp" size="normal"></bootstrap-switch>
-                            </div>
-                        </div>
-                        <div class="row mt-3">
-                            <div class="col-lg-2 offset-lg-1 force-align-center">
-                                <label>
-                                    IP
-                                </label>
-                            </div>
-                            <div class="col-lg-6">
-                                <input class="form-control" v-model="netConf.ip">
-                            </div>
-                        </div>
-                        <div class="row mt-3">
-                            <div class="col-lg-2 offset-lg-1 force-align-center">
-                                <label>
-                                    <cn>掩码</cn>
-                                    <en>Mask</en>
-                                </label>
-                            </div>
-                            <div class="col-lg-6">
-                                <input class="form-control" v-model="netConf.mask">
-                            </div>
-                        </div>
-                        <div class="row mt-3">
-                            <div class="col-lg-2 offset-lg-1 force-align-center">
-                                <label>
-                                    <cn>网关</cn>
-                                    <en>Gateway</en>
-                                </label>
-                            </div>
-                            <div class="col-lg-6">
-                                <input class="form-control" v-model="netConf.gateway">
-                            </div>
-                        </div>
-                        <div class="row mt-3">
-                            <div class="col-lg-2 offset-lg-1 force-align-center">
-                                <label>
-                                    DNS
-                                </label>
-                            </div>
-                            <div class="col-lg-6">
-                                <input class="form-control" v-model="netConf.dns">
-                            </div>
-                        </div>
-                        <div class="row mt-3">
-                            <div class="col-lg-2 offset-lg-1 force-align-center">
-                                <label>
-                                    MAC
-                                </label>
-                            </div>
-                            <div class="col-lg-6">
-                                <input class="form-control" disabled v-model="macConf">
-                            </div>
-                        </div>
-                        <div class="row mt-4">
-                            <div class="col-lg-12 text-center">
-                                <button type="button" class="btn border-3 btn-primary px-4" @click="saveNetConf"><cn>保存</cn><en>Save</en></button>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="tab-pane fade" id="tab2" role="tabpanel" v-if="Object.keys(net2Conf).length > 0">
-                        <div class="row mt-3">
-                            <div class="col-lg-2 offset-lg-1 force-align-center">
-                                <label>
-                                    DHCP
-                                </label>
-                            </div>
-                            <div class="col-lg-6">
-                                <bootstrap-switch v-model="net2Conf.dhcp" size="normal"></bootstrap-switch>
-                            </div>
-                        </div>
-                        <div class="row mt-3">
-                            <div class="col-lg-2 offset-lg-1 force-align-center">
-                                <label>
-                                    IP
-                                </label>
-                            </div>
-                            <div class="col-lg-6">
-                                <input class="form-control" v-model="net2Conf.ip">
-                            </div>
-                        </div>
-                        <div class="row mt-3">
-                            <div class="col-lg-2 offset-lg-1 force-align-center">
-                                <label>
-                                    <cn>掩码</cn>
-                                    <en>Mask</en>
-                                </label>
-                            </div>
-                            <div class="col-lg-6">
-                                <input class="form-control" v-model="net2Conf.mask">
-                            </div>
-                        </div>
-                        <div class="row mt-3">
-                            <div class="col-lg-2 offset-lg-1 force-align-center">
-                                <label>
-                                    <cn>网关</cn>
-                                    <en>Gateway</en>
-                                </label>
-                            </div>
-                            <div class="col-lg-6">
-                                <input class="form-control" v-model="net2Conf.gateway">
-                            </div>
-                        </div>
-                        <div class="row mt-3">
-                            <div class="col-lg-2 offset-lg-1 force-align-center">
-                                <label>
-                                    DNS
-                                </label>
-                            </div>
-                            <div class="col-lg-6">
-                                <input class="form-control" v-model="net2Conf.dns">
-                            </div>
-                        </div>
-                        <div class="row mt-3">
-                            <div class="col-lg-2 offset-lg-1 force-align-center">
-                                <label>
-                                    MAC
-                                </label>
-                            </div>
-                            <div class="col-lg-6">
-                                <input class="form-control" disabled v-model="mac2Conf">
-                            </div>
-                        </div>
-                        <div class="row mt-4">
-                            <div class="col-lg-12 text-center">
-                                <button type="button" class="btn border-3 btn-primary px-4" @click="saveNet2Conf"><cn>保存</cn><en>Save</en></button>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="tab-pane fade" id="tab3" role="tabpanel" v-if="Object.keys(wifiConf).length > 0">
-                        <div class="row mt-4">
-                            <div class="col-lg-6 border-right">
-                                <div class="row mt-4">
-                                    <div class="col-lg-3 force-align-center">
-                                        <label>
-                                            <cn>启用</cn>
-                                            <en>Enable</en>
-                                        </label>
-                                    </div>
-                                    <div class="col-lg-8">
-                                        <bootstrap-switch v-model="wifiConf.enable" size="normal"></bootstrap-switch>
-                                    </div>
+                    <div :class="['tab-pane fade',{'show active':index===0}]" v-for="(item,index) in handleValidNetDevice" :key="index" :id="'tab'+(index+1)" role="tabpanel">
+                        <div v-if="item.type === 'lan'">
+                            <div class="row mt-3">
+                                <div class="col-lg-2 offset-lg-1 force-align-center">
+                                    <label>
+                                        DHCP
+                                    </label>
                                 </div>
-                                <div class="row mt-3">
-                                    <div class="col-lg-3 force-align-center">
-                                        <label>
-                                            WIFI
-                                        </label>
+                                <div class="col-lg-5">
+                                    <bootstrap-switch v-model="item.dhcp" size="normal"></bootstrap-switch>
+                                </div>
+                            </div>
+                            <div class="row mt-3">
+                                <div class="col-lg-2 offset-lg-1 force-align-center">
+                                    <label>
+                                        IP
+                                    </label>
+                                </div>
+                                <div class="col-lg-6">
+                                    <input class="form-control" v-model="item.ip">
+                                </div>
+                            </div>
+                            <div class="row mt-3">
+                                <div class="col-lg-2 offset-lg-1 force-align-center">
+                                    <label>
+                                        <cn>掩码</cn>
+                                        <en>Mask</en>
+                                    </label>
+                                </div>
+                                <div class="col-lg-6">
+                                    <input class="form-control" v-model="item.mask">
+                                </div>
+                            </div>
+                            <div class="row mt-3">
+                                <div class="col-lg-2 offset-lg-1 force-align-center">
+                                    <label>
+                                        <cn>网关</cn>
+                                        <en>Gateway</en>
+                                    </label>
+                                </div>
+                                <div class="col-lg-6">
+                                    <input class="form-control" v-model="item.gw">
+                                </div>
+                            </div>
+                            <div class="row mt-3">
+                                <div class="col-lg-2 offset-lg-1 force-align-center">
+                                    <label>
+                                        DNS
+                                    </label>
+                                </div>
+                                <div class="col-lg-6">
+                                    <input class="form-control" v-model="item.dns">
+                                </div>
+                            </div>
+                            <div class="row mt-3">
+                                <div class="col-lg-2 offset-lg-1 force-align-center">
+                                    <label>
+                                        MAC
+                                    </label>
+                                </div>
+                                <div class="col-lg-6">
+                                    <input class="form-control" disabled v-model="item.mac">
+                                </div>
+                            </div>
+                            <div class="row mt-4">
+                                <div class="col-lg-12 text-center">
+                                    <button type="button" class="btn border-3 btn-primary px-4" @click="updateNetManagerConf(handleValidNetDevice)"><cn>保存</cn><en>Save</en></button>
+                                </div>
+                            </div>
+                        </div>
+                        <div v-else-if="item.type === 'wifi'">
+                            <div class="row mt-4">
+                                <div class="col-lg-6 border-right">
+                                    <div class="row mt-4">
+                                        <div class="col-lg-3 force-align-center">
+                                            <label>
+                                                <cn>启用</cn>
+                                                <en>Enable</en>
+                                            </label>
+                                        </div>
+                                        <div class="col-lg-8">
+                                            <bootstrap-switch v-model="item.enable" size="normal"></bootstrap-switch>
+                                        </div>
                                     </div>
-                                    <div class="col-lg-8">
-                                        <div class="input-group">
-                                            <select class="form-select" v-model="wifiConnectName">
-                                                <option v-for="(item,index) in wifiList" :key="index" :value="item.ssid">{{item.ssid}}</option>
-                                            </select>
-                                            <span class="input-group-text input-group-addon force-cursor-pointer" @click="refreshWifi"><i :class="['fa-solid fa-arrows-rotate',{'spin':refreshMark}]"></i></span>
+                                    <div class="row mt-3">
+                                        <div class="col-lg-3 force-align-center">
+                                            <label>
+                                                WIFI
+                                            </label>
+                                        </div>
+                                        <div class="col-lg-8">
+                                            <div class="input-group">
+                                                <select class="form-select" v-model="wifiConnectId">
+                                                    <option v-for="(it,idx) in wifiList" :key="idx+10" :value="it.ssid">{{it.ssid}}</option>
+                                                </select>
+                                                <span class="input-group-text input-group-addon force-cursor-pointer" @click="refreshWifi"><i :class="['fa-solid fa-arrows-rotate',{'spin':wifiRefresh}]"></i></span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row mt-3">
+                                        <div class="col-lg-3 force-align-center">
+                                            <label>
+                                                <cn>密码</cn>
+                                                <en>Password</en>
+                                            </label>
+                                        </div>
+                                        <div class="col-lg-8">
+                                            <div class="input-group">
+                                                <input class="form-control" :type="!showPasswd.wifipwd ? 'password' : 'text'" v-model="wifiPassword">
+                                                <span class="input-group-text input-group-addon force-cursor-pointer" @click="showPasswd.wifipwd = !showPasswd.wifipwd"><i :class="['fa-regular',{'fa-eye-slash':!showPasswd.wifipwd},{'fa-eye':showPasswd.wifipwd}]"></i></span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row mt-4">
+                                        <div class="col-lg-3 force-align-center">
+                                            <label>
+                                                <cn>状态</cn>
+                                                <en>Status</en>
+                                            </label>
+                                        </div>
+                                        <div class="col-lg-8">
+                                            <label v-if="!wifiConnectStatus">
+                                                <cn>未连接</cn><en>not connected </en>
+                                            </label>
+                                            <label v-if="wifiConnectStatus">
+                                                <cn>已连接</cn><en>connected </en>
+                                            </label>
+                                            <label v-if="wifiConnectStatus"> {{wifiConnectName}}</label>
+                                        </div>
+                                    </div>
+                                    <div class="row mt-4">
+                                        <div class="col-lg-12 text-center">
+                                            <button type="button" class="btn border-3 btn-primary px-4 me-2" @click="connectWifi"><cn>连接</cn><en>Connect</en></button>
                                         </div>
                                     </div>
                                 </div>
-                                <div class="row mt-3">
-                                    <div class="col-lg-3 force-align-center">
-                                        <label>
-                                            <cn>密码</cn>
-                                            <en>Password</en>
-                                        </label>
+                                <div class="col-lg-6">
+                                    <div class="row mt-4">
+                                        <div class="col-lg-3 force-align-center">
+                                            <label>
+                                                DHCP
+                                            </label>
+                                        </div>
+                                        <div class="col-lg-8">
+                                            <bootstrap-switch v-model="item.dhcp" size="normal"></bootstrap-switch>
+                                        </div>
                                     </div>
-                                    <div class="col-lg-8">
-                                        <div class="input-group">
-                                            <input class="form-control" :type="!showPasswd.wifipwd ? 'password' : 'text'" v-model="wifiPasswd">
-                                            <span class="input-group-text input-group-addon force-cursor-pointer" @click="showPasswd.wifipwd = !showPasswd.wifipwd"><i :class="['fa-regular',{'fa-eye-slash':!showPasswd.wifipwd},{'fa-eye':showPasswd.wifipwd}]"></i></span>
+                                    <div class="row mt-3">
+                                        <div class="col-lg-3 force-align-center">
+                                            <label>
+                                                IP
+                                            </label>
+                                        </div>
+                                        <div class="col-lg-8">
+                                            <input class="form-control" v-model="item.ip">
+                                        </div>
+                                    </div>
+                                    <div class="row mt-3">
+                                        <div class="col-lg-3 force-align-center">
+                                            <label>
+                                                <cn>掩码</cn>
+                                                <en>Mask</en>
+                                            </label>
+                                        </div>
+                                        <div class="col-lg-8">
+                                            <input class="form-control" v-model="item.mask">
+                                        </div>
+                                    </div>
+                                    <div class="row mt-3">
+                                        <div class="col-lg-3 force-align-center">
+                                            <label>
+                                                <cn>网关</cn>
+                                                <en>Gateway</en>
+                                            </label>
+                                        </div>
+                                        <div class="col-lg-8">
+                                            <input class="form-control" v-model="item.gw">
+                                        </div>
+                                    </div>
+                                    <div class="row mt-3">
+                                        <div class="col-lg-3 force-align-center">
+                                            <label>
+                                                DNS
+                                            </label>
+                                        </div>
+                                        <div class="col-lg-8">
+                                            <input class="form-control" v-model="item.dns">
+                                        </div>
+                                    </div>
+                                    <div class="row mt-4 mb-4">
+                                        <div class="col-lg-12 text-center">
+                                            <button type="button" class="btn border-3 btn-primary px-4" @click="updateNetManagerConf(handleValidNetDevice)"><cn>保存</cn><en>Save</en></button>
                                         </div>
                                     </div>
                                 </div>
-                                <div class="row mt-4">
-                                    <div class="col-lg-3 force-align-center">
-                                        <label>
-                                            <cn>状态</cn>
-                                            <en>Status</en>
-                                        </label>
-                                    </div>
-                                    <div class="col-lg-8">
-                                        <label v-if="!wifiConnectStatus">
-                                            <cn>未连接</cn><en>not connected </en>
-                                        </label>
-                                        <label v-if="wifiConnectStatus">
-                                            <cn>已连接</cn><en>connected </en>
-                                        </label>
-                                        <label v-if="wifiConnectStatus">{{wifiConnectName}}</label>
-                                    </div>
+                            </div>
+                        </div>
+                        <div v-else>
+                            <div class="row mt-4">
+                                <div class="col-lg-2 offset-lg-1 force-align-center">
+                                    <label>
+                                        <cn>运营商</cn>
+                                        <en>Operator</en>
+                                    </label>
                                 </div>
-                                <div class="row mt-4">
-                                    <div class="col-lg-12 text-center">
-                                        <button type="button" class="btn border-3 btn-primary px-4 me-2" @click="connectWifi"><cn>连接</cn><en>Connect</en></button>
-                                        <button type="button" class="btn border-3 btn-primary px-4" @click="disConnectWifi"><cn>断开</cn><en>Connect</en></button>
-                                    </div>
+                                <div class="col-lg-6">
+                                    <div v-html="item.oper === '' ? (`<cn>检测中...</cn><en>Detecting...</en>`) : item.oper"></div>
                                 </div>
                             </div>
-                            <div class="col-lg-6">
-                                <div class="row mt-4">
-                                    <div class="col-lg-3 force-align-center">
-                                        <label>
-                                            DHCP
-                                        </label>
-                                    </div>
-                                    <div class="col-lg-8">
-                                        <bootstrap-switch v-model="wifiConf.dhcp" size="normal"></bootstrap-switch>
-                                    </div>
+                            <div class="row mt-3">
+                                <div class="col-lg-2 offset-lg-1 force-align-center">
+                                    <label>
+                                        <cn>服务</cn>
+                                        <en>Service</en>
+                                    </label>
                                 </div>
-                                <div class="row mt-3">
-                                    <div class="col-lg-3 force-align-center">
-                                        <label>
-                                            IP
-                                        </label>
-                                    </div>
-                                    <div class="col-lg-8">
-                                        <input class="form-control" v-model="wifiConf.ip">
-                                    </div>
+                                <div class="col-lg-6">
+                                    <div>{{item.service}}</div>
                                 </div>
-                                <div class="row mt-3">
-                                    <div class="col-lg-3 force-align-center">
-                                        <label>
-                                            <cn>掩码</cn>
-                                            <en>Mask</en>
-                                        </label>
-                                    </div>
-                                    <div class="col-lg-8">
-                                        <input class="form-control" v-model="wifiConf.mask">
-                                    </div>
+                            </div>
+                            <div class="row mt-4">
+                                <div class="col-lg-2 offset-lg-1 force-align-center">
+                                    <label>
+                                        IP
+                                    </label>
                                 </div>
-                                <div class="row mt-3">
-                                    <div class="col-lg-3 force-align-center">
-                                        <label>
-                                            <cn>网关</cn>
-                                            <en>Gateway</en>
-                                        </label>
-                                    </div>
-                                    <div class="col-lg-8">
-                                        <input class="form-control" v-model="wifiConf.gateway">
-                                    </div>
+                                <div class="col-lg-6">
+                                    <input class="form-control" v-model="item.ip" readonly disabled>
                                 </div>
-                                <div class="row mt-3">
-                                    <div class="col-lg-3 force-align-center">
-                                        <label>
-                                            DNS
-                                        </label>
-                                    </div>
-                                    <div class="col-lg-8">
-                                        <input class="form-control" v-model="wifiConf.dns">
-                                    </div>
+                            </div>
+                            <div class="row mt-3">
+                                <div class="col-lg-2 offset-lg-1 force-align-center">
+                                    <label>
+                                        <cn>掩码</cn>
+                                        <en>Mask</en>
+                                    </label>
                                 </div>
-                                <div class="row mt-4 mb-4">
-                                    <div class="col-lg-12 text-center">
-                                        <button type="button" class="btn border-3 btn-primary px-4" @click="saveWifiConf"><cn>保存</cn><en>Save</en></button>
-                                    </div>
+                                <div class="col-lg-6">
+                                    <input class="form-control" v-model="item.mask" readonly disabled>
+                                </div>
+                            </div>
+                            <div class="row mt-3">
+                                <div class="col-lg-2 offset-lg-1 force-align-center">
+                                    <label>
+                                        <cn>网关</cn>
+                                        <en>Gateway</en>
+                                    </label>
+                                </div>
+                                <div class="col-lg-6">
+                                    <input class="form-control" v-model="item.gw" readonly disabled>
+                                </div>
+                            </div>
+                            <div class="row mt-3">
+                                <div class="col-lg-2 offset-lg-1 force-align-center">
+                                    <label>
+                                        DNS
+                                    </label>
+                                </div>
+                                <div class="col-lg-6">
+                                    <input class="form-control" v-model="item.dns" readonly disabled>
+                                </div>
+                            </div>
+                            <div class="row mt-3 mb-4">
+                                <div class="col-lg-2 offset-lg-1 force-align-center">
+                                    <label>
+                                        MAC
+                                    </label>
+                                </div>
+                                <div class="col-lg-6">
+                                    <input class="form-control" v-model="item.mac" readonly disabled>
                                 </div>
                             </div>
                         </div>
@@ -363,7 +400,7 @@
                                     </div>
                                     <div class="row mt-3">
                                         <div class="col-lg-12 text-center">
-                                            <button type="button" class="btn border-3 btn-primary px-4" @click="updateUserPasswd"><cn>保存</cn><en>Save</en></button>
+                                            <button type="button" class="btn border-3 btn-primary px-4" @click="updateUserPasswd(userPasswd)"><cn>保存</cn><en>Save</en></button>
                                         </div>
                                     </div>
                                 </div>
@@ -401,7 +438,7 @@
                 </div>
             </div>
         </div>
-    
+
         <div class="row">
             <div class="col-lg-6">
                 <div class="card">
@@ -423,7 +460,7 @@
                                 <input class="form-control" v-model="sysTime">
                             </div>
                             <div class="col-lg-2">
-                                <button type="button" class="btn border-3 btn-primary changeBtn" @click="syncTimeFromPc"><cn>本地同步</cn><en>Sync from PC</en></button>
+                                <button type="button" class="btn border-3 btn-primary px-2" @click="syncTimeFromPc"><cn>本地同步</cn><en>Sync from PC</en></button>
                             </div>
                         </div>
                         <div class="row mt-3" v-if="Object.keys(ntpConf).length > 0">
@@ -448,21 +485,21 @@
                                 </label>
                             </div>
                             <div class="col-lg-3">
-                               <select class="form-select" v-model="timezoneConf.timeArea" @change="onTimeAreaChange">
-                                   <option value="Africa">Africa</option>
-                                   <option value="America">Americas</option>
-                                   <option value="Antarctica">Antarctica</option>
-                                   <option value="Asia">Asia</option>
-                                   <option value="Atlantic">Atlantic Ocean</option>
-                                   <option value="Australia">Australia</option>
-                                   <option value="Europe">Europe</option>
-                                   <option value="Indian">Indian Ocean</option>
-                                   <option value="Pacific">Pacific Ocean</option>
-                               </select>
+                                <select class="form-select" v-model="timezoneConf.timeArea" @change="onTimeAreaChange">
+                                    <option value="Africa">Africa</option>
+                                    <option value="America">Americas</option>
+                                    <option value="Antarctica">Antarctica</option>
+                                    <option value="Asia">Asia</option>
+                                    <option value="Atlantic">Atlantic Ocean</option>
+                                    <option value="Australia">Australia</option>
+                                    <option value="Europe">Europe</option>
+                                    <option value="Indian">Indian Ocean</option>
+                                    <option value="Pacific">Pacific Ocean</option>
+                                </select>
                             </div>
                             <div class="col-lg-3">
                                 <select class="form-select" v-model="timezoneConf.timeCity">
-                                    <option v-for="item in timeCitys" :value="item.name">{{item.name}}</option>
+                                    <option v-for="item in timezoneCitys" :value="item.name">{{item.name}}</option>
                                 </select>
                             </div>
                         </div>
@@ -473,8 +510,8 @@
                                     <en>reboot time</en>
                                 </label>
                             </div>
-                            <div class="col-lg-3" v-model="cronDay">
-                                <select class="form-select">
+                            <div class="col-lg-3">
+                                <select class="form-select" v-model="cronDay">
                                     <option cn="从不" en="never" value="x" v-language-option></option>
                                     <option cn="每天" en="everyday" value="*" v-language-option></option>
                                     <option cn="每周一" en="monday" value="1" v-language-option></option>
@@ -518,14 +555,14 @@
                         <div class="row mt-4">
                             <div class="col-lg-12 text-center">
                                 <button type="button" class="btn border-3 btn-primary px-4 me-4" @click="saveSysConf"><cn>保存</cn><en>Save</en></button>
-                                <button type="button" class="btn border-3 btn-primary px-4 me-4" @click="reboot"><cn>立即重启</cn><en>Reboot</en></button>
-                                <button type="button" class="btn border-3 btn-primary px-4" @click="resetConf"><cn>恢复出厂设置</cn><en>Reset default</en></button>
+                                <button type="button" class="btn border-3 btn-primary px-4 me-4" @click="rebootConfirm('是否立即重启系统')"><cn>立即重启</cn><en>Reboot</en></button>
+                                <button type="button" class="btn border-3 btn-primary px-4" @click="resetConfirm"><cn>恢复出厂设置</cn><en>Reset default</en></button>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
-    
+
             <div class="col-lg-6">
                 <div class="card">
                     <div class="card-header bg-transparent">
@@ -561,16 +598,16 @@
                         <div>
                             <div class="row row-cols-4 row-cols-lg-4 px-5">
                                 <div class="force-align-center">
-                                    <bootstrap-switch v-model="exconfs.config"></bootstrap-switch>
+                                    <bootstrap-switch v-model="exportConfigs.config"></bootstrap-switch>
                                 </div>
                                 <div class="force-align-center">
-                                    <bootstrap-switch v-model="exconfs.defLays"></bootstrap-switch>
+                                    <bootstrap-switch v-model="exportConfigs.defLays"></bootstrap-switch>
                                 </div>
                                 <div class="force-align-center">
-                                    <bootstrap-switch v-model="exconfs.push"></bootstrap-switch>
+                                    <bootstrap-switch v-model="exportConfigs.push"></bootstrap-switch>
                                 </div>
                                 <div class="force-align-center">
-                                    <bootstrap-switch v-model="exconfs.passwd"></bootstrap-switch>
+                                    <bootstrap-switch v-model="exportConfigs.passwd"></bootstrap-switch>
                                 </div>
                             </div>
                         </div>
@@ -596,16 +633,16 @@
                         <div>
                             <div class="row row-cols-4 row-cols-lg-4 px-5">
                                 <div class="force-align-center">
-                                    <bootstrap-switch v-model="exconfs.record"></bootstrap-switch>
+                                    <bootstrap-switch v-model="exportConfigs.record"></bootstrap-switch>
                                 </div>
                                 <div class="force-align-center">
-                                    <bootstrap-switch v-model="exconfs.port"></bootstrap-switch>
+                                    <bootstrap-switch v-model="exportConfigs.port"></bootstrap-switch>
                                 </div>
                                 <div class="force-align-center">
-                                    <bootstrap-switch v-model="exconfs.cron"></bootstrap-switch>
+                                    <bootstrap-switch v-model="exportConfigs.cron"></bootstrap-switch>
                                 </div>
                                 <div class="force-align-center">
-                                    <bootstrap-switch v-model="exconfs.videoBuffer"></bootstrap-switch>
+                                    <bootstrap-switch v-model="exportConfigs.videoBuffer"></bootstrap-switch>
                                 </div>
                             </div>
                         </div>
@@ -613,6 +650,7 @@
                             <div class="col-lg-12 text-center mt-3">
                                 <button type="button" class="btn border-3 btn-primary px-4 me-3" @click="exportConf"><cn>导出</cn><en>Export</en></button>
                                 <button type="button" class="btn border-3 btn-primary px-4 " @click="importConf"><cn>导入</cn><en>Import</en></button>
+                                <input type="file" accept=".zip" style="display:none;" ref="importHandle" />
                             </div>
                         </div>
                     </div>
@@ -825,8 +863,8 @@
                                 </label>
                             </div>
                             <div class="col-lg-6">
-                                <button type="button" class="btn border-3 btn-primary px-3 me-2"><cn>选择文件</cn><en>File</en></button>
-                                <button type="button" class="btn border-3 btn-primary px-3"><cn>版本日志</cn><en>Logs</en></button>
+                                <button type="button" class="btn border-3 btn-primary px-3 me-2" @click="showBootstrapModal('upload')"><cn>选择文件</cn><en>File</en></button>
+                                <button type="button" class="btn border-3 btn-primary px-3" @click="showBootstrapModal('log')"><cn>版本日志</cn><en>Logs</en></button>
                             </div>
                         </div>
                         <div class="row mt-1 mb-4">
@@ -845,269 +883,263 @@
                 </div>
             </div>
         </div>
+        <upload-modal modal-title="上传升级包&Upload" :modal-show="showUploadModal" modal-fade="true"
+                      upload-allow="['bin']" upload-action="/link/upd/uploadPatch.php" upload-count="1"
+                      upload-tip="请把升级包拖动到此处...&Please drag the upgrade package here..."
+                      @upload-success="uploadSuccess" @upload-error="uploadError">
+        </upload-modal>
+
+        <log-modal had-header="false" had-footer="false" :modal-show="showVerLogModal" modal-fade="true" body-class="logModal" >
+            <div data-simplebar class="logModal mt-2">
+                <div v-for="(item,index) in verLogsConf" :key="index" class="mt-3">
+                    <button v-if="index===0" type="button" class="btn-clear close" @click="showBootstrapModal('log')"><i class="fa-solid fa-x"></i></button>
+                    <div class="row">
+                        <div class="col-lg-10 offset-lg-1">
+                            <h3>{{item.version}}</h3>
+                        </div>
+                    </div>
+                    <div class="row mt-2">
+                        <div class="col-lg-10 offset-lg-1">
+                            <ul>
+                                <li v-for="(it,idx) in item.logs" :key="idx" style="font-size: 14px;white-space:pre-wrap;">{{it}}</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <hr>
+                </div>
+            </div>
+        </log-modal>
+
     </main>
 </div>
 <?php include ("./public/foot.inc") ?>
+<script src="assets/plugins/confirm/js/jquery-confirm.min.js"></script>
 <script src="assets/plugins/jszip/jszip.js"></script>
 <script src="assets/plugins/jszip/filesaver.min.js"></script>
+<script src="assets/plugins/fileinput/js/fileinput.js"></script>
+<script src="assets/plugins/fileinput/js/locales/zh.js"></script>
+<script src="assets/plugins/fileinput/themes/fa6/theme.min.js"></script>
 <script type="module">
-    
-    import { rpc2,rpc3,alertMsg,func,queryData,getConfigData } from "./assets/js/helper.js";
-    import { useHardwareConf,useNetConf,useNet2Conf,useWifiConf,useMacConf,useMac2Conf,useVideoBufferConf,useNtpConf,useTimezoneConf,usePortConf,useVersionConf,useSsidConf,useWpaConf } from "./assets/js/confHooks.js";
-    import { bootstrapSwitchComponent,languageOptionDirective } from "./assets/js/vueHelper.js"
-    
-    const {createApp,ref,reactive,watch,watchEffect,computed,onMounted} = Vue;
+
+    import {createApp,ref,reactive,watchEffect,computed,onMounted} from "./assets/plugins/vue/vue.esm.prod.js";
+    import { rpc2,alertMsg,func,queryData,getConfigData,extend,popover,formatDate,deepCopy,rebootConfirm,resetConfirm } from "./assets/js/helper.js";
+    import { useHardwareConf,usetNetManagerConf,usePasswordConf,useVideoBufferConf } from "./assets/js/confHooks.js";
+    import { useNtpConf,useTimezoneConf,usePortConf,useVersionConf,useVerLogsConf,useWpaConf } from "./assets/js/confHooks.js";
+    import { bootstrapSwitchComponent,languageOptionDirective,wifiViewComponent,antenanViewComponent,uploadModalComponent,customModalComponent } from "./assets/js/vueHelper.js"
+
     const app = createApp({
         directives:{
             "language-option": languageOptionDirective
         },
         components:{
             "bootstrap-switch" : bootstrapSwitchComponent,
+            "wifi-icon": wifiViewComponent,
+            "antenan-icon": antenanViewComponent,
+            "upload-modal": uploadModalComponent,
+            "log-modal": customModalComponent
         },
         setup(props,context) {
-            
+
             const { hardwareConf } = useHardwareConf();
-            const { netConf } = useNetConf();
-            const { net2Conf } = useNet2Conf();
-            const { wifiConf } = useWifiConf();
-            const { macConf } = useMacConf();
-            const { mac2Conf } = useMac2Conf();
-            const { videoBufferConf } = useVideoBufferConf();
+            const { netManagerConf,updateNetManagerConf } = usetNetManagerConf();
+            const { wpaConf } = useWpaConf();
+            const { updateUserPasswd } = usePasswordConf();
+            const { videoBufferConf,updateVideoBufferConf } = useVideoBufferConf();
             const { ntpConf } = useNtpConf();
             const { timezoneConf } = useTimezoneConf();
-            const { portConf } = usePortConf();
+            const { portConf,updatePortConf } = usePortConf();
             const { versionConf } = useVersionConf();
-            const { ssidConf } = useSsidConf();
-            const { wpaConf } = useWpaConf();
-            
+            const { verLogsConf } = useVerLogsConf();
+
             const state = {
-                sysTime: ref("1970-01-01 08:00:00"),
-                timeCitys: reactive([]),
-                cronDay: ref("never"),
-                cronTime: ref("0"),
+                netState: ref({}),
+                netAdapter: ref({}),
+                wifiHandler: ref(null),
+                wifiPopover: {},
+                antenanHandler:ref(null),
+                antenanPopover: {},
+                wifiRefresh: ref(false),
                 wifiList:reactive([]),
-                refreshMark: ref(false),
-                wifiPasswd:ref(""),
-                helpCode:ref(""),
-                wifiConnectId:ref(-1),
+                wifiPassword:ref(""),
+                wifiConnectId:ref(""),
                 wifiConnectStatus:ref(false),
                 wifiConnectName:ref(""),
-                userPasswd:reactive({"oldpwd":"","newpwd":"","confirm":""}),
-                showPasswd:reactive({"wifipwd":false,"oldpwd":false,"newpwd":false,"confirm":false}),
-                exconfs:reactive({"config": true, "defLays":false, "push": false, "record": false, "port": false, "passwd": false, "videoBuffer": true, "cron": true})
+                sysTime: ref("1970-01-01 08:00:00"),
+                timezoneCitys: reactive([]),
+                cronDay: ref("never"),
+                cronTime: ref("0"),
+                importHandle:ref(null),
+                helpCode:ref(""),
+                userPasswd:reactive({}),
+                showPasswd:reactive({}),
+                exportConfigs:reactive({}),
+                showUploadModal:ref(false),
+                showVerLogModal:ref(false),
             }
             
-            const onTimeAreaChange = (evt) => {
-                queryData("/timezone/zoneinfo/"+timezoneConf.timeArea+"/").then(data=>{
-                    state.timeCitys.splice(0, state.timeCitys.length, ...data);
-                    if(evt !== undefined)
-                        timezoneConf.timeCity = state.timeCitys[0].name;
-                })
-            }
-            
-            const unwatch = watch(timezoneConf,value=>{
-                onTimeAreaChange();
-                unwatch();
-            })
-
-            const handleWifiList = () => {
-                rpc2( "wifi.wifiList", null).then(data => {
-                    if ( typeof ( data.error ) != "undefined" ) {
-                        alertMsg('<cn>通信错误</cn><en>Connect failed!</en>', 'error');
-                        return;
-                    }
-                    for(let i=0;i<data.length;i++) {
-                        let item = data[i];
-                        console.log(data);
-                        if(item.flags === "[CURRENT]" || item.flags === "[DISABLED]") {
-                            state.wifiConnectStatus.value = false;
-                            if(item.flags === "[CURRENT]")
-                                state.wifiConnectStatus.value = true;
-                            state.wifiConnectName.value = item.ssid;
-                            state.wifiConnectId.value = item.id;
-                            for(let i=0;i<wpaConf.length;i++) {
-                                let wpa = wpaConf[i];
-                                if(wpa.ssid === item.ssid) {
-                                    if(wpa.hasOwnProperty("psk")){
-                                        state.wifiPasswd.value = wpa.psk;
-                                    }
-                                }
-                            }
+            watchEffect(()=>{
+                if(Object.keys(netManagerConf).length > 0) {
+                    if(state.wifiHandler.value && Object.keys(state.wifiPopover).length === 0) {
+                        state.wifiPopover = popover(state.wifiHandler.value, {
+                            placement:"bottom",
+                            trigger:"hover",
+                            content:`<cn>请先插入USB WIFI网卡</cn><en>Please insert the USB WIFI network card first</en>`,
+                        });
+                    } else {
+                        if(!state.wifiHandler.value && Object.keys(state.wifiPopover).length !== 0) {
+                            state.wifiPopover.dispose();
+                            state.wifiPopover = {};
                         }
                     }
-                } );
-            }
 
-            
-            const unwatch_wifi = watch(wifiConf,value=>{
-                if(wifiConf.enable) {
-                    rpc2( "wifi.scanWifi", null).then(data => {
-                        if ( typeof ( data.error ) != "undefined" ) {
-                            alertMsg('<cn>通信错误</cn><en>Connect failed!</en>', 'error');
-                            return;
+                    if(state.antenanHandler.value && Object.keys(state.antenanPopover).length === 0) {
+                        state.antenanPopover = popover(state.antenanHandler.value, {
+                            placement:"bottom",
+                            trigger:"hover",
+                            content:`<cn>请先插入移动网卡</cn><en>Please insert the Cellular network card first</en>`,
+                        })
+                    } else {
+                        if(!state.antenanHandler.value && Object.keys(state.antenanPopover).length !== 0) {
+                            state.antenanPopover.dispose();
+                            state.antenanPopover = {};
                         }
-                        state.wifiList.splice(0, state.wifiList.length, ...data);
-                    }).then(()=>{
-                        handleWifiList();
-                    });
+                    }
+
+                    if(state.wifiList.length === 0) {
+                        const devices = netManagerConf.interface;
+                        if(devices.hasOwnProperty("wlan0") && devices.wlan0.enable)
+                            refreshWifi("noLoading");
+                    }
                 }
-                unwatch_wifi();
+
+                if(wpaConf.length > 0 && state.wifiPassword.value === "") {
+                    for(let i=0;i<wpaConf.length;i++) {
+                        if(state.wifiConnectId.value === wpaConf[i].ssid)
+                            state.wifiPassword.value = wpaConf[i].psk;
+                    }
+                }
+
+                if(Object.keys(timezoneConf).length > 0 && state.timezoneCitys.length === 0)
+                    onTimeAreaChange();
             })
-    
+
+            const getAdapterNetState = () => {
+                rpc2("net.getState").then(data => {
+                    if(Object.keys(data.interface).length !== Object.keys(state.netAdapter.value).length) {
+                        const fetch = {};
+                        Object.keys(data.interface).forEach(key => {
+                            const { ip, mask, gw, dns, type, dev, rssi, oper, service } = data.interface[key];
+                            fetch[key] = { ip, mask, gw, dns, type, dev };
+                            if(rssi !== undefined)
+                                fetch[key].rssi = rssi;
+                            if(oper !== undefined)
+                                fetch[key].oper = oper;
+                            if(service !== undefined)
+                                fetch[key].service = service;
+                        });
+                        state.netAdapter.value = fetch;
+                    } else {
+                        Object.keys(data.interface).forEach(key => {
+                            const { rssi } = data.interface[key];
+                            if(rssi !== undefined)
+                                state.netAdapter.value[key].rssi = rssi;
+                        });
+                    }
+
+                    state.netState.value = data;
+                    const devices = state.netState.value.interface;
+                    if(devices.hasOwnProperty("wlan0") && state.wifiConnectId.value === "")
+                        state.wifiConnectId.value = devices.wlan0.ssid;
+                });
+                setTimeout(getAdapterNetState,2000);
+            }
+
             const handleSysScene = computed(()=>{
                 return Object.keys(videoBufferConf).filter((item,index)=>{
                     return item !== "used";
                 })
             });
-            
-            const refreshWifi = () => {
 
-                if(!wifiConf.enable) {
-                    wifiConf.enable = true;
-                    saveWifiConf("noTip");
-                }
-                state.refreshMark.value = true;
-                let count = 0;
-                let loopTimer = setInterval(()=>{
-                    rpc2( "wifi.scanWifi", null).then(data => {
-                        if ( typeof ( data.error ) != "undefined" ) {
-                            alertMsg('<cn>通信错误</cn><en>Connect failed!</en>', 'error');
-                            return;
-                        }
-                        count++;
-                        if(data.length > 0 || count > 15) {
-                            state.wifiList.splice(0, state.wifiList.length, ...data);
-                            if(state.wifiList.length >0)
-                                ssidConf.ssid = state.wifiList[0].ssid;
-                            clearInterval(loopTimer);
-                            setTimeout(()=>{
-                                state.refreshMark.value = false;
-                            },500);
-                        }
-                    });
-                },1000)
-            }
-    
-            const connectWifi = () => {
-                let rpcList = [];
-                if(wpaConf.length > 0) {
-                    for(let i=0;i<wpaConf.length;i++) {
-                        rpcList.push(
-                            rpc2( "wifi.setWifi", ["remove_network", i+""]).then(data => {
-                                if ( typeof ( data.error ) != "undefined" ) {
-                                    alertMsg('<cn>移除wifi配置失败</cn><en>Failed to remove wifi configuration!</en>', 'error');
-                                    return;
-                                }
-                            })
-                        )
-                    }
-
-                    Promise.all(rpcList).then((results) => {
-                        console.log(results);
-                        rpc2( "wifi.addWifi", [state.wifiConnectName.value,state.wifiPasswd.value]).then(data =>{
-                            if ( typeof ( data.error ) != "undefined" ) {
-                                alertMsg('<cn>通信错误</cn><en>Connect failed!</en>', 'error');
-                                return;
-                            }
-                            rpc2( "wifi.setWifi", ["enable_network", "0"]).then(data => {
-                                if ( typeof ( data.error ) != "undefined" ) {
-                                    alertMsg('<cn>启用wifi失败</cn><en>Failed to enable wifi!</en>', 'error');
-                                    return;
-                                }
-                                alertMsg('<cn>连接成功</cn><en>Connect successfully!</en>', 'success');
-                            })
-                        });
-                    })
-                } else {
-                    rpc2( "wifi.addWifi", [state.wifiConnectName.value,state.wifiPasswd.value]).then(data =>{
-                        if ( typeof ( data.error ) != "undefined" ) {
-                            alertMsg('<cn>通信错误</cn><en>Connect failed!</en>', 'error');
-                            return;
-                        }
-                        rpc2( "wifi.setWifi", ["enable_network", "0"]).then(data => {
-                            if ( typeof ( data.error ) != "undefined" ) {
-                                alertMsg('<cn>启用wifi失败</cn><en>Failed to enable wifi!</en>', 'error');
-                                return;
-                            }
-                            alertMsg('<cn>连接成功</cn><en>Connect successfully!</en>', 'success');
-                        })
-
-                    });
-                }
-            }
-
-            const disConnectWifi = () => {
-                if(state.wifiConnectId.value === -1) {
-                    alertMsg('<cn>没有找到已连接的Wifi</cn><en>No connected Wifi found</en>', 'warning');
-                    return;
-                }
-                rpc2( "wifi.setWifi", ["disable_network", state.wifiConnectId+""]).then(data => {
-                    if ( typeof ( data.error ) != "undefined" ) {
-                        alertMsg('<cn>通信错误</cn><en>Connect failed!</en>', 'error');
-                        return;
-                    }
-                    state.wifiConnectId.value = -1;
-                    state.wifiConnectStatus.value = false;
-                    alertMsg('<cn>Wifi 已断开</cn><en>Wifi disconnect successfully!</en>', 'success');
-                } );
-            }
-    
-            const saveNetConf = () => {
-                func("/link/mgr/conf/updateNetConf", netConf).then(data=>{
-                    if(data.status === "success")
-                        alertMsg('<cn>保存设置成功</cn><en>Save config successfully!</en>', 'success');
-                });
-            }
-    
-            const saveNet2Conf = () => {
-                func("/link/mgr/conf/updateNet2Conf", net2Conf).then(data=>{
-                    if(data.status === "success")
-                        alertMsg('<cn>保存设置成功</cn><en>Save config successfully!</en>', 'success');
-                });
-            }
-    
-            const saveWifiConf = tip => {
-                rpc2( "wifi.update", [ wifiConf ]).then(data => {
-                    if(tip !== "noTip") {
-                        if ( typeof ( data.error ) !== "undefined" ) {
-                            alertMsg('<cn>保存设置失败</cn><en>Save config failed!</en>', 'error');
+            const handleValidNetDevice = computed(()=>{
+                let adapters = [];
+                if(Object.keys(state.netAdapter.value).length > 0 && Object.keys(netManagerConf).length > 0) {
+                    const interface_confs = netManagerConf.interface;
+                    for (const [adapter_name, adapter_status] of Object.entries(state.netAdapter.value)) {
+                        let adpt = {};
+                        if(interface_confs.hasOwnProperty(adapter_name)) {
+                            if(adapter_status.ip === "")
+                                adpt = (extend(deepCopy(adapter_status),deepCopy(interface_confs[adapter_name])));
+                            else
+                                adpt = (extend(deepCopy(interface_confs[adapter_name]),deepCopy(adapter_status)));
                         } else {
-                            alertMsg('<cn>保存设置成功</cn><en>Save config successfully!</en>', 'success');
+                            if(adapter_status.type !== "dongle") {
+                                adpt = {enable: false, dhcp: false, ip: "192.168.1.101",
+                                    mask: "255.255.255.0", gw: "192.168.1.1", dns: "8.8.8.8"}
+                                adpt = (extend(deepCopy(adapter_status),adpt));
+                            } else {
+                                adpt = deepCopy(adapter_status);
+                            }
                         }
+                        adapters.push(adpt)
                     }
-                } );
+                }
+                return adapters;
+            })
+
+            const refreshWifi = tip => {
+                const scanwifi = () => {
+                    rpc2("net.scanWifi").then(data => {
+                        state.wifiList.splice(0, state.wifiList.length, ...data);
+                        state.wifiRefresh.value = false;
+                        if(state.wifiConnectId.value === "" && state.wifiList.length > 0)
+                            state.wifiConnectId.value = state.wifiList[0].ssid;
+                    })
+                }
+                if(tip !== "noLoading") {
+                    state.wifiRefresh.value = true;
+                    setTimeout(scanwifi,2000);
+                } else {
+                    scanwifi();
+                }
             }
-            
-            const updateUserPasswd = () => {
-                func("/link/mgr/conf/updatePasswdConf",state.userPasswd).then((data)=>{
-                    if(data.status === "success")
-                        alertMsg(data.msg, 'success');
+
+            const connectWifi = () => {
+                rpc2("net.setSimpleWifi", [state.wifiConnectId.value,state.wifiPassword.value]).then(data => {
+                    if(data) {
+                        state.wifiConnectStatus.value = true;
+                        state.wifiConnectName.value = state.wifiConnectId.value;
+                        alertMsg('<cn>WIFI连接成功</cn><en>WIFI connected successfully!</en>', 'success');
+                    }
                     else
-                        alertMsg(data.msg, 'error');
+                    {
+                        state.wifiConnectStatus.value = false;
+                        state.wifiConnectName.value = "";
+                        alertMsg('<cn>WIFI连接失败</cn><en>WIFI connected failed!</en>', 'error');
+                    }
+
                 });
             }
-            
-            const updateVideoBufferConf = () => {
-                func("/link/mgr/conf/updateVideoBufferConf",videoBufferConf).then((data)=>{
-                    if(data.status === "success")
-                        alertMsg('<cn>保存设置成功</cn><en>Save config successfully!</en>', 'success');
-                    else
-                        alertMsg('<cn>保存设置失败</cn><en>Save config failed!</en>', 'error');
-                });
-            }
-            
+
             const syncTimeFromPc = () => {
-                let now = new Date();
-                let time1 = now.Format( "yyyy/MM/dd/hh/mm/ss" );
-                let time2 = now.Format( "yyyy-MM-dd hh:mm:ss" );
+                let time1 = formatDate("yyyy/MM/dd/hh/mm/ss");
+                let time2 = formatDate("yyyy-MM-dd hh:mm:ss");
                 func("/link/mgr/system/setSystemTime",{time1:time1,time2:time2}).then((data)=>{
                     if(data.status === "success") {
-                        alertMsg('<cn>保存设置成功</cn><en>Save config successfully!</en>', 'success');
+                        alertMsg('<cn>时间同步成功</cn><en>system time synchronization successful!</en>', 'success');
                         state.sysTime.value = time2;
                     }
                 })
             }
-            
+
+            const onTimeAreaChange = (evt) => {
+                queryData("/timezone/zoneinfo/"+timezoneConf.timeArea+"/").then(data=>{
+                    state.timezoneCitys.splice(0, state.timezoneCitys.length, ...data);
+                    console.log(state.timezoneCitys.length);
+                    if(evt !== undefined)
+                        timezoneConf.timeCity = state.timezoneCitys[0].name;
+                })
+            }
+
             const saveSysConf = () => {
                 Promise.all([
                     func("/link/mgr/conf/updateNtpConf", ntpConf),
@@ -1121,20 +1153,12 @@
                         alertMsg('<cn>保存设置失败</cn><en>Save config failed!</en>', 'error');
                 })
             }
-            
-            const reboot = () => {
-                func("/link/mgr/system/systemReboot");
-            }
-            
-            const resetConf = () => {
-                func("/link/mgr/system/systemReset");
-            }
-            
+
             const exportConf = () => {
                 let confs = ["lang.json"];
-                for(let i=0;i<Object.keys(state.exconfs).length;i++) {
-                    let path = Object.keys(state.exconfs)[i];
-                    if(state.exconfs[path]) {
+                for(let i=0;i<Object.keys(state.exportConfigs).length;i++) {
+                    let path = Object.keys(state.exportConfigs)[i];
+                    if(state.exportConfigs[path]) {
                         if(path === "cron") {
                             confs.push("ntp.json");
                             confs.push("auto/root.cron");
@@ -1150,7 +1174,6 @@
                 let zip = new JSZip();
                 for(let i=0;i<confs.length;i++){
                     getConfigData(confs[i],{responseType: 'blob'}).then((xhr)=>{
-                        console.log(confs[i],xhr.response);
                         zip.file(confs[i],xhr.response,{binary:true});
                     })
                 }
@@ -1164,20 +1187,34 @@
                     }
                 },300);
             }
-            
+
             const importConf = () =>{
-            
-            }
-            
-            const updatePortConf = () => {
-                rpc3("update", [JSON.stringify( portConf, null, 2 )]).then(data => {
-                    if ( typeof ( data.error ) !== "undefined" )
-                        alertMsg('<cn>保存设置失败</cn><en>Save config failed!</en>', 'error');
-                    else
-                        alertMsg('<cn>保存设置成功</cn><en>Save config successfully!</en>', 'success');
+                state.importHandle.value.click();
+                state.importHandle.value.addEventListener('change', event => {
+                    let data = new FormData();
+                    let file=event.target.files[0];
+                    let name=file.name;
+                    data.append("file",file);
+                    data.append("name",name);
+                    axios({
+                        url: '/link/upd/uploadConf.php',
+                        method: 'post',
+                        data: data,
+                        responseType: 'json',
+                        headers: {'Content-Type': 'multipart/form-data'}
+                    }).then(response => {
+                        if (response.data.isSuccess) {
+                            alertMsg('<cn>导入成功</cn><en>Import success</en>！','success');
+                        } else {
+                            alertMsg('<cn>导入失败</cn><en>Import faild</en>！','error');
+                        }
+                    })
+                    .catch(error => {
+                        console.error('请求发生错误:', error);
+                    });
                 });
             }
-            
+
             const startHelp = () => {
                 state.helpCode.value = Math.floor(Math.random()*1000);
                 func("/link/mgr/system/startHelp",{helpCode: state.helpCode.value}).then((data)=>{
@@ -1185,7 +1222,7 @@
                         alertMsg('<cn>连接成功，请向客服提供授权码以便控制您的编码器。</cn><en>Connect success, please provide auth code to customer service to control your encoder!</en>', 'success');
                 })
             }
-            
+
             const stopHelp = () => {
                 func("/link/mgr/system/stopHelp").then((data)=>{
                     if(data.status === "success") {
@@ -1194,7 +1231,7 @@
                     }
                 })
             }
-            
+
             const systemNetTest = () => {
                 func("/link/mgr/system/systemNetTest").then(data => {
                     const str = data.data.join();
@@ -1206,8 +1243,37 @@
                         alertMsg('<cn>网络不可用</cn><en>Network Unavailable</en>！', 'error');
                 })
             }
-            
-            onMounted(()=>{
+
+            const showBootstrapModal = type => {
+                if(type === "upload")
+                    state.showUploadModal.value = !state.showUploadModal.value;
+                if(type === "log")
+                    state.showVerLogModal.value = !state.showVerLogModal.value;
+            }
+
+            const uploadSuccess = data => {
+                const response = data.response;
+                if(response.upload === "0")
+                    rebootConfirm("上传成功，是否立即重启系统完成更新?");
+                if(response.upload === "-1")
+                    alertMsg("<cn>上传失败,升级包机型不匹配！</cn><en>Upload failed, upgrade package model does not match!</en>","error");
+                if(response.upload === "-2")
+                    alertMsg("<cn>上传失败,升级包与系统版本不匹配！</cn><en>Upload failed, the upgrade package does not match the system versio!</en>","error");
+            }
+
+            const uploadError = errMsg => {
+                alertMsg(errMsg, 'error');
+            }
+
+            const updateRenderData = () => {
+                Object.assign(state.userPasswd,{oldpwd: '',newpwd: '',confirm: ''});
+                Object.assign(state.showPasswd,{wifipwd: false,oldpwd: false,newpwd: false,confirm: false});
+                Object.assign(state.exportConfigs,{config: true,defLays: false,push: false,
+                    record: false,port: false,passwd: false,videoBuffer: true,cron: true
+                });
+            }
+
+            const getSysAbortTime = () => {
                 func("/link/mgr/system/getSystemTime").then(result => {
                     state.sysTime.value = result.data;
                     setInterval(()=>{
@@ -1222,9 +1288,9 @@
                         state.sysTime.value = `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
                     },1000);
                 });
-    
+
                 func("/link/mgr/system/getSystemCrontab").then(result => {
-                    if ( result.data === "" || result.data.split( " " ).length !== 6 ) {
+                    if ( result.data === null || result.data.split( " " ).length !== 6 ) {
                         state.cronDay.value = "x";
                         state.cronTime.value = "0";
                     } else {
@@ -1232,28 +1298,17 @@
                         state.cronDay.value = result.data.split( " " )[ 4 ];
                     }
                 });
-    
-                Date.prototype.Format =  fmt => {
-                    let o = {
-                        "M+": this.getMonth() + 1,
-                        "d+": this.getDate(),
-                        "h+": this.getHours(),
-                        "m+": this.getMinutes(),
-                        "s+": this.getSeconds(),
-                        "q+": Math.floor( ( this.getMonth() + 3 ) / 3 ),
-                        "S": this.getMilliseconds()
-                    };
-                    if ( /(y+)/.test( fmt ) ) fmt = fmt.replace( RegExp.$1, ( this.getFullYear() + "" ).substr( 4 - RegExp.$1.length ) );
-                    for ( let k in o )
-                        if ( new RegExp( "(" + k + ")" ).test( fmt ) ) fmt = fmt.replace( RegExp.$1, ( RegExp.$1.length == 1 ) ? ( o[ k ] ) : ( ( "00" + o[ k ] ).substr( ( "" + o[ k ] ).length ) ) );
-                    return fmt;
-                }
+            }
+
+            onMounted(()=>{
+                updateRenderData();
+                getSysAbortTime();
+                getAdapterNetState();
             })
-            
-            return {...state,hardwareConf,netConf,net2Conf,macConf,mac2Conf,wifiConf,
-                videoBufferConf,ssidConf,ntpConf,timezoneConf,portConf,versionConf,handleSysScene,
-                saveNetConf,saveNet2Conf,saveWifiConf,refreshWifi,connectWifi,disConnectWifi,updateUserPasswd,updateVideoBufferConf,
-                onTimeAreaChange,syncTimeFromPc,saveSysConf,reboot,resetConf,exportConf,importConf,updatePortConf,startHelp,stopHelp,systemNetTest}
+
+            return {...state,hardwareConf,netManagerConf,handleValidNetDevice,videoBufferConf,ntpConf,timezoneConf,portConf,versionConf,verLogsConf,
+                refreshWifi,connectWifi,updateNetManagerConf,handleSysScene, updateUserPasswd,updateVideoBufferConf,updatePortConf,showBootstrapModal,
+                uploadSuccess,uploadError,rebootConfirm,resetConfirm, onTimeAreaChange,syncTimeFromPc,saveSysConf,exportConf,importConf,startHelp,stopHelp,systemNetTest}
         }
     });
     app.mount('#app');

@@ -739,8 +739,8 @@
     import { rpc,alertMsg,extend,deepCopy } from "./assets/js/helper.js";
     import { useDefaultConf,useHardwareConf,usePortConf } from "./assets/js/confHooks.js";
     import { bootstrapSwitchComponent,multipleInputComponent } from "./assets/js/vueHelper.js"
+    import {createApp,ref,reactive,toRefs,watch,watchEffect,computed} from "./assets/plugins/vue/vue.esm.prod.js";
 
-    const {createApp,ref,reactive,toRefs,watch,watchEffect,computed} = Vue;
     const app = createApp({
         components:{
             "bootstrap-switch" : bootstrapSwitchComponent,

@@ -3,6 +3,7 @@
 <html lang="uft-8">
 <head>
     <?php include ("./public/head.inc") ?>
+    <link href="assets/plugins/confirm/css/jquery-confirm.min.css" rel="stylesheet">
     <link href="assets/plugins/nouislider/css/nouislider.min.css" rel="stylesheet">
 </head>
 <body>
@@ -38,7 +39,7 @@
                                     </select>
                                 </div>
                                 <div class="flex-grow-1 d-flex justify-content-end pe-3">
-                                    <i class="fa-solid fa-gear fa-lg force-cursor-pointer"></i>
+                                    <i class="fa-solid fa-gear fa-lg force-cursor-pointer" @click="hrefDefLayout"></i>
                                 </div>
                             </div>
                         </div>
@@ -61,8 +62,8 @@
                     </div>
                     <div class="card-body pb-4" >
                         <div class="force-aspect-ratio">
-                            <div class="aspect-ratio-content">
-                                <div v-for="(item,index) in handleActiveDefLayConf.layouts" :style="{position:'absolute',padding:'1px',width:item.pos.w * 100+'%',height:item.pos.h*100+'%',left:item.pos.x*100+'%',top:item.pos.y*100+'%'}">
+                            <div class="aspect-ratio-content bg-black">
+                                <div v-for="(item,index) in handleActiveDefLayConf.layouts" :style="{position:'absolute',width:item.pos.w * 100+'%',height:item.pos.h*100+'%',left:item.pos.x*100+'%',top:item.pos.y*100+'%'}">
                                     <div :style="{width:'100%',height:'100%',backgroundColor: handleLayBackColor(index)}">
                                         <div class="d-flex align-items-center gap-1 border-0 px-2 py-1">
                                             <div class="flex-grow-1">
@@ -422,15 +423,15 @@
     </main>
 </div>
 <?php include ("./public/foot.inc") ?>
-
+<script src="assets/plugins/confirm/js/jquery-confirm.min.js"></script>
 <script src="assets/plugins/nouislider/js/nouislider.min.js"></script>
 <script type="module">
     
-    import { rpc,alertMsg } from "./assets/js/helper.js";
+    import { rpc,alertMsg,confirm } from "./assets/js/helper.js";
     import { useDefaultConf,useDefLaysConf,useHardwareConf } from "./assets/js/confHooks.js";
     import { bootstrapSwitchComponent,nouiSliderComponent,languageOptionDirective } from "./assets/js/vueHelper.js"
-    
-    const {createApp,ref,reactive,watchEffect,computed} = Vue;
+    import {createApp,ref,reactive,watchEffect,computed} from "./assets/plugins/vue/vue.esm.prod.js";
+
     const app = createApp({
         directives:{
             "language-option": languageOptionDirective
@@ -532,6 +533,27 @@
                     unwatch();
                 }
             })
+
+            const hrefDefLayout = () => {
+                confirm({
+                    title: '<cn>布局</cn><en>Layout</en>',
+                    content: '<cn>是否打开布局管理器？</cn><en>Jump to Layout Manager?</en>',
+                    buttons: {
+                        ok: {
+                            text: "<cn>打开</cn><en>Confirm</en>",
+                            btnClass: 'btn-primary',
+                            keys: ['enter'],
+                            action: function() {
+                                window.location.href = "defLayout.php";
+                            }
+                        },
+                        cancel: {
+                            text: "<cn>取消</cn><en>Cancel</en>"
+                        }
+
+                    }
+                });
+            }
             
             const onChangeLayout = () => {
                 let layout = [];
@@ -588,7 +610,8 @@
                 });
             }
             
-            return {...state,defaultConf,defLaysConf,hardwareConf,handleEnableConf,handleActiveDefLayConf,onChangeLayout,handleLayBackColor,handleActiveVolume,onUpdateActiveVolume,handleLayoutChnSelect,saveConf}
+            return {...state,defaultConf,defLaysConf,hardwareConf,handleEnableConf,handleActiveDefLayConf,
+                hrefDefLayout,onChangeLayout,handleLayBackColor,handleActiveVolume,onUpdateActiveVolume,handleLayoutChnSelect,saveConf}
         }
     });
     app.mount('#app');

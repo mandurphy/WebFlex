@@ -409,8 +409,8 @@
     import { rpc,alertMsg,confirm,func } from "./assets/js/helper.js";
     import { useDefaultConf,useOverlayConf,useResConf } from "./assets/js/confHooks.js";
     import { bootstrapSwitchComponent,nouiSliderComponent,vueColorPickerComponent,uploadModalComponent } from "./assets/js/vueHelper.js"
+    import {createApp,ref,reactive,watchEffect,computed} from "./assets/plugins/vue/vue.esm.prod.js";
 
-    const {createApp,ref,reactive,watch,watchEffect,computed,onMounted} = Vue;
     const app = createApp({
         components:{
             "bootstrap-switch" : bootstrapSwitchComponent,
@@ -560,7 +560,7 @@
                 state.showModal.value = !state.showModal.value;
             }
 
-            const uploadSuccess = () => {
+            const uploadSuccess = data => {
                 updateResConf();
             }
 

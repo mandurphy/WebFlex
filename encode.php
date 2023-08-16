@@ -808,8 +808,8 @@
     import { rpc,alertMsg,extend,deepCopy,confirm } from "./assets/js/helper.js";
     import { useDefaultConf,useHardwareConf } from "./assets/js/confHooks.js";
     import { bootstrapSwitchComponent,multipleSelectComponent,languageOptionDirective } from "./assets/js/vueHelper.js"
+    import {createApp,reactive,watch,toRefs,computed,onMounted} from "./assets/plugins/vue/vue.esm.prod.js";
 
-    const {createApp,reactive,watch,toRefs,computed,onMounted} = Vue;
     const app = createApp({
         directives:{
             "language-option": languageOptionDirective

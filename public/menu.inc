@@ -12,8 +12,14 @@
                 </span>
                 </div>
                 <ul class="navbar-nav top-right-menu gap-2">
-                    <li class="nav-item dark-mode">
-                        <a class="nav-link dark-mode-icon" href="javascript:;"><i class="fa-regular fa-moon"></i></a>
+                    <li class="nav-item">
+                        <a class="nav-link" style="font-size: 20px;">
+                            <cn @click="updateSysLanguage('en')">En</cn>
+                            <en @click="updateSysLanguage('cn')">中</en>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="javascript:;"><i class="fa-regular fa-moon"></i></a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" data-bs-toggle="offcanvas" href="#ThemeCustomizer"><i class="fa fa-gear"></i></a>
@@ -35,7 +41,7 @@
                     <i class="fa-solid fa-xmark"></i>
                 </div>
             </div>
-            <div class="sidebar-nav">
+            <div class="sidebar-nav" data-simplebar>
                 <ul class="metismenu">
                     <li>
                         <a href="dashboard.php">
@@ -321,8 +327,8 @@
 </div>
 
 <script type="module">
-    import { func } from "../assets/js/helper.js";
-    const { createApp,ref,watchEffect,onMounted } = Vue;
+    import { createApp,ref,watchEffect,onMounted } from "../assets/plugins/vue/vue.esm.prod.js";
+    import { func,updateSysLanguage } from "../assets/js/helper.js";
     const menu = createApp({
        setup() {
 
@@ -367,7 +373,6 @@
 
            onMounted(()=>{
                $(".metismenu").metisMenu();
-               new SimpleBar(document.querySelector(".sidebar-nav"));
 
                let as = document.querySelectorAll(".sidebar-wrapper .metismenu li a");
                for (let i = 0; i < as.length; i++) {
@@ -386,7 +391,7 @@
                }
            });
 
-           return {...state,onLogout,onToggleMenu,onMouseEnter,onMouseLeave,onCloseSidebar}
+           return {...state,onLogout,onToggleMenu,onMouseEnter,onMouseLeave,onCloseSidebar,updateSysLanguage}
        }
     });
     menu.mount('#menu');

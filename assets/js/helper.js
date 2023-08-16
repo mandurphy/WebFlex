@@ -79,60 +79,48 @@ export const func = (url,data = []) => {
 }
 
 //encoder
-export const rpc = (func, params) => {
+export const rpc = (func, params = []) => {
     return new Promise((resolve,reject)=>{
         let jsonrpc = new JsonRpcClient({ ajaxUrl: '/RPC' });
-        if(params === undefined || params === null)
-            params=[];
         jsonrpc.call(func, params, data => { resolve(data); }, error =>{ console.log(error);reject(error); });
     })
 }
 
-//wifi
-export const rpc2 = (func, params, callbak, usrdata) => {
+//netManager
+export const rpc2 = (func, params = []) => {
     return new Promise((resolve,reject)=>{
         let jsonrpc = new JsonRpcClient({ ajaxUrl: '/RPC2' });
-        if(params === undefined || params === null)
-            params=[];
         jsonrpc.call(func, params, data => { resolve(data); }, error =>{ console.log(error);reject(error); });
     })
 }
 
 //port
-export const rpc3 = (func, params, callbak, usrdata) => {
+export const rpc3 = (func, params = []) => {
     return new Promise((resolve,reject)=>{
         let jsonrpc = new JsonRpcClient({ ajaxUrl: '/RPC3' });
-        if(params === undefined || params === null)
-            params=[];
         jsonrpc.call(func, params, data => { resolve(data); }, error =>{ console.log(error);reject(error); });
     })
 }
 
 //mqtt
-export const rpc4 = (func, params, callbak, usrdata) => {
+export const rpc4 = (func, params = []) => {
     return new Promise((resolve,reject)=>{
         let jsonrpc = new JsonRpcClient({ ajaxUrl: '/RPC4' });
-        if(params === undefined || params === null)
-            params=[];
         jsonrpc.call(func, params, data => { resolve(data); }, error =>{ console.log(error);reject(error); });
     })
 }
 
-export const rpc5 = (func, params, callbak, usrdata) => {
+export const rpc5 = (func, params = []) => {
     return new Promise((resolve,reject)=>{
         let jsonrpc = new JsonRpcClient({ ajaxUrl: '/RPC5' });
-        if(params === undefined || params === null)
-            params=[];
         jsonrpc.call(func, params, data => { resolve(data); }, error =>{ console.log(error);reject(error); });
     })
 }
 
 // monitor
-export const rpc6 = (func, params) => {
+export const rpc6 = (func, params = []) => {
     return new Promise((resolve,reject)=>{
         let jsonrpc = new JsonRpcClient({ ajaxUrl: '/RPC6' });
-        if(params === undefined || params === null)
-            params=[];
         jsonrpc.call(func, params, data => { resolve(data); }, error =>{ console.log(error);reject(error); });
     })
 }
@@ -188,7 +176,109 @@ export const extend = (target, ...sources) => {
     return target;
 }
 
+export const clearReactiveObject = (reactiveObj) => {
+    const keys = Object.keys(reactiveObj);
+    keys.forEach((key) => {
+        delete reactiveObj[key];
+    });
+};
+
 export const deepCopy = (obj) => JSON.parse(JSON.stringify(obj));
+
+export const popover = (ele,param) => {
+    if(ele === null || ele === undefined)
+        return {};
+    if(param.content.includes("<cn>")) {
+        const html = document.querySelector('html');
+        let lang = html.getAttribute('data-bs-language');
+        const regex = new RegExp(`<${lang}>(.*?)<\/${lang}>`);
+        param.content = param.content.match(regex)[1];
+    }
+    return new bootstrap.Popover(ele, param)
+}
+
+export const formatDate =  (fmt,date = new Date()) => {
+    let o = {
+        "M+": date.getMonth() + 1,
+        "d+": date.getDate(),
+        "h+": date.getHours(),
+        "m+": date.getMinutes(),
+        "s+": date.getSeconds(),
+        "q+": Math.floor( ( date.getMonth() + 3 ) / 3 ),
+        "S": date.getMilliseconds()
+    };
+    if ( /(y+)/.test( fmt ) ) fmt = fmt.replace( RegExp.$1, ( date.getFullYear() + "" ).substr( 4 - RegExp.$1.length ) );
+    for ( let k in o )
+        if ( new RegExp( "(" + k + ")" ).test( fmt ) ) fmt = fmt.replace( RegExp.$1, ( RegExp.$1.length == 1 ) ? ( o[ k ] ) : ( ( "00" + o[ k ] ).substr( ( "" + o[ k ] ).length ) ) );
+    return fmt;
+}
+
+export const deepEqualIgnoreProps = (obj1, obj2, ignoreProps) => {
+    if (obj1 === obj2) {
+        return true;
+    }
+    if (typeof obj1 !== 'object' || typeof obj2 !== 'object' || obj1 === null || obj2 === null) {
+        return false;
+    }
+    const keys1 = Object.keys(obj1).filter(key => !ignoreProps.includes(key));
+    const keys2 = Object.keys(obj2).filter(key => !ignoreProps.includes(key));
+    if (keys1.length !== keys2.length) {
+        return false;
+    }
+    for (const key of keys1) {
+        if (!keys2.includes(key) || !deepEqualIgnoreProps(obj1[key], obj2[key], ignoreProps)) {
+            return false;
+        }
+    }
+    return true;
+}
+
+export const rebootConfirm = (msg) => {
+    confirm( {
+        title: '<cn>重启</cn><en>Reboot</en>',
+        content: '<cn>'+msg+'</cn><en>Reboot immediately?</en>',
+        buttons: {
+            ok: {
+                text: "<cn>确认重启</cn><en>Confirm</en>",
+                btnClass: 'btn-primary',
+                keys: [ 'enter' ],
+                action: function () {
+                    func("/link/mgr/system/systemReboot");
+                }
+            },
+            cancel: {
+                text: "<cn>取消</cn><en>Cancel</en>",
+                action: function () {
+                    console.log( 'the user clicked cancel' );
+                }
+            }
+        }
+    } );
+}
+
+export const resetConfirm = () => {
+    confirm( {
+        title: '<cn>还原</cn><en>Reset</en>',
+        content: '<cn>是否还原全部设置？</cn><en>Reset all config to default and reboot immediately?</en>',
+        buttons: {
+            ok: {
+                text: "<cn>确认</cn><en>Confirm</en>",
+                btnClass: 'btn-primary',
+                keys: [ 'enter' ],
+                action: function () {
+                    func("/link/mgr/system/systemReset");
+                }
+            },
+            cancel: {
+                text: "<cn>取消</cn><en>Cancel</en>",
+                action: function () {
+                    console.log( 'the user clicked cancel' );
+                }
+            }
+
+        }
+    } );
+}
 
 
 
