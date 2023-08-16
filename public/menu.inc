@@ -42,7 +42,7 @@
                 </div>
             </div>
             <div class="sidebar-nav" data-simplebar>
-                <ul class="metismenu">
+                <ul class="metismenu" ref="metismenu">
                     <li>
                         <a href="dashboard.php">
                             <div class="parent-icon"><i class="fa fa-tachometer"></i></div>
@@ -329,10 +329,13 @@
 <script type="module">
     import { createApp,ref,watchEffect,onMounted } from "../assets/plugins/vue/vue.esm.prod.js";
     import { func,updateSysLanguage } from "../assets/js/helper.js";
+    import Metismenu from '../assets/plugins/metismenu/js/metisMenu.esm.js';
+
     const menu = createApp({
        setup() {
 
            const state = {
+               metismenu: ref(null),
                isMenuToggled : ref(false),
                isSidebarHovered: ref(false)
            }
@@ -372,8 +375,7 @@
            }
 
            onMounted(()=>{
-               $(".metismenu").metisMenu();
-
+               new Metismenu(state.metismenu.value);
                let as = document.querySelectorAll(".sidebar-wrapper .metismenu li a");
                for (let i = 0; i < as.length; i++) {
                    if (as[i].href === window.location.href) {

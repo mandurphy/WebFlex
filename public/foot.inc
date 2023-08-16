@@ -4,7 +4,6 @@
 <script src="assets/plugins/jquery/jquery.min.js"></script>
 <script src="assets/plugins/bootstrap/bootstrap.bundle.min.js"></script>
 <script src="assets/plugins/pace/js/pace.min.js"></script>
-<script src="assets/plugins/metismenu/js/metisMenu.min.js"></script>
 <script src="assets/plugins/notifications/js/lobibox.js"></script>
 <script src="assets/plugins/notifications/js/notifications.min.js"></script>
 <script src="assets/plugins/notifications/js/notification-custom-script.js"></script>
