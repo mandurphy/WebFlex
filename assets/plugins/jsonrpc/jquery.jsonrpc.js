@@ -14,6 +14,7 @@
  *
  * More examples are available in README.md
  */
+import $ from "../jquery/jquery.esm.js";
 
 (function ($,w) {
     var JsonRpcClient = function(options) {

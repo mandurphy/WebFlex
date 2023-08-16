@@ -1,5 +1,6 @@
 //Author      : @arboshiki
 //create lobibox object
+import $ from "../../jquery/jquery.esm.js";
 var Lobibox = Lobibox || {};
 (function () {
 
@@ -1134,3 +1135,5 @@ var Lobibox = Lobibox || {};
     };
 
 })();
+
+export default Lobibox;

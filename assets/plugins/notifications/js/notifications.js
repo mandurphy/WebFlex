@@ -6,6 +6,7 @@
  * @param {int} n
  * @returns {String}
  */
+import $ from "../../jquery/jquery.esm.js";
 Math.randomString = function (n) {
     var text = "";
     var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";

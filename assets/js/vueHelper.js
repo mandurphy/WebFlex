@@ -1,7 +1,8 @@
 
-import {ref,reactive,toRefs,watch,watchEffect,computed,onMounted,nextTick} from "../plugins/vue/vue.esm.prod.js";
+import {ref,reactive,toRefs,watch,watchEffect,computed,onMounted,nextTick} from '../plugins/vue/vue.esm.prod.js';
 import * as vueColor from '../plugins/vueColor/vue.color.esm.js'
-import * as Popper from "../plugins/popper/popper.esm.js"
+import * as Popper from '../plugins/popper/popper.esm.js'
+import $ from '../plugins/jquery/jquery.esm.js'
 
 export const apexChartsDirective = {
     mounted(el,bindings,node) {

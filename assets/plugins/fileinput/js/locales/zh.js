@@ -9,6 +9,7 @@
  *
  * NOTE: this file must be saved in UTF-8 encoding.
  */
+import jquery from "../../../jquery/jquery.esm.js";
 (function (factory) {
     'use strict';
     if (typeof define === 'function' && define.amd) {
@@ -16,7 +17,7 @@
     } else if (typeof module === 'object' && typeof module.exports === 'object') {
         factory(require('jquery'));
     } else {
-        factory(window.jQuery);
+        factory(jquery);
     }
 }(function ($) {
     "use strict";

@@ -6,7 +6,7 @@
   * @author Mattia Larentis <mattia@larentis.eu> (http://larentis.eu)
   * @license Apache-2.0
   */
-
+import jquery from "../../jquery/jquery.esm.js";
 (function (global, factory) {
   if (typeof define === "function" && define.amd) {
     define(['jquery'], factory);
@@ -16,10 +16,10 @@
     var mod = {
       exports: {}
     };
-    factory(global.jquery);
+    factory(jquery);
     global.bootstrapSwitch = mod.exports;
   }
-})(this, function (_jquery) {
+})(window, function (_jquery) {
   'use strict';
 
   var _jquery2 = _interopRequireDefault(_jquery);

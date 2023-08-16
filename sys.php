@@ -916,12 +916,12 @@
     </main>
 </div>
 <?php include ("./public/foot.inc") ?>
-<script src="assets/plugins/confirm/js/jquery-confirm.min.js"></script>
+<script src="assets/plugins/confirm/js/jquery-confirm.min.js" type="module"></script>
 <script src="assets/plugins/jszip/jszip.js"></script>
 <script src="assets/plugins/jszip/filesaver.min.js"></script>
-<script src="assets/plugins/fileinput/js/fileinput.js"></script>
-<script src="assets/plugins/fileinput/js/locales/zh.js"></script>
-<script src="assets/plugins/fileinput/themes/fa6/theme.min.js"></script>
+<script src="assets/plugins/fileinput/js/fileinput.min.js" type="module"></script>
+<script src="assets/plugins/fileinput/js/locales/zh.js" type="module"></script>
+<script src="assets/plugins/fileinput/themes/fa6/theme.min.js" type="module"></script>
 <script type="module">
 
     import {createApp,ref,reactive,watchEffect,computed,onMounted} from "./assets/plugins/vue/vue.esm.prod.js";

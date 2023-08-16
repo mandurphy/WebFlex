@@ -8,6 +8,7 @@
  * Licensed under the BSD-3-Clause
  * https://github.com/kartik-v/bootstrap-fileinput/blob/master/LICENSE.md
  */
+import jquery from "../../jquery/jquery.esm.js";
 (function (factory) {
     'use strict';
     if (typeof define === 'function' && define.amd) {
@@ -15,7 +16,7 @@
     } else if (typeof module === 'object' && typeof module.exports === 'object') {
         factory(require('jquery'));
     } else {
-        factory(window.jQuery);
+        factory(jquery);
     }
 }(function ($) {
     'use strict';
