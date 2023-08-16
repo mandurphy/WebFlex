@@ -877,6 +877,9 @@
                             <div class="col-lg-6">
                                 <button type="button" class="btn border-3 btn-primary px-3 me-2"><cn>检测更新</cn><en>Search</en></button>
                                 <button type="button" class="btn border-3 btn-primary px-3 search-packet"><i class="fa fa-search"></i></button>
+                                <button type="button" class="btn btn-primary" disabled>
+                                    <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                                </button>
                             </div>
                         </div>
                     </div>

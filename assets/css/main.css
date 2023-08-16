@@ -1122,6 +1122,7 @@ input[type="password"]::-ms-reveal{
 
 .sys .logModal {
     height: 100%;
+    padding-right: 0;
 }
 .sys .logModal .close {
     position: absolute;

@@ -1,6 +1,5 @@
 
 import {queryData, checkFileExists, func, alertMsg, rpc2, rpc3, deepCopy} from "./helper.js";
-// const { ref,reactive } = Vue;
 import { ref,reactive } from "../plugins/vue/vue.esm.prod.js";
 
 export const useDefaultConf = () => {
