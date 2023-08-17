@@ -99,6 +99,8 @@
   <?php include ("./public/foot.inc") ?>
   <script src="assets/plugins/easyPieChart/jquery.easypiechart.js" type="module"></script>
   <script src="assets/plugins/flotChart/jquery.flot.js" type="module"></script>
+  <script src="assets/plugins/flotChart/jquery.flot.resize.js" type="module"></script>
+
   <script type="module">
       import { rpc } from "./assets/js/helper.js";
       import { useDefaultConf,useHardwareConf } from "./assets/js/confHooks.js";
