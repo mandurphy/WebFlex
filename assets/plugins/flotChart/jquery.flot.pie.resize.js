@@ -57,7 +57,7 @@
  More detail and specific examples can be found in the included HTML file.
 
  */
-
+import jQuery from "../jquery/jquery.esm.js";
 (function ($)
 {
     function init(plot) // this is the "body" of the plugin

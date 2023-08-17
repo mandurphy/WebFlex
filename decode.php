@@ -802,7 +802,7 @@
     </main>
 </div>
 <?php include ("./public/foot.inc") ?>
-<script src="assets/plugins/confirm/js/jquery-confirm.min.js"></script>
+<script src="assets/plugins/confirm/js/jquery-confirm.min.js" type="module"></script>
 <script type="module">
     
     import { rpc,alertMsg,extend,deepCopy,confirm } from "./assets/js/helper.js";

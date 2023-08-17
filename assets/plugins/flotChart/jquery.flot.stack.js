@@ -34,7 +34,7 @@ interpolation. If there's a second y value, it's also adjusted (e.g for bar
 charts or filled areas).
 
 */
-
+import jQuery from "../jquery/jquery.esm.js";
 (function ($) {
     var options = {
         series: { stack: null } // or number/string

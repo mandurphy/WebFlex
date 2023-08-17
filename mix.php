@@ -423,7 +423,7 @@
     </main>
 </div>
 <?php include ("./public/foot.inc") ?>
-<script src="assets/plugins/confirm/js/jquery-confirm.min.js"></script>
+<script src="assets/plugins/confirm/js/jquery-confirm.min.js" type="module"></script>
 <script src="assets/plugins/nouislider/js/nouislider.min.js"></script>
 <script type="module">
     

@@ -97,16 +97,8 @@
         </main>
     </div>
   <?php include ("./public/foot.inc") ?>
-
-  <script src="assets/plugins/easyPieChart/jquery.easypiechart.js"></script>
-  <script src="assets/plugins/flotChart/jquery.flot.js"></script>
-  <script src="assets/plugins/flotChart/jquery.flot.tooltip.js"></script>
-  <script src="assets/plugins/flotChart/jquery.flot.resize.js"></script>
-  <script src="assets/plugins/flotChart/jquery.flot.pie.resize.js"></script>
-  <script src="assets/plugins/flotChart/jquery.flot.selection.js"></script>
-  <script src="assets/plugins/flotChart/jquery.flot.stack.js"></script>
-  <script src="assets/plugins/flotChart/jquery.flot.time.js"></script>
-
+  <script src="assets/plugins/easyPieChart/jquery.easypiechart.js" type="module"></script>
+  <script src="assets/plugins/flotChart/jquery.flot.js" type="module"></script>
   <script type="module">
       import { rpc } from "./assets/js/helper.js";
       import { useDefaultConf,useHardwareConf } from "./assets/js/confHooks.js";

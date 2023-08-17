@@ -275,7 +275,7 @@
 
 <script src="assets/plugins/flvjs/flv.js"></script>
 <script src="assets/plugins/jessibuca/jessibuca.js"></script>
-<script src="assets/plugins/timepicker/js/bootstrap-timepicker.min.js"></script>
+<script src="assets/plugins/timepicker/js/bootstrap-timepicker.min.js" type="module"></script>
 <script type="module">
     import { rpc,func,alertMsg } from "./assets/js/helper.js";
     import { useDefaultConf,usePushConf } from "./assets/js/confHooks.js";
@@ -422,6 +422,8 @@
             }
 
             onMounted(() => {
+
+                console.log($);
                 handlePushCrontab();
                 handlePushState();
                 handlePushTimeCount();

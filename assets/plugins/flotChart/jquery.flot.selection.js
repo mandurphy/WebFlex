@@ -77,7 +77,7 @@ The plugin allso adds the following methods to the plot object:
   event. If there's currently no selection, the function returns null.
 
 */
-
+import jQuery from "../jquery/jquery.esm.js";
 (function ($) {
     function init(plot) {
         var selection = {

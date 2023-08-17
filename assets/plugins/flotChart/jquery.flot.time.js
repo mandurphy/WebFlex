@@ -7,7 +7,7 @@ Set axis.mode to "time" to enable. See the section "Time series data" in
 API.txt for details.
 
 */
-
+import jQuery from "../jquery/jquery.esm.js";
 (function($) {
 
 	var options = {

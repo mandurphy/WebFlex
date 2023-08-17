@@ -8,7 +8,8 @@
  * 
  * build on 2013-09-30
  * released under MIT License, 2012
-*/ 
+*/
+import jQuery from '../jquery/jquery.esm.js';
 (function ($) {
 
     // plugin options, default values

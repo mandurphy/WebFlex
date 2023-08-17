@@ -281,7 +281,7 @@ export const netFlotChartComponent = {
 
                 $.fn.tooltip = () => {
                     let prePoint = null, preLabel = null;
-                    $(this).bind("plothover", (event, pos, item) => {
+                    $(net_chart.value).bind("plothover", (event, pos, item) => {
                         if (item) {
                             if ((preLabel !== item.series.label) || (prePoint !== item.dataIndex)) {
                                 prePoint = item.dataIndex;
