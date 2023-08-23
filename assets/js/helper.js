@@ -54,9 +54,9 @@ export const confirm = (options) => {
     $.confirm(options);
 }
 
-export const queryData = (url) => {
+export const queryData = (url,options= {}) => {
     return new Promise((resolve,reject)=>{
-        axios.get(url)
+        axios.get(url,options)
             .then(response => {
                 resolve(response.data);
             })
@@ -143,26 +143,6 @@ export const checkFileExists = (url) => {
             reject(new Error('请求出错'));
         };
         xhr.send();
-    });
-}
-
-export const getConfigData = (url,options) => {
-    return new Promise((resolve, reject) => {
-        window.URL = window.URL || window.webkitURL
-        const xhr = new XMLHttpRequest()
-        if (options.responseType) {
-            xhr.responseType = options.responseType
-        }
-        xhr.open('get', 'http://'+location.hostname+'/config/'+url, true)
-        xhr.onreadystatechange = function() {
-            if (xhr.readyState === 4 && xhr.status === 200) {
-                resolve(xhr);
-            }
-        }
-        xhr.onerror = () => {
-            reject(new Error('请求出错'));
-        };
-        xhr.send()
     });
 }
 

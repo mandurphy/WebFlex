@@ -943,19 +943,19 @@
 </div>
 <?php include ("./public/foot.inc") ?>
 <script src="assets/plugins/confirm/js/jquery-confirm.min.js" type="module"></script>
-<script src="assets/plugins/jszip/jszip.js"></script>
-<script src="assets/plugins/jszip/filesaver.min.js"></script>
 <script src="assets/plugins/fileinput/js/fileinput.min.js" type="module"></script>
 <script src="assets/plugins/fileinput/js/locales/zh.js" type="module"></script>
 <script src="assets/plugins/fileinput/themes/fa6/theme.min.js" type="module"></script>
 <script type="module">
 
-    import { rpc2,alertMsg,func,queryData,getConfigData,extend,popover,formatDate,deepCopy,rebootConfirm,resetConfirm } from "./assets/js/helper.js";
+    import vue from "./assets/plugins/vue/vue.build.js";
+    import JSZip from "./assets/plugins/jszip/jszip.esm.js"
+    import * as fileSave from "./assets/plugins/jszip/filesaver.esm.js";
+    import { rpc2,alertMsg,func,queryData,extend,popover,formatDate,deepCopy,rebootConfirm,resetConfirm } from "./assets/js/helper.js";
     import { useHardwareConf,usetNetManagerConf,usePasswordConf,useVideoBufferConf } from "./assets/js/vueHooks.js";
     import { useNtpConf,useTimezoneConf,usePortConf,useVersionConf,useVerLogsConf,useWpaConf } from "./assets/js/vueHooks.js";
     import { ignoreCustomElementPlugin,bootstrapSwitchComponent,languageOptionDirective,uploadModalComponent,upgradeModalComponent,customModalComponent,loadingButtonComponent } from "./assets/js/vueHelper.js"
     import { wifiFlagComponent,antenanFlagComponent } from "./assets/js/vueFlags.js";
-    import vue from "./assets/plugins/vue/vue.build.js";
 
     const { createApp,ref,reactive,watchEffect,computed,onMounted } = vue;
     const app = createApp({
@@ -984,6 +984,7 @@
             const { portConf,updatePortConf } = usePortConf();
             const { versionConf } = useVersionConf();
             const { verLogsConf } = useVerLogsConf();
+            const { saveAs } = fileSave;
 
             const state = {
                 netState: ref({}),
@@ -1211,21 +1212,30 @@
                         }
                     }
                 }
-                let zip = new JSZip();
-                for(let i=0;i<confs.length;i++){
-                    getConfigData(confs[i],{responseType: 'blob'}).then((xhr)=>{
-                        zip.file(confs[i],xhr.response,{binary:true});
-                    })
-                }
-                setTimeout(() => {
-                    if (Object.keys(zip.files).length > 0) {
-                        zip.generateAsync({type: 'blob'}).then((blob) => {
+
+                const promiseArray = confs.map((conf) => {
+                    return queryData("config/" + conf, { responseType: 'blob' }).then(data => ({ name: conf, data }));
+                });
+
+                Promise.all(promiseArray)
+                        .then((results) => {
+                            const zip = new JSZip();
+                            results.forEach(({ name, data }) => {
+                                zip.file(name, data, { binary: true });
+                            });
+
+                            if (Object.keys(zip.files).length > 0) {
+                                return zip.generateAsync({ type: 'blob' });
+                            } else {
+                                throw new Error('下载全部失败');
+                            }
+                        })
+                        .then(blob => {
                             saveAs(blob, 'configs.zip');
+                        })
+                        .catch(error => {
+                            console.error(error);
                         });
-                    } else {
-                        console.log('下载全部失败')
-                    }
-                },300);
             }
 
             const importConf = () =>{
