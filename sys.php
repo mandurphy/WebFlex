@@ -24,14 +24,14 @@
                                 </div>
                             </div>
                             <div v-else-if="item.type === 'wifi'" class="d-flex align-items-center">
-                                <wifi-icon :icon="'wifi-'+(item.rssi > 3 ? 4 : (item.rssi < 3 ? (item.rssi === 0 ? 0 : 2) : 3))" width="20" height="20" stroke="#cccccc" color="#777777" stroke-width="2.3"></wifi-icon>
+                                <wifi-flag :icon="'wifi-'+(item.rssi > 3 ? 4 : (item.rssi < 3 ? (item.rssi === 0 ? 0 : 2) : 3))" width="20" height="20" stroke="#cccccc" color="#777777" stroke-width="2.3"></wifi-flag>
                                 <div class="tab-title">
                                     <cn>无线网</cn>
                                     <en>WIFI</en>
                                 </div>
                             </div>
                             <div v-else class="d-flex align-items-center">
-                                <antenan-icon :icon="'antenan-'+(item.rssi > 3 ? 4 : (item.rssi < 3 ? (item.rssi === 0 ? 0 : 2) : 3))" width="20" height="20" stroke="#cccccc" color="#777777" stroke-width="2.3"></antenan-icon>
+                                <antenan-flag :icon="'antenan-'+(item.rssi > 3 ? 4 : (item.rssi < 3 ? (item.rssi === 0 ? 0 : 2) : 3))" width="20" height="20" stroke="#cccccc" color="#777777" stroke-width="2.3"></antenan-flag>
                                 <div class="tab-title">
                                     <cn>移动网络</cn>
                                     <en>Cellular network</en>
@@ -43,7 +43,7 @@
                     <li v-if="!handleValidNetDevice.some(item => item.type === 'wifi')" class="nav-item force-cursor-pointer" ref="wifiHandler">
                         <a class="nav-link">
                             <div class="d-flex align-items-center">
-                                <wifi-icon icon="wifi-off" width="20" height="20" stroke="#999999" stroke-width="2.3"></wifi-icon>
+                                <wifi-flag icon="wifi-off" width="20" height="20" stroke="#999999" stroke-width="2.3"></wifi-flag>
                                 <div class="tab-title">
                                     <cn>无线网</cn>
                                     <en>WIFI</en>
@@ -55,7 +55,7 @@
                     <li v-if="!handleValidNetDevice.some(item => item.type === 'dongle')" class="nav-item force-cursor-pointer" ref="antenanHandler">
                         <a class="nav-link">
                             <div class="d-flex align-items-center">
-                                <antenan-icon icon="antenan-off" width="20" height="20" stroke="#999999" stroke-width="2.3"></antenan-icon>
+                                <antenan-flag icon="antenan-off" width="20" height="20" stroke="#999999" stroke-width="2.3"></antenan-flag>
                                 <div class="tab-title">
                                     <cn>移动网络</cn>
                                     <en>Cellular network</en>
@@ -875,11 +875,11 @@
                                 </label>
                             </div>
                             <div class="col-lg-6">
-                                <button type="button" class="btn border-3 btn-primary px-3 me-2"><cn>检测更新</cn><en>Search</en></button>
-                                <button type="button" class="btn border-3 btn-primary px-3 search-packet"><i class="fa fa-search"></i></button>
-                                <button type="button" class="btn btn-primary" disabled>
-                                    <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
-                                </button>
+                                <loading-button custom-class="btn border-3 btn-primary px-3 me-2 checkUpdate" @button-click="checkUpdatePatch" :had-loading="checkLoading">
+                                    <cn>检测更新</cn>
+                                    <en>Search</en>
+                                </loading-button>
+                                <button type="button" class="btn border-3 btn-primary px-3 search-packet checkUpdate" @click="searchUpdatePatch"><i class="fa fa-search"></i></button>
                             </div>
                         </div>
                     </div>
@@ -892,8 +892,8 @@
                       @upload-success="uploadSuccess" @upload-error="uploadError">
         </upload-modal>
 
-        <log-modal had-header="false" had-footer="false" :modal-show="showVerLogModal" modal-fade="true" body-class="logModal" >
-            <div data-simplebar class="logModal mt-2">
+        <logger-modal modal-size="modal-lg" had-header="false" had-footer="false" :modal-show="showVerLogModal" modal-fade="true" content-class="logCtx" body-class="logBody"  >
+            <div data-simplebar class="mt-2">
                 <div v-for="(item,index) in verLogsConf" :key="index" class="mt-3">
                     <button v-if="index===0" type="button" class="btn-clear close" @click="showBootstrapModal('log')"><i class="fa-solid fa-x"></i></button>
                     <div class="row">
@@ -911,8 +911,27 @@
                     <hr>
                 </div>
             </div>
-        </log-modal>
+        </logger-modal>
 
+        <search-modal modal-title="固件搜索&Search" :modal-show="showSearchModal"
+                      modal-fade="true" confirm-btn-name="搜索&Search" cancel-btn-name="取消&Cancel"
+                      @confirm-btn-click="searchPatchBySn">
+            <div class="row my-3">
+                <div class="col-lg-3 offset-lg-1">
+                    <div style="font-size: 14px;line-height: 20px;color: #666">
+                        <cn>固件编号:</cn>
+                        <en>Patch Serial:</en>
+                    </div>
+                </div>
+                <div class="col-lg-6">
+                    <div>
+                        <input v-model="patchSN" autocomplete="off" style="width: 100%;border: none;border-bottom: 1px solid #ccc;outline: none;"/>
+                    </div>
+                </div>
+            </div>
+        </search-modal>
+
+        <upgrade-modal v-model:check-upgrade="checkUpgrade" :patch-sn="patchSN" modal-fade="true"></upgrade-modal>
     </main>
 </div>
 <?php include ("./public/foot.inc") ?>
@@ -924,11 +943,12 @@
 <script src="assets/plugins/fileinput/themes/fa6/theme.min.js" type="module"></script>
 <script type="module">
 
-    import {createApp,ref,reactive,watchEffect,computed,onMounted} from "./assets/plugins/vue/vue.esm.prod.js";
+    import { createApp,ref,reactive,watchEffect,computed,onMounted } from "./assets/plugins/vue/vue.esm.prod.js";
     import { rpc2,alertMsg,func,queryData,getConfigData,extend,popover,formatDate,deepCopy,rebootConfirm,resetConfirm } from "./assets/js/helper.js";
     import { useHardwareConf,usetNetManagerConf,usePasswordConf,useVideoBufferConf } from "./assets/js/confHooks.js";
     import { useNtpConf,useTimezoneConf,usePortConf,useVersionConf,useVerLogsConf,useWpaConf } from "./assets/js/confHooks.js";
-    import { bootstrapSwitchComponent,languageOptionDirective,wifiViewComponent,antenanViewComponent,uploadModalComponent,customModalComponent } from "./assets/js/vueHelper.js"
+    import { bootstrapSwitchComponent,languageOptionDirective,uploadModalComponent,upgradeModalComponent,customModalComponent,loadingButtonComponent } from "./assets/js/vueHelper.js"
+    import { wifiFlagComponent,antenanFlagComponent } from "./assets/js/vueFlags.js";
 
     const app = createApp({
         directives:{
@@ -936,10 +956,13 @@
         },
         components:{
             "bootstrap-switch" : bootstrapSwitchComponent,
-            "wifi-icon": wifiViewComponent,
-            "antenan-icon": antenanViewComponent,
+            "wifi-flag": wifiFlagComponent,
+            "antenan-flag": antenanFlagComponent,
             "upload-modal": uploadModalComponent,
-            "log-modal": customModalComponent
+            "logger-modal": customModalComponent,
+            "upgrade-modal": upgradeModalComponent,
+            "search-modal": customModalComponent,
+            "loading-button": loadingButtonComponent
         },
         setup(props,context) {
 
@@ -978,6 +1001,10 @@
                 exportConfigs:reactive({}),
                 showUploadModal:ref(false),
                 showVerLogModal:ref(false),
+                showSearchModal:ref(false),
+                checkLoading:ref(false),
+                checkUpgrade:ref(false),
+                patchSN:ref("")
             }
             
             watchEffect(()=>{
@@ -1014,6 +1041,9 @@
                             refreshWifi("noLoading");
                     }
                 }
+
+                if(!state.checkUpgrade.value)
+                    state.checkLoading.value = false;
 
                 if(wpaConf.length > 0 && state.wifiPassword.value === "") {
                     for(let i=0;i<wpaConf.length;i++) {
@@ -1137,7 +1167,6 @@
             const onTimeAreaChange = (evt) => {
                 queryData("/timezone/zoneinfo/"+timezoneConf.timeArea+"/").then(data=>{
                     state.timezoneCitys.splice(0, state.timezoneCitys.length, ...data);
-                    console.log(state.timezoneCitys.length);
                     if(evt !== undefined)
                         timezoneConf.timeCity = state.timezoneCitys[0].name;
                 })
@@ -1268,6 +1297,26 @@
                 alertMsg(errMsg, 'error');
             }
 
+            const checkUpdatePatch = () => {
+                state.checkLoading.value = true;
+                setTimeout(()=>{
+                    state.checkUpgrade.value = true;
+                },1000)
+            }
+
+            const searchUpdatePatch = () => {
+                state.showSearchModal.value = !state.showSearchModal.value;
+            }
+
+            const searchPatchBySn = () => {
+                if(state.patchSN.value === "") {
+                    alertMsg("<cn>请输入固件编号</cn><en>Please enter the patch sn.</en>", "error");
+                    return;
+                }
+                state.checkUpgrade.value = true;
+                state.showSearchModal.value = false;
+            }
+
             const updateRenderData = () => {
                 Object.assign(state.userPasswd,{oldpwd: '',newpwd: '',confirm: ''});
                 Object.assign(state.showPasswd,{wifipwd: false,oldpwd: false,newpwd: false,confirm: false});
@@ -1311,7 +1360,8 @@
 
             return {...state,hardwareConf,netManagerConf,handleValidNetDevice,videoBufferConf,ntpConf,timezoneConf,portConf,versionConf,verLogsConf,
                 refreshWifi,connectWifi,updateNetManagerConf,handleSysScene, updateUserPasswd,updateVideoBufferConf,updatePortConf,showBootstrapModal,
-                uploadSuccess,uploadError,rebootConfirm,resetConfirm, onTimeAreaChange,syncTimeFromPc,saveSysConf,exportConf,importConf,startHelp,stopHelp,systemNetTest}
+                uploadSuccess,uploadError,rebootConfirm,resetConfirm, onTimeAreaChange,syncTimeFromPc,saveSysConf,exportConf,importConf,startHelp,stopHelp,
+                systemNetTest,checkUpdatePatch,searchUpdatePatch,searchPatchBySn}
         }
     });
     app.mount('#app');

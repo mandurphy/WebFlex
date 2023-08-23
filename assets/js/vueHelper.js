@@ -1,7 +1,9 @@
 
 import {ref,reactive,toRefs,watch,watchEffect,computed,onMounted,nextTick} from '../plugins/vue/vue.esm.prod.js';
+import { func,confirm,rebootConfirm,alertMsg } from './helper.js'
 import * as vueColor from '../plugins/vueColor/vue.color.esm.js'
 import * as Popper from '../plugins/popper/popper.esm.js'
+import '../plugins/axios/axios.min.js';
 import $ from '../plugins/jquery/jquery.esm.js'
 
 export const apexChartsDirective = {
@@ -868,36 +870,374 @@ export const uploadModalComponent = {
     }
 }
 
+export const upgradeModalComponent = {
+    template: `<div :class="['modal',{'fade':modalFade===undefined ? false : JSON.parse(modalFade)}]" data-bs-backdrop="static" tabindex="-1" aria-hidden="true" ref="modal">
+                <div class="modal-dialog modal-lg modal-dialog-centered">
+                    <div :class="['modal-content front',{'front0':!showLog},{'front180':showLog}]">
+                        <div class="modal-header">
+                            <h5 class="modal-title">
+                                <cn>升级包</cn>
+                                <en>Upgrade</en>
+                            </h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body px-3">
+                            <table class="table table-bordered">
+                                <thead>
+                                <tr>
+                                    <th>
+                                        <cn>序号</cn>
+                                        <en>Num</en>
+                                    </th>
+                                    <th>
+                                        <cn>名称</cn>
+                                        <en>Name</en>
+                                    </th>
+                                    <th>
+                                        <cn>版本</cn>
+                                        <en>Build</en>
+                                    </th>
+                                    <th>
+                                        <cn>日期</cn>
+                                        <en>Date</en>
+                                    </th>
+                                    <th>
+                                        <cn>级别</cn>
+                                        <en>Impact</en>
+                                    </th>
+                                    <th>
+                                        <cn>日志</cn>
+                                        <en>Log</en>
+                                    </th>
+                                    <th>
+                                        <cn>操作</cn>
+                                        <en>Option</en>
+                                    </th>
+                                    <th>
+                                        <cn>下载</cn>
+                                        <en>Download</en>
+                                    </th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr v-for="(item,index) in systemPatchs" :key="item.id">
+                                    <td>{{index+1}}</td>
+                                    <td>{{item.name}}</td>
+                                    <td>{{item.build}}</td>
+                                    <td>{{item.sys_ver}}</td>
+                                    <td v-if="item.impact === '1'" class="force-color-red">
+                                        <cn>重要</cn>
+                                        <en>impact</en>
+                                    </td>
+                                    <td v-else>
+                                        <cn>普通</cn>
+                                        <en>normal</en>
+                                    </td>
+                                    <td>
+                                        <a class="force-cursor-pointer" @click="showPatchVersionLog(index)">
+                                            <cn>更新日志</cn>
+                                            <en>Show logs</en>
+                                        </a>
+                                    </td>
+                                    <td>
+                                        <a class="force-cursor-pointer" @click="handleUpdatePatch(index)">
+                                            <div v-if="upgradePatch.id === item.id && hadUpdate">{{updatePercent}}%</div>
+                                            <div v-else>
+                                                <cn>更新</cn>
+                                                <en>Update</en>
+                                            </div>
+                                        </a>
+                                    </td>
+                                    <td>
+                                        <a class="force-cursor-pointer" @click="handleDownloadPatch(index)">
+                                            <cn>下载</cn>
+                                            <en>Download</en>
+                                        </a>
+                                    </td>
+                                </tr>
+                                </tbody>
+                            </table>
+                            <div class="row mt-4 mb-2">
+                                <div class="col-lg-12">
+                                    <cn>Tip：级别标记为<cn style="color: red">重要</cn>的升级包不能跳过，更新之后才能继续更新。</cn>
+                                    <en>Tip：Upgrade packages marked as <en style="color: red">impact</en> cannot be skipped and can only be updated after they have been updated</en>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div :class="['modal-content rear',{'rear180':!showLog},{'rear0':showLog}]">
+                        <div v-if="Object.keys(showLogPatch).length > 0">
+                            <div class="modal-header">
+                                <h5 class="modal-title">
+                                    Build {{showLogPatch.sys_ver}}
+                                </h5>
+                                <button type="button" class="btn-close" @click="hidePatchVersionLog"></button>
+                            </div>
+                            <div class="modal-body">
+                                <ul>
+                                    <li class="mt-2" v-for="(it,idx) in handleVersionLogs" :key="idx" style="font-size: 15px;white-space:pre-wrap;">{{it}}</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>`,
+    props:['modalShow','modalFade','checkUpgrade','patchSn'],
+    setup(props,context) {
+
+        const { modalFade,checkUpgrade,patchSn } = toRefs(props);
+
+        const state = {
+            modal: ref(null),
+            checkUpgrade: ref(false),
+            systemPatchs:reactive([]),
+            showLog:ref(false),
+            showLogPatch:ref({}),
+            hadUpdate:ref(false),
+            updatePercent:ref(0),
+            upgradePatch:ref({}),
+            facAliase:"",
+            bsModal: {},
+        }
+
+        watchEffect(async ()=>{
+            if(checkUpgrade.value) {
+                const checkHelpNetData = await func("/link/mgr/upgrade/checkHelpNet");
+                if (checkHelpNetData.status === "error") {
+                    alertMsg(checkHelpNetData.msg, "error");
+                    return;
+                }
+
+                if(!patchSn.value) {
+                    const getSystemAliaseData = await func("/link/mgr/upgrade/getSystemAliase");
+                    if (getSystemAliaseData.status === "error") {
+                        alertMsg(getSystemAliaseData.msg, "error");
+                        context.emit('update:checkUpgrade', false);
+                        return;
+                    }
+                    if (getSystemAliaseData.data.length === 0) {
+                        alertMsg("<cn>已经是最新版本</cn><en>It is the latest version</en>", "success");
+                        context.emit('update:checkUpgrade', false);
+                        return;
+                    }
+                    state.facAliase = getSystemAliaseData.data[0].aliase;
+
+                    const getAllSystemPatchData = await func("/link/mgr/upgrade/getAllSystemPatch");
+                    if (getAllSystemPatchData.status === "error") {
+                        alertMsg(getAllSystemPatchData.msg, "error");
+                        context.emit('update:checkUpgrade', false);
+                        return;
+                    }
+                    if (getAllSystemPatchData.data.length === 0) {
+                        alertMsg("<cn>已经是最新版本</cn><en>It is the latest version</en>", "success");
+                        context.emit('update:checkUpgrade', false);
+                        return;
+                    }
+                    state.systemPatchs.splice(0);
+                    state.systemPatchs.push(...getAllSystemPatchData.data);
+
+                    const checkVersionMasterData = await func("/link/mgr/upgrade/checkVersionMaster");
+                    if (checkVersionMasterData.status === "error") {
+                        alertMsg(checkVersionMasterData.msg, "error");
+                        context.emit('update:checkUpgrade', false);
+                        return;
+                    }
+                    if (checkVersionMasterData.data === 0) {
+                        confirm({
+                            title: '<cn>注意</cn><en>Tip</en>',
+                            content: '<cn>设备可能升级过其他固件，如果继续升级，功能可能会被覆盖，是否继续?</cn><en>The device may have been upgraded with custom firmware, and the upgrade function may be overwritten. Do you want to continue?</en>',
+                            buttons: {
+                                ok: {
+                                    text: "<cn>继续</cn><en>Continue</en>",
+                                    btnClass: 'btn-primary',
+                                    keys: ['enter'],
+                                    action: () => {
+                                        state.bsModal.show();
+                                    }
+                                },
+                                cancel: {
+                                    text: "<cn>取消</cn><en>Cancel</en>",
+                                    action: ()=>{
+                                        context.emit('update:checkUpgrade', false);
+                                    }
+                                }
+                            }
+                        });
+                    } else {
+                        state.bsModal.show();
+                    }
+                } else {
+                    const getSystemAliaseData = await func("/link/mgr/upgrade/getSystemAliase");
+                    if (getSystemAliaseData.status === "error") {
+                        alertMsg(getSystemAliaseData.msg, "error");
+                        context.emit('update:checkUpgrade', false);
+                        return;
+                    }
+                    if (getSystemAliaseData.data.length === 0) {
+                        alertMsg("<cn>无效固件编号</cn><en>Invalid upgrade sn</en>", "error");
+                        context.emit('update:checkUpgrade', false);
+                        return;
+                    }
+                    state.facAliase = getSystemAliaseData.data[0].aliase;
+
+                    const getSystemPatchBySnData = await func("/link/mgr/upgrade/getSystemPatchBySn",{"sn": patchSn.value});
+                    if (getSystemPatchBySnData.data.length === 0) {
+                        alertMsg("<cn>无效固件编号</cn><en>Invalid upgrade sn</en>", "error");
+                        context.emit('update:checkUpgrade', false);
+                        return;
+                    }
+                    state.systemPatchs.splice(0);
+                    state.systemPatchs.push(...getSystemPatchBySnData.data);
+                    state.bsModal.show();
+                }
+            }
+        })
+
+        const handleVersionLogs = computed(()=>{
+            const regex = /[\r\n\t]/g;
+            state.showLogPatch.value.description = state.showLogPatch.value.description.replace(regex,"");
+            return state.showLogPatch.value.description.split(";").filter((item)=>{
+                return item !== "";
+            })
+        })
+
+        const showPatchVersionLog = idx => {
+            state.showLogPatch.value = state.systemPatchs[idx];
+            state.showLog.value = true;
+        }
+
+        const hidePatchVersionLog = () => {
+            state.showLog.value = false;
+        }
+
+        const getUpdateFileSize = async name => {
+            const params = {
+                "action": "get_file_size",
+                "name": name
+            };
+            const response = await axios.post("/link/upgrade.php", params);
+            return response.data.size;
+        };
+
+        const handleUpdatePatch = idx => {
+            if(state.hadUpdate.value)
+                return;
+
+            state.upgradePatch.value = state.systemPatchs[idx];
+            const patch = state.systemPatchs[idx];
+            const chip = patch.chip;
+            let name = patch.name;
+            let type = "update";
+            if(name.indexOf("_sn_") > 0) {
+                name = name.replace("_sn_","_"+state.facAliase+"_");
+                type = "sn";
+            } else {
+                name = name.replace("_","_"+state.facAliase+"_");
+                type = "update";
+            }
+
+            const params = {
+                action:"update", name:name,
+                chip:chip, type:type
+            }
+
+            axios.post('/link/upgrade.php', params)
+                .then(async response => {
+                    const total = Number(response.data.size);
+                    state.hadUpdate.value = true;
+                    state.updatePercent.value = 0;
+                    if(total > 0) {
+                        const timerId = setInterval(async function () {
+                            const size = await getUpdateFileSize(name);
+                            state.updatePercent.value = parseInt(size/total * 100);
+                            if (size >= total) {
+                                clearInterval(timerId);
+                                state.bsModal.hide();
+                                context.emit('update:checkUpgrade', false);
+                                state.hadUpdate.value = false;
+                                state.upgradePatch.value = {};
+                                rebootConfirm('下载完成，是否立即重启系统完成更新？');
+                            }
+                        }, 1000);
+                    }
+                })
+        }
+
+        const handleDownloadPatch = idx => {
+            state.upgradePatch.value = state.systemPatchs[idx];
+            const patch = state.systemPatchs[idx];
+            const chip = patch.chip;
+            let name = patch.name;
+            let type = "update";
+            if(name.indexOf("_sn_") > 0) {
+                name = name.replace("_sn_","_"+state.facAliase+"_");
+                type = "sn";
+            } else {
+                name = name.replace("_","_"+state.facAliase+"_");
+                type = "update";
+            }
+
+            const params = {
+                action:"download", name:name,
+                chip:chip, type:type
+            }
+
+            const fileName = name;
+            axios.post('/link/upgrade.php',params, { responseType: 'arraybuffer' })
+                .then(response => {
+                    const blob = new Blob([response.data], { type: 'application/octet-stream' });
+                    const url = URL.createObjectURL(blob);
+                    const a = document.createElement('a');
+                    a.href = url;
+                    a.download = fileName;
+                    document.body.appendChild(a);
+                    a.click();
+                    document.body.removeChild(a);
+                    URL.revokeObjectURL(url);
+                })
+                .catch(error => {
+                    console.error('Error downloading file:', error);
+                });
+        }
+
+        onMounted(()=>{
+            state.bsModal = new bootstrap.Modal(state.modal.value);
+            state.modal.value.addEventListener('hide.bs.modal',() => {
+                context.emit('update:checkUpgrade', false);
+            });
+        })
+        return { ...state,modalFade,handleVersionLogs,showPatchVersionLog,hidePatchVersionLog,handleUpdatePatch,handleDownloadPatch }
+    }
+}
 
 export const customModalComponent = {
     template: `<div :class="['modal',{'fade':modalFade===undefined ? false : JSON.parse(modalFade)}]"  tabindex="-1" aria-hidden="true" ref="modal">
-                    <div class="modal-dialog modal-lg modal-dialog-centered">
-                      <div class="modal-content" style="position: absolute;width: 100%;height: 100%;">
+                    <div :class="['modal-dialog modal-dialog-centered',modalSize]">
+                      <div :class="['modal-content',contentClass]">
                         <div class="modal-header" v-if="hadHeader === undefined || JSON.parse(hadHeader)">
                           <h5 class="modal-title">{{modalTitle}}</h5>
                           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                         </div>
                         <div :class="['modal-body',bodyClass]">
-<!--                            <div ref="simplebar" style="width: 100%;height: 100%;">-->
-                                <slot></slot>
-<!--                            </div>-->
+                            <slot></slot>
                         </div>
                         <div class="modal-footer" v-if="hadFooter === undefined || JSON.parse(hadFooter)">
-                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                            <button type="button" class="btn btn-primary">Save changes</button>
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">{{modalCancelBtnName}}</button>
+                            <button type="button" class="btn btn-primary" @click="confirmBtnClick">{{modalConfirmBtnName}}</button>
                           </div>
                       </div>
                     </div>
                </div>`,
-    props:['hadHeader','hadFooter','modalTitle','modalShow','modalFade','bodyClass'],
+    props:['modalSize','hadHeader','hadFooter','modalTitle','modalShow','modalFade','bodyClass','contentClass','confirmBtnName','cancelBtnName'],
     setup(props,context) {
 
         const { modalShow,modalFade } = toRefs(props);
 
         const state = {
             modal: ref(null),
-            simplebar: ref(null),
             modalTitle: ref(""),
+            modalConfirmBtnName:ref("确定"),
+            modalCancelBtnName:ref("取消"),
             show: false,
             bsModal: {},
         }
@@ -924,6 +1264,10 @@ export const customModalComponent = {
             });
         }
 
+        const confirmBtnClick = () => {
+            context.emit("confirm-btn-click");
+        }
+
         const updateLangText = () => {
             const html = document.querySelector('html');
             let lang = html.getAttribute('data-bs-language');
@@ -934,10 +1278,25 @@ export const customModalComponent = {
                 else
                     state.modalTitle.value = title2;
             }
+
+            if(props.confirmBtnName !== undefined) {
+                const [name1,name2] = props.confirmBtnName.split("&");
+                if(lang === "cn" || name2 === undefined)
+                    state.modalConfirmBtnName.value = name1;
+                else
+                    state.modalConfirmBtnName.value = name2;
+            }
+
+            if(props.cancelBtnName !== undefined) {
+                const [name1,name2] = props.cancelBtnName.split("&");
+                if(lang === "cn" || name2 === undefined)
+                    state.modalCancelBtnName.value = name1;
+                else
+                    state.modalCancelBtnName.value = name2;
+            }
         }
 
         onMounted(()=>{
-            //new SimpleBar(state.simplebar.value);
             const html = document.querySelector('html');
             html.addEventListener("loaded",()=>{
                 updateLangText();
@@ -945,204 +1304,35 @@ export const customModalComponent = {
             })
         })
 
-        return { ...state,modalFade }
+        return { ...state,modalFade,confirmBtnClick }
     }
 }
 
-export const wifiViewComponent = {
-    template: `<div>
-                    <div v-if="icon === 'wifi'">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-wifi" :width="width" :height="height" viewBox="0 0 24 24" :stroke-width="strokeWidth" :stroke="stroke" fill="none" stroke-linecap="round" stroke-linejoin="round">
-                            <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
-                            <path d="M12 18l.01 0" />
-                            <path d="M9.172 15.172a4 4 0 0 1 5.656 0" />
-                            <path d="M6.343 12.343a8 8 0 0 1 11.314 0" />
-                            <path d="M3.515 9.515c4.686 -4.687 12.284 -4.687 17 0" />
-                        </svg>
-                    </div>
-                    <div v-if="icon === 'wifi-1'">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-wifi" :width="width" :height="height" viewBox="0 0 24 24" :stroke-width="strokeWidth" :stroke="stroke" fill="none" stroke-linecap="round" stroke-linejoin="round">
-                            <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
-                            <path d="M12 18l.01 0" :stroke="color"/>
-                            <path d="M9.172 15.172a4 4 0 0 1 5.656 0"/>
-                            <path d="M6.343 12.343a8 8 0 0 1 11.314 0"/>
-                            <path d="M3.515 9.515c4.686 -4.687 12.284 -4.687 17 0" />
-                        </svg>
-                    </div>
-                    <div v-if="icon === 'wifi-2'">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-wifi" :width="width" :height="height" viewBox="0 0 24 24" :stroke-width="strokeWidth" :stroke="stroke" fill="none" stroke-linecap="round" stroke-linejoin="round">
-                            <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
-                            <path d="M12 18l.01 0" :stroke="color"/>
-                            <path d="M9.172 15.172a4 4 0 0 1 5.656 0" :stroke="color"/>
-                            <path d="M6.343 12.343a8 8 0 0 1 11.314 0"/>
-                            <path d="M3.515 9.515c4.686 -4.687 12.284 -4.687 17 0" />
-                        </svg>
-                    </div>
-                    <div v-if="icon === 'wifi-3'">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-wifi" :width="width" :height="height" viewBox="0 0 24 24" :stroke-width="strokeWidth" :stroke="stroke" fill="none" stroke-linecap="round" stroke-linejoin="round">
-                            <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
-                            <path d="M12 18l.01 0" :stroke="color"/>
-                            <path d="M9.172 15.172a4 4 0 0 1 5.656 0" :stroke="color"/>
-                            <path d="M6.343 12.343a8 8 0 0 1 11.314 0" :stroke="color"/>
-                            <path d="M3.515 9.515c4.686 -4.687 12.284 -4.687 17 0" />
-                        </svg>
-                    </div>
-                    <div v-if="icon === 'wifi-4'">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-wifi" :width="width" :height="height" viewBox="0 0 24 24" :stroke-width="strokeWidth" :stroke="stroke" fill="none" stroke-linecap="round" stroke-linejoin="round">
-                            <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
-                            <path d="M12 18l.01 0" :stroke="color"/>
-                            <path d="M9.172 15.172a4 4 0 0 1 5.656 0" :stroke="color"/>
-                            <path d="M6.343 12.343a8 8 0 0 1 11.314 0" :stroke="color"/>
-                            <path d="M3.515 9.515c4.686 -4.687 12.284 -4.687 17 0" :stroke="color"/>
-                        </svg>
-                    </div>
-                    <div v-if="icon === 'wifi-off'">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-wifi-off" :width="width" :height="height" viewBox="0 0 24 24" :stroke-width="strokeWidth" :stroke="stroke" fill="none" stroke-linecap="round" stroke-linejoin="round">
-                            <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
-                            <path d="M12 18l.01 0" />
-                            <path d="M9.172 15.172a4 4 0 0 1 5.656 0" />
-                            <path d="M6.343 12.343a7.963 7.963 0 0 1 3.864 -2.14m4.163 .155a7.965 7.965 0 0 1 3.287 2" />
-                            <path d="M3.515 9.515a12 12 0 0 1 3.544 -2.455m3.101 -.92a12 12 0 0 1 10.325 3.374" />
-                            <path d="M3 3l18 18" />
-                        </svg>
-                    </div>  
-               </div>`,
-    props:['icon','width','height','stroke','strokeWidth','color'],
+export const loadingButtonComponent = {
+    template: `<button type="button" :class="customClass" @click="onButtonClick">
+                    <span v-if="hadLoading" class="spinner-border spinner-border-sm"></span>
+                    <span v-else >
+                        <slot></slot>
+                    </span>
+                </button>`,
+    props:['customClass','hadLoading'],
     setup(props,context) {
-        const { stroke,icon,color } = toRefs(props);
+
+        const { hadLoading } = toRefs(props);
 
         const state = {
-            icon: ref("wifi"),
-            width: ref(20),
-            height: ref(20),
-            stroke: ref("#2c3e50"),
-            strokeWidth: ref(2),
-            color: ref("#cccccc")
+
         }
 
-        watchEffect(()=>{
-            if(stroke.value !== undefined)
-                state.stroke.value = stroke.value;
-            if(icon.value !== undefined)
-                state.icon.value = icon.value;
-            if(color.value !== undefined)
-                state.color.value = color.value;
-        })
-
-        onMounted(()=>{
-            if(props.width !== undefined)
-                state.width.value = props.width;
-            if(props.height !== undefined)
-                state.height.value = props.height;
-            if(props.strokeWidth !== undefined)
-                state.strokeWidth.value = props.strokeWidth;
-        })
-
-        return { ...state }
-    }
-}
-
-
-export const antenanViewComponent = {
-    template: `<div>
-                    <div v-if="icon === 'antenan'">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-antenna-bars-5" :width="width" :height="height" viewBox="0 0 24 24" :stroke-width="strokeWidth" :stroke="stroke" fill="none" stroke-linecap="round" stroke-linejoin="round">
-                          <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
-                          <path d="M6 18l0 -3" />
-                          <path d="M10 18l0 -6" />
-                          <path d="M14 18l0 -9" />
-                          <path d="M18 18l0 -12" />
-                        </svg>
-                    </div>
-                    <div v-if="icon === 'antenan-0'">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-antenna-bars-5" :width="width" :height="height" viewBox="0 0 24 24" :stroke-width="strokeWidth" :stroke="stroke" fill="none" stroke-linecap="round" stroke-linejoin="round">
-                          <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
-                          <path d="M6 18l0 -3" />
-                          <path d="M10 18l0 -6" />
-                          <path d="M14 18l0 -9" />
-                          <path d="M18 18l0 -12" />
-                        </svg>
-                    </div>
-                    <div v-if="icon === 'antenan-1'">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-antenna-bars-5" :width="width" :height="height" viewBox="0 0 24 24" :stroke-width="strokeWidth" :stroke="stroke" fill="none" stroke-linecap="round" stroke-linejoin="round">
-                          <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
-                          <path d="M6 18l0 -3" :stroke="color"/>
-                          <path d="M10 18l0 -6"/>
-                          <path d="M14 18l0 -9"/>
-                          <path d="M18 18l0 -12" />
-                        </svg>
-                    </div>
-                    <div v-if="icon === 'antenan-2'">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-antenna-bars-5" :width="width" :height="height" viewBox="0 0 24 24" :stroke-width="strokeWidth" :stroke="stroke" fill="none" stroke-linecap="round" stroke-linejoin="round">
-                          <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
-                          <path d="M6 18l0 -3" :stroke="color"/>
-                          <path d="M10 18l0 -6" :stroke="color"/>
-                          <path d="M14 18l0 -9" />
-                          <path d="M18 18l0 -12" />
-                        </svg>
-                    </div>
-                    <div v-if="icon === 'antenan-3'">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-antenna-bars-5" :width="width" :height="height" viewBox="0 0 24 24" :stroke-width="strokeWidth" :stroke="stroke" fill="none" stroke-linecap="round" stroke-linejoin="round">
-                          <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
-                          <path d="M6 18l0 -3" :stroke="color"/>
-                          <path d="M10 18l0 -6" :stroke="color"/>
-                          <path d="M14 18l0 -9" :stroke="color"/>
-                          <path d="M18 18l0 -12" />
-                        </svg>
-                    </div>
-                    <div v-if="icon === 'antenan-4'">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-antenna-bars-5" :width="width" :height="height" viewBox="0 0 24 24" :stroke-width="strokeWidth" :stroke="stroke" fill="none" stroke-linecap="round" stroke-linejoin="round">
-                          <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
-                          <path d="M6 18l0 -3" :stroke="color"/>
-                          <path d="M10 18l0 -6" :stroke="color"/>
-                          <path d="M14 18l0 -9" :stroke="color"/>
-                          <path d="M18 18l0 -12" :stroke="color"/>
-                        </svg>
-                    </div>
-                    <div v-if="icon === 'antenan-off'">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-antenna-bars-off" :width="width" :height="height" viewBox="0 0 24 24" :stroke-width="strokeWidth" :stroke="stroke" fill="none" stroke-linecap="round" stroke-linejoin="round">
-                          <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
-                          <path d="M6 18v-3" />
-                          <path d="M10 18v-6" />
-                          <path d="M14 18v-4" />
-                          <path d="M14 10v-1" />
-                          <path d="M18 14v-8" />
-                          <path d="M3 3l18 18" />
-                        </svg>
-                    </div>  
-               </div>`,
-    props:['icon','width','height','stroke','strokeWidth','color'],
-    setup(props,context) {
-        const { stroke,icon,color } = toRefs(props);
-
-        const state = {
-            icon: ref("antenan"),
-            width: ref(20),
-            height: ref(20),
-            stroke: ref("#2c3e50"),
-            strokeWidth: ref(2),
-            color: ref("#cccccc")
+        const onButtonClick = () => {
+            context.emit("button-click","click")
         }
 
-        watchEffect(()=>{
-            if(stroke.value !== undefined)
-                state.stroke.value = stroke.value;
-            if(icon.value !== undefined)
-                state.icon.value = icon.value;
-            if(color.value !== undefined)
-                state.color.value = color.value;
-        })
-
         onMounted(()=>{
-            if(props.width !== undefined)
-                state.width.value = props.width;
-            if(props.height !== undefined)
-                state.height.value = props.height;
-            if(props.strokeWidth !== undefined)
-                state.strokeWidth.value = props.strokeWidth;
+
         })
 
-        return { ...state }
+        return { ...state,hadLoading,onButtonClick }
     }
 }
 
