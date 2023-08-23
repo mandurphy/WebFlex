@@ -169,8 +169,8 @@
   <script type="module">
 
       import { rpc} from "./assets/js/helper.js";
-      import { useDefaultConf,useHardwareConf } from "./assets/js/confHooks.js";
-      import { pieChartDirective,apexChartsDirective,bootstrapSwitchComponent } from "./assets/js/vueHelper.js"
+      import { useDefaultConf,useHardwareConf } from "./assets/js/vueHooks.js";
+      import { ignoreCustomElementPlugin,pieChartDirective,apexChartsDirective,bootstrapSwitchComponent } from "./assets/js/vueHelper.js"
       import vue from "./assets/plugins/vue/vue.build.js";
 
       const { createApp,ref,reactive,onMounted } = vue;
@@ -275,6 +275,7 @@
               }
           }
       })
+      app.use(ignoreCustomElementPlugin);
       app.mount('#app')
   </script>
   </body>

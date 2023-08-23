@@ -103,8 +103,8 @@
 
   <script type="module">
       import { rpc } from "./assets/js/helper.js";
-      import { useDefaultConf,useHardwareConf } from "./assets/js/confHooks.js";
-      import { bootstrapSwitchComponent,statusPieChartComponent,statusTemperatureComponent,netFlotChartComponent } from "./assets/js/vueHelper.js"
+      import { useDefaultConf,useHardwareConf } from "./assets/js/vueHooks.js";
+      import { ignoreCustomElementPlugin,bootstrapSwitchComponent,statusPieChartComponent,statusTemperatureComponent,netFlotChartComponent } from "./assets/js/vueHelper.js"
       import vue from "./assets/plugins/vue/vue.build.js";
 
       const { createApp,ref,reactive,onMounted } = vue;
@@ -247,6 +247,7 @@
               return {...state, makeImgUrl,handleChnVolume}
           }
       })
+      app.use(ignoreCustomElementPlugin);
       app.mount('#app')
   </script>
   </body>

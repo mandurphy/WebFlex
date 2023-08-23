@@ -114,8 +114,8 @@
 
 <script type="module">
     import { rpc4,alertMsg } from "./assets/js/helper.js";
-    import { useMqttConf,useFrpEnableConf,useFrpcConf } from "./assets/js/confHooks.js";
-    import { bootstrapSwitchComponent } from "./assets/js/vueHelper.js"
+    import { useMqttConf,useFrpEnableConf,useFrpcConf } from "./assets/js/vueHooks.js";
+    import { ignoreCustomElementPlugin,bootstrapSwitchComponent } from "./assets/js/vueHelper.js"
     import vue from "./assets/plugins/vue/vue.build.js";
 
     const {createApp,ref,reactive,watch,watchEffect,computed,onMounted} = vue;
@@ -169,6 +169,7 @@
             return {...state,mqttConf,frpEnableConf,frpcConf}
         }
     });
+    app.use(ignoreCustomElementPlugin);
     app.mount('#app');
 </script>
 </body>

@@ -806,8 +806,8 @@
 <script type="module">
     
     import { extend,deepCopy,confirm } from "./assets/js/helper.js";
-    import { useDefaultConf,useHardwareConf } from "./assets/js/confHooks.js";
-    import { bootstrapSwitchComponent,multipleSelectComponent,languageOptionDirective } from "./assets/js/vueHelper.js"
+    import { useDefaultConf,useHardwareConf } from "./assets/js/vueHooks.js";
+    import { ignoreCustomElementPlugin,bootstrapSwitchComponent,multipleSelectComponent,languageOptionDirective } from "./assets/js/vueHelper.js"
     import vue from "./assets/plugins/vue/vue.build.js";
     const {createApp,reactive,watch,toRefs,computed,onMounted} = vue;
 
@@ -925,6 +925,7 @@
                 handleNetConf,saveGlobalConfByLocal,saveDefaultConf}
         }
     });
+    app.use(ignoreCustomElementPlugin);
     app.mount('#app');
 </script>
 </body>

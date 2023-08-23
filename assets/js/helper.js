@@ -2,7 +2,7 @@
 import $ from '../plugins/jquery/jquery.esm.js';
 import JsonRpcClient from '../plugins/jsonrpc/jquery.jsonrpc.js';
 import '../plugins/axios/axios.min.js';
-import { useLanguageConf } from './confHooks.js';
+import { useLanguageConf } from './vueHooks.js';
 import Lobibox from '../plugins/notifications/js/lobibox.min.js'
 
 export const getUrlParam = (key) => {

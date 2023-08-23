@@ -61,8 +61,8 @@
 <script src="assets/plugins/flvjs/flv.js"></script>
 <script src="assets/plugins/jessibuca/jessibuca.js"></script>
 <script type="module">
-    import { useDefaultConf } from "./assets/js/confHooks.js";
-    import { flvPlayerComponent } from "./assets/js/vueHelper.js"
+    import { useDefaultConf } from "./assets/js/vueHooks.js";
+    import { ignoreCustomElementPlugin,flvPlayerComponent } from "./assets/js/vueHelper.js"
     import vue from "./assets/plugins/vue/vue.build.js";
 
     const {createApp,ref,reactive,watch,watchEffect,computed,onMounted} = vue;
@@ -125,6 +125,7 @@
             return {...state,handleActivePlayerConf,onChangePlayerChn,onChangeBufferTime}
         }
     });
+    app.use(ignoreCustomElementPlugin);
     app.mount('#app');
 </script>
 </body>

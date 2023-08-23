@@ -951,9 +951,9 @@
 <script type="module">
 
     import { rpc2,alertMsg,func,queryData,getConfigData,extend,popover,formatDate,deepCopy,rebootConfirm,resetConfirm } from "./assets/js/helper.js";
-    import { useHardwareConf,usetNetManagerConf,usePasswordConf,useVideoBufferConf } from "./assets/js/confHooks.js";
-    import { useNtpConf,useTimezoneConf,usePortConf,useVersionConf,useVerLogsConf,useWpaConf } from "./assets/js/confHooks.js";
-    import { bootstrapSwitchComponent,languageOptionDirective,uploadModalComponent,upgradeModalComponent,customModalComponent,loadingButtonComponent } from "./assets/js/vueHelper.js"
+    import { useHardwareConf,usetNetManagerConf,usePasswordConf,useVideoBufferConf } from "./assets/js/vueHooks.js";
+    import { useNtpConf,useTimezoneConf,usePortConf,useVersionConf,useVerLogsConf,useWpaConf } from "./assets/js/vueHooks.js";
+    import { ignoreCustomElementPlugin,bootstrapSwitchComponent,languageOptionDirective,uploadModalComponent,upgradeModalComponent,customModalComponent,loadingButtonComponent } from "./assets/js/vueHelper.js"
     import { wifiFlagComponent,antenanFlagComponent } from "./assets/js/vueFlags.js";
     import vue from "./assets/plugins/vue/vue.build.js";
 
@@ -1374,6 +1374,7 @@
                 systemNetTest,checkUpdatePatch,searchUpdatePatch,searchPatchBySn}
         }
     });
+    app.use(ignoreCustomElementPlugin);
     app.mount('#app');
 </script>
 </body>

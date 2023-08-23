@@ -737,8 +737,8 @@
 <script type="module">
 
     import { rpc,alertMsg,extend,deepCopy } from "./assets/js/helper.js";
-    import { useDefaultConf,useHardwareConf,usePortConf } from "./assets/js/confHooks.js";
-    import { bootstrapSwitchComponent,multipleInputComponent } from "./assets/js/vueHelper.js"
+    import { useDefaultConf,useHardwareConf,usePortConf } from "./assets/js/vueHooks.js";
+    import { ignoreCustomElementPlugin,bootstrapSwitchComponent,multipleInputComponent } from "./assets/js/vueHelper.js"
     import vue from "./assets/plugins/vue/vue.build.js";
 
     const {createApp,ref,reactive,toRefs,watch,watchEffect,computed} = vue;
@@ -915,6 +915,7 @@
             return {...state,defaultConf,hardwareConf,handleEnableConf,handlePlayUrl,handlePushSpeed,saveGlobalConfByLocal,saveDefaultConf}
         }
     });
+    app.use(ignoreCustomElementPlugin);
     app.mount('#app');
 </script>
 </body>

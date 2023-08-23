@@ -95,8 +95,8 @@
 
 <script type="module">
     import { rpc,alertMsg } from "./assets/js/helper.js";
-    import { useDefaultConf } from "./assets/js/confHooks.js";
-    import { bootstrapSwitchComponent } from "./assets/js/vueHelper.js"
+    import { useDefaultConf } from "./assets/js/vueHooks.js";
+    import { ignoreCustomElementPlugin,bootstrapSwitchComponent } from "./assets/js/vueHelper.js"
     import vue from "./assets/plugins/vue/vue.build.js";
 
     const {createApp,ref,watchEffect} = vue;
@@ -149,6 +149,7 @@
             return {...state,saveConf}
         }
     });
+    app.use(ignoreCustomElementPlugin);
     app.mount('#app');
 </script>
 </body>

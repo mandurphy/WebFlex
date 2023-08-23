@@ -295,8 +295,8 @@
 
 <script type="module">
     import { rpc,alertMsg } from "./assets/js/helper.js";
-    import { useIntercomConf } from "./assets/js/confHooks.js";
-    import { bootstrapSwitchComponent,languageOptionDirective } from "./assets/js/vueHelper.js"
+    import { useIntercomConf } from "./assets/js/vueHooks.js";
+    import { ignoreCustomElementPlugin,bootstrapSwitchComponent,languageOptionDirective } from "./assets/js/vueHelper.js"
     import vue from "./assets/plugins/vue/vue.build.js";
     const {createApp,ref,reactive,watch,watchEffect,computed,onMounted} = vue;
 
@@ -347,6 +347,7 @@
             return {...state,intercomConf,handleDevicesArray,saveConf}
         }
     });
+    app.use(ignoreCustomElementPlugin);
     app.mount('#app');
 </script>
 </body>

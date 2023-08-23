@@ -407,8 +407,8 @@
 <script src="assets/plugins/fileinput/themes/fa6/theme.min.js" type="module"></script>
 <script type="module">
     import { rpc,alertMsg,confirm,func } from "./assets/js/helper.js";
-    import { useDefaultConf,useOverlayConf,useResConf } from "./assets/js/confHooks.js";
-    import { bootstrapSwitchComponent,nouiSliderComponent,vueColorPickerComponent,uploadModalComponent } from "./assets/js/vueHelper.js"
+    import { useDefaultConf,useOverlayConf,useResConf } from "./assets/js/vueHooks.js";
+    import { ignoreCustomElementPlugin,bootstrapSwitchComponent,nouiSliderComponent,vueColorPickerComponent,uploadModalComponent } from "./assets/js/vueHelper.js"
     import vue from "./assets/plugins/vue/vue.build.js";
 
     const {createApp,ref,reactive,watchEffect,computed} = vue;
@@ -583,6 +583,7 @@
                 editOverlay,delOverlay,addOverlay,delCurrentRes,uploadRes,uploadSuccess,uploadError,saveOverlayConf}
         }
     });
+    app.use(ignoreCustomElementPlugin);
     app.mount('#app');
 </script>
 </body>

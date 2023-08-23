@@ -8,6 +8,12 @@ import $ from '../plugins/jquery/jquery.esm.js'
 
 const {ref,reactive,toRefs,watch,watchEffect,computed,onMounted,nextTick} = vue;
 
+export const ignoreCustomElementPlugin =  {
+    install: (app) => {
+        app.config.compilerOptions.isCustomElement = (tag) => tag === 'cn' || tag === 'en';
+    }
+};
+
 export const apexChartsDirective = {
     mounted(el,bindings,node) {
         let tx = bindings.value.data1;

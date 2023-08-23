@@ -1,5 +1,5 @@
 
-import { useLanguageConf } from "./confHooks.js";
+import { useLanguageConf } from "./vueHooks.js";
 
 window.addEventListener("load",  () => {
 

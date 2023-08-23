@@ -138,8 +138,8 @@
 
 <script type="module">
     import { rpc,rpc6,alertMsg } from "./assets/js/helper.js";
-    import { useHardwareConf,useButtonConf,useUartConf } from "./assets/js/confHooks.js";
-    import { bootstrapSwitchComponent,languageOptionDirective } from "./assets/js/vueHelper.js"
+    import { useHardwareConf,useButtonConf,useUartConf } from "./assets/js/vueHooks.js";
+    import { ignoreCustomElementPlugin,bootstrapSwitchComponent,languageOptionDirective } from "./assets/js/vueHelper.js"
     import vue from "./assets/plugins/vue/vue.build.js";
 
     const {createApp,ref,reactive,watch,watchEffect,computed} = vue;
@@ -177,6 +177,7 @@
             return {hardwareConf,buttonConf,uartConf,saveUartConf,saveButtonConf}
         }
     });
+    app.use(ignoreCustomElementPlugin);
     app.mount('#app');
 </script>
 </body>

@@ -278,8 +278,8 @@
 <script src="assets/plugins/timepicker/js/bootstrap-timepicker.min.js" type="module"></script>
 <script type="module">
     import { rpc,func,alertMsg } from "./assets/js/helper.js";
-    import { useDefaultConf,usePushConf } from "./assets/js/confHooks.js";
-    import { bootstrapSwitchComponent,flvPlayerComponent,timepickerComponent,languageOptionDirective } from "./assets/js/vueHelper.js"
+    import { useDefaultConf,usePushConf } from "./assets/js/vueHooks.js";
+    import { ignoreCustomElementPlugin,bootstrapSwitchComponent,flvPlayerComponent,timepickerComponent,languageOptionDirective } from "./assets/js/vueHelper.js"
     import vue from "./assets/plugins/vue/vue.build.js";
 
     const {createApp,ref,reactive,computed,onMounted} = vue;
@@ -427,6 +427,7 @@
             return {...state,pushConf,onChangeSrcV,onPushStart,onPushStop,addPushUrl,delPushUrl,handleEnableConf,getPushSpeed,savePushConf}
         }
     });
+    app.use(ignoreCustomElementPlugin);
     app.mount('#app');
 </script>
 </body>
