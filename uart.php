@@ -140,8 +140,9 @@
     import { rpc,rpc6,alertMsg } from "./assets/js/helper.js";
     import { useHardwareConf,useButtonConf,useUartConf } from "./assets/js/confHooks.js";
     import { bootstrapSwitchComponent,languageOptionDirective } from "./assets/js/vueHelper.js"
-    import {createApp,ref,reactive,watch,watchEffect,computed} from "./assets/plugins/vue/vue.esm.prod.js";
+    import vue from "./assets/plugins/vue/vue.build.js";
 
+    const {createApp,ref,reactive,watch,watchEffect,computed} = vue;
     const app = createApp({
         directives: {
           "language-option": languageOptionDirective

@@ -105,11 +105,9 @@
       import { rpc } from "./assets/js/helper.js";
       import { useDefaultConf,useHardwareConf } from "./assets/js/confHooks.js";
       import { bootstrapSwitchComponent,statusPieChartComponent,statusTemperatureComponent,netFlotChartComponent } from "./assets/js/vueHelper.js"
+      import vue from "./assets/plugins/vue/vue.build.js";
 
-      import { createApp,ref,reactive,onMounted } from "./assets/plugins/vue/vue.esm.prod.js";
-      const { defaultConf } = useDefaultConf();
-      const { hardwareConf } = useHardwareConf();
-      
+      const { createApp,ref,reactive,onMounted } = vue;
       const app  = createApp({
           components:{
               "bootstrap-switch":bootstrapSwitchComponent,
@@ -133,6 +131,9 @@
                   input : reactive([]),
                   volume: reactive([])
               }
+
+              const { defaultConf } = useDefaultConf();
+              const { hardwareConf } = useHardwareConf();
 
               const getData1 = (d) => {
                   state.data1.shift();

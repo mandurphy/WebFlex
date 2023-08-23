@@ -72,8 +72,9 @@
 <script type="module">
 
     import { alertMsg,getUrlParam } from "./assets/js/helper.js";
-    import { createApp,ref,onMounted } from "./assets/plugins/vue/vue.esm.prod.js";
+    import vue from "./assets/plugins/vue/vue.build.js";
 
+    const { createApp,ref,onMounted } = vue;
     const app = createApp({
         setup(props,context) {
 

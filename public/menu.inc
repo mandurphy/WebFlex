@@ -49,12 +49,12 @@
                             <div class="menu-title"><cn>设备状态</cn><en>Dashboard</en></div>
                         </a>
                     </li>
-                    <li>
-                        <a href="dashboard1.php">
-                            <div class="parent-icon"><i class="fa fa-tachometer"></i></div>
-                            <div class="menu-title"><cn>设备状态1</cn><en>Dashboard</en></div>
-                        </a>
-                    </li>
+<!--                    <li>-->
+<!--                        <a href="dashboard1.php">-->
+<!--                            <div class="parent-icon"><i class="fa fa-tachometer"></i></div>-->
+<!--                            <div class="menu-title"><cn>设备状态1</cn><en>Dashboard</en></div>-->
+<!--                        </a>-->
+<!--                    </li>-->
                     <li>
                         <a href="decode.php">
                             <div class="parent-icon"><i class="fa fa-image"></i></div>

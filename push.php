@@ -280,8 +280,9 @@
     import { rpc,func,alertMsg } from "./assets/js/helper.js";
     import { useDefaultConf,usePushConf } from "./assets/js/confHooks.js";
     import { bootstrapSwitchComponent,flvPlayerComponent,timepickerComponent,languageOptionDirective } from "./assets/js/vueHelper.js"
-    import {createApp,ref,reactive,computed,onMounted} from "./assets/plugins/vue/vue.esm.prod.js";
+    import vue from "./assets/plugins/vue/vue.build.js";
 
+    const {createApp,ref,reactive,computed,onMounted} = vue;
     const app = createApp({
         directives: {
           "language-option": languageOptionDirective
@@ -294,7 +295,7 @@
         setup(props,context) {
 
             const { defaultConf } = useDefaultConf();
-            const { pushConf } = usePushConf();
+            const { pushConf,updatePushConf } = usePushConf();
 
             const state = {
                 defaultSubEnable:ref(null),
@@ -409,21 +410,15 @@
             }
 
             const savePushConf = () => {
-                rpc("push.update", [ JSON.stringify( pushConf, null, 2 ) ]).then(data => {
-                    if ( typeof ( data.error ) !== "undefined" ) {
-                        alertMsg('<cn>保存设置失败</cn><en>Save config failed!</en>', 'error');
-                        return;
-                    }
+                updatePushConf().then(()=>{
                     func("/link/mgr/system/setPushCrontab",state.pushCron).then(data => {
                         if(data.status === "success")
                             alertMsg('<cn>保存设置成功</cn><en>Save config success!</en>', 'success');
                     })
-                });
+                })
             }
 
             onMounted(() => {
-
-                console.log($);
                 handlePushCrontab();
                 handlePushState();
                 handlePushTimeCount();

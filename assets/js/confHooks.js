@@ -1,6 +1,7 @@
 
-import {queryData, checkFileExists, func, alertMsg, rpc2, rpc3, deepCopy} from "./helper.js";
-import { ref,reactive } from "../plugins/vue/vue.esm.prod.js";
+import {queryData, checkFileExists, func, alertMsg,rpc, rpc2, rpc3, deepCopy} from "./helper.js";
+import vue from "../plugins/vue/vue.build.js";
+const { ref,reactive } = vue;
 
 export const useDefaultConf = () => {
 
@@ -8,7 +9,21 @@ export const useDefaultConf = () => {
     queryData("config/config.json").then((conf)=>{
         defaultConf.splice(0, defaultConf.length, ...conf);
     });
-    return { defaultConf }
+
+    const updateDefaultConf = () => {
+        return new Promise((resolve,reject)=>{
+            rpc( "enc.update", [ JSON.stringify( defaultConf, null, 2 ) ]).then(data => {
+                if ( typeof ( data.error ) != "undefined" ) {
+                    reject();
+                    alertMsg('<cn>保存设置失败</cn><en>Save config failed!</en>', 'error');
+                } else {
+                    alertMsg('<cn>保存设置成功</cn><en>Save config success!</en>', 'success');
+                    resolve();
+                }
+            });
+        })
+    }
+    return { defaultConf,updateDefaultConf }
 }
 
 export const useHardwareConf = () => {
@@ -103,16 +118,18 @@ export const usetNetManagerConf = () => {
     })
 
     const updateNetManagerConf = (param) => {
-        const adapter = {};
-        deepCopy(param).forEach(item => {
-            if(item.type !== "dongle") {
-                const dev = item.dev;
-                delete item.dev;
-                delete item.type;
-                adapter[dev] = item;
-            }
-        });
-        netManagerConf.interface = adapter;
+        if(param !== undefined) {
+            const adapter = {};
+            deepCopy(param).forEach(item => {
+                if(item.type !== "dongle") {
+                    const dev = item.dev;
+                    delete item.dev;
+                    delete item.type;
+                    adapter[dev] = item;
+                }
+            });
+            netManagerConf.interface = adapter;
+        }
         rpc2("net.update",[JSON.stringify(netManagerConf,null,2)]).then(data=>{
             if(data)
                 alertMsg('<cn>保存设置成功</cn><en>Save config successfully!</en>', 'success');
@@ -219,7 +236,20 @@ export const usePushConf = () => {
     queryData("config/push.json").then((conf)=>{
         Object.assign(pushConf,conf)
     })
-    return { pushConf }
+
+    const updatePushConf = () => {
+        return new Promise((resolve,reject)=> {
+            rpc("push.update", [ JSON.stringify( pushConf, null, 2 ) ]).then(data => {
+                if ( typeof ( data.error ) !== "undefined" ) {
+                    alertMsg('<cn>保存设置失败</cn><en>Save config failed!</en>', 'error');
+                    reject();
+                    return;
+                }
+                resolve();
+            });
+        })
+    }
+    return { pushConf,updatePushConf }
 }
 
 export const useUartConf = () => {

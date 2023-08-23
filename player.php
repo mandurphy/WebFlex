@@ -63,8 +63,9 @@
 <script type="module">
     import { useDefaultConf } from "./assets/js/confHooks.js";
     import { flvPlayerComponent } from "./assets/js/vueHelper.js"
-    import {createApp,ref,reactive,watch,watchEffect,computed,onMounted} from "./assets/plugins/vue/vue.esm.prod.js";
+    import vue from "./assets/plugins/vue/vue.build.js";
 
+    const {createApp,ref,reactive,watch,watchEffect,computed,onMounted} = vue;
     const app = createApp({
         components:{
             "flv-player": flvPlayerComponent

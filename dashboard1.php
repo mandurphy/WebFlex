@@ -171,11 +171,9 @@
       import { rpc} from "./assets/js/helper.js";
       import { useDefaultConf,useHardwareConf } from "./assets/js/confHooks.js";
       import { pieChartDirective,apexChartsDirective,bootstrapSwitchComponent } from "./assets/js/vueHelper.js"
-      import { createApp,ref,reactive,onMounted } from "./assets/plugins/vue/vue.esm.prod.js";
+      import vue from "./assets/plugins/vue/vue.build.js";
 
-      const { defaultConf } = useDefaultConf();
-      const { hardwareConf } = useHardwareConf();
-      
+      const { createApp,ref,reactive,onMounted } = vue;
       const app  = createApp({
           directives:{
               "pie":pieChartDirective,
@@ -196,6 +194,9 @@
                   input : reactive([]),
                   test_switch : ref(true)
               }
+
+              const { defaultConf } = useDefaultConf();
+              const { hardwareConf } = useHardwareConf();
               
               const updateNetState = () => {
                   rpc("enc.getNetState").then(data => {

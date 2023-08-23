@@ -85,7 +85,7 @@
                                     </label>
                                 </div>
                                 <div class="col-lg-6">
-                                    <input class="form-control" v-model="item.ip">
+                                    <input class="form-control" v-model.trim.lazy="item.ip">
                                 </div>
                             </div>
                             <div class="row mt-3">
@@ -96,7 +96,7 @@
                                     </label>
                                 </div>
                                 <div class="col-lg-6">
-                                    <input class="form-control" v-model="item.mask">
+                                    <input class="form-control" v-model.trim.lazy="item.mask">
                                 </div>
                             </div>
                             <div class="row mt-3">
@@ -107,7 +107,7 @@
                                     </label>
                                 </div>
                                 <div class="col-lg-6">
-                                    <input class="form-control" v-model="item.gw">
+                                    <input class="form-control" v-model.trim.lazy="item.gw">
                                 </div>
                             </div>
                             <div class="row mt-3">
@@ -117,7 +117,7 @@
                                     </label>
                                 </div>
                                 <div class="col-lg-6">
-                                    <input class="form-control" v-model="item.dns">
+                                    <input class="form-control" v-model.trim.lazy="item.dns">
                                 </div>
                             </div>
                             <div class="row mt-3">
@@ -127,7 +127,7 @@
                                     </label>
                                 </div>
                                 <div class="col-lg-6">
-                                    <input class="form-control" disabled v-model="item.mac">
+                                    <input class="form-control" disabled v-model.trim.lazy="item.mac">
                                 </div>
                             </div>
                             <div class="row mt-4">
@@ -174,7 +174,7 @@
                                         </div>
                                         <div class="col-lg-8">
                                             <div class="input-group">
-                                                <input class="form-control" :type="!showPasswd.wifipwd ? 'password' : 'text'" v-model="wifiPassword">
+                                                <input class="form-control" :type="!showPasswd.wifipwd ? 'password' : 'text'" v-model.trim.lazy="wifiPassword">
                                                 <span class="input-group-text input-group-addon force-cursor-pointer" @click="showPasswd.wifipwd = !showPasswd.wifipwd"><i :class="['fa-regular',{'fa-eye-slash':!showPasswd.wifipwd},{'fa-eye':showPasswd.wifipwd}]"></i></span>
                                             </div>
                                         </div>
@@ -220,7 +220,7 @@
                                             </label>
                                         </div>
                                         <div class="col-lg-8">
-                                            <input class="form-control" v-model="item.ip">
+                                            <input class="form-control" v-model.trim.lazy="item.ip">
                                         </div>
                                     </div>
                                     <div class="row mt-3">
@@ -231,7 +231,7 @@
                                             </label>
                                         </div>
                                         <div class="col-lg-8">
-                                            <input class="form-control" v-model="item.mask">
+                                            <input class="form-control" v-model.trim.lazy="item.mask">
                                         </div>
                                     </div>
                                     <div class="row mt-3">
@@ -242,7 +242,7 @@
                                             </label>
                                         </div>
                                         <div class="col-lg-8">
-                                            <input class="form-control" v-model="item.gw">
+                                            <input class="form-control" v-model.trim.lazy="item.gw">
                                         </div>
                                     </div>
                                     <div class="row mt-3">
@@ -252,7 +252,7 @@
                                             </label>
                                         </div>
                                         <div class="col-lg-8">
-                                            <input class="form-control" v-model="item.dns">
+                                            <input class="form-control" v-model.trim.lazy="item.dns">
                                         </div>
                                     </div>
                                     <div class="row mt-4 mb-4">
@@ -293,7 +293,7 @@
                                     </label>
                                 </div>
                                 <div class="col-lg-6">
-                                    <input class="form-control" v-model="item.ip" readonly disabled>
+                                    <input class="form-control" v-model.trim.lazy="item.ip" readonly disabled>
                                 </div>
                             </div>
                             <div class="row mt-3">
@@ -304,7 +304,7 @@
                                     </label>
                                 </div>
                                 <div class="col-lg-6">
-                                    <input class="form-control" v-model="item.mask" readonly disabled>
+                                    <input class="form-control" v-model.trim.lazy="item.mask" readonly disabled>
                                 </div>
                             </div>
                             <div class="row mt-3">
@@ -315,7 +315,7 @@
                                     </label>
                                 </div>
                                 <div class="col-lg-6">
-                                    <input class="form-control" v-model="item.gw" readonly disabled>
+                                    <input class="form-control" v-model.trim.lazy="item.gw" readonly disabled>
                                 </div>
                             </div>
                             <div class="row mt-3">
@@ -325,7 +325,7 @@
                                     </label>
                                 </div>
                                 <div class="col-lg-6">
-                                    <input class="form-control" v-model="item.dns" readonly disabled>
+                                    <input class="form-control" v-model.trim.lazy="item.dns" readonly disabled>
                                 </div>
                             </div>
                             <div class="row mt-3 mb-4">
@@ -335,7 +335,7 @@
                                     </label>
                                 </div>
                                 <div class="col-lg-6">
-                                    <input class="form-control" v-model="item.mac" readonly disabled>
+                                    <input class="form-control" v-model.trim.lazy="item.mac" readonly disabled>
                                 </div>
                             </div>
                         </div>
@@ -363,7 +363,7 @@
                                         </div>
                                         <div class="col-lg-6">
                                             <div class="input-group">
-                                                <input class="form-control" :type="!showPasswd.oldpwd ? 'password' : 'text'" v-model="userPasswd.oldpwd">
+                                                <input class="form-control" :type="!showPasswd.oldpwd ? 'password' : 'text'" v-model.trim.lazy="userPasswd.oldpwd">
                                                 <span class="input-group-text input-group-addon force-cursor-pointer" @click="showPasswd.oldpwd = !showPasswd.oldpwd"><i :class="['fa-regular',{'fa-eye-slash':!showPasswd.oldpwd},{'fa-eye':showPasswd.oldpwd}]"></i></span>
                                             </div>
                                         </div>
@@ -379,7 +379,7 @@
                                         </div>
                                         <div class="col-lg-6">
                                             <div class="input-group">
-                                                <input class="form-control" :type="!showPasswd.newpwd ? 'password' : 'text'" v-model="userPasswd.newpwd">
+                                                <input class="form-control" :type="!showPasswd.newpwd ? 'password' : 'text'" v-model.trim.lazy="userPasswd.newpwd">
                                                 <span class="input-group-text input-group-addon force-cursor-pointer" @click="showPasswd.newpwd = !showPasswd.newpwd"><i :class="['fa-regular',{'fa-eye-slash':!showPasswd.newpwd},{'fa-eye':showPasswd.newpwd}]"></i></span>
                                             </div>
                                         </div>
@@ -393,7 +393,7 @@
                                         </div>
                                         <div class="col-lg-6">
                                             <div class="input-group">
-                                                <input class="form-control" :type="!showPasswd.confirm ? 'password' : 'text'" v-model="userPasswd.confirm">
+                                                <input class="form-control" :type="!showPasswd.confirm ? 'password' : 'text'" v-model.trim.lazy="userPasswd.confirm">
                                                 <span class="input-group-text input-group-addon force-cursor-pointer" @click="showPasswd.confirm = !showPasswd.confirm"><i :class="['fa-regular',{'fa-eye-slash':!showPasswd.confirm},{'fa-eye':showPasswd.confirm}]"></i></span>
                                             </div>
                                         </div>
@@ -457,7 +457,7 @@
                                 </label>
                             </div>
                             <div class="col-lg-6">
-                                <input class="form-control" v-model="sysTime">
+                                <input class="form-control" v-model.trim.lazy="sysTime">
                             </div>
                             <div class="col-lg-2">
                                 <button type="button" class="btn border-3 btn-primary px-2" @click="syncTimeFromPc"><cn>本地同步</cn><en>Sync from PC</en></button>
@@ -471,7 +471,7 @@
                                 </label>
                             </div>
                             <div class="col-lg-6">
-                                <input class="form-control" v-model="ntpConf.server">
+                                <input class="form-control" v-model.trim.lazy="ntpConf.server">
                             </div>
                             <div class="col-lg-2">
                                 <bootstrap-switch v-model="ntpConf.enable"></bootstrap-switch>
@@ -689,22 +689,22 @@
                                         <en>Static port</en>
                                     </div>
                                     <div class="col">
-                                        <input type="text" class="form-control text-center" v-model="portConf.http[0]" readonly disabled>
+                                        <input type="text" class="form-control text-center" v-model.trim.lazy="portConf.http[0]" readonly disabled>
                                     </div>
                                     <div class="col">
-                                        <input type="text" class="form-control text-center" v-model="portConf.rtsp[0]" readonly disabled>
+                                        <input type="text" class="form-control text-center" v-model.trim.lazy="portConf.rtsp[0]" readonly disabled>
                                     </div>
                                     <div class="col">
-                                        <input type="text" class="form-control text-center" v-model="portConf.rtmp[0]" readonly disabled>
+                                        <input type="text" class="form-control text-center" v-model.trim.lazy="portConf.rtmp[0]" readonly disabled>
                                     </div>
                                     <div class="col">
-                                        <input type="text" class="form-control text-center" v-model="portConf.httpts[0]" readonly disabled>
+                                        <input type="text" class="form-control text-center" v-model.trim.lazy="portConf.httpts[0]" readonly disabled>
                                     </div>
                                     <div class="col">
-                                        <input type="text" class="form-control text-center" v-model="portConf.telnet[0]" readonly disabled>
+                                        <input type="text" class="form-control text-center" v-model.trim.lazy="portConf.telnet[0]" readonly disabled>
                                     </div>
                                     <div class="col">
-                                        <input type="text" class="form-control text-center" v-model="portConf.ssh[0]" readonly disabled>
+                                        <input type="text" class="form-control text-center" v-model.trim.lazy="portConf.ssh[0]" readonly disabled>
                                     </div>
                                 </div>
                                 <div class="row mt-3">
@@ -713,22 +713,22 @@
                                         <en>Reserve port</en>
                                     </div>
                                     <div class="col">
-                                        <input type="text" class="form-control text-center" v-model="portConf.http[1]">
+                                        <input type="text" class="form-control text-center" v-model.trim.lazy="portConf.http[1]">
                                     </div>
                                     <div class="col">
-                                        <input type="text" class="form-control text-center" v-model="portConf.rtsp[1]">
+                                        <input type="text" class="form-control text-center" v-model.trim.lazy="portConf.rtsp[1]">
                                     </div>
                                     <div class="col">
-                                        <input type="text" class="form-control text-center" v-model="portConf.rtmp[1]">
+                                        <input type="text" class="form-control text-center" v-model.trim.lazy="portConf.rtmp[1]">
                                     </div>
                                     <div class="col">
-                                        <input type="text" class="form-control text-center" v-model="portConf.httpts[1]">
+                                        <input type="text" class="form-control text-center" v-model.trim.lazy="portConf.httpts[1]">
                                     </div>
                                     <div class="col">
-                                        <input type="text" class="form-control text-center" v-model="portConf.telnet[1]">
+                                        <input type="text" class="form-control text-center" v-model.trim.lazy="portConf.telnet[1]">
                                     </div>
                                     <div class="col">
-                                        <input type="text" class="form-control text-center" v-model="portConf.ssh[1]">
+                                        <input type="text" class="form-control text-center" v-model.trim.lazy="portConf.ssh[1]">
                                     </div>
                                 </div>
                                 <div class="row mt-3">
@@ -737,22 +737,22 @@
                                         <en>NAT port</en>
                                     </div>
                                     <div class="col">
-                                        <input type="text" class="form-control text-center" v-model="portConf.http[2]">
+                                        <input type="text" class="form-control text-center" v-model.trim.lazy="portConf.http[2]">
                                     </div>
                                     <div class="col">
-                                        <input type="text" class="form-control text-center" v-model="portConf.rtsp[2]">
+                                        <input type="text" class="form-control text-center" v-model.trim.lazy="portConf.rtsp[2]">
                                     </div>
                                     <div class="col">
-                                        <input type="text" class="form-control text-center" v-model="portConf.rtmp[2]">
+                                        <input type="text" class="form-control text-center" v-model.trim.lazy="portConf.rtmp[2]">
                                     </div>
                                     <div class="col">
-                                        <input type="text" class="form-control text-center" v-model="portConf.httpts[2]">
+                                        <input type="text" class="form-control text-center" v-model.trim.lazy="portConf.httpts[2]">
                                     </div>
                                     <div class="col">
-                                        <input type="text" class="form-control text-center" v-model="portConf.telnet[2]">
+                                        <input type="text" class="form-control text-center" v-model.trim.lazy="portConf.telnet[2]">
                                     </div>
                                     <div class="col">
-                                        <input type="text" class="form-control text-center" v-model="portConf.ssh[2]">
+                                        <input type="text" class="form-control text-center" v-model.trim.lazy="portConf.ssh[2]">
                                     </div>
                                 </div>
                             </div>
@@ -784,7 +784,7 @@
                                         <en>Auth code</en>
                                     </div>
                                     <div class="col-lg-3 force-align-center">
-                                        <input type="text" class="form-control" v-model="helpCode" readonly disabled>
+                                        <input type="text" class="form-control" v-model.trim.lazy="helpCode" readonly disabled>
                                     </div>
                                     <div class="col-lg-6">
                                         <button type="button" class="btn border-3 btn-primary px-4 me-2" @click="startHelp"><cn>开始协助</cn><en>Start</en></button>
@@ -804,7 +804,14 @@
                             </div>
                             <div class="card-body">
                                 <div class="row my-2">
-                                    <div class="col-lg-12 text-center">
+                                    <div class="col-lg-3 d-flex align-items-center justify-content-end">
+                                        <cn>服务地址</cn>
+                                        <en>Server</en>
+                                    </div>
+                                    <div class="col-lg-5 force-align-center" v-if="Object.keys(netManagerConf).length > 0">
+                                        <input type="text" class="form-control" v-model.trim.lazy="netManagerConf.onlineServer">
+                                    </div>
+                                    <div class="col-lg-4">
                                         <button type="button" class="btn border-3 btn-primary px-4 net-test" @click="systemNetTest"><cn>网络测试</cn><en>Start Test</en></button>
                                     </div>
                                 </div>
@@ -925,7 +932,7 @@
                 </div>
                 <div class="col-lg-6">
                     <div>
-                        <input v-model="patchSN" autocomplete="off" style="width: 100%;border: none;border-bottom: 1px solid #ccc;outline: none;"/>
+                        <input v-model.trim.lazy="patchSN" autocomplete="off" style="width: 100%;border: none;border-bottom: 1px solid #ccc;outline: none;"/>
                     </div>
                 </div>
             </div>
@@ -943,13 +950,14 @@
 <script src="assets/plugins/fileinput/themes/fa6/theme.min.js" type="module"></script>
 <script type="module">
 
-    import { createApp,ref,reactive,watchEffect,computed,onMounted } from "./assets/plugins/vue/vue.esm.prod.js";
     import { rpc2,alertMsg,func,queryData,getConfigData,extend,popover,formatDate,deepCopy,rebootConfirm,resetConfirm } from "./assets/js/helper.js";
     import { useHardwareConf,usetNetManagerConf,usePasswordConf,useVideoBufferConf } from "./assets/js/confHooks.js";
     import { useNtpConf,useTimezoneConf,usePortConf,useVersionConf,useVerLogsConf,useWpaConf } from "./assets/js/confHooks.js";
     import { bootstrapSwitchComponent,languageOptionDirective,uploadModalComponent,upgradeModalComponent,customModalComponent,loadingButtonComponent } from "./assets/js/vueHelper.js"
     import { wifiFlagComponent,antenanFlagComponent } from "./assets/js/vueFlags.js";
+    import vue from "./assets/plugins/vue/vue.build.js";
 
+    const { createApp,ref,reactive,watchEffect,computed,onMounted } = vue;
     const app = createApp({
         directives:{
             "language-option": languageOptionDirective
@@ -1265,15 +1273,17 @@
             }
 
             const systemNetTest = () => {
-                func("/link/mgr/system/systemNetTest").then(data => {
-                    const str = data.data.join();
-                    if(str === "")
-                        alertMsg('<cn>域名解析超时</cn><en>DNS timeout</en>!', 'error');
-                    else if(str.indexOf(" 0%")>0)
-                        alertMsg('<cn>网络可用</cn><en>Network available</en>！', 'success');
-                    else
-                        alertMsg('<cn>网络不可用</cn><en>Network Unavailable</en>！', 'error');
-                })
+                // func("/link/mgr/system/systemNetTest").then(data => {
+                //     const str = data.data.join();
+                //     if(str === "")
+                //         alertMsg('<cn>域名解析超时</cn><en>DNS timeout</en>!', 'error');
+                //     else if(str.indexOf(" 0%")>0)
+                //         alertMsg('<cn>网络可用</cn><en>Network available</en>！', 'success');
+                //     else
+                //         alertMsg('<cn>网络不可用</cn><en>Network Unavailable</en>！', 'error');
+                // })
+                console.log(netManagerConf,"########");
+                updateNetManagerConf();
             }
 
             const showBootstrapModal = type => {

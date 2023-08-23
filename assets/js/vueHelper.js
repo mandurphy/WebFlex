@@ -1,10 +1,12 @@
 
-import {ref,reactive,toRefs,watch,watchEffect,computed,onMounted,nextTick} from '../plugins/vue/vue.esm.prod.js';
+import vue from "../plugins/vue/vue.build.js";
 import { func,confirm,rebootConfirm,alertMsg } from './helper.js'
 import * as vueColor from '../plugins/vueColor/vue.color.esm.js'
 import * as Popper from '../plugins/popper/popper.esm.js'
 import '../plugins/axios/axios.min.js';
 import $ from '../plugins/jquery/jquery.esm.js'
+
+const {ref,reactive,toRefs,watch,watchEffect,computed,onMounted,nextTick} = vue;
 
 export const apexChartsDirective = {
     mounted(el,bindings,node) {
@@ -1002,47 +1004,47 @@ export const upgradeModalComponent = {
 
         watchEffect(async ()=>{
             if(checkUpgrade.value) {
-                const checkHelpNetData = await func("/link/mgr/upgrade/checkHelpNet");
-                if (checkHelpNetData.status === "error") {
-                    alertMsg(checkHelpNetData.msg, "error");
+                let result = await func("/link/mgr/upgrade/checkHelpNet");
+                if (result.status === "error") {
+                    alertMsg(result.msg, "error");
                     return;
                 }
 
                 if(!patchSn.value) {
-                    const getSystemAliaseData = await func("/link/mgr/upgrade/getSystemAliase");
-                    if (getSystemAliaseData.status === "error") {
-                        alertMsg(getSystemAliaseData.msg, "error");
+                    result = await func("/link/mgr/upgrade/getSystemAliase");
+                    if (result.status === "error") {
+                        alertMsg(result.msg, "error");
                         context.emit('update:checkUpgrade', false);
                         return;
                     }
-                    if (getSystemAliaseData.data.length === 0) {
+                    if (result.data.length === 0) {
                         alertMsg("<cn>已经是最新版本</cn><en>It is the latest version</en>", "success");
                         context.emit('update:checkUpgrade', false);
                         return;
                     }
-                    state.facAliase = getSystemAliaseData.data[0].aliase;
+                    state.facAliase = result.data[0].aliase;
 
-                    const getAllSystemPatchData = await func("/link/mgr/upgrade/getAllSystemPatch");
-                    if (getAllSystemPatchData.status === "error") {
-                        alertMsg(getAllSystemPatchData.msg, "error");
+                    result = await func("/link/mgr/upgrade/getAllSystemPatch");
+                    if (result.status === "error") {
+                        alertMsg(result.msg, "error");
                         context.emit('update:checkUpgrade', false);
                         return;
                     }
-                    if (getAllSystemPatchData.data.length === 0) {
+                    if (result.data.length === 0) {
                         alertMsg("<cn>已经是最新版本</cn><en>It is the latest version</en>", "success");
                         context.emit('update:checkUpgrade', false);
                         return;
                     }
                     state.systemPatchs.splice(0);
-                    state.systemPatchs.push(...getAllSystemPatchData.data);
+                    state.systemPatchs.push(...result.data);
 
-                    const checkVersionMasterData = await func("/link/mgr/upgrade/checkVersionMaster");
-                    if (checkVersionMasterData.status === "error") {
-                        alertMsg(checkVersionMasterData.msg, "error");
+                    result = await func("/link/mgr/upgrade/checkVersionMaster");
+                    if (result.status === "error") {
+                        alertMsg(result.msg, "error");
                         context.emit('update:checkUpgrade', false);
                         return;
                     }
-                    if (checkVersionMasterData.data === 0) {
+                    if (result.data === 0) {
                         confirm({
                             title: '<cn>注意</cn><en>Tip</en>',
                             content: '<cn>设备可能升级过其他固件，如果继续升级，功能可能会被覆盖，是否继续?</cn><en>The device may have been upgraded with custom firmware, and the upgrade function may be overwritten. Do you want to continue?</en>',
@@ -1067,21 +1069,21 @@ export const upgradeModalComponent = {
                         state.bsModal.show();
                     }
                 } else {
-                    const getSystemAliaseData = await func("/link/mgr/upgrade/getSystemAliase");
-                    if (getSystemAliaseData.status === "error") {
-                        alertMsg(getSystemAliaseData.msg, "error");
+                    let result = await func("/link/mgr/upgrade/getSystemAliase");
+                    if (result.status === "error") {
+                        alertMsg(result.msg, "error");
                         context.emit('update:checkUpgrade', false);
                         return;
                     }
-                    if (getSystemAliaseData.data.length === 0) {
+                    if (result.data.length === 0) {
                         alertMsg("<cn>无效固件编号</cn><en>Invalid upgrade sn</en>", "error");
                         context.emit('update:checkUpgrade', false);
                         return;
                     }
-                    state.facAliase = getSystemAliaseData.data[0].aliase;
+                    state.facAliase = result.data[0].aliase;
 
-                    const getSystemPatchBySnData = await func("/link/mgr/upgrade/getSystemPatchBySn",{"sn": patchSn.value});
-                    if (getSystemPatchBySnData.data.length === 0) {
+                    result = await func("/link/mgr/upgrade/getSystemPatchBySn",{"sn": patchSn.value});
+                    if (result.data.length === 0) {
                         alertMsg("<cn>无效固件编号</cn><en>Invalid upgrade sn</en>", "error");
                         context.emit('update:checkUpgrade', false);
                         return;

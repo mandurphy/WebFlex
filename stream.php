@@ -739,8 +739,9 @@
     import { rpc,alertMsg,extend,deepCopy } from "./assets/js/helper.js";
     import { useDefaultConf,useHardwareConf,usePortConf } from "./assets/js/confHooks.js";
     import { bootstrapSwitchComponent,multipleInputComponent } from "./assets/js/vueHelper.js"
-    import {createApp,ref,reactive,toRefs,watch,watchEffect,computed} from "./assets/plugins/vue/vue.esm.prod.js";
+    import vue from "./assets/plugins/vue/vue.build.js";
 
+    const {createApp,ref,reactive,toRefs,watch,watchEffect,computed} = vue;
     const app = createApp({
         components:{
             "bootstrap-switch" : bootstrapSwitchComponent,
@@ -748,7 +749,7 @@
         },
         setup(props,context) {
         
-            const { defaultConf } = useDefaultConf();
+            const { defaultConf,updateDefaultConf } = useDefaultConf();
             const { hardwareConf } = useHardwareConf();
             const { portConf } = usePortConf();
 
@@ -906,14 +907,9 @@
             }
         
             const saveDefaultConf = () => {
-                rpc("enc.update", [ JSON.stringify( defaultConf, null, 2 ) ]).then(data => {
-                    if ( typeof ( data.error ) != "undefined" ) {
-                        alertMsg('<cn>保存设置失败</cn><en>Save config failed!</en>', 'error');
-                        return;
-                    }
-                    alertMsg('<cn>保存设置成功</cn><en>Save config success!</en>', 'success');
+                updateDefaultConf().then(()=>{
                     updatePlayUrl();
-                });
+                })
             }
         
             return {...state,defaultConf,hardwareConf,handleEnableConf,handlePlayUrl,handlePushSpeed,saveGlobalConfByLocal,saveDefaultConf}

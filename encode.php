@@ -805,10 +805,11 @@
 <script src="assets/plugins/confirm/js/jquery-confirm.min.js" type="module"></script>
 <script type="module">
     
-    import { rpc,alertMsg,extend,deepCopy,confirm } from "./assets/js/helper.js";
+    import { extend,deepCopy,confirm } from "./assets/js/helper.js";
     import { useDefaultConf,useHardwareConf } from "./assets/js/confHooks.js";
     import { bootstrapSwitchComponent,multipleSelectComponent,languageOptionDirective } from "./assets/js/vueHelper.js"
-    import {createApp,reactive,watch,toRefs,computed,onMounted} from "./assets/plugins/vue/vue.esm.prod.js";
+    import vue from "./assets/plugins/vue/vue.build.js";
+    const {createApp,reactive,watch,toRefs,computed,onMounted} = vue;
 
     const app = createApp({
         directives:{
@@ -820,7 +821,7 @@
         },
         setup(props,context) {
             
-            const { defaultConf } = useDefaultConf();
+            const { defaultConf,updateDefaultConf } = useDefaultConf();
             const { hardwareConf } = useHardwareConf();
             let globalConf = reactive({});
 
@@ -889,15 +890,6 @@
             
             const saveDefaultConf = () => {
 
-                const saveConfig = () => {
-                    rpc( "enc.update", [ JSON.stringify( defaultConf, null, 2 ) ]).then(data => {
-                        if ( typeof ( data.error ) != "undefined" )
-                            alertMsg('<cn>保存设置失败</cn><en>Save config failed!</en>', 'error');
-                        else
-                            alertMsg('<cn>保存设置成功</cn><en>Save config success!</en>', 'success');
-                    });
-                }
-
                 const maxENC = hardwareConf.capability.encode.maxPixel;
                 let sum=0;
                 for ( let i = 0; i < defaultConf.length; i++ ) {
@@ -919,13 +911,13 @@
                                 text: "<cn>知道了</cn><en>I know</en>",
                                 btnClass: 'btn-primary',
                                 keys: [ 'enter' ],
-                                action: () => saveConfig()
+                                action: () => updateDefaultConf()
                             }
                         }
                     } );
                     return;
                 }
-                saveConfig();
+                updateDefaultConf();
             }
             
             return {globalConf,defaultConf,hardwareConf,
