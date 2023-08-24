@@ -1,9 +1,9 @@
 
-import $ from '../plugins/jquery/jquery.esm.js';
 import JsonRpcClient from '../plugins/jsonrpc/jquery.jsonrpc.js';
-import '../plugins/axios/axios.min.js';
-import { useLanguageConf } from './vueHooks.js';
+import axios from '../plugins/axios/axios.esm.js';
 import Lobibox from '../plugins/notifications/js/lobibox.min.js'
+import JqueryConfirm from '../plugins/confirm/js/jquery-confirm.esm.js'
+import { useLanguageConf } from './vueHooks.js';
 
 export const getUrlParam = (key) => {
     let param = "";
@@ -51,7 +51,8 @@ export const alertMsg = (message, type = "success", size = "mini") => {
 }
 
 export const confirm = (options) => {
-    $.confirm(options);
+    const jc = new JqueryConfirm();
+    jc.confirm(options);
 }
 
 export const queryData = (url,options= {}) => {
@@ -70,6 +71,19 @@ export const queryData = (url,options= {}) => {
 export const func = (url,data = []) => {
     return new Promise((resolve,reject)=>{
         axios.post('/link/relay.php', {url:url,data:data})
+            .then(response => {
+                resolve(response.data);
+            })
+            .catch(error => {
+                console.error('请求出错:', error);
+                reject(error);
+            });
+    })
+}
+
+export const axios_post = (url,data = []) => {
+    return new Promise((resolve,reject)=>{
+        axios.post(url, data)
             .then(response => {
                 resolve(response.data);
             })

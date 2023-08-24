@@ -1,10 +1,9 @@
 
 import vue from "../plugins/vue/vue.build.js";
-import { func,confirm,rebootConfirm,alertMsg } from './helper.js'
 import * as vueColor from '../plugins/vueColor/vue.color.esm.js'
 import * as Popper from '../plugins/popper/popper.esm.js'
-import '../plugins/axios/axios.min.js';
 import $ from '../plugins/jquery/jquery.esm.js'
+import { func,confirm,rebootConfirm,alertMsg,axios_post } from './helper.js'
 
 const {ref,reactive,toRefs,watch,watchEffect,computed,onMounted,nextTick} = vue;
 
@@ -1123,8 +1122,8 @@ export const upgradeModalComponent = {
                 "action": "get_file_size",
                 "name": name
             };
-            const response = await axios.post("/link/upgrade.php", params);
-            return response.data.size;
+            const data = await axios_post("/link/upgrade.php", params);
+            return data.size;
         };
 
         const handleUpdatePatch = idx => {
@@ -1149,9 +1148,9 @@ export const upgradeModalComponent = {
                 chip:chip, type:type
             }
 
-            axios.post('/link/upgrade.php', params)
-                .then(async response => {
-                    const total = Number(response.data.size);
+            axios_post('/link/upgrade.php', params)
+                .then(async data => {
+                    const total = Number(data.size);
                     state.hadUpdate.value = true;
                     state.updatePercent.value = 0;
                     if(total > 0) {
@@ -1191,9 +1190,9 @@ export const upgradeModalComponent = {
             }
 
             const fileName = name;
-            axios.post('/link/upgrade.php',params, { responseType: 'arraybuffer' })
-                .then(response => {
-                    const blob = new Blob([response.data], { type: 'application/octet-stream' });
+            axios_post('/link/upgrade.php',params, { responseType: 'arraybuffer' })
+                .then(data => {
+                    const blob = new Blob([data], { type: 'application/octet-stream' });
                     const url = URL.createObjectURL(blob);
                     const a = document.createElement('a');
                     a.href = url;

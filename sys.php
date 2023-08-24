@@ -942,7 +942,6 @@
     </main>
 </div>
 <?php include ("./public/foot.inc") ?>
-<script src="assets/plugins/confirm/js/jquery-confirm.min.js" type="module"></script>
 <script src="assets/plugins/fileinput/js/fileinput.min.js" type="module"></script>
 <script src="assets/plugins/fileinput/js/locales/zh.js" type="module"></script>
 <script src="assets/plugins/fileinput/themes/fa6/theme.min.js" type="module"></script>

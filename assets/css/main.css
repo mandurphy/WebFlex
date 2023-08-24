@@ -566,7 +566,7 @@ a {
     .table-responsive {
         white-space: nowrap;
     }
-   
+
     .sidebar-wrapper {
        left: -260px;
     }
@@ -591,7 +591,7 @@ a {
     .toggled .sidebar-wrapper .sidebar-header {
         width: 260px;
     }
-    
+
     .toggled .logo-name {
         display: block;
     }
@@ -599,7 +599,7 @@ a {
     .toggled .top-header .navbar {
         left: 0px;
     }
-    
+
     .toggled .sidebar-wrapper .sidebar-bottom {
         width: 260px;
     }
@@ -607,7 +607,7 @@ a {
     .toggled .sidebar-wrapper .sidebar-bottom .dropdown-toggle {
         justify-content: start;
      }
-            
+
     .toggled .sidebar-wrapper .sidebar-bottom .user-info {
         display: block;
     }
@@ -652,17 +652,6 @@ a {
     font-size: 12px;
     color: gray;
     margin-left: 0.3rem;
-}
-
-
-.jconfirm-box-container {
-    margin: 0 auto;
-}
-
-.jc-bs3-container {
-    position: fixed !important;
-    right: 0;
-    max-width: calc(100% - 260px);
 }
 
 input[type="password"]::-ms-reveal{
