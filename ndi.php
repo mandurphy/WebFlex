@@ -36,7 +36,8 @@
                         </div>
                         <div class="card-body pb-4">
                             <div class="force-aspect-ratio">
-                                <div class="aspect-ratio-content d-flex flex-column justify-content-between">
+                                <div class="aspect-ratio-content d-flex flex-column justify-content-between" v-if="Object.keys(defaultConf).length > 0">
+                                    <div class="row"></div>
                                     <div class="row"></div>
                                     <div class="row"></div>
                                     <div class="row">
@@ -47,18 +48,18 @@
                                             </label>
                                         </div>
                                         <div class="col-lg-6">
-                                            <bootstrap-switch v-model="" size="normal"></bootstrap-switch>
+                                            <bootstrap-switch v-model="defaultConf[chnIndex].enable" @switch-change="updateDefaultConf" size="normal"></bootstrap-switch>
                                         </div>
                                     </div>
                                     <div class="row">
                                         <div class="col-lg-3 offset-lg-1 force-align-center">
                                             <label>
-                                                <cn>源设备名</cn>
-                                                <en>Source name</en>
+                                                <cn>已选择</cn>
+                                                <en>Selected</en>
                                             </label>
                                         </div>
                                         <div class="col-lg-6">
-                                            <input type="text" class="form-control">
+                                            <input type="text" v-model.trim.lazy="defaultConf[chnIndex].ndirecv.name" class="form-control" readonly disabled>
                                         </div>
                                     </div>
                                     <div class="row">
@@ -69,16 +70,17 @@
                                             </label>
                                         </div>
                                         <div class="col-lg-6">
-                                            <select class="form-select" v-model="">
-                                                <option v-for=""></option>
+                                            <select class="form-select" v-model="ndiName">
+                                                <option v-for="(item,index) in ndiList" :key="index" :value="item">{{item}}</option>
                                             </select>
                                         </div>
                                     </div>
+                                    <div class="row"></div>
                                     <div class="row">
                                         <div class="col-lg-12 text-center">
-                                            <button type="button" class="btn border-3 btn-primary px-4 me-3"><cn>刷新</cn><en>Refresh</en></button>
-                                            <button type="button" class="btn border-3 btn-primary px-4 me-3"><cn>选择</cn><en>Select</en></button>
-                                            <button type="button" class="btn border-3 btn-primary px-4"><cn>输出</cn><en>Display</en></button>
+                                            <button type="button" class="btn border-3 btn-primary px-4 me-3" @click="refreshNdiSourceList"><cn>刷新</cn><en>Refresh</en></button>
+                                            <button type="button" class="btn border-3 btn-primary px-4 me-3" @click="updateNdiSourceSelect"><cn>选择</cn><en>Select</en></button>
+                                            <button type="button" class="btn border-3 btn-primary px-4" @click="displayNdiSource"><cn>HDMI输出</cn><en>Display</en></button>
                                         </div>
                                     </div>
                                     <div class="row"></div>
@@ -99,54 +101,74 @@
     import { ignoreCustomElementPlugin,bootstrapSwitchComponent } from "./assets/js/vueHelper.js"
     import vue from "./assets/plugins/vue/vue.build.js";
 
-    const {createApp,ref,watchEffect} = vue;
+    const {createApp,ref,reactive,watchEffect,onMounted} = vue;
     const app = createApp({
         components:{
             "bootstrap-switch" : bootstrapSwitchComponent
         },
         setup(props,context) {
             
-            const { defaultConf } = useDefaultConf();
+            const { defaultConf,updateDefaultConf } = useDefaultConf();
 
             const state = {
                 chnIndex: ref(-1),
                 chnImgUrl: ref("assets/images/nosignal.jpg"),
+                ndiName: ref(""),
+                ndiList: reactive([])
             }
-            
-            const updateChnImage = () => {
-                if(defaultConf[state.chnIndex.value].enable)
-                    state.chnImgUrl.value = "snap/snap" + state.chnIndex.value + ".jpg?rnd=" + Math.random();
-                else
-                    state.chnImgUrl.value = "assets/images/nosignal.jpg";
-                
-                setTimeout(() => { rpc( "enc.snap" ) },200)
-                setTimeout(updateChnImage,500);
-            }
-            
-            
+
             const unwatch = watchEffect(()=>{
                 if(Object.keys(defaultConf).length > 0) {
                     for(let i=0;i<defaultConf.length;i++) {
                         if(defaultConf[i].type !== "ndi")
                             continue;
                         state.chnIndex.value = i;
+                        state.ndiName.value = defaultConf[i].ndirecv.name;
                     }
                     updateChnImage();
                     unwatch();
                 }
             })
-            
-            
-            const saveConf = () => {
-                // rpc( "enc.updateOverlay", [ JSON.stringify( overlayConf, null, 2 ) ], data => {
-                //     if ( typeof ( data.error ) != "undefined" )
-                //         alertMsg('<cn>保存设置失败</cn><en>Save config failed!</en>', 'error');
-                //     else
-                //         alertMsg('<cn>保存设置成功</cn><en>Save config success!</en>', 'success');
-                // } );
+
+            const updateChnImage = () => {
+                if(defaultConf[state.chnIndex.value].enable)
+                    state.chnImgUrl.value = "snap/snap" + state.chnIndex.value + ".jpg?rnd=" + Math.random();
+                else
+                    state.chnImgUrl.value = "assets/images/nosignal.jpg";
+
+                setTimeout(() => { rpc( "enc.snap" ) },200)
+                setTimeout(updateChnImage,500);
             }
+
+            const refreshNdiSourceList = tip => {
+                rpc("enc.getNDIList").then(data => {
+                    state.ndiList.splice(0);
+                    state.ndiList.push(...data);
+                    if(tip !== "noTip")
+                        alertMsg("<cn>刷新NDI源列表成功</cn><en>Refresh ndi source list successfully</en>")
+                });
+            }
+
+            const updateNdiSourceSelect = () => {
+                defaultConf[state.chnIndex.value].ndirecv.name = state.ndiName.value;
+                updateDefaultConf();
+            }
+
+            const displayNdiSource = () => {
+                defaultConf.forEach(item => {
+                    if(item.type === "mix") {
+                        item.output.enable = true;
+                        item.output.src = defaultConf[state.chnIndex.value].id;
+                    }
+                });
+                updateDefaultConf();
+            }
+
+            onMounted(()=>{
+                refreshNdiSourceList("noTip");
+            })
             
-            return {...state,saveConf}
+            return {...state,defaultConf,updateDefaultConf,refreshNdiSourceList,updateNdiSourceSelect,displayNdiSource}
         }
     });
     app.use(ignoreCustomElementPlugin);

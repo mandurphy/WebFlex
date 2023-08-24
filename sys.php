@@ -948,7 +948,7 @@
 <script type="module">
 
     import vue from "./assets/plugins/vue/vue.build.js";
-    import JSZip from "./assets/plugins/jszip/jszip.esm.js"
+    import JsZip from "./assets/plugins/jszip/jszip.esm.js"
     import * as fileSave from "./assets/plugins/jszip/filesaver.esm.js";
     import { rpc2,alertMsg,func,queryData,extend,popover,formatDate,deepCopy,rebootConfirm,resetConfirm } from "./assets/js/helper.js";
     import { useHardwareConf,usetNetManagerConf,usePasswordConf,useVideoBufferConf } from "./assets/js/vueHooks.js";
@@ -1217,24 +1217,24 @@
                 });
 
                 Promise.all(promiseArray)
-                        .then((results) => {
-                            const zip = new JSZip();
-                            results.forEach(({ name, data }) => {
-                                zip.file(name, data, { binary: true });
-                            });
-
-                            if (Object.keys(zip.files).length > 0) {
-                                return zip.generateAsync({ type: 'blob' });
-                            } else {
-                                throw new Error('下载全部失败');
-                            }
-                        })
-                        .then(blob => {
-                            saveAs(blob, 'configs.zip');
-                        })
-                        .catch(error => {
-                            console.error(error);
+                    .then((results) => {
+                        const zip = new JsZip();
+                        results.forEach(({ name, data }) => {
+                            zip.file(name, data, { binary: true });
                         });
+
+                        if (Object.keys(zip.files).length > 0) {
+                            return zip.generateAsync({ type: 'blob' });
+                        } else {
+                            throw new Error('下载全部失败');
+                        }
+                    })
+                    .then(blob => {
+                        saveAs(blob, 'configs.zip');
+                    })
+                    .catch(error => {
+                        console.error(error);
+                    });
             }
 
             const importConf = () =>{

@@ -378,6 +378,7 @@ export const bootstrapSwitchComponent = {
                 },
                 onSwitchChange(event,state) {
                     context.emit('update:modelValue', state);
+                    context.emit('switch-change', state);
                 }
             })
         })
@@ -1094,7 +1095,7 @@ export const upgradeModalComponent = {
                         return;
                     }
                     state.systemPatchs.splice(0);
-                    state.systemPatchs.push(...getSystemPatchBySnData.data);
+                    state.systemPatchs.push(...result.data);
                     state.bsModal.show();
                 }
             }
@@ -1202,9 +1203,6 @@ export const upgradeModalComponent = {
                     document.body.removeChild(a);
                     URL.revokeObjectURL(url);
                 })
-                .catch(error => {
-                    console.error('Error downloading file:', error);
-                });
         }
 
         onMounted(()=>{
