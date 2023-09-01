@@ -953,7 +953,7 @@
     import { rpc2,alertMsg,func,queryData,extend,popover,formatDate,deepCopy,rebootConfirm,resetConfirm } from "./assets/js/cul.helper.js";
     import { useHardwareConf,usetNetManagerConf,usePasswordConf,useVideoBufferConf,useNtpConf,useTimezoneConf,usePortConf,useVersionConf,useVerLogsConf,useWpaConf } from "./assets/js/vue.hooks.js";
     import { ignoreCustomElementPlugin,bootstrapSwitchComponent,languageOptionDirective,uploadModalComponent,upgradeModalComponent,customModalComponent,loadingButtonComponent } from "./assets/js/vue.helper.js"
-    import { wifiFlagComponent,antenanFlagComponent } from "./assets/js/vue.icons.js";
+    import { wifiFlagComponent,antenanFlagComponent } from "./assets/js/vue.flags.js";
 
     const { createApp,ref,reactive,watchEffect,computed,onMounted } = vue;
     const app = createApp({
