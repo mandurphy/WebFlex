@@ -13,7 +13,7 @@
                     <div class="card">
                         <div class="card-header bg-transparent">
                             <div class="p-2 mb-0 d-flex align-items-end">
-                                <cn>NDI预览</cn>
+                                <cn>服务器设置</cn>
                                 <en>NDI Preview</en>
                             </div>
                         </div>

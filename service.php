@@ -85,7 +85,7 @@
                                 </label>
                             </div>
                             <div class="col-lg-6">
-                                <bootstrap-switch v-model="serviceConf.sls" size="normal"></bootstrap-switch>
+                                <bs-switch v-model="serviceConf.sls" size="normal"></bs-switch>
                             </div>
                         </div>
                         <div class="row mt-3">
@@ -116,15 +116,15 @@
 <?php include ("./public/foot.inc") ?>
 
 <script type="module">
-    import { rpc4,alertMsg } from "./assets/js/helper.js";
-    import { useServiceConf,useSlsConf,useRtmpConf,useNdiConf } from "./assets/js/vueHooks.js";
-    import { ignoreCustomElementPlugin,bootstrapSwitchComponent } from "./assets/js/vueHelper.js"
-    import vue from "./assets/plugins/vue/vue.build.js";
+    import { rpc4,alertMsg } from "./assets/js/rps.helper.js";
+    import { useServiceConf,useSlsConf,useRtmpConf,useNdiConf } from "./assets/js/vue.hooks.js";
+    import { ignoreCustomElementPlugin,bootstrapSwitchComponent } from "./assets/js/vue.helper.js"
+    import vue from "./assets/js/vue.build.js";
 
     const {createApp,ref,reactive,watch,watchEffect,computed,onMounted} = vue;
     const app = createApp({
         components:{
-            "bootstrap-switch" : bootstrapSwitchComponent
+            "bs-switch" : bootstrapSwitchComponent
         },
         setup(props,context) {
             

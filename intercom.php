@@ -48,7 +48,7 @@
                                     </label>
                                 </div>
                                 <div class="col-lg-6">
-                                    <bootstrap-switch v-model="intercomConf.intercom.enable" size="normal"></bootstrap-switch>
+                                    <bs-switch v-model="intercomConf.intercom.enable" size="normal"></bs-switch>
                                 </div>
                             </div>
                             <div class="row mt-4">
@@ -199,7 +199,7 @@
                                             </label>
                                         </div>
                                         <div class="col-lg-6">
-                                            <bootstrap-switch v-model="intercomConf.vmix.enable" size="normal"></bootstrap-switch>
+                                            <bs-switch v-model="intercomConf.vmix.enable" size="normal"></bs-switch>
                                         </div>
                                     </div>
                                     <div class="row mt-4">
@@ -248,7 +248,7 @@
                                             </label>
                                         </div>
                                         <div class="col-lg-6">
-                                            <bootstrap-switch v-model="intercomConf.server.enable" size="normal"></bootstrap-switch>
+                                            <bs-switch v-model="intercomConf.server.enable" size="normal"></bs-switch>
                                         </div>
                                     </div>
                                 </div>
@@ -271,7 +271,7 @@
                                             </label>
                                         </div>
                                         <div class="col-lg-3">
-                                            <bootstrap-switch v-model="intercomConf.tally.enable" size="normal"></bootstrap-switch>
+                                            <bs-switch v-model="intercomConf.tally.enable" size="normal"></bs-switch>
                                         </div>
                                         <div class="col-lg-3">
                                             <button type="button" class="btn border-3 btn-primary px-4">
@@ -294,10 +294,10 @@
     <?php include ("./public/foot.inc") ?>
 
 <script type="module">
-    import { rpc,alertMsg } from "./assets/js/helper.js";
-    import { useIntercomConf } from "./assets/js/vueHooks.js";
-    import { ignoreCustomElementPlugin,bootstrapSwitchComponent,languageOptionDirective } from "./assets/js/vueHelper.js"
-    import vue from "./assets/plugins/vue/vue.build.js";
+    import { rpc,alertMsg } from "./assets/js/rps.helper.js";
+    import { useIntercomConf } from "./assets/js/vue.hooks.js";
+    import { ignoreCustomElementPlugin,bootstrapSwitchComponent,languageOptionDirective } from "./assets/js/vue.helper.js"
+    import vue from "./assets/js/vue.build.js";
     const {createApp,ref,reactive,watch,watchEffect,computed,onMounted} = vue;
 
     const app = createApp({
@@ -305,7 +305,7 @@
             "language-option": languageOptionDirective
         },
         components:{
-            "bootstrap-switch" : bootstrapSwitchComponent
+            "bs-switch" : bootstrapSwitchComponent
         },
         setup(props,context) {
     

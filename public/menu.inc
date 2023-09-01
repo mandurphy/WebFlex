@@ -328,7 +328,7 @@
 
 <script type="module">
     import { createApp,ref,watchEffect,onMounted } from "../assets/plugins/vue/vue.esm.prod.js";
-    import { func,updateSysLanguage } from "../assets/js/helper.js";
+    import { func,updateSysLanguage } from "../assets/js/rps.helper.js";
     import Metismenu from '../assets/plugins/metismenu/js/metisMenu.esm.js';
 
     const menu = createApp({

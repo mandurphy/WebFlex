@@ -1,4 +1,4 @@
-import {onMounted, ref, toRefs, watchEffect} from "../plugins/vue/vue.esm.prod.js";
+import {onMounted, ref, toRefs, watchEffect} from "./vue.build.js";
 
 export const wifiFlagComponent = {
     template: `<div>

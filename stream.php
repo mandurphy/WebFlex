@@ -54,25 +54,25 @@
                                      <en>Main protocol</en>
                                  </div>
                                  <div class="col force-align-center">
-                                     <bootstrap-switch v-model="globalConf.stream.http" ></bootstrap-switch>
+                                     <bs-switch v-model="globalConf.stream.http" ></bs-switch>
                                  </div>
                                  <div v-if="Object.keys(hardwareConf).length > 0 && hardwareConf.function.hls" class="col force-align-center">
-                                     <bootstrap-switch v-model="globalConf.stream.hls" ></bootstrap-switch>
+                                     <bs-switch v-model="globalConf.stream.hls" ></bs-switch>
                                  </div>
                                  <div class="col force-align-center">
-                                     <bootstrap-switch v-model="globalConf.stream.rtmp" ></bootstrap-switch>
+                                     <bs-switch v-model="globalConf.stream.rtmp" ></bs-switch>
                                  </div>
                                  <div class="col force-align-center">
-                                     <bootstrap-switch v-model="globalConf.stream.rtsp.enable" ></bootstrap-switch>
+                                     <bs-switch v-model="globalConf.stream.rtsp.enable" ></bs-switch>
                                  </div>
                                  <div class="col force-align-center">
-                                     <bootstrap-switch v-model="globalConf.stream.udp.enable" ></bootstrap-switch>
+                                     <bs-switch v-model="globalConf.stream.udp.enable" ></bs-switch>
                                  </div>
                                  <div class="col-2">
                                      <multiple-input type="text" class="form-control" v-model:value1="globalConf.stream.udp.ip" v-model:value2="globalConf.stream.udp.port" split=":"></multiple-input>
                                  </div>
                                  <div class="col force-align-center">
-                                     <bootstrap-switch v-model="globalConf.stream.push.enable" ></bootstrap-switch>
+                                     <bs-switch v-model="globalConf.stream.push.enable" ></bs-switch>
                                  </div>
                                  <div class="col"></div>
                              </div>
@@ -83,25 +83,25 @@
                                      <en>Sub protocol</en>
                                  </div>
                                  <div class="col force-align-center">
-                                     <bootstrap-switch v-model="globalConf.stream2.http" ></bootstrap-switch>
+                                     <bs-switch v-model="globalConf.stream2.http" ></bs-switch>
                                  </div>
                                  <div v-if="Object.keys(hardwareConf).length > 0 && hardwareConf.function.hls" class="col force-align-center">
-                                     <bootstrap-switch v-model="globalConf.stream2.hls" ></bootstrap-switch>
+                                     <bs-switch v-model="globalConf.stream2.hls" ></bs-switch>
                                  </div>
                                  <div class="col force-align-center">
-                                     <bootstrap-switch v-model="globalConf.stream2.rtmp" ></bootstrap-switch>
+                                     <bs-switch v-model="globalConf.stream2.rtmp" ></bs-switch>
                                  </div>
                                  <div class="col force-align-center">
-                                     <bootstrap-switch v-model="globalConf.stream2.rtsp.enable" ></bootstrap-switch>
+                                     <bs-switch v-model="globalConf.stream2.rtsp.enable" ></bs-switch>
                                  </div>
                                  <div class="col force-align-center">
-                                     <bootstrap-switch v-model="globalConf.stream2.udp.enable" ></bootstrap-switch>
+                                     <bs-switch v-model="globalConf.stream2.udp.enable" ></bs-switch>
                                  </div>
                                  <div class="col-2">
                                      <multiple-input type="text" class="form-control" v-model:value1="globalConf.stream2.udp.ip" v-model:value2="globalConf.stream2.udp.port" split=":"></multiple-input>
                                  </div>
                                  <div class="col force-align-center">
-                                     <bootstrap-switch v-model="globalConf.stream2.push.enable" ></bootstrap-switch>
+                                     <bs-switch v-model="globalConf.stream2.push.enable" ></bs-switch>
                                  </div>
                                  <div class="col"></div>
                              </div>
@@ -232,25 +232,25 @@
                                      <input type="text" class="form-control" v-model.trim.lazy="item.name">
                                  </div>
                                  <div class="col force-align-center">
-                                     <bootstrap-switch v-model="item.stream.http" ></bootstrap-switch>
+                                     <bs-switch v-model="item.stream.http" ></bs-switch>
                                  </div>
                                  <div v-if="Object.keys(hardwareConf).length > 0 && hardwareConf.function.hls" class="col force-align-center">
-                                     <bootstrap-switch v-model="item.stream.hls" ></bootstrap-switch>
+                                     <bs-switch v-model="item.stream.hls" ></bs-switch>
                                  </div>
                                  <div class="col force-align-center">
-                                     <bootstrap-switch v-model="item.stream.rtmp" ></bootstrap-switch>
+                                     <bs-switch v-model="item.stream.rtmp" ></bs-switch>
                                  </div>
                                  <div class="col force-align-center">
-                                     <bootstrap-switch v-model="item.stream.rtsp.enable" ></bootstrap-switch>
+                                     <bs-switch v-model="item.stream.rtsp.enable" ></bs-switch>
                                  </div>
                                  <div class="col force-align-center">
-                                     <bootstrap-switch v-model="item.stream.udp.enable" ></bootstrap-switch>
+                                     <bs-switch v-model="item.stream.udp.enable" ></bs-switch>
                                  </div>
                                  <div class="col-2">
                                      <multiple-input type="text" class="form-control" v-model:value1="item.stream.udp.ip" v-model:value2="item.stream.udp.port" split=":"></multiple-input>
                                  </div>
                                  <div class="col force-align-center">
-                                     <bootstrap-switch v-model="item.stream.push.enable" ></bootstrap-switch>
+                                     <bs-switch v-model="item.stream.push.enable" ></bs-switch>
                                  </div>
                                  <div class="col-2">
                                      <input class="form-control" v-model.trim.lazy="item.stream.push.path">
@@ -259,25 +259,25 @@
                              <div class="row mt-1">
                                  <div class="col-2 text-center"></div>
                                  <div class="col force-align-center">
-                                     <bootstrap-switch v-model="item.stream2.http" ></bootstrap-switch>
+                                     <bs-switch v-model="item.stream2.http" ></bs-switch>
                                  </div>
                                  <div v-if="Object.keys(hardwareConf).length > 0 && hardwareConf.function.hls" class="col force-align-center">
-                                     <bootstrap-switch v-model="item.stream2.hls" ></bootstrap-switch>
+                                     <bs-switch v-model="item.stream2.hls" ></bs-switch>
                                  </div>
                                  <div class="col force-align-center">
-                                     <bootstrap-switch v-model="item.stream2.rtmp" ></bootstrap-switch>
+                                     <bs-switch v-model="item.stream2.rtmp" ></bs-switch>
                                  </div>
                                  <div class="col force-align-center">
-                                     <bootstrap-switch v-model="item.stream2.rtsp.enable" ></bootstrap-switch>
+                                     <bs-switch v-model="item.stream2.rtsp.enable" ></bs-switch>
                                  </div>
                                  <div class="col force-align-center">
-                                     <bootstrap-switch v-model="item.stream2.udp.enable" ></bootstrap-switch>
+                                     <bs-switch v-model="item.stream2.udp.enable" ></bs-switch>
                                  </div>
                                  <div class="col-2">
                                      <multiple-input type="text" class="form-control" v-model:value1="item.stream2.udp.ip" v-model:value2="item.stream2.udp.port" split=":"></multiple-input>
                                  </div>
                                  <div class="col force-align-center">
-                                     <bootstrap-switch v-model="item.stream2.push.enable" ></bootstrap-switch>
+                                     <bs-switch v-model="item.stream2.push.enable" ></bs-switch>
                                  </div>
                                  <div class="col-2">
                                      <input class="form-control" v-model.trim.lazy="item.stream2.push.path">
@@ -347,7 +347,7 @@
                                              <input type="text" class="form-control" v-model.trim.lazy="item.stream.udp.ttl">
                                          </div>
                                          <div class="col">
-                                             <bootstrap-switch v-model="item.stream.udp.flowCtrl"></bootstrap-switch>
+                                             <bs-switch v-model="item.stream.udp.flowCtrl"></bs-switch>
                                          </div>
                                          <div class="col">
                                              <input type="text" class="form-control" v-model.trim.lazy="item.stream.udp.bandwidth">
@@ -379,7 +379,7 @@
                                              </select>
                                          </div>
                                          <div class="col force-align-center">
-                                             <bootstrap-switch v-model="item.stream.udp.rtp"></bootstrap-switch>
+                                             <bs-switch v-model="item.stream.udp.rtp"></bs-switch>
                                          </div>
                                      </div>
                                  </div>
@@ -472,10 +472,10 @@
                                      <input type="text" class="form-control" v-model.trim.lazy="item.stream.rtsp.passwd">
                                  </div>
                                  <div class="col-1">
-                                     <bootstrap-switch v-model="item.stream.rtsp.auth"></bootstrap-switch>
+                                     <bs-switch v-model="item.stream.rtsp.auth"></bs-switch>
                                  </div>
                                  <div class="col-1 force-align-center">
-                                     <bootstrap-switch v-model="item.stream.rtsp.enable"></bootstrap-switch>
+                                     <bs-switch v-model="item.stream.rtsp.enable"></bs-switch>
                                  </div>
                              </div>
                              <hr >
@@ -545,7 +545,7 @@
                                      <input type="text" class="form-control" v-model.trim.lazy="item.stream.srt.passwd">
                                  </div>
                                  <div class="col force-align-center">
-                                     <bootstrap-switch v-model="item.stream.srt.enable"></bootstrap-switch>
+                                     <bs-switch v-model="item.stream.srt.enable"></bs-switch>
                                  </div>
                              </div>
                              <hr >
@@ -585,7 +585,7 @@
                                      <input type="text" class="form-control" v-model.trim.lazy="item.ndi.group">
                                  </div>
                                  <div class="col-1 force-align-center">
-                                     <bootstrap-switch v-model="item.ndi.enable"></bootstrap-switch>
+                                     <bs-switch v-model="item.ndi.enable"></bs-switch>
                                  </div>
                              </div>
                              <hr >
@@ -736,15 +736,15 @@
 
 <script type="module">
 
-    import { rpc,alertMsg,extend,deepCopy } from "./assets/js/helper.js";
-    import { useDefaultConf,useHardwareConf,usePortConf } from "./assets/js/vueHooks.js";
-    import { ignoreCustomElementPlugin,bootstrapSwitchComponent,multipleInputComponent } from "./assets/js/vueHelper.js"
-    import vue from "./assets/plugins/vue/vue.build.js";
+    import { rpc,alertMsg,extend,deepCopy } from "./assets/js/rps.helper.js";
+    import { useDefaultConf,useHardwareConf,usePortConf } from "./assets/js/vue.hooks.js";
+    import { ignoreCustomElementPlugin,bootstrapSwitchComponent,multipleInputComponent } from "./assets/js/vue.helper.js"
+    import vue from "./assets/js/vue.build.js";
 
     const {createApp,ref,reactive,toRefs,watch,watchEffect,computed} = vue;
     const app = createApp({
         components:{
-            "bootstrap-switch" : bootstrapSwitchComponent,
+            "bs-switch" : bootstrapSwitchComponent,
             "multiple-input": multipleInputComponent
         },
         setup(props,context) {
@@ -829,7 +829,7 @@
             }
 
             const unwatch = watchEffect(()=>{
-                if(Object.keys(defaultConf).length > 0 && Object.keys(portConf).length >0) {
+                if(defaultConf.length > 0 && Object.keys(portConf).length >0) {
                     for (let i = 0; i < defaultConf.length; i++) {
                         if(defaultConf[i].hasOwnProperty("stream")) {
                             let rtsp = defaultConf[i].stream.rtsp;

@@ -24,7 +24,7 @@
                                 </div>
                                 <div class="flex-grow-0">
                                     <select class="form-select">
-                                        <option v-if="Object.keys(defaultConf).length > 0 && mixIndex > -1" :value="defaultConf[mixIndex].id">{{defaultConf[mixIndex].name}}</option>
+                                        <option v-if="defaultConf.length > 0 && mixIndex > -1" :value="defaultConf[mixIndex].id">{{defaultConf[mixIndex].name}}</option>
                                     </select>
                                 </div>
                                 <div class="flex-grow-0">
@@ -96,7 +96,7 @@
                             <en>Output Config</en>
                         </div>
                     </div>
-                    <div class="card-body" v-if="Object.keys(defaultConf).length > 0">
+                    <div class="card-body" v-if="defaultConf.length > 0">
                         <div class="row">
                             <div class="col-lg-6">
                                 <div class="row">
@@ -107,7 +107,7 @@
                                         </label>
                                     </div>
                                     <div class="col-lg-6">
-                                        <bootstrap-switch v-model="defaultConf[mixIndex].enable" size="normal"></bootstrap-switch>
+                                        <bs-switch v-model="defaultConf[mixIndex].enable" size="normal"></bs-switch>
                                     </div>
                                 </div>
                                 <div class="row mt-4">
@@ -118,7 +118,7 @@
                                         </label>
                                     </div>
                                     <div class="col-lg-6">
-                                        <bootstrap-switch v-model="defaultConf[mixIndex].output.enable" size="normal"></bootstrap-switch>
+                                        <bs-switch v-model="defaultConf[mixIndex].output.enable" size="normal"></bs-switch>
                                     </div>
                                 </div>
                             </div>
@@ -197,6 +197,17 @@
                                 <div class="row mt-4">
                                     <div class="col-lg-3 offset-lg-1 force-align-center">
                                         <label>
+                                            <cn>左右镜像</cn>
+                                            <en>mirror</en>
+                                        </label>
+                                    </div>
+                                    <div class="col-lg-6">
+                                        <bs-switch v-model="defaultConf[mixIndex].output.mirror" size="normal"></bs-switch>
+                                    </div>
+                                </div>
+                                <div class="row mt-4">
+                                    <div class="col-lg-3 offset-lg-1 force-align-center">
+                                        <label>
                                             <cn>视频源</cn>
                                             <en>video source</en>
                                         </label>
@@ -215,7 +226,7 @@
                                         </label>
                                     </div>
                                     <div class="col-lg-6">
-                                        <bootstrap-switch v-model="defaultConf[mixIndex].output.lowLatency" size="normal"></bootstrap-switch>
+                                        <bs-switch v-model="defaultConf[mixIndex].output.lowLatency" size="normal"></bs-switch>
                                     </div>
                                 </div>
                                 <div class="row mt-4">
@@ -289,7 +300,7 @@
                                         </label>
                                     </div>
                                     <div class="col-lg-6">
-                                        <bootstrap-switch v-model="defaultConf[mixIndex].output2.enable" size="normal"></bootstrap-switch>
+                                        <bs-switch v-model="defaultConf[mixIndex].output2.enable" size="normal"></bs-switch>
                                     </div>
                                 </div>
                                 <div class="row mt-4">
@@ -330,6 +341,17 @@
                                 <div class="row mt-4">
                                     <div class="col-lg-3 offset-lg-1 force-align-center">
                                         <label>
+                                            <cn>左右镜像</cn>
+                                            <en>mirror</en>
+                                        </label>
+                                    </div>
+                                    <div class="col-lg-6">
+                                        <bs-switch v-model="defaultConf[mixIndex].output2.mirror" size="normal"></bs-switch>
+                                    </div>
+                                </div>
+                                <div class="row mt-4">
+                                    <div class="col-lg-3 offset-lg-1 force-align-center">
+                                        <label>
                                             <cn>视频源</cn>
                                             <en>video source</en>
                                         </label>
@@ -348,7 +370,7 @@
                                         </label>
                                     </div>
                                     <div class="col-lg-6">
-                                        <bootstrap-switch v-model="defaultConf[mixIndex].output2.lowLatency" size="normal"></bootstrap-switch>
+                                        <bs-switch v-model="defaultConf[mixIndex].output2.lowLatency" size="normal"></bs-switch>
                                     </div>
                                 </div>
                                 <div class="row mt-4">
@@ -426,10 +448,10 @@
 <script src="assets/plugins/nouislider/js/nouislider.min.js"></script>
 <script type="module">
     
-    import { rpc,alertMsg,confirm } from "./assets/js/helper.js";
-    import { useDefaultConf,useDefLaysConf,useHardwareConf } from "./assets/js/vueHooks.js";
-    import { ignoreCustomElementPlugin,bootstrapSwitchComponent,nouiSliderComponent,languageOptionDirective } from "./assets/js/vueHelper.js"
-    import vue from "./assets/plugins/vue/vue.build.js";
+    import { rpc,alertMsg,confirm } from "./assets/js/rps.helper.js";
+    import { useDefaultConf,useDefLaysConf,useHardwareConf } from "./assets/js/vue.hooks.js";
+    import { ignoreCustomElementPlugin,bootstrapSwitchComponent,nouiSliderComponent,languageOptionDirective } from "./assets/js/vue.helper.js"
+    import vue from "./assets/js/vue.build.js";
 
     const {createApp,ref,reactive,watchEffect,computed} = vue;
     const app = createApp({
@@ -437,7 +459,7 @@
             "language-option": languageOptionDirective
         },
         components:{
-            "bootstrap-switch" : bootstrapSwitchComponent,
+            "bs-switch" : bootstrapSwitchComponent,
             "noui-slider": nouiSliderComponent
         },
         setup(props,context) {
@@ -495,7 +517,7 @@
             };
     
             const unwatch = watchEffect(()=>{
-                if(Object.keys(defaultConf).length > 0 && Object.keys(defLaysConf).length > 0) {
+                if(defaultConf.length > 0 && Object.keys(defLaysConf).length > 0) {
                     for(let i=0;i<defaultConf.length;i++) {
                         if(defaultConf[i].type !== "mix")
                             continue;

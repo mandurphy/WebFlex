@@ -39,7 +39,7 @@
                     </div>
                     <div class="row">
                         <div class="col-lg-12 mt-2 mb-2">
-                            <flv-player :url="playerUrl" :codec="playerCodec" :audio="playerAudio" :buffer="bufferTime" canplay="true"></flv-player>
+                            <h5-player :url="playerUrl" :codec="playerCodec" :audio="playerAudio" :buffer="bufferTime" canplay="true"></h5-player>
                         </div>
                     </div>
                     <div class="row mt-5">
@@ -57,18 +57,15 @@
         </main>
     </div>
 <?php include ("./public/foot.inc") ?>
-
-<script src="assets/plugins/flvjs/flv.js"></script>
-<script src="assets/plugins/jessibuca/jessibuca.js"></script>
 <script type="module">
-    import { useDefaultConf } from "./assets/js/vueHooks.js";
-    import { ignoreCustomElementPlugin,flvPlayerComponent } from "./assets/js/vueHelper.js"
-    import vue from "./assets/plugins/vue/vue.build.js";
+    import { useDefaultConf } from "./assets/js/vue.hooks.js";
+    import { ignoreCustomElementPlugin,h5PlayerComponent } from "./assets/js/vue.helper.js"
+    import vue from "./assets/js/vue.build.js";
 
     const {createApp,ref,reactive,watch,watchEffect,computed,onMounted} = vue;
     const app = createApp({
         components:{
-            "flv-player": flvPlayerComponent
+            "h5-player": h5PlayerComponent
         },
         setup(props,context) {
             
@@ -90,7 +87,6 @@
                         state.playerUrl.value = 'http://'+window.location.host+'/flv?app=live&stream='+item.stream.suffix;
                         state.playerCodec.value = item.encv.codec;
                         state.playerAudio.value = item.enca.codec !== "close";
-                        console.log(state.playerUrl)
                         break;
                     }
                 }

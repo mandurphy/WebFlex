@@ -42,15 +42,14 @@
         </div>
     </div>
 </div>
-</div>
 
 <?php include ("./public/foot.inc") ?>
 
 <script type="module">
 
-    import { alertMsg,getUrlParam } from "./assets/js/helper.js";
-    import { ignoreCustomElementPlugin } from "./assets/js/vueHelper.js";
-    import vue from "./assets/plugins/vue/vue.build.js";
+    import { alertMsg,getUrlParam } from "./assets/js/rps.helper.js";
+    import { ignoreCustomElementPlugin } from "./assets/js/vue.helper.js";
+    import vue from "./assets/js/vue.build.js";
 
     const { createApp,ref,onMounted } = vue;
     const app = createApp({

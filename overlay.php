@@ -165,7 +165,7 @@
                                             </label>
                                         </div>
                                         <div class="col-lg-6">
-                                            <bootstrap-switch v-model="editData.enable" size="normal"></bootstrap-switch>
+                                            <bs-switch v-model="editData.enable" size="normal"></bs-switch>
                                         </div>
                                     </div>
                                     <div class="row mt-4" v-if="editData.type === 'mask'">
@@ -405,15 +405,15 @@
 <script src="assets/plugins/fileinput/js/locales/zh.js" type="module"></script>
 <script src="assets/plugins/fileinput/themes/fa6/theme.min.js" type="module"></script>
 <script type="module">
-    import { rpc,alertMsg,confirm,func } from "./assets/js/helper.js";
-    import { useDefaultConf,useOverlayConf,useResConf } from "./assets/js/vueHooks.js";
-    import { ignoreCustomElementPlugin,bootstrapSwitchComponent,nouiSliderComponent,vueColorPickerComponent,uploadModalComponent } from "./assets/js/vueHelper.js"
-    import vue from "./assets/plugins/vue/vue.build.js";
+    import { rpc,alertMsg,confirm,func } from "./assets/js/rps.helper.js";
+    import { useDefaultConf,useOverlayConf,useResConf } from "./assets/js/vue.hooks.js";
+    import { ignoreCustomElementPlugin,bootstrapSwitchComponent,nouiSliderComponent,vueColorPickerComponent,uploadModalComponent } from "./assets/js/vue.helper.js"
+    import vue from "./assets/js/vue.build.js";
 
     const {createApp,ref,reactive,watchEffect,computed} = vue;
     const app = createApp({
         components:{
-            "bootstrap-switch" : bootstrapSwitchComponent,
+            "bs-switch" : bootstrapSwitchComponent,
             "noui-slider": nouiSliderComponent,
             "picker-color": vueColorPickerComponent,
             "upload-modal": uploadModalComponent
@@ -422,7 +422,7 @@
             
             const { defaultConf } = useDefaultConf();
             const { overlayConf } = useOverlayConf();
-            const { resConf,updateResConf } = useResConf();
+            const { resConf,handleResConf } = useResConf();
 
             const state = {
                 chnIndex : ref(-1),
@@ -470,7 +470,7 @@
             });
 
             const unwatch = watchEffect(()=>{
-                if(Object.keys(defaultConf).length > 0 && Object.keys(overlayConf).length > 0) {
+                if(defaultConf.length > 0 && Object.keys(overlayConf).length > 0) {
                     for(let i=0;i<defaultConf.length;i++) {
                         if(defaultConf[i].enable) {
                             state.chnIndex.value = i;
@@ -544,7 +544,7 @@
                             keys: [ 'enter' ],
                             action: () => {
                                 func("/link/mgr/root/delResFile",resName).then(data => {
-                                    updateResConf();
+                                    handleResConf();
                                 });
                             }
                         },
@@ -561,7 +561,7 @@
             }
 
             const uploadSuccess = data => {
-                updateResConf();
+                handleResConf();
             }
 
             const uploadError = errMsg => {

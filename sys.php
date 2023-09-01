@@ -75,7 +75,7 @@
                                     </label>
                                 </div>
                                 <div class="col-lg-5">
-                                    <bootstrap-switch v-model="item.dhcp" size="normal"></bootstrap-switch>
+                                    <bs-switch v-model="item.dhcp" size="normal"></bs-switch>
                                 </div>
                             </div>
                             <div class="row mt-3">
@@ -147,7 +147,7 @@
                                             </label>
                                         </div>
                                         <div class="col-lg-8">
-                                            <bootstrap-switch v-model="item.enable" size="normal"></bootstrap-switch>
+                                            <bs-switch v-model="item.enable" size="normal"></bs-switch>
                                         </div>
                                     </div>
                                     <div class="row mt-3">
@@ -210,7 +210,7 @@
                                             </label>
                                         </div>
                                         <div class="col-lg-8">
-                                            <bootstrap-switch v-model="item.dhcp" size="normal"></bootstrap-switch>
+                                            <bs-switch v-model="item.dhcp" size="normal"></bs-switch>
                                         </div>
                                     </div>
                                     <div class="row mt-3">
@@ -474,7 +474,7 @@
                                 <input class="form-control" v-model.trim.lazy="ntpConf.server">
                             </div>
                             <div class="col-lg-2">
-                                <bootstrap-switch v-model="ntpConf.enable"></bootstrap-switch>
+                                <bs-switch v-model="ntpConf.enable"></bs-switch>
                             </div>
                         </div>
                         <div class="row mt-3">
@@ -598,16 +598,16 @@
                         <div>
                             <div class="row row-cols-4 row-cols-lg-4 px-5">
                                 <div class="force-align-center">
-                                    <bootstrap-switch v-model="exportConfigs.config"></bootstrap-switch>
+                                    <bs-switch v-model="exportConfigs.config"></bs-switch>
                                 </div>
                                 <div class="force-align-center">
-                                    <bootstrap-switch v-model="exportConfigs.defLays"></bootstrap-switch>
+                                    <bs-switch v-model="exportConfigs.defLays"></bs-switch>
                                 </div>
                                 <div class="force-align-center">
-                                    <bootstrap-switch v-model="exportConfigs.push"></bootstrap-switch>
+                                    <bs-switch v-model="exportConfigs.push"></bs-switch>
                                 </div>
                                 <div class="force-align-center">
-                                    <bootstrap-switch v-model="exportConfigs.passwd"></bootstrap-switch>
+                                    <bs-switch v-model="exportConfigs.passwd"></bs-switch>
                                 </div>
                             </div>
                         </div>
@@ -633,16 +633,16 @@
                         <div>
                             <div class="row row-cols-4 row-cols-lg-4 px-5">
                                 <div class="force-align-center">
-                                    <bootstrap-switch v-model="exportConfigs.record"></bootstrap-switch>
+                                    <bs-switch v-model="exportConfigs.record"></bs-switch>
                                 </div>
                                 <div class="force-align-center">
-                                    <bootstrap-switch v-model="exportConfigs.port"></bootstrap-switch>
+                                    <bs-switch v-model="exportConfigs.port"></bs-switch>
                                 </div>
                                 <div class="force-align-center">
-                                    <bootstrap-switch v-model="exportConfigs.cron"></bootstrap-switch>
+                                    <bs-switch v-model="exportConfigs.cron"></bs-switch>
                                 </div>
                                 <div class="force-align-center">
-                                    <bootstrap-switch v-model="exportConfigs.videoBuffer"></bootstrap-switch>
+                                    <bs-switch v-model="exportConfigs.videoBuffer"></bs-switch>
                                 </div>
                             </div>
                         </div>
@@ -778,7 +778,7 @@
                                 </div>
                             </div>
                             <div class="card-body">
-                                <div class="row my-4">
+                                <div class="row my-3">
                                     <div class="col-lg-3 d-flex align-items-center justify-content-end">
                                         <cn>授权码</cn>
                                         <en>Auth code</en>
@@ -803,7 +803,7 @@
                                 </div>
                             </div>
                             <div class="card-body">
-                                <div class="row my-2">
+                                <div class="row my-3">
                                     <div class="col-lg-3 d-flex align-items-center justify-content-end">
                                         <cn>服务地址</cn>
                                         <en>Server</en>
@@ -947,14 +947,13 @@
 <script src="assets/plugins/fileinput/themes/fa6/theme.min.js" type="module"></script>
 <script type="module">
 
-    import vue from "./assets/plugins/vue/vue.build.js";
+    import vue from "./assets/js/vue.build.js";
     import JsZip from "./assets/plugins/jszip/jszip.esm.js"
     import * as fileSave from "./assets/plugins/jszip/filesaver.esm.js";
-    import { rpc2,alertMsg,func,queryData,extend,popover,formatDate,deepCopy,rebootConfirm,resetConfirm } from "./assets/js/helper.js";
-    import { useHardwareConf,usetNetManagerConf,usePasswordConf,useVideoBufferConf } from "./assets/js/vueHooks.js";
-    import { useNtpConf,useTimezoneConf,usePortConf,useVersionConf,useVerLogsConf,useWpaConf } from "./assets/js/vueHooks.js";
-    import { ignoreCustomElementPlugin,bootstrapSwitchComponent,languageOptionDirective,uploadModalComponent,upgradeModalComponent,customModalComponent,loadingButtonComponent } from "./assets/js/vueHelper.js"
-    import { wifiFlagComponent,antenanFlagComponent } from "./assets/js/vueFlags.js";
+    import { rpc2,alertMsg,func,queryData,extend,popover,formatDate,deepCopy,rebootConfirm,resetConfirm } from "./assets/js/rps.helper.js";
+    import { useHardwareConf,usetNetManagerConf,usePasswordConf,useVideoBufferConf,useNtpConf,useTimezoneConf,usePortConf,useVersionConf,useVerLogsConf,useWpaConf } from "./assets/js/vue.hooks.js";
+    import { ignoreCustomElementPlugin,bootstrapSwitchComponent,languageOptionDirective,uploadModalComponent,upgradeModalComponent,customModalComponent,loadingButtonComponent } from "./assets/js/vue.helper.js"
+    import { wifiFlagComponent,antenanFlagComponent } from "./assets/js/vue.icons.js";
 
     const { createApp,ref,reactive,watchEffect,computed,onMounted } = vue;
     const app = createApp({
@@ -962,7 +961,7 @@
             "language-option": languageOptionDirective
         },
         components:{
-            "bootstrap-switch" : bootstrapSwitchComponent,
+            "bs-switch" : bootstrapSwitchComponent,
             "wifi-flag": wifiFlagComponent,
             "antenan-flag": antenanFlagComponent,
             "upload-modal": uploadModalComponent,

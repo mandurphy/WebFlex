@@ -383,7 +383,7 @@
                                         <input type="text" class="form-control" v-model.trim.lazy="item.encv.gop">
                                     </div>
                                     <div class="col force-align-center">
-                                        <bootstrap-switch v-model="item.enable" ></bootstrap-switch>
+                                        <bs-switch v-model="item.enable" ></bs-switch>
                                     </div>
                                 </div>
                                 <div class="row mt-1">
@@ -427,7 +427,7 @@
                                         <input type="text" class="form-control" v-model.trim.lazy="item.encv2.gop">
                                     </div>
                                     <div class="col force-align-center">
-                                        <bootstrap-switch v-model="item.enable2" ></bootstrap-switch>
+                                        <bs-switch v-model="item.enable2" ></bs-switch>
                                     </div>
                                 </div>
                                 <hr >
@@ -504,7 +504,7 @@
                                         <input type="text" class="form-control" v-model.trim.lazy="item.encv.Pqp">
                                     </div>
                                     <div class="col force-align-center">
-                                        <bootstrap-switch v-model="item.encv.lowLatency" ></bootstrap-switch>
+                                        <bs-switch v-model="item.encv.lowLatency" ></bs-switch>
                                     </div>
                                 </div>
                                 <div class="row mt-1">
@@ -536,7 +536,7 @@
                                         <input type="text" class="form-control" v-model.trim.lazy="item.encv2.Pqp">
                                     </div>
                                     <div class="col force-align-center">
-                                        <bootstrap-switch v-model="item.encv2.lowLatency" ></bootstrap-switch>
+                                        <bs-switch v-model="item.encv2.lowLatency" ></bs-switch>
                                     </div>
                                 </div>
                                 <hr >
@@ -606,10 +606,10 @@
                                         <input type="text" class="form-control" v-model.trim.lazy="item.cap.crop.B">
                                     </div>
                                     <div class="col force-align-center">
-                                        <bootstrap-switch v-model="item.cap.deinterlace" v-if="item.type==='vi'"></bootstrap-switch>
+                                        <bs-switch v-model="item.cap.deinterlace" v-if="item.type==='vi'"></bs-switch>
                                     </div>
                                     <div class="col force-align-center">
-                                        <bootstrap-switch v-model="item.cap.ntsc" v-if="item.type==='vi'"></bootstrap-switch>
+                                        <bs-switch v-model="item.cap.ntsc" v-if="item.type==='vi'"></bs-switch>
                                     </div>
                                 </div>
                                 <hr >
@@ -774,13 +774,13 @@
                                         </select>
                                     </div>
                                     <div class="col force-align-center">
-                                        <bootstrap-switch v-model="item.net.decodeV"></bootstrap-switch>
+                                        <bs-switch v-model="item.net.decodeV"></bs-switch>
                                     </div>
                                     <div class="col force-align-center">
-                                        <bootstrap-switch v-model="item.net.decodeA"></bootstrap-switch>
+                                        <bs-switch v-model="item.net.decodeA"></bs-switch>
                                     </div>
                                     <div class="col force-align-center">
-                                        <bootstrap-switch v-model="item.net.enable"></bootstrap-switch>
+                                        <bs-switch v-model="item.net.enable"></bs-switch>
                                     </div>
                                 </div>
                                 <hr >
@@ -804,10 +804,10 @@
 <?php include ("./public/foot.inc") ?>
 <script type="module">
     
-    import { extend,deepCopy,confirm } from "./assets/js/helper.js";
-    import { useDefaultConf,useHardwareConf } from "./assets/js/vueHooks.js";
-    import { ignoreCustomElementPlugin,bootstrapSwitchComponent,multipleSelectComponent,languageOptionDirective } from "./assets/js/vueHelper.js"
-    import vue from "./assets/plugins/vue/vue.build.js";
+    import { extend,deepCopy,confirm } from "./assets/js/rps.helper.js";
+    import { useDefaultConf,useHardwareConf } from "./assets/js/vue.hooks.js";
+    import { ignoreCustomElementPlugin,bootstrapSwitchComponent,multipleSelectComponent,languageOptionDirective } from "./assets/js/vue.helper.js"
+    import vue from "./assets/js/vue.build.js";
     const {createApp,reactive,watch,toRefs,computed,onMounted} = vue;
 
     const app = createApp({
@@ -815,7 +815,7 @@
             "language-option": languageOptionDirective
         },
         components:{
-            "bootstrap-switch" : bootstrapSwitchComponent,
+            "bs-switch" : bootstrapSwitchComponent,
             "multiple-select": multipleSelectComponent
         },
         setup(props,context) {
@@ -852,7 +852,7 @@
             
             const handleAdvConf = computed(()=>{
                 return defaultConf.filter((item,index)=>{
-                    return item.enable;
+                    return !!(item.enable && item.type !== "ndi");
                 })
             })
             

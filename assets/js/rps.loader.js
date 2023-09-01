@@ -1,9 +1,8 @@
 
-import { useLanguageConf } from "./vueHooks.js";
+import { useLanguageConf } from "./vue.hooks.js";
 
 window.addEventListener("load",  () => {
-
-    let { languageConf } = useLanguageConf();
+    const { languageConf } = useLanguageConf();
     const lang = languageConf["lang"];
     const html = document.querySelector('html');
     html.setAttribute('data-bs-language', lang);

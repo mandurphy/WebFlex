@@ -3,7 +3,7 @@ import JsonRpcClient from '../plugins/jsonrpc/jquery.jsonrpc.js';
 import axios from '../plugins/axios/axios.esm.js';
 import Lobibox from '../plugins/notifications/js/lobibox.min.js'
 import JqueryConfirm from '../plugins/confirm/js/jquery-confirm.esm.js'
-import { useLanguageConf } from './vueHooks.js';
+import { useLanguageConf } from './vue.hooks.js';
 
 export const getUrlParam = (key) => {
     let param = "";
@@ -274,6 +274,12 @@ export const resetConfirm = () => {
 
         }
     } );
+}
+
+export const splitArray = (array,count) => {
+    return Array.from({ length: Math.ceil(array.length / count) }, (_, index) =>
+        array.slice(index * count, index * count + count)
+    );
 }
 
 

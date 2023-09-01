@@ -102,15 +102,15 @@
   <script src="assets/plugins/flotChart/jquery.flot.resize.js" type="module"></script>
 
   <script type="module">
-      import { rpc } from "./assets/js/helper.js";
-      import { useDefaultConf,useHardwareConf } from "./assets/js/vueHooks.js";
-      import { ignoreCustomElementPlugin,bootstrapSwitchComponent,statusPieChartComponent,statusTemperatureComponent,netFlotChartComponent } from "./assets/js/vueHelper.js"
-      import vue from "./assets/plugins/vue/vue.build.js";
+      import { rpc } from "./assets/js/rps.helper.js";
+      import { useDefaultConf,useHardwareConf } from "./assets/js/vue.hooks.js";
+      import { ignoreCustomElementPlugin,bootstrapSwitchComponent,statusPieChartComponent,statusTemperatureComponent,netFlotChartComponent } from "./assets/js/vue.helper.js"
+      import vue from "./assets/js/vue.build.js";
 
       const { createApp,ref,reactive,onMounted } = vue;
       const app  = createApp({
           components:{
-              "bootstrap-switch":bootstrapSwitchComponent,
+              "bs-switch":bootstrapSwitchComponent,
               "net-chart":netFlotChartComponent,
               "pie-chart":statusPieChartComponent,
               "tmp-compt":statusTemperatureComponent

@@ -137,10 +137,10 @@
 <?php include ("./public/foot.inc") ?>
 
 <script type="module">
-    import { rpc,rpc6,alertMsg } from "./assets/js/helper.js";
-    import { useHardwareConf,useButtonConf,useUartConf } from "./assets/js/vueHooks.js";
-    import { ignoreCustomElementPlugin,bootstrapSwitchComponent,languageOptionDirective } from "./assets/js/vueHelper.js"
-    import vue from "./assets/plugins/vue/vue.build.js";
+    import { rpc,rpc6,alertMsg } from "./assets/js/rps.helper.js";
+    import { useHardwareConf,useButtonConf,useUartConf } from "./assets/js/vue.hooks.js";
+    import { ignoreCustomElementPlugin,bootstrapSwitchComponent,languageOptionDirective } from "./assets/js/vue.helper.js"
+    import vue from "./assets/js/vue.build.js";
 
     const {createApp,ref,reactive,watch,watchEffect,computed} = vue;
     const app = createApp({
@@ -148,7 +148,7 @@
           "language-option": languageOptionDirective
         },
         components:{
-            "bootstrap-switch" : bootstrapSwitchComponent
+            "bs-switch" : bootstrapSwitchComponent
         },
         setup(props,context) {
     

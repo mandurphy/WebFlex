@@ -113,4 +113,38 @@ class System extends Basic
         }
         return $this->handleRet("",'success','保存成功','save successfully');
     }
+
+    public function formatBytes($param)
+    {
+        $config = [
+            '4' => 'TB',
+            '3' => 'GB',
+            '2' => 'MB',
+            '1' => 'KB'
+        ];
+        foreach ($config as $key => $value) {
+            if ($param >= pow(1024, $key)) {
+                return number_format($param / pow(1024, $key), 2) . $value;
+            }
+        }
+        return '0KB';
+    }
+
+    public function getMountDiskSpace()
+    {
+        $mountDir = '/root/usb';
+        $output = shell_exec('df ' . $mountDir);
+        if(strpos($output, $mountDir) != false) {
+            $totalSpace = disk_total_space($mountDir);
+            $freeSpace = disk_free_space($mountDir);
+            $usedSpace = $totalSpace - $freeSpace;
+            $result = array(
+                'total'=> $this->formatBytes($totalSpace),
+                'free' => $this->formatBytes($freeSpace),
+                'used' => $this->formatBytes($usedSpace)
+            );
+            return $this->handleRet($result,'success','获取成功','get disk space successfully');
+        }
+        return $this->handleRet('','error','磁盘未挂载','disk is not mounted');
+    }
 }

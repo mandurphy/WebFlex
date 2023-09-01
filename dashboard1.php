@@ -116,7 +116,7 @@
                                              <span v-if="item.avalible" class="badge bg-success bg-success-subtle text-success border border-opacity-25 border-success">{{item.info}}</span>
                                              <span v-else class="badge bg-warning bg-warning-subtle text-warning border border-opacity-25 border-warning">{{item.info}}</span>
                                          </div>
-                                         <bootstrap-switch v-model="test_switch"></bootstrap-switch>
+                                         <bs-switch v-model="test_switch"></bs-switch>
                                      </div>
                                      <hr style="margin: 0.55rem 0">
                                  </div>
@@ -168,10 +168,10 @@
   <script src="assets/plugins/apex/apexcharts.min.js"></script>
   <script type="module">
 
-      import { rpc} from "./assets/js/helper.js";
-      import { useDefaultConf,useHardwareConf } from "./assets/js/vueHooks.js";
-      import { ignoreCustomElementPlugin,pieChartDirective,apexChartsDirective,bootstrapSwitchComponent } from "./assets/js/vueHelper.js"
-      import vue from "./assets/plugins/vue/vue.build.js";
+      import { rpc} from "./assets/js/rps.helper.js";
+      import { useDefaultConf,useHardwareConf } from "./assets/js/vue.hooks.js";
+      import { ignoreCustomElementPlugin,pieChartDirective,apexChartsDirective,bootstrapSwitchComponent } from "./assets/js/vue.helper.js"
+      import vue from "./assets/js/vue.build.js";
 
       const { createApp,ref,reactive,onMounted } = vue;
       const app  = createApp({
@@ -180,7 +180,7 @@
               "apex":apexChartsDirective
           },
           components:{
-            "bootstrap-switch":bootstrapSwitchComponent
+            "bs-switch":bootstrapSwitchComponent
           },
           setup(prop,context){
               

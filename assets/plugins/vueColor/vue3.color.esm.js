@@ -4,25 +4,26 @@
  *
  * Do NOT use SRI with dynamically generated files! More information: https://www.jsdelivr.com/using-sri-with-dynamic-files
  */
-import {
-    openBlock as e,
-    createElementBlock as t,
-    normalizeStyle as a,
-    resolveComponent as o,
-    createElementVNode as l,
-    createVNode as i,
-    withDirectives as r,
-    vModelText as s,
-    toDisplayString as n,
-    normalizeClass as c,
-    createBlock as h,
-    createCommentVNode as p,
-    vShow as d,
-    Fragment as u,
-    renderList as v,
-    withCtx as g,
-    withKeys as b
-} from "../vue/vue.esm.prod.js";
+import vue from "../../js/vue.build.js";
+const {
+    openBlock : e,
+    createElementBlock : t,
+    normalizeStyle : a,
+    resolveComponent : o,
+    createElementVNode : l,
+    createVNode : i,
+    withDirectives : r,
+    vModelText : s,
+    toDisplayString : n,
+    normalizeClass : c,
+    createBlock : h,
+    createCommentVNode : p,
+    vShow : d,
+    Fragment : u,
+    renderList : v,
+    withCtx : g,
+    withKeys : b
+} = vue;
 import {TinyColor as x} from "./tiny.color.esm.js";
 import f from "./material.colors.esm.js";
 

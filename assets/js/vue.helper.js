@@ -1,11 +1,10 @@
 
-import vue from "../plugins/vue/vue.build.js";
-import * as vueColor from '../plugins/vueColor/vue.color.esm.js'
-import * as Popper from '../plugins/popper/popper.esm.js'
-import $ from '../plugins/jquery/jquery.esm.js'
-import { func,confirm,rebootConfirm,alertMsg,axios_post } from './helper.js'
+import vue from "./vue.build.js";
+import $ from '../plugins/jquery/jquery.esm.js';
+import { func,confirm,rebootConfirm,alertMsg,axios_post } from './rps.helper.js'
 
-const {ref,reactive,toRefs,watch,watchEffect,computed,onMounted,nextTick} = vue;
+const {ref,reactive,toRefs,watch,watchEffect,
+    computed,onMounted,nextTick,defineAsyncComponent} = vue;
 
 export const ignoreCustomElementPlugin =  {
     install: (app) => {
@@ -13,114 +12,9 @@ export const ignoreCustomElementPlugin =  {
     }
 };
 
-export const apexChartsDirective = {
-    mounted(el,bindings,node) {
-        let tx = bindings.value.data1;
-        let rx = bindings.value.data2;
-
-        let data = [];
-        for(let i=0;i<50;i++)
-            data.push(0);
-
-        let options = {
-            series: [{
-                name: 'tx',
-                data: data
-            }, {
-                name: 'rx',
-                data: data
-            }],
-            chart: {
-                foreColor: '#9ba7b2',
-                height: 360,
-                type: 'area',
-                zoom: {
-                    enabled: false
-                },
-                toolbar: {
-                    show: true
-                },
-            },
-            colors: ["#0d6efd", '#20c997'],
-            title: {
-                align: 'left',
-                style: {
-                    fontSize: "16px",
-                    color: '#666'
-                }
-            },
-            dataLabels: {
-                enabled: false
-            },
-            grid: {
-                borderColor: 'rgba(255, 255, 255, 0.15)',
-                strokeDashArray: 4,
-                yaxis: {
-                    lines: {
-                        show: true
-                    }
-                }
-            },
-            xaxis: {
-                labels: {
-                    show: false // 隐藏 x 轴的标签文本
-                },
-                axisTicks: {
-                    show: false // 隐藏 x 轴的刻度线
-                },
-                gridLines: {
-                    show: false // 隐藏 x 轴的网格线
-                }
-            }
-        };
-        app.chart = new ApexCharts(el, options);
-        app.chart.render();
-    },
-    updated(el,bindings,vnode) {
-
-        // 获取当前的 Series 数据数组
-        let data1 = app.chart.w.globals.series[0];
-        let data2 = app.chart.w.globals.series[1];
-
-        if(data1 !== undefined && data2 != undefined) {
-            if(data1.length > 100) {
-                data1.shift();
-                data2.shift();
-            }
-            data1.push(bindings.value.data1);
-            data2.push(bindings.value.data2);
-        }
-        app.chart.updateSeries([{data: data1}, {data: data2}], false);
-
-    }
-}
-
-export const pieChartDirective = {
-    mounted(el,bindings,vnode) {
-        let bgColor = bindings.value.bgColor;
-        let color = bindings.value.color;
-        $(el).easyPieChart({
-            easing: 'easeOutBounce',
-            barColor : bgColor,
-            lineWidth: 7,
-            trackColor : color,
-            scaleColor: false,
-            onStep: (from, to, percent) => {
-                $(el).find('.w_percent').text(Math.round(percent));
-            }
-
-        });
-    },
-    updated(el,bindings,node) {
-        $(el).data( 'easyPieChart' ).update( bindings.value.val);
-    }
-};
-
-
-
 export const languageOptionDirective = {
-    mounted(el, binding, vnode) {
-
+    async mounted(el, binding, vnode) {
+        await import('../plugins/polyfill/mutationobserver-shim.min.js');
         const update = () => {
             const lang = html.getAttribute('data-bs-language');
             el.textContent = el.getAttribute(lang);
@@ -132,10 +26,29 @@ export const languageOptionDirective = {
             update();
         });
 
-        const config = { attributes: true };
+        const config = {attributes: true};
         observer.observe(html, config);
     }
 };
+
+export const clickOutsideDirective = {
+    mounted(el, binding) {
+        const eventHandler = (e) => {
+            if (el.contains(e.target)) {
+                return false
+            }
+            if (binding.value && typeof binding.value === 'function') {
+                binding.value(e)
+            }
+        }
+        el.__click_outside__ = eventHandler
+        document.addEventListener('click', eventHandler)
+    },
+    beforeUnmount(el) {
+        document.removeEventListener('click', el.__click_outside__)
+        delete el.__click_outside__
+    }
+}
 
 export const statusTemperatureComponent = {
     template: `<div class="pie">
@@ -205,7 +118,6 @@ export const statusPieChartComponent = {
         return { pie_chart,pie_text }
     }
 };
-
 
 export const netFlotChartComponent = {
     template: `<div class="col-lg-12 netState" ref="net_chart"> </div>`,
@@ -367,16 +279,17 @@ export const bootstrapSwitchComponent = {
             $(bs_switch.value).bootstrapSwitch('state', modelValue.value, true);
         })
 
-        onMounted(()=>{
+        onMounted(async () => {
+            await import('../plugins/switch/js/bootstrap-switch.min.js');
             $(bs_switch.value).bootstrapSwitch({
                 "state": props.modelValue,
                 "size": size,
-                onInit(dom,event,state) {
-                    $(bs_switch.value).on('focus.bootstrapSwitch',() => {
+                onInit(dom, event, state) {
+                    $(bs_switch.value).on('focus.bootstrapSwitch', () => {
                         this.$wrapper.removeClass("bootstrap-switch-focused")
                     })
                 },
-                onSwitchChange(event,state) {
+                onSwitchChange(event, state) {
                     context.emit('update:modelValue', state);
                     context.emit('switch-change', state);
                 }
@@ -397,7 +310,7 @@ export const multipleSelectComponent = {
 
         let selectValue = ref("");
         const onSelectChange = () =>{
-            let [value1,value2] = selectValue.value.split(this.split);
+            let [value1,value2] = selectValue.value.split(props.split);
             value1 = isNaN(Number(value1)) ? value1 : Number(value1);
             value2 = isNaN(Number(value2)) ? value2 : Number(value2);
             context.emit('update:value1', value1);
@@ -507,12 +420,11 @@ export const nouiSliderComponent = {
     }
 };
 
-
-export const flvPlayerComponent = {
-    template: `<div style="width:100%; padding-bottom: 56.25%;  position: relative;" ref="flv">
-                    <video autoplay controls muted style="width:100%;height: 100%; position: absolute; background: #555;" ref="video"></video>
-                    <div style="position: absolute;width: 100%;height: 100%" ref="jess"></div>
-                    <div class="force-video-cloud" ref="cloud">
+export const h5PlayerComponent = {
+    template: `<div style="width:100%; padding-bottom: 56.25%;  position: relative;">
+                    <video autoplay controls muted style="width:100%;height: 100%; position: absolute; background: #555;" ref="videoHandler"></video>
+                    <div style="position: absolute;width: 100%;height: 100%" ref="jessHandler"></div>
+                    <div class="force-video-cloud" ref="cloudHandler">
                         <div class="loading"></div>
                     </div>
               </div>`,
@@ -520,13 +432,14 @@ export const flvPlayerComponent = {
     setup(props,context) {
 
         const { url,codec,audio,buffer,canplay } = toRefs(props);
-        const flv = ref(null);
-        const video = ref(null);
-        const jess = ref(null);
-        const cloud = ref(null);
-
-        let player = {};
-        let hadInitPlayer = false;
+        const state = {
+            videoHandler: ref(null),
+            jessHandler: ref(null),
+            cloudHandler: ref(null),
+            hadInitPlayer: false,
+            flvJsModule: {},
+            h5Player: {},
+        }
 
         watchEffect(()=>{
             let hadPlay = canplay.value;
@@ -535,25 +448,27 @@ export const flvPlayerComponent = {
 
             if(hadPlay) {
                 if(url.value !== "" && codec.value !== "" && audio.value !== "" && buffer.value !== "") {
-                    if(hadInitPlayer)
+                    if(state.hadInitPlayer)
                         destoryPlayer();
                     setTimeout(initPlayer,300);
                 }
             } else {
-                if(hadInitPlayer)
+                if(state.hadInitPlayer)
                     destoryPlayer();
             }
         })
 
-        const initPlayer = () => {
+        const initPlayer = async () => {
             if(props.url === "" || props.codec === "" || props.audio === "")
                 return;
 
             if(props.codec === "h265") {
-                video.value.style.display = 'none';
-                jess.value.style.display = 'block';
-                player =  new Jessibuca({
-                    container: jess.value,
+                state.videoHandler.value.style.display = 'none';
+                state.jessHandler.value.style.display = 'block';
+                if(!window.Jessibuca)
+                    await import('../plugins/jessibuca/jessibuca.js');
+                state.h5Player =  new Jessibuca({
+                    container: state.jessHandler.value,
                     videoBuffer: buffer.value/1000,
                     decoder: "assets/plugins/jessibuca/decoder.js",
                     isResize: false,
@@ -566,45 +481,47 @@ export const flvPlayerComponent = {
                     forceNoOffscreen: true,
                     isNotMute: false,
                 });
-                player.play(url.value);
-                player.on("play", (flag) => {
-                    cloud.value.style.display = 'none'
+                state.h5Player.play(url.value);
+                state.h5Player.on("play", (flag) => {
+                    state.cloudHandler.value.style.display = 'none'
                 })
             } else {
-                video.value.style.display = 'block';
-                jess.value.style.display = 'none';
-                player = flvjs.createPlayer({
+                state.videoHandler.value.style.display = 'block';
+                state.jessHandler.value.style.display = 'none';
+                if(Object.keys(state.flvJsModule).length === 0)
+                    state.flvJsModule = (await import('../plugins/flvjs/flv.esm.js')).default;
+                state.h5Player = state.flvJsModule.createPlayer({
                     type: 'flv',
                     audio: JSON.parse(audio.value),
                     url: url.value
                 });
-                player.attachMediaElement(video.value);
-                player.load();
-                player.play();
+                state.h5Player.attachMediaElement(state.videoHandler.value);
+                state.h5Player.load();
+                state.h5Player.play();
 
-                video.value.addEventListener("canplay",() => {
-                    cloud.value.style.display = 'none'
+                state.videoHandler.value.addEventListener("canplay",() => {
+                    state.cloudHandler.value.style.display = 'none'
                 });
             }
-            hadInitPlayer = true;
+            state.hadInitPlayer = true;
         }
         const destoryPlayer = () => {
-            if(Object.keys(player).length > 0) {
-                if(player.hasOwnProperty("unload")) {
-                    player.unload();
-                    player.detachMediaElement();
+            if(Object.keys(state.h5Player).length > 0) {
+                if(state.h5Player.hasOwnProperty("unload")) {
+                    state.h5Player.unload();
+                    state.h5Player.detachMediaElement();
                 }
-                player.destroy();
-                player = {};
+                state.h5Player.destroy();
+                state.h5Player = {};
             }
-            cloud.value.style.display = 'flex';
-            video.value.removeEventListener("canplay",()=>{});
-            hadInitPlayer = false;
+            state.cloudHandler.value.style.display = 'flex';
+            state.videoHandler.value.removeEventListener("canplay",()=>{});
+            state.hadInitPlayer = false;
         }
         const checkDelay = () => {
-            if (Object.keys(player).length > 0 && player.hasOwnProperty("buffered") && player.buffered.length > 0) {
-                if (player.buffered.end(0) - player.currentTime > 1.5) {
-                    player.currentTime = player.buffered.end(0) - 0.2
+            if (Object.keys(state.h5Player).length > 0 && state.h5Player.hasOwnProperty("buffered") && state.h5Player.buffered.length > 0) {
+                if (state.h5Player.buffered.end(0) - state.h5Player.currentTime > 1.5) {
+                    state.h5Player.currentTime = state.h5Player.buffered.end(0) - 0.2
                 }
             }
             setTimeout(checkDelay,1000);
@@ -614,7 +531,7 @@ export const flvPlayerComponent = {
             checkDelay();
         })
 
-        return {flv,video,jess,cloud}
+        return { ...state }
     }
 };
 
@@ -632,7 +549,8 @@ export const timepickerComponent = {
             $(timepicker.value).timepicker('setTime', modelValue.value);
         })
 
-        onMounted(()=>{
+        onMounted(async () => {
+            await import('../plugins/timepicker/js/bootstrap-timepicker.js');
             $(timepicker.value).timepicker({
                 minuteStep: 1,
                 defaultTime: props.modelValue,
@@ -662,27 +580,15 @@ export const vueColorPickerComponent = {
               </div>`,
     props: ['modelValue','direct'],
     components: {
-        "sketch-picker": vueColor.Sketch
+        "sketch-picker": defineAsyncComponent(() => {
+            return import('../plugins/vueColor/vue3.color.esm.js').then(module => {
+                const { Sketch } = module;
+                return Sketch;
+            })
+        }),
     },
     directives: {
-        "click-outside": {
-            mounted(el, binding) {
-                const eventHandler = (e) => {
-                    if (el.contains(e.target)) {
-                        return false
-                    }
-                    if (binding.value && typeof binding.value === 'function') {
-                        binding.value(e)
-                    }
-                }
-                el.__click_outside__ = eventHandler
-                document.addEventListener('click', eventHandler)
-            },
-            beforeUnmount(el) {
-                document.removeEventListener('click', el.__click_outside__)
-                delete el.__click_outside__
-            }
-        }
+        "click-outside": clickOutsideDirective
     },
     setup(props,context){
 
@@ -692,9 +598,8 @@ export const vueColorPickerComponent = {
             pickerColor: ref(""),
             sketchColor: ref(""),
             partyPopper: {},
-            popperOptions: reactive({})
+            popperOptions: reactive({}),
         }
-
 
         watch(state.sketchColor,()=>{
             if(state.sketchColor.value.hasOwnProperty("hex")) {
@@ -737,7 +642,8 @@ export const vueColorPickerComponent = {
             hidePopper();
         }
 
-        nextTick(()=>{
+        nextTick(async () => {
+            const Popper = await import('../plugins/popper/popper.esm.js');
             state.partyPopper = Popper.createPopper(state.picker.value, state.popper.value, {
                 placement: props.direct,
                 modifiers: [
@@ -760,7 +666,8 @@ export const vueColorPickerComponent = {
         })
 
         onMounted(()=>{
-            state.pickerColor.value = props.modelValue;
+            // state.pickerColor.value = props.modelValue;
+            state.sketchColor.value = {'hex':props.modelValue};
         });
 
         return {...state,clickOutside,pickerColorChange}
