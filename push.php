@@ -273,7 +273,7 @@
     </div>
 <?php include ("./public/foot.inc") ?>
 <script type="module">
-    import { rpc,func,alertMsg } from "./assets/js/rps.helper.js";
+    import { rpc,func,alertMsg } from "./assets/js/cul.helper.js";
     import { useDefaultConf,usePushConf } from "./assets/js/vue.hooks.js";
     import { ignoreCustomElementPlugin,bootstrapSwitchComponent,h5PlayerComponent,timepickerComponent,languageOptionDirective } from "./assets/js/vue.helper.js"
     import vue from "./assets/js/vue.build.js";

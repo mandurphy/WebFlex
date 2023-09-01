@@ -1,7 +1,7 @@
 
 import vue from "./vue.build.js";
 import $ from '../plugins/jquery/jquery.esm.js';
-import { func,confirm,rebootConfirm,alertMsg,axios_post } from './rps.helper.js'
+import { func,confirm,rebootConfirm,alertMsg,axios_post } from './cul.helper.js'
 
 const {ref,reactive,toRefs,watch,watchEffect,
     computed,onMounted,nextTick,defineAsyncComponent} = vue;

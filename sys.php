@@ -950,7 +950,7 @@
     import vue from "./assets/js/vue.build.js";
     import JsZip from "./assets/plugins/jszip/jszip.esm.js"
     import * as fileSave from "./assets/plugins/jszip/filesaver.esm.js";
-    import { rpc2,alertMsg,func,queryData,extend,popover,formatDate,deepCopy,rebootConfirm,resetConfirm } from "./assets/js/rps.helper.js";
+    import { rpc2,alertMsg,func,queryData,extend,popover,formatDate,deepCopy,rebootConfirm,resetConfirm } from "./assets/js/cul.helper.js";
     import { useHardwareConf,usetNetManagerConf,usePasswordConf,useVideoBufferConf,useNtpConf,useTimezoneConf,usePortConf,useVersionConf,useVerLogsConf,useWpaConf } from "./assets/js/vue.hooks.js";
     import { ignoreCustomElementPlugin,bootstrapSwitchComponent,languageOptionDirective,uploadModalComponent,upgradeModalComponent,customModalComponent,loadingButtonComponent } from "./assets/js/vue.helper.js"
     import { wifiFlagComponent,antenanFlagComponent } from "./assets/js/vue.icons.js";

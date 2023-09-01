@@ -1,5 +1,5 @@
 
-import {queryData, checkFileExists, func, alertMsg,rpc, rpc2, rpc3, deepCopy} from "./rps.helper.js";
+import {queryData, checkFileExists, func, alertMsg,rpc, rpc2, rpc3, deepCopy} from "./cul.helper.js";
 import vue from "./vue.build.js";
 const { ref,reactive,onMounted } = vue;
 

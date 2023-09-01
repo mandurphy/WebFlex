@@ -71,7 +71,7 @@
 
 <script type="module">
 
-    import { alertMsg,getUrlParam } from "./assets/js/rps.helper.js";
+    import { alertMsg,getUrlParam } from "./assets/js/cul.helper.js";
     import { ignoreCustomElementPlugin } from "./assets/js/vue.helper.js";
     import vue from "./assets/js/vue.build.js";
 

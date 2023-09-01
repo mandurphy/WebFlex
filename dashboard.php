@@ -102,7 +102,7 @@
   <script src="assets/plugins/flotChart/jquery.flot.resize.js" type="module"></script>
 
   <script type="module">
-      import { rpc } from "./assets/js/rps.helper.js";
+      import { rpc } from "./assets/js/cul.helper.js";
       import { useDefaultConf,useHardwareConf } from "./assets/js/vue.hooks.js";
       import { ignoreCustomElementPlugin,bootstrapSwitchComponent,statusPieChartComponent,statusTemperatureComponent,netFlotChartComponent } from "./assets/js/vue.helper.js"
       import vue from "./assets/js/vue.build.js";

@@ -234,7 +234,7 @@
 
 <script type="module">
     import vue from "./assets/js/vue.build.js";
-    import { rpc } from "./assets/js/rps.helper.js";
+    import { rpc } from "./assets/js/cul.helper.js";
     import { useDefaultConf,useGb28181Conf } from "./assets/js/vue.hooks.js";
     import { ignoreCustomElementPlugin,bootstrapSwitchComponent } from "./assets/js/vue.helper.js"
 
