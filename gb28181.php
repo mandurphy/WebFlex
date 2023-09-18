@@ -16,17 +16,16 @@
                                 <cn>服务器设置</cn>
                                 <en>Server config</en>
                                 <small>
-                                    <cn>提示：该功能正在调试中，大部分参数都需要重启后生效.</cn>
-                                    <en>Tip: This function is being debugged, and most parameters need to be restarted to take effect</en>
+                                    <cn>该功能正在调试中，大部分参数都需要重启后生效.</cn>
+                                    <en>This function is being debugged, and most parameters need to be restarted to take effect</en>
                                 </small>
                             </div>
                         </div>
                         <div class="card-body" >
-
                             <div class="row">
-                                <div class="col-lg-7">
-                                    <div class="card">
-                                        <div class="card-body">
+                                <div class="col-lg-7 force-equal-height-container">
+                                    <div class="card force-equal-height-item">
+                                        <div class="card-body d-flex flex-column">
                                             <div class="row">
                                                 <div class="d-flex align-items-center gap-3 px-2 py-1">
                                                     <div class="flex-grow-0">
@@ -42,16 +41,16 @@
                                                     </div>
                                                 </div>
                                             </div>
-                                            <div class="row mt-3">
+                                            <div class="row mt-3 flex-grow-1 force-align-center">
                                                 <div class="col-lg-12">
-                                                    <img :src="chnImgUrl" class="card-img" alt="..." style="height: 100%">
+                                                    <img :src="chnImgUrl" class="card-img" alt="...">
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
-                                <div class="col-lg-5" v-if="Object.keys(gb28181Conf).length > 0">
-                                    <div class="card">
+                                <div class="col-lg-5 force-equal-height-container" v-if="Object.keys(gb28181Conf).length > 0">
+                                    <div class="card force-equal-height-item">
                                         <div class="card-body" >
                                             <div class="row mt-3">
                                                 <div class="col-lg-3 offset-lg-1 force-align-center">
@@ -202,7 +201,7 @@
                                 </div>
                             </div>
                             <hr>
-                            <div v-for="(item,index) in handleGb28181Channels">
+                            <div v-for="(item,index) in gb28181Conf.channel">
                                 <div class="row mt-3">
                                     <div class="col-lg-3">
                                         <input class="form-control" v-model.trim.lazy="item.chnName" readonly disabled>
@@ -260,19 +259,19 @@
             }
 
             const handleGb28181Channels = computed(() => {
-                if(defaultConf.length > 0 && Object.keys(gb28181Conf).length > 0) {
-                    return gb28181Conf.channel.filter(item => {
-                        const match = defaultConf.find(conf => conf.enable && item.id === conf.id);
-                        if (match) {
-                            return {
-                                ...item,
-                                chnName: match.name
-                            };
-                        }
-                        return false;
-                    });
-                }
-                return [];
+                // if(defaultConf.length > 0 && Object.keys(gb28181Conf).length > 0) {
+                //     return gb28181Conf.channel.filter(item => {
+                //         const match = defaultConf.find(conf => conf.enable && item.id === conf.id);
+                //         if (match) {
+                //             return {
+                //                 ...item,
+                //                 chnName: match.name
+                //             };
+                //         }
+                //         return false;
+                //     });
+                // }
+                // return [];
             });
 
             const unwatch = watchEffect(()=>{

@@ -1,6 +1,7 @@
 
 import vue from "./vue.build.js";
 import $ from '../plugins/jquery/jquery.esm.js';
+import '../plugins/switch/js/bootstrap-switch.min.js';
 import { func,confirm,rebootConfirm,alertMsg,axios_post } from './cul.helper.js'
 
 const {ref,reactive,toRefs,watch,watchEffect,
@@ -280,7 +281,6 @@ export const bootstrapSwitchComponent = {
         })
 
         onMounted(async () => {
-            await import('../plugins/switch/js/bootstrap-switch.min.js');
             $(bs_switch.value).bootstrapSwitch({
                 "state": props.modelValue,
                 "size": size,
@@ -363,10 +363,30 @@ export const multipleInputComponent = {
     }
 };
 
-
 export const nouiSliderComponent = {
     template: `<div class="slider-wrap" ref="slider"></div>`,
-    props: ['modelValue', 'min', 'max', 'step','fix'],
+    props: {
+        modelValue: {
+          type: [Number,String],
+          default: 0
+        },
+        min: {
+            type: Number,
+            default: 0
+        },
+        max: {
+            type: Number,
+            default: 100
+        },
+        step: {
+            type: Number,
+            default: 1
+        },
+        fix: {
+            type: Number,
+            default: 0
+        }
+    },
     setup(props,context) {
         const slider = ref(null);
         let handle = ref(null);
@@ -389,7 +409,8 @@ export const nouiSliderComponent = {
             return value;
         }
 
-        onMounted(()=>{
+        onMounted(async () => {
+            const noUiSlider = await import("../plugins/nouislider/js/nouislider.esm.js");
             noUiSlider.create(slider.value, {
                 start: Number(props.modelValue),
                 connect: [true, false],
@@ -1135,7 +1156,7 @@ export const customModalComponent = {
                         </div>
                         <div class="modal-footer" v-if="hadFooter === undefined || JSON.parse(hadFooter)">
                             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">{{modalCancelBtnName}}</button>
-                            <button type="button" class="btn btn-primary" @click="confirmBtnClick">{{modalConfirmBtnName}}</button>
+                            <button type="button" :class="['btn btn-primary',arrowClass]" @click="confirmBtnClick">{{modalConfirmBtnName}}</button>
                           </div>
                       </div>
                     </div>
@@ -1245,6 +1266,151 @@ export const loadingButtonComponent = {
         })
 
         return { ...state,hadLoading,onButtonClick }
+    }
+}
+
+export const ptzDirectComponent = {
+    template: `<div class="row">
+                    <div class="col-lg-12">
+                        <div class="row">
+                            <div class="col-lg-6 text-center">
+                                <cn>云台控制</cn>
+                                <en>PTZ</en>
+                            </div>
+                            <div class="col-lg-6 text-center">
+                                <cn>预置位</cn>
+                                <en>Preset</en>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-12 mt-3">
+                        <div class="row">
+                            <div class="col-lg-6">
+                                <div class="row">
+                                    <div class="col-lg-12 text-center">
+                                        <button type="button" @mousedown="handlePtzMove('left-up')" @mouseup="handlePtzMove('move-stop')" :class="['btn btn-primary',arrowClass,{'force-visibility-hide':!sticks.includes('left-up')}]">
+                                            <i class="fa-solid fa-circle-arrow-up" style="transform: rotate(-45deg);-o-transform: rotate(-45deg);-webkit-transform: rotate(-45deg);-moz-transform: rotate(-45deg);"></i>
+                                        </button>
+                                        <button type="button" @mousedown="handlePtzMove('up')" @mouseup="handlePtzMove('move-stop')" :class="['btn btn-primary',arrowClass,{'force-visibility-hide':!sticks.includes('up')}]" :style="{'margin':'0px '+gop+'px'}">
+                                            <i class="fa-solid fa-circle-arrow-up"></i>
+                                        </button>
+                                        <button type="button" @mousedown="handlePtzMove('right-up')" @mouseup="handlePtzMove('move-stop')" :class="['btn btn-primary',arrowClass,{'force-visibility-hide':!sticks.includes('right-up')}]">
+                                            <i class="fa-solid fa-circle-arrow-up" style="transform: rotate(45deg);-o-transform: rotate(45deg);-webkit-transform: rotate(45deg);-moz-transform: rotate(45deg);"></i>
+                                        </button>
+                                    </div>
+                                    <div class="col-lg-12 text-center" :style="{'marginTop':gop+'px'}">
+                                        <button type="button" @mousedown="handlePtzMove('left')" @mouseup="handlePtzMove('move-stop')" :class="['btn btn-primary',arrowClass,{'force-visibility-hide':!sticks.includes('left')}]">
+                                            <i class="fa-solid fa-circle-arrow-left"></i>
+                                        </button>
+                                        <button type="button" @mouseup="handlePtzMove('home')" :class="['btn btn-primary',homeClass,{'force-visibility-hide':!sticks.includes('home')}]" :style="{'margin':'0px '+gop+'px'}">
+                                            <i class="fa-solid fa-house"></i>
+                                        </button>
+                                        <button type="button" @mousedown="handlePtzMove('right')" @mouseup="handlePtzMove('move-stop')" :class="['btn btn-primary',arrowClass,{'force-visibility-hide':!sticks.includes('right')}]">
+                                            <i class="fa-solid fa-circle-arrow-right"></i>
+                                        </button>
+                                    </div>
+                                    <div class="col-lg-12 text-center" :style="{'marginTop':gop+'px'}">
+                                        <button type="button" @mousedown="handlePtzMove('left-down')" @mouseup="handlePtzMove('move-stop')" :class="['btn btn-primary',arrowClass,{'force-visibility-hide':!sticks.includes('left-down')}]">
+                                            <i class="fa-solid fa-circle-arrow-up" style="transform: rotate(-135deg);-o-transform: rotate(-135deg);-webkit-transform: rotate(-135deg);-moz-transform: rotate(-135deg);"></i>
+                                        </button>
+                                        <button type="button" @mousedown="handlePtzMove('down')" @mouseup="handlePtzMove('move-stop')" :class="['btn btn-primary',arrowClass,{'force-visibility-hide':!sticks.includes('down')}]" :style="{'margin':'0px '+gop+'px'}">
+                                            <i class="fa-solid fa-circle-arrow-down"></i>
+                                        </button>
+                                        <button type="button" @mousedown="handlePtzMove('right-down')" @mouseup="handlePtzMove('move-stop')" :class="['btn btn-primary',arrowClass,{'force-visibility-hide':!sticks.includes('right-down')}]">
+                                            <i class="fa-solid fa-circle-arrow-up" style="transform: rotate(135deg);-o-transform: rotate(135deg);-webkit-transform: rotate(135deg);-moz-transform: rotate(130deg);"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                                <div class="row mt-4">
+                                    <div class="col-lg-3 text-center">
+                                        <cn>焦距</cn>
+                                        <en>Zoom</en>
+                                    </div>
+                                    <div class="col-lg-7 pt-2">
+                                        <noui-slider v-model="" :min="100" :max="400" :step="1"></noui-slider>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-lg-6">
+                                <div class="row">
+                                    <div class="col-lg-12 text-center">
+                                        <button type="button" @click="handlePtzMove('left-up')" :class="['btn btn-default',arrowClass]">
+                                            1
+                                        </button>
+                                        <button type="button" @click="handlePtzMove('up')" :class="['btn btn-default',arrowClass]" :style="{'margin':'0px '+gop+'px'}">
+                                            2
+                                        </button>
+                                        <button type="button" @click="handlePtzMove('right-up')" :class="['btn btn-default',arrowClass]">
+                                            3
+                                        </button>
+                                    </div>
+                                    <div class="col-lg-12 text-center" :style="{'marginTop':gop+'px'}">
+                                        <button type="button" @click="handlePtzMove('left')" :class="['btn btn-default',arrowClass]">
+                                            4
+                                        </button>
+                                        <button type="button" @click="handlePtzMove('home')" :class="['btn btn-default',arrowClass]" :style="{'margin':'0px '+gop+'px'}">
+                                            5
+                                        </button>
+                                        <button type="button" @click="handlePtzMove('right')" :class="['btn btn-default',arrowClass]">
+                                            6
+                                        </button>
+                                    </div>
+                                    <div class="col-lg-12 text-center" :style="{'marginTop':gop+'px'}">
+                                        <button type="button" @click="handlePtzMove('left-down')" :class="['btn btn-default',arrowClass]">
+                                            7
+                                        </button>
+                                        <button type="button" @click="handlePtzMove('down')" :class="['btn btn-default',arrowClass]" :style="{'margin':'0px '+gop+'px'}">
+                                            8
+                                        </button>
+                                        <button type="button" @click="handlePtzMove('right-down')" :class="['btn btn-default',arrowClass]">
+                                            9
+                                        </button>
+                                    </div>
+                                </div>
+                                <div class="row mt-3">
+                                    <div class="row-lg-12 text-center">
+                                        <button type="button" class="btn btn-primary border-3 px-3 me-1">
+                                            <cn>调用</cn>
+                                            <en>Get</en>
+                                        </button>
+                                        <button type="button" class="btn btn-primary border-3 px-3">
+                                            <cn>设置</cn>
+                                            <en>Set</en>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>`,
+    props: {
+        arrowClass: {
+            type: String,
+            default: "",
+        },
+        homeClass: {
+            type: String,
+            default: "",
+        },
+        gop: {
+            type: Number,
+            default: 5
+        },
+        sticks: {
+            type: Array,
+            default: ['left', 'left-up', 'up', 'right-up', 'right', 'right-down', 'down', 'left-down','home']
+        },
+    },
+    components:{
+        "noui-slider": nouiSliderComponent
+    },
+    setup(props,context) {
+
+        const handlePtzMove = type => {
+            context.emit("ptz-move",type)
+        }
+
+        return { handlePtzMove }
     }
 }
 

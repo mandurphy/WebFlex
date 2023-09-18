@@ -538,21 +538,33 @@ a {
 }
 
 .font-12 {
-    font-size: 12px;
+    font-size: 12px !important;
+}
+
+.font-14 {
+    font-size: 14px !important;
+}
+
+.font-16 {
+    font-size: 16px !important;
+}
+
+.font-18 {
+    font-size: 18px !important;
 }
 
 .font-20 {
-    font-size: 20px;
+    font-size: 20px !important;
 }
 .font-22 {
-    font-size: 22px;
+    font-size: 22px !important;
 }
 .font-24 {
-    font-size: 24px;
+    font-size: 24px !important;
 }
 
 .font-30 {
-	font-size: 30px;
+	font-size: 30px !important;
 }
 
 .btn-option {
@@ -746,6 +758,10 @@ input[type="password"]::-ms-reveal{
     display: none;
 }
 
+.force-visibility-hide {
+    visibility: hidden;
+}
+
 
 .force-video-cloud {
     position: absolute;
@@ -800,8 +816,13 @@ input[type="password"]::-ms-reveal{
     height: 100%;
 }
 
-.force-color-red {
-    color: red;
+.force-equal-height-container {
+    display: flex;
+    align-items: stretch;
+}
+
+.force-equal-height-container .force-equal-height-item {
+    flex: 1;
 }
 
 .login .loading, .login .loading > div {
@@ -1299,4 +1320,28 @@ input[type="password"]::-ms-reveal{
     left: 0;
     width: 100%;
     height: 100%;
+}
+
+.insta360 .arrow-direct {
+    width: 4.7rem;
+    height: 2.86rem;
+    font-size: 1.1428rem !important;
+}
+
+.insta360 .home-direct {
+    width: 4.7rem;
+    height: 2.86rem;
+    font-size: 1rem !important;
+}
+
+.onvif .arrow-direct {
+    width: 4.7rem;
+    height: 2.86rem;
+    font-size: 1.1428rem !important;
+}
+
+.onvif .home-direct {
+    width: 4.7rem;
+    height: 2.86rem;
+    font-size: 1rem !important;
 }

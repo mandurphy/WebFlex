@@ -156,7 +156,7 @@
                                         <small>#{{layIndex+1}}</small>
                                     </div>
                                 </div>
-                                <div class="card-body" v-if="Object.keys(editData).length !== 0">
+                                <div class="card-body" v-if="Object.keys(handleEditData).length !== 0">
                                     <div class="row">
                                         <div class="col-lg-3 offset-lg-1 force-align-center">
                                             <label>
@@ -165,10 +165,10 @@
                                             </label>
                                         </div>
                                         <div class="col-lg-6">
-                                            <bs-switch v-model="editData.enable" size="normal"></bs-switch>
+                                            <bs-switch v-model="handleEditData.enable" size="normal"></bs-switch>
                                         </div>
                                     </div>
-                                    <div class="row mt-4" v-if="editData.type === 'mask'">
+                                    <div class="row mt-4" v-if="handleEditData.type === 'mask'">
                                         <div class="col-lg-3 offset-lg-1 force-align-center">
                                             <label>
                                                 <cn>强度</cn>
@@ -176,7 +176,7 @@
                                             </label>
                                         </div>
                                         <div class="col-lg-6">
-                                            <select class="form-select" v-model="editData.content">
+                                            <select class="form-select" v-model="handleEditData.content">
                                                 <option value="8">8</option>
                                                 <option value="16">16</option>
                                                 <option value="32">32</option>
@@ -184,7 +184,7 @@
                                             </select>
                                         </div>
                                     </div>
-                                    <div class="row mt-4" v-if="editData.type === 'pic'">
+                                    <div class="row mt-4" v-if="handleEditData.type === 'pic'">
                                         <div class="col-lg-3 offset-lg-1 force-align-center">
                                             <label>
                                                 <cn>图片</cn>
@@ -192,12 +192,12 @@
                                             </label>
                                         </div>
                                         <div class="col-lg-6">
-                                            <select class="form-select" v-model="editData.content">
+                                            <select class="form-select" v-model="handleEditData.content">
                                                 <option v-for="(item,index) in handlePngConf" :key="index" :value="item.path">{{item.name}}</option>
                                             </select>
                                         </div>
                                     </div>
-                                    <div class="row mt-4" v-if="editData.type === 'text'">
+                                    <div class="row mt-4" v-if="handleEditData.type === 'text'">
                                         <div class="col-lg-3 offset-lg-1 force-align-center">
                                             <label>
                                                 <cn>文字</cn>
@@ -205,10 +205,10 @@
                                             </label>
                                         </div>
                                         <div class="col-lg-6">
-                                            <input class="form-control"  type="text" v-model.trim.lazy="editData.content" />
+                                            <input class="form-control"  type="text" v-model.trim.lazy="handleEditData.content" />
                                         </div>
                                     </div>
-                                    <div class="row mt-4" v-if="editData.type === 'time'">
+                                    <div class="row mt-4" v-if="handleEditData.type === 'time'">
                                         <div class="col-lg-3 offset-lg-1 force-align-center">
                                             <label>
                                                 <cn>格式</cn>
@@ -216,10 +216,10 @@
                                             </label>
                                         </div>
                                         <div class="col-lg-6">
-                                            <input class="form-control" type="text" v-model.trim.lazy="editData.content" />
+                                            <input class="form-control" type="text" v-model.trim.lazy="handleEditData.content" />
                                         </div>
                                     </div>
-                                    <div class="row mt-4" v-if="editData.type === 'time' || editData.type === 'text'">
+                                    <div class="row mt-4" v-if="handleEditData.type === 'time' || handleEditData.type === 'text'">
                                         <div class="col-lg-3 offset-lg-1 force-align-center">
                                             <label>
                                                 <cn>字体</cn>
@@ -227,12 +227,12 @@
                                             </label>
                                         </div>
                                         <div class="col-lg-6">
-                                            <select class="form-select" v-model="editData.font">
+                                            <select class="form-select" v-model="handleEditData.font">
                                                 <option v-for="(item,index) in handleFontConf" :key="index" :value="item.path">{{item.name}}</option>
                                             </select>
                                         </div>
                                     </div>
-                                    <div class="row mt-4" v-if="editData.type === 'text'">
+                                    <div class="row mt-4" v-if="handleEditData.type === 'text'">
                                         <div class="col-lg-3 offset-lg-1 force-align-center">
                                             <label>
                                                 <cn>移动</cn>
@@ -240,7 +240,7 @@
                                             </label>
                                         </div>
                                         <div class="col-lg-6">
-                                            <noui-slider v-model="editData.move" min="-20" max="20" step="1" fix="0"></noui-slider>
+                                            <noui-slider v-model="handleEditData.move" :min="-20" :max="20" :step="1" :fix="0"></noui-slider>
                                         </div>
                                     </div>
                                     <div class="row mt-4">
@@ -251,7 +251,7 @@
                                             </label>
                                         </div>
                                         <div class="col-lg-6">
-                                            <noui-slider v-model="editData.x" min="0" max="1" step="0.001" fix="3"></noui-slider>
+                                            <noui-slider v-model="handleEditData.x" :min="0" :max="1" :step="0.001" :fix="3"></noui-slider>
                                         </div>
                                     </div>
                                     <div class="row mt-4">
@@ -262,10 +262,10 @@
                                             </label>
                                         </div>
                                         <div class="col-lg-6">
-                                            <noui-slider v-model="editData.y" min="0" max="1" step="0.001" fix="3"></noui-slider>
+                                            <noui-slider v-model="handleEditData.y" :min="0" :max="1" :step="0.001" :fix="3"></noui-slider>
                                         </div>
                                     </div>
-                                    <div class="row mt-4" v-if="editData.type === 'text' || editData.type === 'mask' || editData.type === 'rect' || editData.type === 'border'">
+                                    <div class="row mt-4" v-if="handleEditData.type === 'text' || handleEditData.type === 'mask' || handleEditData.type === 'rect' || handleEditData.type === 'border'">
                                         <div class="col-lg-3 offset-lg-1 force-align-center">
                                             <label>
                                                 <cn>宽度</cn>
@@ -273,10 +273,10 @@
                                             </label>
                                         </div>
                                         <div class="col-lg-6">
-                                            <noui-slider v-model="editData.w" min="0" max="1" step="0.001" fix="3"></noui-slider>
+                                            <noui-slider v-model="handleEditData.w" :min="0" :max="1" :step="0.001" :fix="3"></noui-slider>
                                         </div>
                                     </div>
-                                    <div class="row mt-4" v-if="editData.type === 'mask' || editData.type === 'rect' || editData.type === 'border'">
+                                    <div class="row mt-4" v-if="handleEditData.type === 'mask' || handleEditData.type === 'rect' || handleEditData.type === 'border'">
                                         <div class="col-lg-3 offset-lg-1 force-align-center">
                                             <label>
                                                 <cn>高度</cn>
@@ -284,10 +284,10 @@
                                             </label>
                                         </div>
                                         <div class="col-lg-6">
-                                            <noui-slider v-model="editData.h" min="0" max="1" step="0.001" fix="3"></noui-slider>
+                                            <noui-slider v-model="handleEditData.h" :min="0" :max="1" :step="0.001" :fix="3"></noui-slider>
                                         </div>
                                     </div>
-                                    <div class="row mt-4" v-if="editData.type === 'border'">
+                                    <div class="row mt-4" v-if="handleEditData.type === 'border'">
                                         <div class="col-lg-3 offset-lg-1 force-align-center">
                                             <label>
                                                 <cn>边框宽度</cn>
@@ -295,10 +295,10 @@
                                             </label>
                                         </div>
                                         <div class="col-lg-6">
-                                            <noui-slider v-model="editData.border" min="1" max="50" step="1" fix="0"></noui-slider>
+                                            <noui-slider v-model="handleEditData.border" :min="1" :max="50" :step="1" :fix="0"></noui-slider>
                                         </div>
                                     </div>
-                                    <div class="row mt-4" id="color" v-if="editData.type !== 'pic' && editData.type !== 'mask'">
+                                    <div class="row mt-4" id="color" v-if="handleEditData.type !== 'pic' && handleEditData.type !== 'mask'">
                                         <div class="col-lg-3 offset-lg-1 force-align-center">
                                             <label>
                                                 <cn>颜色</cn>
@@ -306,10 +306,10 @@
                                             </label>
                                         </div>
                                         <div class="col-lg-6">
-                                            <picker-color v-model="editData.color" direct="bottom"></picker-color>
+                                            <picker-color v-model="handleEditData.color" direct="bottom"></picker-color>
                                         </div>
                                     </div>
-                                    <div class="row mt-4" v-if="editData.type === 'text' || editData.type === 'time'">
+                                    <div class="row mt-4" v-if="handleEditData.type === 'text' || handleEditData.type === 'time'">
                                         <div class="col-lg-3 offset-lg-1 force-align-center">
                                             <label>
                                                 <cn>背景色</cn>
@@ -317,10 +317,10 @@
                                             </label>
                                         </div>
                                         <div class="col-lg-6">
-                                            <picker-color v-model="editData.bgColor" direct="bottom"></picker-color>
+                                            <picker-color v-model="handleEditData.bgColor" direct="bottom"></picker-color>
                                         </div>
                                     </div>
-                                    <div class="row mt-4" v-if="editData.type === 'text' || editData.type === 'time' || editData.type === 'pic'">
+                                    <div class="row mt-4" v-if="handleEditData.type === 'text' || handleEditData.type === 'time' || handleEditData.type === 'pic'">
                                         <div class="col-lg-3 offset-lg-1 force-align-center">
                                             <label>
                                                 <cn>缩放</cn>
@@ -328,10 +328,10 @@
                                             </label>
                                         </div>
                                         <div class="col-lg-6">
-                                            <noui-slider v-model="editData.scale" min="0.1" max="4" step="0.01" fix="2"></noui-slider>
+                                            <noui-slider v-model="handleEditData.scale" :min="0.1" :max="4" :step="0.01" :fix="2"></noui-slider>
                                         </div>
                                     </div>
-                                    <div class="row mt-4" v-if="editData.type !== 'mask'">
+                                    <div class="row mt-4" v-if="handleEditData.type !== 'mask'">
                                         <div class="col-lg-3 offset-lg-1 force-align-center">
                                             <label>
                                                 <cn>透明度</cn>
@@ -339,11 +339,11 @@
                                             </label>
                                         </div>
                                         <div class="col-lg-6">
-                                            <noui-slider v-model="editData.alpha" min="0" max="1" step="0.01" fix="2"></noui-slider>
+                                            <noui-slider v-model="handleEditData.alpha" :min="0" :max="1" :step="0.01" :fix="2"></noui-slider>
                                         </div>
                                     </div>
                                     <div class="row text-center mt-4">
-                                        <button type="button" class="btn border-3 btn-primary me-2 col-lg-2 offset-lg-5" @click="saveOverlayConf"><cn>保存</cn><en>Save</en></button>
+                                        <button type="button" class="btn border-3 btn-primary me-2 col-lg-2 offset-lg-5" @click="updateOverlayConf"><cn>保存</cn><en>Save</en></button>
                                     </div>
                                 </div>
                             </div>
@@ -400,7 +400,6 @@
     </div>
 <?php include ("./public/foot.inc") ?>
 
-<script src="assets/plugins/nouislider/js/nouislider.min.js"></script>
 <script src="assets/plugins/fileinput/js/fileinput.js" type="module"></script>
 <script src="assets/plugins/fileinput/js/locales/zh.js" type="module"></script>
 <script src="assets/plugins/fileinput/themes/fa6/theme.min.js" type="module"></script>
@@ -421,14 +420,14 @@
         setup(props,context) {
             
             const { defaultConf } = useDefaultConf();
-            const { overlayConf } = useOverlayConf();
+            const { overlayConf,updateOverlayConf } = useOverlayConf();
             const { resConf,handleResConf } = useResConf();
 
             const state = {
-                chnIndex : ref(-1),
+                chnIndex : ref(0),
                 chnImgUrl : ref(""),
-                editData: reactive({}),
-                layIndex : ref(-1),
+                handleEditData: reactive({}),
+                layIndex : ref(0),
                 colors : ref('#194d33'),
                 showModal: ref(false),
                 modalTitle:ref(""),
@@ -448,7 +447,11 @@
             })
     
             const handleOverlayConf = computed(()=>{
-                return overlayConf[state.chnIndex.value];
+                return overlayConf[state.chnIndex.value] || [];
+            });
+
+            const handleEditData = computed(()=>{
+                return handleOverlayConf.value[state.layIndex.value] || {};
             });
 
             const handlePngConf = computed(()=>{
@@ -485,7 +488,6 @@
             
             const editOverlay = (idx) => {
                 state.layIndex.value = idx;
-                Object.assign(state.editData, overlayConf[state.chnIndex.value][idx]);
             }
 
             const delOverlay = idx => {
@@ -499,7 +501,8 @@
                             keys: [ 'enter' ],
                             action: () => {
                                 overlayConf[state.chnIndex.value].splice(idx, 1);
-                                saveOverlayConf();
+                                state.layIndex.value = 0;
+                                updateOverlayConf("noTip");
                             }
                         },
                         cancel: {
@@ -512,6 +515,7 @@
                     }
                 } );
             }
+
             const addOverlay = type => {
                 let lay={
                     type: type,
@@ -543,15 +547,12 @@
                             btnClass: 'btn-primary',
                             keys: [ 'enter' ],
                             action: () => {
-                                func("/link/mgr/root/delResFile",resName).then(data => {
-                                    handleResConf();
-                                });
+                                func("/link/mgr/root/delResFile",resName).then(data => handleResConf());
                             }
                         },
                         cancel: {
                             text: "<cn>取消</cn><en>Cancel</en>"
                         }
-
                     }
                 } );
             }
@@ -567,19 +568,9 @@
             const uploadError = errMsg => {
                 alertMsg(errMsg, 'error');
             }
-            
-            const saveOverlayConf = () => {
-                Object.assign(overlayConf[state.chnIndex.value][state.layIndex.value], state.editData);
-                rpc("enc.updateOverlay", [ JSON.stringify( overlayConf, null, 2 ) ]).then(data => {
-                    if ( typeof ( data.error ) != "undefined" )
-                        alertMsg('<cn>保存设置失败</cn><en>Save config failed!</en>', 'error');
-                    else
-                        alertMsg('<cn>保存设置成功</cn><en>Save config success!</en>', 'success');
-                });
-            }
 
-            return {...state,handleEnableConf,handleOverlayConf,handlePngConf,handleFontConf,resConf,
-                editOverlay,delOverlay,addOverlay,delCurrentRes,uploadRes,uploadSuccess,uploadError,saveOverlayConf}
+            return {...state,handleEnableConf,handleOverlayConf,handleEditData,handlePngConf,handleFontConf,resConf,
+                editOverlay,delOverlay,addOverlay,delCurrentRes,uploadRes,uploadSuccess,uploadError,updateOverlayConf}
         }
     });
     app.use(ignoreCustomElementPlugin);

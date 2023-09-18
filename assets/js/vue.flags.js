@@ -1,4 +1,5 @@
-import {onMounted, ref, toRefs, watchEffect} from "./vue.build.js";
+import vue from "./vue.build.js";
+const {onMounted, ref, toRefs, watchEffect} = vue;
 
 export const wifiFlagComponent = {
     template: `<div>

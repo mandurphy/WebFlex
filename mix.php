@@ -67,7 +67,7 @@
                                     <div :style="{width:'100%',height:'100%',backgroundColor: handleLayBackColor(index)}">
                                         <div class="d-flex align-items-center gap-1 border-0 px-2 py-1">
                                             <div class="flex-grow-1">
-                                                <select class="form-select" v-model="defaultConf[mixIndex].srcV[index]" @change="saveConf('noTip')">
+                                                <select class="form-select" v-model="defaultConf[mixIndex].srcV[index]" @change="updateDefaultConf('noTip')">
                                                     <option value="-1" cn="空" en="none" v-language-option></option>
                                                     <option v-for="(it,index) in handleLayoutChnSelect(defaultConf[mixIndex].srcV[index])" :value="it.id">{{it.name}}</option>
                                                 </select>
@@ -252,7 +252,7 @@
                                         </label>
                                     </div>
                                     <div class="col-lg-6">
-                                        <noui-slider v-model="defaultConf[mixIndex].output.csc.luma" min="0" max="100" step="1" fix="0"></noui-slider>
+                                        <noui-slider v-model="defaultConf[mixIndex].output.csc.luma" :min="0" :max="100" :step="1" :fix="0"></noui-slider>
                                     </div>
                                 </div>
                                 <div class="row mt-4">
@@ -263,7 +263,7 @@
                                         </label>
                                     </div>
                                     <div class="col-lg-6">
-                                        <noui-slider v-model="defaultConf[mixIndex].output.csc.contrast" min="0" max="100" step="1" fix="0"></noui-slider>
+                                        <noui-slider v-model="defaultConf[mixIndex].output.csc.contrast" :min="0" :max="100" :step="1" :fix="0"></noui-slider>
                                     </div>
                                 </div>
                                 <div class="row mt-4">
@@ -274,7 +274,7 @@
                                         </label>
                                     </div>
                                     <div class="col-lg-6">
-                                        <noui-slider v-model="defaultConf[mixIndex].output.csc.saturation" min="0" max="100" step="1" fix="0"></noui-slider>
+                                        <noui-slider v-model="defaultConf[mixIndex].output.csc.saturation" :min="0" :max="100" :step="1" :fix="0"></noui-slider>
                                     </div>
                                 </div>
                                 <div class="row mt-4">
@@ -285,7 +285,7 @@
                                         </label>
                                     </div>
                                     <div class="col-lg-6">
-                                        <noui-slider v-model="defaultConf[mixIndex].output.csc.hue" min="0" max="100" step="1" fix="0"></noui-slider>
+                                        <noui-slider v-model="defaultConf[mixIndex].output.csc.hue" :min="0" :max="100" :step="1" :fix="0"></noui-slider>
                                     </div>
                                 </div>
                             </div>
@@ -396,7 +396,7 @@
                                         </label>
                                     </div>
                                     <div class="col-lg-6">
-                                        <noui-slider v-model="defaultConf[mixIndex].output2.csc.luma" min="0" max="100" step="1" fix="0"></noui-slider>
+                                        <noui-slider v-model="defaultConf[mixIndex].output2.csc.luma" :min="0" :max="100" :step="1" :fix="0"></noui-slider>
                                     </div>
                                 </div>
                                 <div class="row mt-4">
@@ -407,7 +407,7 @@
                                         </label>
                                     </div>
                                     <div class="col-lg-6">
-                                        <noui-slider v-model="defaultConf[mixIndex].output2.csc.contrast" min="0" max="100" step="1" fix="0"></noui-slider>
+                                        <noui-slider v-model="defaultConf[mixIndex].output2.csc.contrast" :min="0" :max="100" :step="1" :fix="0"></noui-slider>
                                     </div>
                                 </div>
                                 <div class="row mt-4">
@@ -418,7 +418,7 @@
                                         </label>
                                     </div>
                                     <div class="col-lg-6">
-                                        <noui-slider v-model="defaultConf[mixIndex].output2.csc.saturation" min="0" max="100" step="1" fix="0"></noui-slider>
+                                        <noui-slider v-model="defaultConf[mixIndex].output2.csc.saturation" :min="0" :max="100" :step="1" :fix="0"></noui-slider>
                                     </div>
                                 </div>
                                 <div class="row mt-4">
@@ -429,14 +429,14 @@
                                         </label>
                                     </div>
                                     <div class="col-lg-6">
-                                        <noui-slider v-model="defaultConf[mixIndex].output2.csc.hue" min="0" max="100" step="1" fix="0"></noui-slider>
+                                        <noui-slider v-model="defaultConf[mixIndex].output2.csc.hue" :min="0" :max="100" :step="1" :fix="0"></noui-slider>
                                     </div>
                                 </div>
                             </div>
                         </div>
                         <hr class="mt-4 mb-4">
                         <div class="row mb-3">
-                            <button type="button" @click="saveConf" class="col-2 offset-5 btn border-3 btn-primary text-center"><cn>保存</cn><en>Save</en></button>
+                            <button type="button" @click="updateDefaultConf" class="col-2 offset-5 btn border-3 btn-primary text-center"><cn>保存</cn><en>Save</en></button>
                         </div>
                     </div>
                 </div>
@@ -464,7 +464,7 @@
         },
         setup(props,context) {
             
-            const { defaultConf } = useDefaultConf();
+            const { defaultConf,updateDefaultConf } = useDefaultConf();
             const { defLaysConf } = useDefLaysConf();
             const { hardwareConf } = useHardwareConf();
 
@@ -475,7 +475,10 @@
             }
             
             const updateChnImage = () => {
-                state.chnImgUrl.value = "snap/snap" + defaultConf[state.mixIndex.value].id + ".jpg?rnd=" + Math.random();
+                if(defaultConf[state.mixIndex.value].enable)
+                    state.chnImgUrl.value = "snap/snap" + defaultConf[state.mixIndex.value].id + ".jpg?rnd=" + Math.random();
+                else
+                    state.chnImgUrl.value = "assets/images/nosignal.jpg";
                 setTimeout(() => { rpc( "enc.snap" ) },200)
                 setTimeout(updateChnImage,500);
             }
@@ -513,7 +516,7 @@
                 else
                     defaultConf[state.mixIndex.value].srcA.splice(idx, 1);
                 
-                saveConf("noTip");
+                updateDefaultConf("noTip");
             };
     
             const unwatch = watchEffect(()=>{
@@ -596,8 +599,7 @@
                     }
                 }
                 
-                if(!mark)
-                {
+                if(!mark) {
                     if (srcV.length >= defaultConf[state.mixIndex.value].srcV.length)
                         srcV.splice(0, defaultConf[state.mixIndex.value].srcV.length, ...defaultConf[state.mixIndex.value].srcV);
                     else
@@ -605,7 +607,7 @@
                 }
                 defaultConf[state.mixIndex.value].srcV.splice(0, defaultConf[state.mixIndex.value].srcV.length, ...srcV);
                 defaultConf[state.mixIndex.value].layout.splice(0, defaultConf[state.mixIndex.value].layout.length, ...layout);
-                saveConf("noTip");
+                updateDefaultConf("noTip");
                 const options = document.querySelectorAll(`option[cn]`);
                 options.forEach(option => {
                     option.textContent = option.getAttribute('cn');
@@ -621,19 +623,9 @@
                 return "rgb(" + color + "," + color + "," + color + ")";
             }
             
-            const saveConf = (tip) => {
-                rpc( "enc.update", [ JSON.stringify( defaultConf, null, 2 ) ]).then(data => {
-                    if(tip != "noTip") {
-                        if ( typeof ( data.error ) != "undefined" )
-                            alertMsg('<cn>保存设置失败</cn><en>Save config failed!</en>', 'error');
-                        else
-                            alertMsg('<cn>保存设置成功</cn><en>Save config success!</en>', 'success');
-                    }
-                });
-            }
-            
             return {...state,defaultConf,defLaysConf,hardwareConf,handleEnableConf,handleActiveDefLayConf,
-                hrefDefLayout,onChangeLayout,handleLayBackColor,handleActiveVolume,onUpdateActiveVolume,handleLayoutChnSelect,saveConf}
+                hrefDefLayout,onChangeLayout,handleLayBackColor,handleActiveVolume,onUpdateActiveVolume,
+                handleLayoutChnSelect,updateDefaultConf}
         }
     });
     app.use(ignoreCustomElementPlugin);

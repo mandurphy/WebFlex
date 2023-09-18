@@ -87,4 +87,11 @@ class RpcClient
         $client->send();
         return $ret;
     }
+
+    public function update_overlay($param)
+    {
+        $client = new Client(self::enc_url);
+        $client->query('enc.updateOverlay',[json_encode($param,JSON_UNESCAPED_UNICODE|JSON_PRETTY_PRINT)]);
+        $client->send();
+    }
 }

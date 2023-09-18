@@ -14,20 +14,27 @@ class Overlay extends Verify
             $this->link_verify();
             $conf = $this->load_conf('/link/config/config.json');
             $result = [];
-            foreach ($conf as $item) {
-                if (!$item['type'] == 'file')
-                    continue;
 
+            $overlayConf = [];
+            if(file_exists("/link/config/auto/overlay.json"))
+                $overlayConf = $this->load_conf('/link/config/auto/overlay.json');
+
+            for($i=0;$i<count($conf);$i++) {
+                $item = $conf[$i];
                 $obj = array(
                     'id' => $item['id'],
                     'name' => $item['name'],
                     'type' => $item['type'],
                     'enable'=> $item['enable'],
                     'enable2'=> $item['enable2'],
-                    'overlay' => $item['overlay']
                 );
+                if(count($overlayConf) > 0)
+                    $obj['overlay'] = $overlayConf[$i];
+                else
+                    $obj['overlay'] = $item['overlay'];
                 array_push($result, $obj);
             }
+
             return $this->handleRet($result, "success", "执行完成", "execution is completed");
         } catch (Exception $ex) {
             return $this->handleRet('', 'error', $ex->getMessage(), $ex->getMessage());
@@ -42,31 +49,47 @@ class Overlay extends Verify
             $this->check_args($params);
 
             $conf = $this->load_conf('/link/config/config.json');
-            for($i=0;$i<count($params);$i++)
+            $mark = file_exists("/link/config/auto/overlay.json");
+
+            if($mark)
             {
-                $param = $params[$i];
-                $id = $param['id'];
-
-                $chn=null;$index=-1;
-                for($j=0;$j<count($conf);$j++)
+                $overlayConf = [];
+                for($i=0;$i<count($params);$i++)
                 {
-                    $item = $conf[$j];
-                    if($id != $item['id'])
-                        continue;
-
-                    if(!isset($param['overlay']))
-                        continue;
-
-                    $item['overlay'] = $param['overlay'];
-                    $chn = $item;
-                    $index = $j;
+                    $param = $params[$i];
+                    $overlayConf[] = $param['overlay'];
                 }
-                if($index > -1)
-                    $conf[$index] = $chn;
+                $client = new RpcClient();
+                $client->update_overlay($overlayConf);
             }
+            else
+            {
+                for($i=0;$i<count($params);$i++)
+                {
+                    $param = $params[$i];
 
-            $client = new RpcClient();
-            $client->update_enc($conf);
+                    $id = $param['id'];
+
+                    $chn=null;$index=-1;
+                    for($j=0;$j<count($conf);$j++)
+                    {
+                        $item = $conf[$j];
+                        if($id != $item['id'])
+                            continue;
+
+                        if(!isset($param['overlay']))
+                            continue;
+
+                        $item['overlay'] = $param['overlay'];
+                        $chn = $item;
+                        $index = $j;
+                    }
+                    if($index > -1)
+                        $conf[$index] = $chn;
+                }
+                $client = new RpcClient();
+                $client->update_enc($conf);
+            }
 
             return $this->handleRet("","success","执行完成","execution is completed");
         }

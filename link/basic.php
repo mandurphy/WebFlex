@@ -21,7 +21,7 @@ class Basic
             throw new Exception("参数格式错误&&param format error");
     }
 
-    public static function handleRet($data,$status,$msg_cn,$msg_en): string
+    protected static function handleRet($data,$status,$msg_cn,$msg_en): string
     {
         $lang = Basic::load_conf('/link/config/lang.json');
 

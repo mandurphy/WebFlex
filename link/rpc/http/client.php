@@ -165,7 +165,7 @@ class Client
      * Returns the object handle (so you can chain method calls if you're into
      * that kinky stuff)
      */
-    public function query($method, $arguments, &$response)
+    public function query($method, $arguments, &$response = null)
     {
         $id = count($this->responses);
         $this->responses[$id] = &$response;

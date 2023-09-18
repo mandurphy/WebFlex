@@ -106,6 +106,18 @@
 }
 
 /* button */
+[data-bs-theme=default] .btn-default {
+    background-color: #ffffff;
+    border-color: #cccccc;
+    font-size: 14px;
+    font-weight: normal;
+    padding: 6px 12px;
+    white-space: nowrap;
+    border-radius: 4px;
+    line-height: 1.2;
+    color: #333333;
+}
+
 [data-bs-theme=default] .btn-primary {
     background-color: var(--bs-default-bg-color);
     border-color: var(--bs-default-bg-color);

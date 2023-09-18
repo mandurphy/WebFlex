@@ -3,88 +3,135 @@
 <html lang="uft-8">
 <head>
     <?php include ("./public/head.inc") ?>
+    <link href="assets/plugins/nouislider/css/nouislider.min.css" rel="stylesheet">
 </head>
 <body>
 <?php include ("./public/menu.inc") ?>
     <div data-simplebar>
-        <main class="page-content ndi" id="app" v-cloak>
+        <main class="page-content sync" id="app" v-cloak>
             <div class="row">
-                <div class="col-lg-6">
+                <div class="col-lg-12">
                     <div class="card">
                         <div class="card-header bg-transparent">
                             <div class="p-2 mb-0 d-flex align-items-end">
-                                <cn>NDI预览</cn>
-                                <en>NDI Preview</en>
+                                <cn>功能说明</cn>
+                                <en>Function Description</en>
                             </div>
                         </div>
                         <div class="card-body" >
-                            <div class="row">
-                                <div class="col-lg-12 mt-2">
-                                    <img :src="chnImgUrl" class="card-img" alt="...">
-                                </div>
-                            </div>
+                            <p>
+                                <cn>编码器本身的接口同步性已经在出厂时校准过，大多数情况下无需额外调节。但是如果输入输出设备链路比较复杂，或外设本身存在同步性问题，可以通过下面的参数进行微调。</cn>
+                                <en>The interface synchronization of the encoder itself has been calibrated at the factory and no additional adjustment is required in most cases. However, if the input and output device link is relatively complex, or the peripheral itself has synchronization problems, you can fine-tune it through the following parameters.</en>
+                            </p>
+                            <p>
+                                <cn>由于视频接口的延迟是固定的，额外增加视频缓冲的代价较高，以下调节都是针对音频接口的。</cn>
+                                <en>Since the delay of the video interface is fixed, the cost of additional video buffering is higher. The following adjustments are all for the audio interface.</en>
+                            </p>
+                            <p>
+                                <cn><strong>时间戳偏移:</strong>仅影响串流输出时的音频时间戳偏移，如果该设备只用于编码，那么调节这个参数是最精确高效的。</cn>
+                                <en><strong>Timestamp offset:</strong> It only affects the audio timestamp offset during streaming output. If the device is only used for encoding, then adjusting this parameter is the most accurate and efficient.</en>
+                            </p>
+                            <p>
+                                <cn><strong>硬件延迟:</strong>在音频接口增加额外的缓冲，使其产生延迟，主要针对解码场景或输入混音等功能。</cn>
+                                <en><strong>Hardware delay:</strong> Adding additional buffers to the audio interface to cause delays, mainly for functions such as decoding scenes or input mixing.</en>
+                            </p>
+                            <p>
+                                <cn><strong>帧:</strong>通常情况下, 一个音频帧的时长为21.3ms</cn>
+                                <en><strong>Frame:</strong> Normally, the duration of an audio frame is 21.3ms.</en>
+                            </p>
                         </div>
                     </div>
                 </div>
-                <div class="col-lg-6">
+            </div>
+            <div class="row">
+                <div class="col-lg-12">
                     <div class="card">
-                        <div class="card-header bg-transparent">
-                            <div class="p-2 mb-0 d-flex align-items-end">
-                                <cn>NDI解码设置</cn>
-                                <en>NDI decode config</en>
+                        <div class="card-body" >
+                            <div class="row">
+                                <div class="col-lg-12">
+                                    <div class="card">
+                                        <div class="card-header bg-transparent">
+                                            <div class="p-2 mb-0 d-flex align-items-end">
+                                                <cn>输入同步调节</cn>
+                                                <en>Input Synchronization</en>
+                                            </div>
+                                        </div>
+                                        <div class="card-body">
+                                            <div class="row">
+                                                <div class="col-lg-3 text-center">
+                                                    <cn>接口名称</cn>
+                                                    <en>Interface name</en>
+                                                </div>
+                                                <div class="col-lg-4 text-center">
+                                                    <cn>时间戳偏移(ms)</cn>
+                                                    <en>Timestamp offset</en>
+                                                </div>
+                                                <div class="col-lg-4 text-center">
+                                                    <cn>硬件延迟(帧)</cn>
+                                                    <en>Hardwa delay(frame)</en>
+                                                </div>
+                                            </div>
+                                            <hr>
+                                            <div class="row mt-2" v-for="(item,index) in handleAiConf">
+                                                <div class="col-lg-3">
+                                                    <input class="form-control" disabled readonly v-model.trim.lazy="item.name">
+                                                </div>
+                                                <div class="col-lg-4 p-3">
+                                                    <noui-slider v-model="" :min="-500" :max="500" :step="1" :fix="0"></noui-slider>
+                                                </div>
+                                                <div class="col-lg-4 p-3">
+                                                    <noui-slider v-model="" :min="0" :max="25" :step="1" :fix="0"></noui-slider>
+                                                </div>
+                                                <hr>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
-                        </div>
-                        <div class="card-body pb-4">
-                            <div class="force-aspect-ratio">
-                                <div class="aspect-ratio-content d-flex flex-column justify-content-between" v-if="defaultConf.length > 0">
-                                    <div class="row"></div>
-                                    <div class="row"></div>
-                                    <div class="row"></div>
-                                    <div class="row">
-                                        <div class="col-lg-3 offset-lg-1 force-align-center">
-                                            <label>
-                                                <cn>总开关</cn>
-                                                <en>Main enable</en>
-                                            </label>
+                            <div class="row">
+                                <div class="col-lg-12">
+                                    <div class="card">
+                                        <div class="card-header bg-transparent">
+                                            <div class="p-2 mb-0 d-flex align-items-end">
+                                                <cn>输出同步调节</cn>
+                                                <en>Output Synchronization</en>
+                                            </div>
                                         </div>
-                                        <div class="col-lg-6">
-                                            <bs-switch v-model="defaultConf[chnIndex].enable" @switch-change="updateDefaultConf" size="normal"></bs-switch>
-                                        </div>
-                                    </div>
-                                    <div class="row">
-                                        <div class="col-lg-3 offset-lg-1 force-align-center">
-                                            <label>
-                                                <cn>已选择</cn>
-                                                <en>Selected</en>
-                                            </label>
-                                        </div>
-                                        <div class="col-lg-6">
-                                            <input type="text" v-model.trim.lazy="defaultConf[chnIndex].ndirecv.name" class="form-control" readonly disabled>
-                                        </div>
-                                    </div>
-                                    <div class="row">
-                                        <div class="col-lg-3 offset-lg-1 force-align-center">
-                                            <label>
-                                                <cn>源列表</cn>
-                                                <en>Source List</en>
-                                            </label>
-                                        </div>
-                                        <div class="col-lg-6">
-                                            <select class="form-select" v-model="ndiName">
-                                                <option v-for="(item,index) in ndiList" :key="index" :value="item">{{item}}</option>
-                                            </select>
+                                        <div class="card-body" >
+                                            <div class="row">
+                                                <div class="col-lg-3 text-center">
+                                                    <cn>接口名称</cn>
+                                                    <en>Interface name</en>
+                                                </div>
+                                                <div class="col-lg-4 text-center">
+                                                    <cn>硬件延迟(帧)</cn>
+                                                    <en>Hardwa delay(frame)</en>
+                                                </div>
+                                            </div>
+                                            <hr>
+                                            <div class="row mt-2" v-for="(item,index) in handleAoConf">
+                                                <div class="col-lg-3">
+                                                    <input class="form-control" disabled readonly v-model.trim.lazy="item.name">
+                                                </div>
+                                                <div class="col-lg-4 p-3">
+                                                    <noui-slider v-model="" :min="0" :max="25" :step="1" :fix="0"></noui-slider>
+                                                </div>
+                                                <hr>
+                                            </div>
                                         </div>
                                     </div>
-                                    <div class="row"></div>
-                                    <div class="row">
-                                        <div class="col-lg-12 text-center">
-                                            <button type="button" class="btn border-3 btn-primary px-4 me-3" @click="refreshNdiSourceList"><cn>刷新</cn><en>Refresh</en></button>
-                                            <button type="button" class="btn border-3 btn-primary px-4 me-3" @click="updateNdiSourceSelect"><cn>选择</cn><en>Select</en></button>
-                                            <button type="button" class="btn border-3 btn-primary px-4" @click="displayNdiSource"><cn>HDMI输出</cn><en>Display</en></button>
-                                        </div>
-                                    </div>
-                                    <div class="row"></div>
-                                    <div class="row"></div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-lg-12 text-center">
+                                    <button type="button" class="btn btn-primary px-5 py-2" @click="">
+                                        <cn>保存</cn>
+                                        <en>Save</en>
+                                    </button>
+                                    <button type="button" class="btn btn-default px-5 py-2 ms-2" @click="">
+                                        <cn>重置</cn>
+                                        <en>Reset</en>
+                                    </button>
                                 </div>
                             </div>
                         </div>
@@ -96,79 +143,37 @@
 <?php include ("./public/foot.inc") ?>
 
 <script type="module">
-    import { rpc,alertMsg } from "./assets/js/cul.helper.js";
-    import { useDefaultConf } from "./assets/js/vue.hooks.js";
-    import { ignoreCustomElementPlugin,bootstrapSwitchComponent } from "./assets/js/vue.helper.js"
+    import { useSyncConf } from "./assets/js/vue.hooks.js";
+    import {ignoreCustomElementPlugin, bootstrapSwitchComponent, nouiSliderComponent} from "./assets/js/vue.helper.js"
     import vue from "./assets/js/vue.build.js";
 
-    const {createApp,ref,reactive,watchEffect,onMounted,nextTick} = vue;
+    const {createApp,ref,reactive,watchEffect,computed,onMounted} = vue;
     const app = createApp({
         components:{
-            "bs-switch" : bootstrapSwitchComponent
+            "bs-switch" : bootstrapSwitchComponent,
+            "noui-slider": nouiSliderComponent
         },
         setup(props,context) {
             
-            const { defaultConf,updateDefaultConf } = useDefaultConf();
+            const { syncConf,updateSyncConf } = useSyncConf();
 
             const state = {
-                chnIndex: ref(-1),
-                chnImgUrl: ref("assets/images/nosignal.jpg"),
-                ndiName: ref(""),
-                ndiList: reactive([])
+
             }
 
-            const unwatch = watchEffect(()=>{
-                if(defaultConf.length > 0) {
-                    for(let i=0;i<defaultConf.length;i++) {
-                        if(defaultConf[i].type !== "ndi")
-                            continue;
-                        state.chnIndex.value = i;
-                        state.ndiName.value = defaultConf[i].ndirecv.name;
-                    }
-                    updateChnImage();
-                    unwatch();
-                }
-            })
+            const handleAiConf = computed(()=>{
+                return syncConf.filter(item => {
+                    return item.type === "ai";
+                })
+            });
 
-            const updateChnImage = () => {
-                if(defaultConf[state.chnIndex.value].enable)
-                    state.chnImgUrl.value = "snap/snap" + state.chnIndex.value + ".jpg?rnd=" + Math.random();
-                else
-                    state.chnImgUrl.value = "assets/images/nosignal.jpg";
+            const handleAoConf = computed(()=>{
+                return syncConf.filter(item => {
+                    return item.type === "ao";
+                })
+            });
 
-                setTimeout(() => { rpc( "enc.snap" ) },200)
-                setTimeout(updateChnImage,500);
-            }
-
-            const refreshNdiSourceList = tip => {
-                rpc("enc.getNDIList").then(data => {
-                    state.ndiList.splice(0);
-                    state.ndiList.push(...data);
-                    if(tip !== "noTip")
-                        alertMsg("<cn>刷新NDI源列表成功</cn><en>Refresh ndi source list successfully</en>")
-                });
-            }
-
-            const updateNdiSourceSelect = () => {
-                defaultConf[state.chnIndex.value].ndirecv.name = state.ndiName.value;
-                updateDefaultConf();
-            }
-
-            const displayNdiSource = () => {
-                defaultConf.forEach(item => {
-                    if(item.type === "mix") {
-                        item.output.enable = true;
-                        item.output.src = defaultConf[state.chnIndex.value].id;
-                    }
-                });
-                updateDefaultConf();
-            }
-
-            onMounted(()=>{
-                refreshNdiSourceList("noTip");
-            })
-            
-            return {...state,defaultConf,updateDefaultConf,refreshNdiSourceList,updateNdiSourceSelect,displayNdiSource}
+            return {...state,handleAiConf,handleAoConf}
         }
     });
     app.use(ignoreCustomElementPlugin);
