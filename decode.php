@@ -804,7 +804,7 @@
 <?php include ("./public/foot.inc") ?>
 <script type="module">
     
-    import { extend,deepCopy,confirm } from "./assets/js/cul.helper.js";
+    import { extend,deepCopy,confirm } from "./assets/js/lp.utils.js";
     import { useDefaultConf,useHardwareConf } from "./assets/js/vue.hooks.js";
     import { ignoreCustomElementPlugin,bootstrapSwitchComponent,multipleSelectComponent,languageOptionDirective } from "./assets/js/vue.helper.js"
     import vue from "./assets/js/vue.build.js";

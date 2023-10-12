@@ -2,7 +2,7 @@
 import vue from "./vue.build.js";
 import $ from '../plugins/jquery/jquery.esm.js';
 import '../plugins/switch/js/bootstrap-switch.min.js';
-import { func,confirm,rebootConfirm,alertMsg,axios_post } from './cul.helper.js'
+import { func,confirm,rebootConfirm,alertMsg,axios_post } from './lp.utils.js'
 
 const {ref,reactive,toRefs,watch,watchEffect,
     computed,onMounted,nextTick,defineAsyncComponent} = vue;
@@ -409,16 +409,25 @@ export const nouiSliderComponent = {
             return value;
         }
 
+        watch(() => props.modelValue, (newValue, oldValue) => {
+            if (slider.value) {
+                slider.value.noUiSlider.updateOptions({
+                    start: newValue,
+                });
+                hideTooltip();
+            }
+        });
+
         onMounted(async () => {
             const noUiSlider = await import("../plugins/nouislider/js/nouislider.esm.js");
             noUiSlider.create(slider.value, {
-                start: Number(props.modelValue),
+                start: props.modelValue,
                 connect: [true, false],
                 tooltips: {
                     to: formatTooltipValue,
                 },
-                range: {'min': Number(props.min), 'max': Number(props.max)},
-                step: Number(props.step)
+                range: {'min': props.min, 'max': props.max},
+                step: props.step
             });
 
             handle.value = slider.value.querySelector('.noUi-handle');
@@ -432,8 +441,13 @@ export const nouiSliderComponent = {
                 hideTooltip();
             });
 
-            slider.value.noUiSlider.on('slide', (values, mark) => {
+            // slider.value.noUiSlider.on('slide', (values, mark) => {
+            //     context.emit('update:modelValue', values[mark]);
+            // });
+
+            slider.value.noUiSlider.on('end', (values, mark) => {
                 context.emit('update:modelValue', values[mark]);
+                context.emit('slide-end', values[mark]);
             });
         })
 
@@ -449,7 +463,28 @@ export const h5PlayerComponent = {
                         <div class="loading"></div>
                     </div>
               </div>`,
-    props: ['url','codec','audio','buffer','canplay'],
+    props: {
+        url: {
+            type: String,
+            default: ""
+        },
+        codec: {
+            type: String,
+            default: "h264"
+        },
+        audio: {
+            type: Boolean,
+            default: true
+        },
+        buffer: {
+            type: Number,
+            default: 200
+        },
+        canplay: {
+            type: Boolean,
+            default: true
+        }
+    },
     setup(props,context) {
 
         const { url,codec,audio,buffer,canplay } = toRefs(props);
@@ -463,12 +498,8 @@ export const h5PlayerComponent = {
         }
 
         watchEffect(()=>{
-            let hadPlay = canplay.value;
-            if(hadPlay === undefined)
-                hadPlay = true;
-
-            if(hadPlay) {
-                if(url.value !== "" && codec.value !== "" && audio.value !== "" && buffer.value !== "") {
+            if(canplay.value) {
+                if(url.value !== "") {
                     if(state.hadInitPlayer)
                         destoryPlayer();
                     setTimeout(initPlayer,300);
@@ -480,7 +511,7 @@ export const h5PlayerComponent = {
         })
 
         const initPlayer = async () => {
-            if(props.url === "" || props.codec === "" || props.audio === "")
+            if(props.url === "")
                 return;
 
             if(props.codec === "h265") {
@@ -509,12 +540,12 @@ export const h5PlayerComponent = {
             } else {
                 state.videoHandler.value.style.display = 'block';
                 state.jessHandler.value.style.display = 'none';
-                if(Object.keys(state.flvJsModule).length === 0)
-                    state.flvJsModule = (await import('../plugins/flvjs/flv.esm.js')).default;
-                state.h5Player = state.flvJsModule.createPlayer({
+                if(!window.flvjs)
+                    await import('../plugins/flvjs/flv.js');
+                state.h5Player = flvjs.createPlayer({
                     type: 'flv',
+                    url: url.value,
                     audio: JSON.parse(audio.value),
-                    url: url.value
                 });
                 state.h5Player.attachMediaElement(state.videoHandler.value);
                 state.h5Player.load();
@@ -540,17 +571,15 @@ export const h5PlayerComponent = {
             state.hadInitPlayer = false;
         }
         const checkDelay = () => {
-            if (Object.keys(state.h5Player).length > 0 && state.h5Player.hasOwnProperty("buffered") && state.h5Player.buffered.length > 0) {
-                if (state.h5Player.buffered.end(0) - state.h5Player.currentTime > 1.5) {
-                    state.h5Player.currentTime = state.h5Player.buffered.end(0) - 0.2
-                }
-            }
-            setTimeout(checkDelay,1000);
+            // if (Object.keys(state.h5Player).length > 0 && state.h5Player.hasOwnProperty("buffered") && state.h5Player.buffered.length > 0) {
+            //     if (state.h5Player.buffered.end(0) - state.h5Player.currentTime > 1.5) {
+            //         state.h5Player.currentTime = state.h5Player.buffered.end(0) - 0.2;
+            //     }
+            // }
+            // setTimeout(checkDelay,1000);
         }
 
-        onMounted(()=>{
-            checkDelay();
-        })
+        onMounted(checkDelay);
 
         return { ...state }
     }
@@ -566,26 +595,27 @@ export const timepickerComponent = {
         const timepicker = ref(null);
         const { modelValue } = toRefs(props);
 
-        watch(modelValue,()=>{
-            $(timepicker.value).timepicker('setTime', modelValue.value);
-        })
+        import("../plugins/timepicker/js/bootstrap-timepicker.js").then(() => {
+            watch(modelValue,()=>{
+                $(timepicker.value).timepicker('setTime', modelValue.value);
+            })
 
-        onMounted(async () => {
-            await import('../plugins/timepicker/js/bootstrap-timepicker.js');
-            $(timepicker.value).timepicker({
-                minuteStep: 1,
-                defaultTime: props.modelValue,
-                showMeridian: false,
-                icons: {
-                    up: 'fa-solid fa-angle-up',
-                    down: 'fa-solid fa-angle-down'
-                },
-            });
+            onMounted(() => {
+                $(timepicker.value).timepicker({
+                    minuteStep: 1,
+                    defaultTime: props.modelValue,
+                    showMeridian: false,
+                    icons: {
+                        up: 'fa-solid fa-angle-up',
+                        down: 'fa-solid fa-angle-down'
+                    },
+                });
 
-            $(timepicker.value).on("changeTime.timepicker", event => {
-                context.emit('update:modelValue', event.time.value);
-            });
-        })
+                $(timepicker.value).on("changeTime.timepicker", event => {
+                    context.emit('update:modelValue', event.time.value);
+                });
+            })
+        });
 
         return {timepicker}
     }
@@ -1144,28 +1174,68 @@ export const upgradeModalComponent = {
 }
 
 export const customModalComponent = {
-    template: `<div :class="['modal',{'fade':modalFade===undefined ? false : JSON.parse(modalFade)}]"  tabindex="-1" aria-hidden="true" ref="modal">
+    template: `<div :class="['modal',{'fade':modalFade}]"  tabindex="-1" aria-hidden="true" ref="modal">
                     <div :class="['modal-dialog modal-dialog-centered',modalSize]">
                       <div :class="['modal-content',contentClass]">
-                        <div class="modal-header" v-if="hadHeader === undefined || JSON.parse(hadHeader)">
+                        <div class="modal-header" v-if="hadHeader">
                           <h5 class="modal-title">{{modalTitle}}</h5>
                           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                         </div>
                         <div :class="['modal-body',bodyClass]">
                             <slot></slot>
                         </div>
-                        <div class="modal-footer" v-if="hadFooter === undefined || JSON.parse(hadFooter)">
+                        <div class="modal-footer" v-if="hadFooter">
                             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">{{modalCancelBtnName}}</button>
                             <button type="button" :class="['btn btn-primary',arrowClass]" @click="confirmBtnClick">{{modalConfirmBtnName}}</button>
                           </div>
                       </div>
                     </div>
                </div>`,
-    props:['modalSize','hadHeader','hadFooter','modalTitle','modalShow','modalFade','bodyClass','contentClass','confirmBtnName','cancelBtnName'],
+    props: {
+        modalSize: {
+          type: String,
+          default: ""
+        },
+        hadHeader: {
+            type: Boolean,
+            default: true
+        },
+        hadFooter: {
+            type: Boolean,
+            default: true
+        },
+        modalTitle: {
+            type:String,
+            default: "标题"
+        },
+        modalShow: {
+            type: Boolean,
+            default: false
+        },
+        modalFade: {
+            type: Boolean,
+            default: true
+        },
+        bodyClass: {
+            type: String,
+            default: ""
+        },
+        contentClass: {
+            type: String,
+            default: ""
+        },
+        confirmBtnName: {
+            type: String,
+            default:"确定"
+        },
+        cancelBtnName: {
+            type: String,
+            default:"取消"
+        }
+    },
     setup(props,context) {
 
         const { modalShow,modalFade } = toRefs(props);
-
         const state = {
             modal: ref(null),
             modalTitle: ref(""),
@@ -1253,19 +1323,11 @@ export const loadingButtonComponent = {
 
         const { hadLoading } = toRefs(props);
 
-        const state = {
-
-        }
-
         const onButtonClick = () => {
             context.emit("button-click","click")
         }
 
-        onMounted(()=>{
-
-        })
-
-        return { ...state,hadLoading,onButtonClick }
+        return { hadLoading,onButtonClick }
     }
 }
 
@@ -1327,53 +1389,53 @@ export const ptzDirectComponent = {
                                         <en>Zoom</en>
                                     </div>
                                     <div class="col-lg-7 pt-2">
-                                        <noui-slider v-model="" :min="100" :max="400" :step="1"></noui-slider>
+                                        <noui-slider v-model="zoom" :min="zoomMin" :max="zoomMax" :step="zoomStep" :fix="zoomFix" @slide-end="onTouchSlideEnd"></noui-slider>
                                     </div>
                                 </div>
                             </div>
                             <div class="col-lg-6">
                                 <div class="row">
                                     <div class="col-lg-12 text-center">
-                                        <button type="button" @click="handlePtzMove('left-up')" :class="['btn btn-default',arrowClass]">
+                                        <button type="button" @click="updatePreset(1)" :class="['btn',{'btn-primary':presetVal===1},{'btn-default':presetVal!==1},arrowClass]">
                                             1
                                         </button>
-                                        <button type="button" @click="handlePtzMove('up')" :class="['btn btn-default',arrowClass]" :style="{'margin':'0px '+gop+'px'}">
+                                        <button type="button" @click="updatePreset(2)" :class="['btn',{'btn-primary':presetVal===2},{'btn-default':presetVal!==2},arrowClass]" :style="{'margin':'0px '+gop+'px'}">
                                             2
                                         </button>
-                                        <button type="button" @click="handlePtzMove('right-up')" :class="['btn btn-default',arrowClass]">
+                                        <button type="button" @click="updatePreset(3)" :class="['btn',{'btn-primary':presetVal===3},{'btn-default':presetVal!==3},arrowClass]">
                                             3
                                         </button>
                                     </div>
                                     <div class="col-lg-12 text-center" :style="{'marginTop':gop+'px'}">
-                                        <button type="button" @click="handlePtzMove('left')" :class="['btn btn-default',arrowClass]">
+                                        <button type="button" @click="updatePreset(4)" :class="['btn',{'btn-primary':presetVal===4},{'btn-default':presetVal!==4},arrowClass]">
                                             4
                                         </button>
-                                        <button type="button" @click="handlePtzMove('home')" :class="['btn btn-default',arrowClass]" :style="{'margin':'0px '+gop+'px'}">
+                                        <button type="button" @click="updatePreset(5)" :class="['btn',{'btn-primary':presetVal===5},{'btn-default':presetVal!==5},arrowClass]" :style="{'margin':'0px '+gop+'px'}">
                                             5
                                         </button>
-                                        <button type="button" @click="handlePtzMove('right')" :class="['btn btn-default',arrowClass]">
+                                        <button type="button" @click="updatePreset(6)" :class="['btn',{'btn-primary':presetVal===6},{'btn-default':presetVal!==6},arrowClass]">
                                             6
                                         </button>
                                     </div>
                                     <div class="col-lg-12 text-center" :style="{'marginTop':gop+'px'}">
-                                        <button type="button" @click="handlePtzMove('left-down')" :class="['btn btn-default',arrowClass]">
+                                        <button type="button" @click="updatePreset(7)" :class="['btn',{'btn-primary':presetVal===7},{'btn-default':presetVal!==7},arrowClass]">
                                             7
                                         </button>
-                                        <button type="button" @click="handlePtzMove('down')" :class="['btn btn-default',arrowClass]" :style="{'margin':'0px '+gop+'px'}">
+                                        <button type="button" @click="updatePreset(8)" :class="['btn',{'btn-primary':presetVal===8},{'btn-default':presetVal!==8},arrowClass]" :style="{'margin':'0px '+gop+'px'}">
                                             8
                                         </button>
-                                        <button type="button" @click="handlePtzMove('right-down')" :class="['btn btn-default',arrowClass]">
+                                        <button type="button" @click="updatePreset(9)" :class="['btn',{'btn-primary':presetVal===9},{'btn-default':presetVal!==9},arrowClass]">
                                             9
                                         </button>
                                     </div>
                                 </div>
                                 <div class="row mt-3">
                                     <div class="row-lg-12 text-center">
-                                        <button type="button" class="btn btn-primary border-3 px-3 me-1">
+                                        <button type="button" class="btn btn-primary border-3 px-3 me-1" @click="handleCallPreset">
                                             <cn>调用</cn>
                                             <en>Get</en>
                                         </button>
-                                        <button type="button" class="btn btn-primary border-3 px-3">
+                                        <button type="button" class="btn btn-primary border-3 px-3" @click="handleSetPreset">
                                             <cn>设置</cn>
                                             <en>Set</en>
                                         </button>
@@ -1400,17 +1462,63 @@ export const ptzDirectComponent = {
             type: Array,
             default: ['left', 'left-up', 'up', 'right-up', 'right', 'right-down', 'down', 'left-down','home']
         },
+        zoomVal: {
+            type: Number,
+            default: 0
+        },
+        zoomMin: {
+            type: Number,
+            default: 0
+        },
+        zoomMax: {
+            type: Number,
+            default: 10
+        },
+        zoomStep: {
+            type: Number,
+            default: 1
+        },
+        zoomFix: {
+            type: Number,
+            default: 0
+        }
     },
     components:{
         "noui-slider": nouiSliderComponent
     },
     setup(props,context) {
 
+        const state = {
+            zoom: ref(0),
+            presetVal: ref(0)
+        }
+
+        watch(()=>props.zoomVal,(newValue,oldValue) => {
+            console.log(newValue);
+            state.zoom.value = newValue;
+        })
+
         const handlePtzMove = type => {
             context.emit("ptz-move",type)
         }
 
-        return { handlePtzMove }
+        const updatePreset = val => {
+            state.presetVal.value = val;
+        }
+
+        const onTouchSlideEnd = val => {
+            context.emit('zoom-change', val);
+        }
+
+        const handleCallPreset = () => {
+            context.emit('call-preset',state.presetVal.value);
+        }
+
+        const handleSetPreset = () => {
+            context.emit('set-preset',state.presetVal.value);
+        }
+
+        return { ...state,handlePtzMove,onTouchSlideEnd,updatePreset,handleCallPreset,handleSetPreset }
     }
 }
 

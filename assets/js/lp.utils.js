@@ -55,6 +55,18 @@ export const confirm = (options) => {
     jc.confirm(options);
 }
 
+export const request = (url) => {
+    const xhr = new XMLHttpRequest();
+    xhr.open('GET', url, false);
+    xhr.send();
+
+    if (xhr.status === 200) {
+        return JSON.parse(xhr.responseText);
+    } else {
+        throw new Error(xhr.statusText);
+    }
+}
+
 export const queryData = (url,options= {}) => {
     return new Promise((resolve,reject)=>{
         axios.get(url,options)
@@ -126,6 +138,7 @@ export const rpc4 = (func, params = []) => {
     })
 }
 
+//onvif
 export const rpc5 = (func, params = []) => {
     return new Promise((resolve,reject)=>{
         let jsonrpc = new JsonRpcClient({ ajaxUrl: '/RPC5' });
@@ -177,6 +190,10 @@ export const clearReactiveObject = (reactiveObj) => {
     keys.forEach((key) => {
         delete reactiveObj[key];
     });
+};
+
+export const clearReactiveArray = (reactiveArray) => {
+    reactiveArray.splice(0);
 };
 
 export const deepCopy = (obj) => JSON.parse(JSON.stringify(obj));
@@ -280,6 +297,10 @@ export const splitArray = (array,count) => {
     return Array.from({ length: Math.ceil(array.length / count) }, (_, index) =>
         array.slice(index * count, index * count + count)
     );
+}
+
+export const isEmpty = str => {
+    return (!str || str.trim() === "");
 }
 
 

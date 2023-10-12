@@ -10,183 +10,183 @@
     <div data-simplebar>
         <main class="page-content push" id="app" v-cloak>
             <div class="row">
-                <div class="col-lg-6">
-                    <div class="row">
-                        <div class="col-lg-12">
-                            <div class="card">
-                                <div class="card-header bg-transparent">
-                                    <div class="p-2 mb-0 d-flex align-items-end">
-                                        <cn>视频预览</cn>
-                                        <en>Preview</en>
-                                        <small>
-                                            <cn>推流后可见</cn>
-                                            <en>visible when pushing</en>
-                                        </small>
-                                    </div>
-                                </div>
-                                <div class="card-body">
-                                    <div class="force-aspect-ratio aspect-lg">
-                                        <div class="aspect-ratio-content d-flex flex-column justify-content-between">
-                                            <div class="row">
-                                                <div class="col-lg-12">
-                                                    <h5-player :url="playUrl" codec="h265" audio="true" buffer="200" :canplay="hadPlayed"></h5-player>
-                                                </div>
-                                            </div>
-                                            <div class="row">
-                                                <div class="col-lg-12">
-                                                    <div class="push-bar">
-                                                        <div class="row">
-                                                            <div class="col-4 text-center" style="line-height: 34px;">
-                                                                <strong>{{pushTimeCount}}</strong>
-                                                            </div>
-                                                            <div class="col-7 d-flex align-items-start">
-                                                                <button type="button" :class="['btn border-3',{'btn-primary':!pushState.pushing},{'btn-default disabled':pushState.pushing}]" @click="onPushStart">
-                                                                    <i class="fa-solid fa-video me-1"></i>
-                                                                    <cn>推流</cn>
-                                                                    <en>Push</en>
-                                                                </button>
-                                                                <button type="button" :class="['btn border-3 ms-1',{'btn-primary':pushState.pushing},{'btn-default disabled':!pushState.pushing}]" @click="onPushStop">
-                                                                    <i class="fa-solid fa-stop me-1"></i>
-                                                                    <cn>停止</cn>
-                                                                    <en>Stop</en>
-                                                                </button>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
+                <div class="col-lg-7 force-equal-height-container">
+                    <div class="card force-equal-height-item">
+                        <div class="card-header bg-transparent">
+                            <div class="p-2 mb-0 d-flex align-items-end">
+                                <cn>视频预览</cn>
+                                <en>Preview</en>
+                                <small>
+                                    <cn>推流后可见</cn>
+                                    <en>visible when pushing</en>
+                                </small>
+                            </div>
+                        </div>
+                        <div class="card-body d-flex">
+                            <div class="row flex-grow-1 force-align-center">
+                                <div class="col-lg-12">
+                                    <h5-player :url="playUrl" :codec="playerCodec" :audio="true" :canplay="hadPlayed"></h5-player>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
-                <div class="col-lg-6">
-                    <div class="card">
-                        <div class="card-header bg-transparent">
-                            <div class="p-2 mb-0 d-flex align-items-end">
-                                <cn>基本设置</cn>
-                                <en>Basic config</en>
+                <div class="col-lg-5 force-equal-height-container">
+                    <div class="force-equal-height-item d-flex flex-column">
+                        <div class="row flex-grow-1 pb-2">
+                            <div class="col-lg-12">
+                                <div class="card h-100 d-flex flex-column">
+                                    <div class="card-header bg-transparent">
+                                        <div class="p-2 mb-0 d-flex align-items-end">
+                                            <cn>基本设置</cn>
+                                            <en>Basic config</en>
+                                        </div>
+                                    </div>
+                                    <div class="card-body">
+                                        <div class="d-flex flex-column justify-content-between h-100" v-if="Object.keys(pushConf).length > 0">
+                                            <div class="row">
+                                                <div class="col-lg-4 force-align-right pe-4">
+                                                    <label>
+                                                        <cn>视频源</cn>
+                                                        <en>Video source</en>
+                                                    </label>
+                                                </div>
+                                                <div class="col-lg-6">
+                                                    <select class="form-select" v-model="pushConf.srcV" @change="onChangeSrcV">
+                                                        <option v-for="(item,index) in handleEnableConf" :value="item.id">{{item.name}}</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-lg-4 force-align-right pe-4">
+                                                    <label>
+                                                        <cn>音频源</cn>
+                                                        <en>Audio source</en>
+                                                    </label>
+                                                </div>
+                                                <div class="col-lg-6">
+                                                    <select class="form-select" v-model="pushConf.srcA">
+                                                        <option value="-1" cn="无" en="None" v-language-option></option>
+                                                        <option v-for="(item,index) in handleEnableConf" :value="item.id">{{item.name}}</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-lg-4 force-align-right pe-4">
+                                                    <label>
+                                                        <cn>码流</cn>
+                                                        <en>Stream</en>
+                                                    </label>
+                                                </div>
+                                                <div class="col-lg-6">
+                                                    <select class="form-select" v-model="pushConf.srcV_chn">
+                                                        <option value="main" cn="主码流" en="Main Stream" v-language-option></option>
+                                                        <option v-if="defaultSubEnable" value="sub" cn="辅码流" en="Sub Stream" v-language-option></option>
+                                                        <option v-else value="sub" cn="辅码流(未启用)" en="Sub Stream(not enable)" v-language-option></option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-lg-4 force-align-right pe-4">
+                                                    <label>
+                                                        <cn>定时开启</cn>
+                                                        <en>start time</en>
+                                                    </label>
+                                                </div>
+                                                <div class="col-lg-3">
+                                                    <select class="form-select" v-model="pushCron.start.day">
+                                                        <option cn="从不" en="never" value="x" v-language-option></option>
+                                                        <option cn="每天" en="everyday" value="*" v-language-option></option>
+                                                        <option cn="每周一" en="monday" value="1" v-language-option></option>
+                                                        <option cn="每周二" en="tuesday" value="2" v-language-option></option>
+                                                        <option cn="每周三" en="wednesday" value="3" v-language-option></option>
+                                                        <option cn="每周四" en="thursday" value="4" v-language-option></option>
+                                                        <option cn="每周五" en="friday" value="5" v-language-option></option>
+                                                        <option cn="每周六" en="saturday" value="6" v-language-option></option>
+                                                        <option cn="每周日" en="sunday" value="0" v-language-option></option>
+                                                    </select>
+                                                </div>
+                                                <div class="col-lg-3">
+                                                    <time-picker v-model="pushCron.start.time"></time-picker>
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-lg-4 force-align-right pe-4">
+                                                    <label>
+                                                        <cn>定时结束</cn>
+                                                        <en>stop time</en>
+                                                    </label>
+                                                </div>
+                                                <div class="col-lg-3">
+                                                    <select class="form-select" v-model="pushCron.stop.day">
+                                                        <option cn="从不" en="never" value="x" v-language-option></option>
+                                                        <option cn="每天" en="everyday" value="*" v-language-option></option>
+                                                        <option cn="每周一" en="monday" value="1" v-language-option></option>
+                                                        <option cn="每周二" en="tuesday" value="2" v-language-option></option>
+                                                        <option cn="每周三" en="wednesday" value="3" v-language-option></option>
+                                                        <option cn="每周四" en="thursday" value="4" v-language-option></option>
+                                                        <option cn="每周五" en="friday" value="5" v-language-option></option>
+                                                        <option cn="每周六" en="saturday" value="6" v-language-option></option>
+                                                        <option cn="每周日" en="sunday" value="0" v-language-option></option>
+                                                    </select>
+                                                </div>
+                                                <div class="col-lg-3">
+                                                    <time-picker v-model="pushCron.stop.time"></time-picker>
+                                                </div>
+                                            </div>
+<!--                                            <div class="hr-container">-->
+<!--                                                <hr>-->
+<!--                                                <span class="hr-text">OR</span>-->
+<!--                                            </div>-->
+                                            <div class="row">
+                                                <div class="col-lg-4 force-align-right pe-4">
+                                                    <label>
+                                                        <cn>开机启动</cn>
+                                                        <en>auto push</en>
+                                                    </label>
+                                                </div>
+                                                <div class="col-lg-6">
+                                                    <select class="form-select" v-model="pushConf.autorun">
+                                                        <option cn="关闭" en="OFF" value="false" v-language-option></option>
+                                                        <option cn="开启" en="ON" value="true" v-language-option></option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            <div class="row mt-2">
+                                                <div class="col-lg-12 text-center">
+                                                    <button type="button" class="btn border-3 btn-primary px-5" @click="savePushConf">
+                                                        <cn>保存</cn>
+                                                        <en>Save</en>
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                         </div>
-                        <div class="card-body">
-                            <div class="force-aspect-ratio">
-                                <div class="aspect-ratio-content d-flex flex-column justify-content-between" v-if="Object.keys(pushConf).length > 0">
-                                    <div class="row">
-                                        <div class="col-lg-3 offset-lg-1 force-align-right pe-4">
-                                            <label>
-                                                <cn>视频源</cn>
-                                                <en>Video source</en>
-                                            </label>
-                                        </div>
-                                        <div class="col-lg-6">
-                                            <select class="form-select" v-model="pushConf.srcV" @change="onChangeSrcV">
-                                                <option v-for="(item,index) in handleEnableConf" :value="item.id">{{item.name}}</option>
-                                            </select>
-                                        </div>
-                                    </div>
-                                    <div class="row">
-                                        <div class="col-lg-3 offset-lg-1 force-align-right pe-4">
-                                            <label>
-                                                <cn>音频源</cn>
-                                                <en>Audio source</en>
-                                            </label>
-                                        </div>
-                                        <div class="col-lg-6">
-                                            <select class="form-select" v-model="pushConf.srcA">
-                                                <option value="-1" cn="无" en="None" v-language-option></option>
-                                                <option v-for="(item,index) in handleEnableConf" :value="item.id">{{item.name}}</option>
-                                            </select>
-                                        </div>
-                                    </div>
-                                    <div class="row">
-                                        <div class="col-lg-3 offset-lg-1 force-align-right pe-4">
-                                            <label>
-                                                <cn>码流</cn>
-                                                <en>Stream</en>
-                                            </label>
-                                        </div>
-                                        <div class="col-lg-6">
-                                            <select class="form-select" v-model="pushConf.srcV_chn">
-                                                <option value="main" cn="主码流" en="Main Stream" v-language-option></option>
-                                                <option v-if="defaultSubEnable" value="sub" cn="辅码流" en="Sub Stream" v-language-option></option>
-                                                <option v-else value="sub" cn="辅码流(未启用)" en="Sub Stream(not enable)" v-language-option></option>
-                                            </select>
-                                        </div>
-                                    </div>
-                                    <div class="row">
-                                        <div class="col-lg-3 offset-lg-1 force-align-right pe-4">
-                                            <label>
-                                                <cn>定时开启</cn>
-                                                <en>start time</en>
-                                            </label>
-                                        </div>
-                                        <div class="col-lg-3">
-                                            <select class="form-select" v-model="pushCron.start.day">
-                                                <option cn="从不" en="never" value="x" v-language-option></option>
-                                                <option cn="每天" en="everyday" value="*" v-language-option></option>
-                                                <option cn="每周一" en="monday" value="1" v-language-option></option>
-                                                <option cn="每周二" en="tuesday" value="2" v-language-option></option>
-                                                <option cn="每周三" en="wednesday" value="3" v-language-option></option>
-                                                <option cn="每周四" en="thursday" value="4" v-language-option></option>
-                                                <option cn="每周五" en="friday" value="5" v-language-option></option>
-                                                <option cn="每周六" en="saturday" value="6" v-language-option></option>
-                                                <option cn="每周日" en="sunday" value="0" v-language-option></option>
-                                            </select>
-                                        </div>
-                                        <div class="col-lg-3">
-                                            <time-picker v-model="pushCron.start.time"></time-picker>
-                                        </div>
-                                    </div>
-                                    <div class="row">
-                                        <div class="col-lg-3 offset-lg-1 force-align-right pe-4">
-                                            <label>
-                                                <cn>定时结束</cn>
-                                                <en>stop time</en>
-                                            </label>
-                                        </div>
-                                        <div class="col-lg-3">
-                                            <select class="form-select" v-model="pushCron.stop.day">
-                                                <option cn="从不" en="never" value="x" v-language-option></option>
-                                                <option cn="每天" en="everyday" value="*" v-language-option></option>
-                                                <option cn="每周一" en="monday" value="1" v-language-option></option>
-                                                <option cn="每周二" en="tuesday" value="2" v-language-option></option>
-                                                <option cn="每周三" en="wednesday" value="3" v-language-option></option>
-                                                <option cn="每周四" en="thursday" value="4" v-language-option></option>
-                                                <option cn="每周五" en="friday" value="5" v-language-option></option>
-                                                <option cn="每周六" en="saturday" value="6" v-language-option></option>
-                                                <option cn="每周日" en="sunday" value="0" v-language-option></option>
-                                            </select>
-                                        </div>
-                                        <div class="col-lg-3">
-                                            <time-picker v-model="pushCron.stop.time"></time-picker>
-                                        </div>
-                                    </div>
-                                    <div class="hr-container">
-                                        <hr>
-                                        <span class="hr-text">OR</span>
-                                    </div>
-                                    <div class="row">
-                                        <div class="col-lg-3 offset-lg-1 force-align-right pe-4">
-                                            <label>
-                                                <cn>开机启动</cn>
-                                                <en>auto push</en>
-                                            </label>
-                                        </div>
-                                        <div class="col-lg-6">
-                                            <select class="form-select" v-model="pushConf.autorun">
-                                                <option cn="关闭" en="OFF" value="false" v-language-option></option>
-                                                <option cn="开启" en="ON" value="true" v-language-option></option>
-                                            </select>
-                                        </div>
-                                    </div>
-                                    <div class="row">
-                                        <div class="col-lg-12 text-center mt-4">
-                                            <button type="button" class="btn border-3 btn-primary px-5" @click="savePushConf">
-                                                <cn>保存</cn>
-                                                <en>Save</en>
-                                            </button>
+                        <div class="row flex-grow-0">
+                            <div class="col-lg-12">
+                                <div class="card">
+                                    <div class="card-body">
+                                        <div class="push-bar">
+                                            <div class="row">
+                                                <div class="col-4 text-center" style="line-height: 34px;">
+                                                    <strong>{{pushTimeCount}}</strong>
+                                                </div>
+                                                <div class="col-7 d-flex align-items-start">
+                                                    <button type="button" :class="['btn border-3',{'btn-primary':!pushState.pushing},{'btn-default disabled':pushState.pushing}]" @click="onPushStart">
+                                                        <i class="fa-solid fa-video me-1"></i>
+                                                        <cn>推流</cn>
+                                                        <en>Push</en>
+                                                    </button>
+                                                    <button type="button" :class="['btn border-3 ms-1',{'btn-primary':pushState.pushing},{'btn-default disabled':!pushState.pushing}]" @click="onPushStop">
+                                                        <i class="fa-solid fa-stop me-1"></i>
+                                                        <cn>停止</cn>
+                                                        <en>Stop</en>
+                                                    </button>
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -273,12 +273,12 @@
     </div>
 <?php include ("./public/foot.inc") ?>
 <script type="module">
-    import { rpc,func,alertMsg } from "./assets/js/cul.helper.js";
+    import { rpc,func,alertMsg } from "./assets/js/lp.utils.js";
     import { useDefaultConf,usePushConf } from "./assets/js/vue.hooks.js";
     import { ignoreCustomElementPlugin,bootstrapSwitchComponent,h5PlayerComponent,timepickerComponent,languageOptionDirective } from "./assets/js/vue.helper.js"
     import vue from "./assets/js/vue.build.js";
 
-    const {createApp,ref,reactive,computed,onMounted} = vue;
+    const {createApp,ref,reactive,watchEffect,computed,onMounted} = vue;
     const app = createApp({
         directives: {
           "language-option": languageOptionDirective
@@ -294,6 +294,7 @@
             const { pushConf,updatePushConf } = usePushConf();
 
             const state = {
+                playerCodec:ref("h264"),
                 defaultSubEnable:ref(null),
                 hadPlayed:ref(false),
                 playUrl:ref('http://'+window.location.host+'/flv?app=live&stream=preview'),
@@ -316,6 +317,20 @@
                 }),
             }
 
+            const unwatch = watchEffect(()=>{
+                if(Object.keys(pushConf).length > 0) {
+                    defaultConf.forEach(item => {
+                        if(item.id === pushConf.srcV) {
+                            if(pushConf.srcV_chn === "sub" && item.enable2)
+                                state.playerCodec.value = item.encv2.codec;
+                            else
+                                state.playerCodec.value = item.encv.codec;
+                        }
+                    });
+                    unwatch();
+                }
+            })
+
             const handleEnableConf = computed(()=>{
                return defaultConf.filter((item,index) => {
                    if(item.enable && state.defaultSubEnable.value === null)
@@ -325,7 +340,7 @@
             });
 
             const handlePushCrontab = () => {
-                func("/link/mgr/system/handlePushCrontab").then(result => {
+                func("/link/mgr/system/getPushCrontab").then(result => {
                     const keys = Object.keys(result.data);
                     keys.forEach(key => {
                         const value = result.data[key];
@@ -341,7 +356,7 @@
             }
 
             const onChangeSrcV = () => {
-                defaultConf.filter((item,index) => {
+                defaultConf.forEach(item => {
                     if(item.id === pushConf.srcV)
                         state.defaultSubEnable.value = item.enable2;
                     return true;
@@ -406,11 +421,20 @@
             }
 
             const savePushConf = () => {
+                defaultConf.forEach(item => {
+                    if(item.id === pushConf.srcV) {
+                        if(pushConf.srcV_chn === "sub" && item.enable2)
+                            state.playerCodec.value = item.encv2.codec;
+                        else
+                            state.playerCodec.value = item.encv.codec;
+                    }
+                });
+
                 updatePushConf().then(()=>{
                     func("/link/mgr/system/setPushCrontab",state.pushCron).then(data => {
                         if(data.status === "success")
                             alertMsg('<cn>保存设置成功</cn><en>Save config success!</en>', 'success');
-                    })
+                    });
                 })
             }
 

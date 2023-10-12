@@ -95,10 +95,14 @@ class System extends Verify
             $this->link_verify();
             $params = json_decode($params,true);
             $this->check_args($params);
+            
+            $time1 = $params["sysDate"];
+            $parts = explode("/", $time1);
+            $time2 = $parts[0] . "-" . $parts[1] . "-" . $parts[2] . " " . $parts[3] . ":" . $parts[4] . ":" . $parts[5];
 
-            $date = $params["sysDate"];
-            exec( "/link/bin/rtc -s time " . $date);
+            exec( "/link/bin/rtc -s time " . $time1. " '".$time2."'" );
             exec( "/link/bin/rtc -g time" );
+
             return $this->handleRet("","success","执行完成","execution is completed");
         }
         catch (Exception $ex)
@@ -111,8 +115,9 @@ class System extends Verify
     {
         try {
             $this->link_verify();
-            $result = date( "Y-m-d H:i:s", intval( time() ) );
-            return $this->handleRet($result,"success","执行完成","execution is completed");
+            //$result = date( "Y-m-d H:i:s", intval( time() ) );
+            exec('date +"%Y-%m-%d %H:%M:%S"',$result);
+            return $this->handleRet($result[0],"success","执行完成","execution is completed");
         }
         catch (Exception $ex)
         {

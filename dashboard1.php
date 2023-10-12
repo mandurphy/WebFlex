@@ -168,7 +168,7 @@
   <script src="assets/plugins/apex/apexcharts.min.js"></script>
   <script type="module">
 
-      import { rpc} from "./assets/js/cul.helper.js";
+      import { rpc} from "./assets/js/lp.utils.js";
       import { useDefaultConf,useHardwareConf } from "./assets/js/vue.hooks.js";
       import { ignoreCustomElementPlugin,pieChartDirective,apexChartsDirective,bootstrapSwitchComponent } from "./assets/js/vue.helper.js"
       import vue from "./assets/js/vue.build.js";

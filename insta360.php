@@ -33,7 +33,9 @@
                             <div class="flex-fill pb-2">
                                 <div class="card h-100">
                                     <div class="card-body d-flex align-items-center">
-                                        <ptz-direct :arrow-class="'arrow-direct'" :home-class="'home-direct'" :gop="5" :sticks="['up','down','left','right','home']" @ptz-move="handlePtzMove"></ptz-direct>
+                                        <ptz-direct :arrow-class="'arrow-direct'" :home-class="'home-direct'" :gop="5" :sticks="['up','down','left','right','home']"
+                                                    :zoom-val="ptz.z" :zoom-min="100" :zoom-max="400"
+                                                    @ptz-move="handlePtzMove" @zoom-change="handleZoomChange" @call-preset="handleCallPreset" @set-preset="handleSetPreset"></ptz-direct>
                                     </div>
                                 </div>
                             </div>
@@ -59,13 +61,13 @@
                                                 <hr>
                                                 <div class="row">
                                                     <div class="col-lg-4 force-align-center">
-                                                        <bs-switch></bs-switch>
+                                                        <bs-switch v-model="options.tracking" @switch-change="onUsbCamOptionChange"></bs-switch>
                                                     </div>
                                                     <div class="col-lg-4 force-align-center">
-                                                        <bs-switch></bs-switch>
+                                                        <bs-switch v-model="options.whiteboard" @switch-change="onUsbCamOptionChange"></bs-switch>
                                                     </div>
                                                     <div class="col-lg-4 force-align-center">
-                                                        <bs-switch></bs-switch>
+                                                        <bs-switch v-model="options.overhead" @switch-change="onUsbCamOptionChange"></bs-switch>
                                                     </div>
                                                 </div>
                                             </div>
@@ -86,13 +88,13 @@
                                                 <hr>
                                                 <div class="row">
                                                     <div class="col-lg-4 force-align-center">
-                                                        <bs-switch></bs-switch>
+                                                        <bs-switch v-model="options.deskview" @switch-change="onUsbCamOptionChange"></bs-switch>
                                                     </div>
                                                     <div class="col-lg-4 force-align-center">
-                                                        <bs-switch></bs-switch>
+                                                        <bs-switch v-model="options.hdr" @switch-change="onUsbCamOptionChange"></bs-switch>
                                                     </div>
                                                     <div class="col-lg-4 force-align-center">
-                                                        <bs-switch></bs-switch>
+                                                        <bs-switch v-model="options.mirror" @switch-change="onUsbCamOptionChange"></bs-switch>
                                                     </div>
                                                 </div>
                                             </div>
@@ -109,7 +111,7 @@
 <?php include ("./public/foot.inc") ?>
 
 <script type="module">
-    import { rpc,alertMsg } from "./assets/js/cul.helper.js";
+    import { rpc } from "./assets/js/lp.utils.js";
     import { useDefaultConf } from "./assets/js/vue.hooks.js";
     import { ignoreCustomElementPlugin,bootstrapSwitchComponent,ptzDirectComponent } from "./assets/js/vue.helper.js"
     import vue from "./assets/js/vue.build.js";
@@ -127,6 +129,11 @@
             const state = {
                 chnIndex: ref(-1),
                 chnImgUrl: ref("assets/images/nosignal.jpg"),
+                ptz: reactive({ p: 0, t: 0, z: 300 }),
+                options: reactive({tracking: false, whiteboard: false, overhead: false, deskview: false, hdr: false, mirror: false}),
+                stepP: 0,
+                stepT: 0,
+                timerId: 0
             }
 
             const unwatch = watchEffect(()=>{
@@ -151,15 +158,83 @@
                 setTimeout(updateChnImage,500);
             }
 
-            const handlePtzMove = type => {
-                console.log(type,"@@@");
+            const handleUsbCamState = () => {
+                Promise.all([rpc("usb.ptz_get"), rpc("usb.insta360_get")]).then(([data1, data2]) => {
+                    if(Object.keys(data1).length > 0)
+                        Object.assign(state.ptz,data1);
+                    if(Object.keys(data2).length > 0)
+                        Object.assign(state.options,data2);
+                    setTimeout(handleUsbCamState,500);
+                });
             }
 
-            onMounted(()=>{
+            const updatePtz = () => {
+                state.ptz.p += state.stepP*3600;
+                state.ptz.t += state.stepT*3600;
+                rpc("usb.ptz_set", [state.ptz.p,state.ptz.t,state.ptz.p]);
+            }
 
-            })
+            const ptzMoveStart = () => {
+                if(state.timerId === 0)
+                    state.timerId=setInterval(updatePtz,100);
+            }
+
+            const ptzMoveStop = () => {
+                if(state.timerId !== 0) {
+                    clearInterval(state.timerId);
+                    state.timerId = 0;
+                }
+                state.stepP = 0;
+                state.stepT = 0;
+            }
+
+            const handlePtzMove = type => {
+                if(type === "up") {
+                    ptzMoveStart();
+                    state.stepT = 1;
+                }
+                if(type === "right") {
+                    ptzMoveStart();
+                    state.stepP = 1;
+                }
+                if(type === "down") {
+                    ptzMoveStart();
+                    state.stepT = -1;
+                }
+                if(type === "left") {
+                    ptzMoveStart();
+                    state.stepP = -1;
+                }
+                if(type === "home") {
+                    ptzMoveStop();
+                    state.ptz.p = 0;
+                    state.ptz.t = 0;
+                    rpc("usb.ptz_set",[state.ptz.p,state.ptz.t,state.ptz.p]);
+                }
+                if(type === "move-stop")
+                    ptzMoveStop();
+            }
+
+            const handleZoomChange = zoomVal => {
+                state.ptz.z = zoomVal;
+                rpc("usb.ptz_set",[state.ptz.p,state.ptz.t,state.ptz.p]);
+            }
+
+            const handleCallPreset = presetVal => {
+                rpc("usb.preset_call", [presetVal]);
+            }
+
+            const handleSetPreset = presetVal => {
+                rpc("usb.preset_set", [presetVal, state.ptz.p,state.ptz.t,state.ptz.p]);
+            }
+
+            const onUsbCamOptionChange = () => {
+                rpc("usb.insta360_set", [state.options]);
+            }
+
+            onMounted(handleUsbCamState);
             
-            return {...state, handlePtzMove}
+            return {...state, handlePtzMove,handleZoomChange,handleCallPreset,handleSetPreset,onUsbCamOptionChange}
         }
     });
     app.use(ignoreCustomElementPlugin);

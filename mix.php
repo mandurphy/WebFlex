@@ -448,7 +448,7 @@
 <script src="assets/plugins/nouislider/js/nouislider.min.js"></script>
 <script type="module">
     
-    import { rpc,alertMsg,confirm } from "./assets/js/cul.helper.js";
+    import { rpc,alertMsg,confirm } from "./assets/js/lp.utils.js";
     import { useDefaultConf,useDefLaysConf,useHardwareConf } from "./assets/js/vue.hooks.js";
     import { ignoreCustomElementPlugin,bootstrapSwitchComponent,nouiSliderComponent,languageOptionDirective } from "./assets/js/vue.helper.js"
     import vue from "./assets/js/vue.build.js";

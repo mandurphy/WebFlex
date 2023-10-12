@@ -144,7 +144,7 @@
 <?php include ("./public/foot.inc") ?>
 
 <script type="module">
-    import { rpc } from "./assets/js/cul.helper.js";
+    import { rpc } from "./assets/js/lp.utils.js";
     import { useDefaultConf,useResConf } from "./assets/js/vue.hooks.js";
     import {ignoreCustomElementPlugin,bootstrapSwitchComponent,nouiSliderComponent,languageOptionDirective} from "./assets/js/vue.helper.js"
     import vue from "./assets/js/vue.build.js";

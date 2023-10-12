@@ -921,7 +921,7 @@
         </logger-modal>
 
         <search-modal modal-title="固件搜索&Search" :modal-show="showSearchModal"
-                      modal-fade="true" confirm-btn-name="搜索&Search" cancel-btn-name="取消&Cancel"
+                      confirm-btn-name="搜索&Search" cancel-btn-name="取消&Cancel"
                       @confirm-btn-click="searchPatchBySn">
             <div class="row my-3">
                 <div class="col-lg-3 offset-lg-1">
@@ -950,7 +950,7 @@
     import vue from "./assets/js/vue.build.js";
     import JsZip from "./assets/plugins/jszip/jszip.esm.js"
     import * as fileSave from "./assets/plugins/jszip/filesaver.esm.js";
-    import { rpc2,alertMsg,func,queryData,extend,popover,formatDate,deepCopy,rebootConfirm,resetConfirm } from "./assets/js/cul.helper.js";
+    import { rpc2,alertMsg,func,queryData,extend,popover,formatDate,deepCopy,rebootConfirm,resetConfirm } from "./assets/js/lp.utils.js";
     import { useHardwareConf,usetNetManagerConf,usePasswordConf,useVideoBufferConf,useNtpConf,useTimezoneConf,usePortConf,useVersionConf,useVerLogsConf,useWpaConf } from "./assets/js/vue.hooks.js";
     import { ignoreCustomElementPlugin,bootstrapSwitchComponent,languageOptionDirective,uploadModalComponent,upgradeModalComponent,customModalComponent,loadingButtonComponent } from "./assets/js/vue.helper.js"
     import { wifiFlagComponent,antenanFlagComponent } from "./assets/js/vue.flags.js";

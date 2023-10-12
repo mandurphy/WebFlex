@@ -1345,3 +1345,8 @@ input[type="password"]::-ms-reveal{
     height: 2.86rem;
     font-size: 1rem !important;
 }
+
+.onvif .btn-loading {
+    min-width: 76px;
+    min-height: 34.8px;
+}

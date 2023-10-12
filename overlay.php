@@ -404,7 +404,7 @@
 <script src="assets/plugins/fileinput/js/locales/zh.js" type="module"></script>
 <script src="assets/plugins/fileinput/themes/fa6/theme.min.js" type="module"></script>
 <script type="module">
-    import { rpc,alertMsg,confirm,func } from "./assets/js/cul.helper.js";
+    import { rpc,alertMsg,confirm,func } from "./assets/js/lp.utils.js";
     import { useDefaultConf,useOverlayConf,useResConf } from "./assets/js/vue.hooks.js";
     import { ignoreCustomElementPlugin,bootstrapSwitchComponent,nouiSliderComponent,vueColorPickerComponent,uploadModalComponent } from "./assets/js/vue.helper.js"
     import vue from "./assets/js/vue.build.js";

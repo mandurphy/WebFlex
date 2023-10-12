@@ -140,7 +140,7 @@
 <script type="module">
     import vue from "./assets/js/vue.build.js";
     import vueDragResize from "./assets/plugins/vueDragResize/js/vue3-drag-resize.esm.js";
-    import { rpc,deepCopy } from "./assets/js/cul.helper.js";
+    import { rpc,deepCopy } from "./assets/js/lp.utils.js";
     import { useDefaultConf,useRoiConf } from "./assets/js/vue.hooks.js";
     import { ignoreCustomElementPlugin,bootstrapSwitchComponent,languageOptionDirective } from "./assets/js/vue.helper.js"
     const {createApp,ref,reactive,watchEffect,computed,nextTick,onMounted} = vue;

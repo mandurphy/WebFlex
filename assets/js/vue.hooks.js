@@ -1,5 +1,5 @@
 
-import {queryData, checkFileExists, func, alertMsg,rpc, rpc2, rpc3, deepCopy} from "./cul.helper.js";
+import {queryData, checkFileExists, func, alertMsg, rpc, rpc2, rpc3, deepCopy, clearReactiveObject,request} from "./lp.utils.js";
 import vue from "./vue.build.js";
 const { ref,reactive,onMounted } = vue;
 
@@ -25,9 +25,7 @@ export const useDefaultConf = () => {
             });
         })
     }
-    onMounted(()=> {
-        handleDefaultConf();
-    })
+    onMounted(handleDefaultConf);
     return { defaultConf,updateDefaultConf }
 }
 
@@ -38,9 +36,7 @@ export const useHardwareConf = () => {
             Object.assign(hardwareConf, conf);
         })
     }
-    onMounted(() => {
-        handleHardwareConf();
-    })
+    onMounted(handleHardwareConf);
     return { hardwareConf }
 }
 
@@ -66,10 +62,8 @@ export const usePortConf = () => {
             });
         })
     }
-    onMounted(() => {
-        handlePortConf();
-    })
-    return { portConf }
+    onMounted(handlePortConf);
+    return { portConf,updatePortConf }
 }
 
 export const useOverlayConf = () => {
@@ -95,9 +89,7 @@ export const useOverlayConf = () => {
         })
     }
 
-    onMounted(()=>{
-        handleOverlayConf();
-    })
+    onMounted(handleOverlayConf);
     return { overlayConf,updateOverlayConf }
 }
 
@@ -121,42 +113,44 @@ export const useDefLaysConf = () => {
             defLaysConf.splice(0, defLaysConf.length, ...conf);
         })
     }
-    onMounted(()=>{
-        handleDefLaysConf();
-    })
+    onMounted(handleDefLaysConf);
     return { defLaysConf }
 }
 
 export const useLanguageConf = () => {
-    const request = (url) => {
-        const xhr = new XMLHttpRequest();
-        xhr.open('GET', url, false);
-        xhr.send();
-
-        if (xhr.status === 200) {
-            return JSON.parse(xhr.responseText);
-        } else {
-            throw new Error(xhr.statusText);
-        }
-    }
-
     const languageConf = reactive({});
-
     const handleLanguageConf = () => {
-        let conf = {"lang":"cn"}
-
-        try {
-            conf = request("config/lang.json");
-        } catch (e) {
-            console.log("get lang.json faild!")
-        }
-
+        let conf = request("config/lang.json");
         Object.assign(languageConf, conf);
     }
 
     handleLanguageConf();
 
     return { languageConf }
+}
+
+export const useThemeConf = () => {
+    const themeConf = reactive({});
+    const handleThemeConf = () => {
+        let conf = request("config/theme.json");
+        Object.assign(themeConf, conf);
+    }
+    const updateThemeConf = (type) => {
+        return new Promise((resolve,reject)=>{
+            themeConf.used = type;
+            func("/link/mgr/conf/updateThemeConf",themeConf).then(data => {
+                if ( data.status === "success" ) {
+                    const html = document.querySelector('html');
+                    html.setAttribute('data-bs-theme', type);
+                    resolve();
+                    return;
+                }
+                reject();
+            })
+        })
+    }
+    handleThemeConf();
+    return { themeConf,updateThemeConf }
 }
 
 
@@ -195,9 +189,7 @@ export const usetNetManagerConf = (tip = "tip") => {
             })
         })
     }
-    onMounted(()=>{
-        handleNetManagerConf();
-    })
+    onMounted(handleNetManagerConf);
     return { netManagerConf,updateNetManagerConf }
 }
 
@@ -242,9 +234,7 @@ export const useVideoBufferConf = () => {
             });
         })
     }
-    onMounted(()=>{
-        handleVideoBufferConf();
-    })
+    onMounted(handleVideoBufferConf);
     return { videoBufferConf,updateVideoBufferConf }
 }
 
@@ -270,9 +260,7 @@ export const useNtpConf = () => {
             });
         })
     }
-    onMounted(()=>{
-        handleNtpConf();
-    })
+    onMounted(handleNtpConf);
     return { ntpConf,updateNtpConf }
 }
 
@@ -298,9 +286,7 @@ export const useTimezoneConf = () => {
             });
         })
     }
-    onMounted(()=>{
-        handleTimezoneConf();
-    })
+    onMounted(handleTimezoneConf);
     return { timezoneConf,updateTimezoneConf }
 }
 
@@ -324,9 +310,7 @@ export const useVerLogsConf = () => {
             verLogsConf.splice(0, verLogsConf.length, ...conf);
         })
     }
-    onMounted(()=>{
-        handleVerLogsConf();
-    })
+    onMounted(handleVerLogsConf);
     return { verLogsConf }
 }
 
@@ -350,9 +334,7 @@ export const usePushConf = () => {
             });
         })
     }
-    onMounted(()=>{
-        handlePushConf();
-    })
+    onMounted(handlePushConf);
     return { pushConf,updatePushConf }
 }
 
@@ -380,9 +362,7 @@ export const useButtonConf = () => {
             }
         })
     }
-    onMounted(()=>{
-        handleButtonConf();
-    })
+    onMounted(handleButtonConf);
     return { buttonConf }
 }
 
@@ -406,9 +386,7 @@ export const useMqttConf = () => {
             Object.assign(mqttConf,conf)
         })
     }
-    onMounted(()=>{
-        handleMqttConf();
-    })
+    onMounted(handleMqttConf);
     return { mqttConf }
 }
 
@@ -432,9 +410,7 @@ export const useFrpcConf = () => {
             frpcConf.value = conf;
         })
     }
-    onMounted(()=>{
-        handleFrpcConf();
-    })
+    onMounted(handleFrpcConf);
     return { frpcConf }
 }
 
@@ -458,9 +434,7 @@ export const useSlsConf = () => {
             slsConf.value = conf;
         })
     }
-    onMounted(()=>{
-        handleSlsConf();
-    })
+    onMounted(handleSlsConf);
     return { slsConf }
 }
 
@@ -484,9 +458,7 @@ export const useNdiConf = () => {
             ndiConf.value = JSON.stringify(conf,null,2);
         })
     }
-    onMounted(()=>{
-        handleNdiConf();
-    })
+    onMounted(handleNdiConf);
     return { ndiConf }
 }
 
@@ -497,9 +469,7 @@ export const useSsidConf = () => {
             Object.assign(ssidConf,conf)
         })
     }
-    onMounted(()=>{
-        handleSSIDConf();
-    })
+    onMounted(handleSSIDConf);
     return { ssidConf }
 }
 
@@ -529,9 +499,7 @@ export const useWpaConf = () => {
             }
         })
     }
-    onMounted(()=>{
-        handleWpaConf();
-    })
+    onMounted(handleWpaConf);
     return { wpaConf }
 }
 
@@ -540,6 +508,9 @@ export const useRecordConf = () => {
     const recordConf = reactive({});
     const handleRecordConf = () => {
         queryData("config/record.json").then(conf => {
+            // for (let key in recordConf)
+            //     delete recordConf[key];
+            clearReactiveObject(conf);
             Object.assign(recordConf,conf)
         })
     }
@@ -555,10 +526,10 @@ export const useRecordConf = () => {
             })
         })
     }
-    onMounted(()=>{
-        handleRecordConf();
-    })
-    return { recordConf,updateRecordConf }
+
+    onMounted(handleRecordConf);
+
+    return { recordConf,handleRecordConf,updateRecordConf }
 }
 
 export const useGb28181Conf = () => {
@@ -585,9 +556,7 @@ export const useGb28181Conf = () => {
         })
     }
 
-    onMounted(()=>{
-        handleGb28181Conf();
-    })
+    onMounted(handleGb28181Conf);
     return { gb28181Conf,updateGb28181Conf }
 }
 
@@ -615,9 +584,7 @@ export const useRoiConf = () => {
         })
     }
 
-    onMounted(()=>{
-        handleRoiConf();
-    })
+    onMounted(handleRoiConf);
     return { roiConf,updateRoiConf }
 }
 
@@ -645,11 +612,35 @@ export const useSyncConf = () => {
         })
     }
 
-    onMounted(()=>{
-        handleSyncConf();
-    })
+    onMounted(handleSyncConf);
 
     return { syncConf,updateSyncConf }
+}
+
+export const usePtzConf = () => {
+    const ptzConf = reactive({});
+    const handlePtzConf = () => {
+        queryData("config/auto/ptz.json").then((conf)=>{
+            Object.assign(ptzConf, conf);
+        })
+    }
+    const updatePtzConf = (tip = "tip") => {
+        return new Promise((resolve,reject)=>{
+            func("/link/mgr/conf/updatePtzConf",ptzConf).then(data => {
+                if ( data.status !== "success" ) {
+                    reject();
+                    if(tip !== "noTip")
+                        alertMsg('<cn>保存设置失败</cn><en>Save config failed!</en>', 'error');
+                } else {
+                    resolve();
+                    if(tip !== "noTip")
+                        alertMsg('<cn>保存设置成功</cn><en>Save config successfully!</en>', 'success');
+                }
+            })
+        })
+    }
+    onMounted(handlePtzConf);
+    return { ptzConf,updatePtzConf }
 }
 
 

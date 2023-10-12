@@ -51,8 +51,8 @@
                                 </div>
                                 <div class="col-lg-5 force-equal-height-container" v-if="Object.keys(gb28181Conf).length > 0">
                                     <div class="card force-equal-height-item">
-                                        <div class="card-body" >
-                                            <div class="row mt-3">
+                                        <div class="card-body d-flex flex-column justify-content-between">
+                                            <div class="row">
                                                 <div class="col-lg-3 offset-lg-1 force-align-center">
                                                     <label>
                                                         <cn>启用</cn>
@@ -63,7 +63,7 @@
                                                     <bs-switch v-model="gb28181Conf.server.enable" size="normal"></bs-switch>
                                                 </div>
                                             </div>
-                                            <div class="row mt-3">
+                                            <div class="row">
                                                 <div class="col-lg-3 offset-lg-1 force-align-center">
                                                     <label>
                                                         <cn>品牌</cn>
@@ -74,7 +74,7 @@
                                                     <input class="form-control" v-model.trim.lazy="gb28181Conf.server.Manufacture">
                                                 </div>
                                             </div>
-                                            <div class="row mt-3">
+                                            <div class="row">
                                                 <div class="col-lg-3 offset-lg-1 force-align-center">
                                                     <label>
                                                         <cn>设备型号</cn>
@@ -85,7 +85,7 @@
                                                     <input class="form-control" v-model.trim.lazy="gb28181Conf.server.mode">
                                                 </div>
                                             </div>
-                                            <div class="row mt-3">
+                                            <div class="row">
                                                 <div class="col-lg-3 offset-lg-1 force-align-center">
                                                     <label>
                                                         <cn>本机ID</cn>
@@ -96,7 +96,7 @@
                                                     <input class="form-control" v-model.trim.lazy="gb28181Conf.server.id">
                                                 </div>
                                             </div>
-                                            <div class="row mt-3">
+                                            <div class="row">
                                                 <div class="col-lg-3 offset-lg-1 force-align-center">
                                                     <label>
                                                         <cn>服务器ID</cn>
@@ -107,7 +107,7 @@
                                                     <input class="form-control" v-model.trim.lazy="gb28181Conf.server.svrId">
                                                 </div>
                                             </div>
-                                            <div class="row mt-3">
+                                            <div class="row">
                                                 <div class="col-lg-3 offset-lg-1 force-align-center">
                                                     <label>
                                                         <cn>服务器域</cn>
@@ -118,7 +118,7 @@
                                                     <input class="form-control" v-model.trim.lazy="gb28181Conf.server.realm">
                                                 </div>
                                             </div>
-                                            <div class="row mt-3">
+                                            <div class="row">
                                                 <div class="col-lg-3 offset-lg-1 force-align-center">
                                                     <label>
                                                         <cn>服务器IP</cn>
@@ -129,7 +129,7 @@
                                                     <input class="form-control" v-model.trim.lazy="gb28181Conf.server.svrIp">
                                                 </div>
                                             </div>
-                                            <div class="row mt-3">
+                                            <div class="row">
                                                 <div class="col-lg-3 offset-lg-1 force-align-center">
                                                     <label>
                                                         <cn>服务器端口</cn>
@@ -140,7 +140,7 @@
                                                     <input class="form-control" v-model.trim.lazy="gb28181Conf.server.svrPort">
                                                 </div>
                                             </div>
-                                            <div class="row mt-3">
+                                            <div class="row">
                                                 <div class="col-lg-3 offset-lg-1 force-align-center">
                                                     <label>
                                                         <cn>密码</cn>
@@ -151,11 +151,12 @@
                                                     <input class="form-control" v-model.trim.lazy="gb28181Conf.server.passwd">
                                                 </div>
                                             </div>
-                                            <div class="row mt-3">
+                                            <div class="row">
                                                 <div class="col-lg-12 text-center">
                                                     <button type="button" class="btn border-3 btn-primary px-4" @click="updateGb28181Conf"><cn>保存</cn><en>Save</en></button>
                                                 </div>
                                             </div>
+                                            <div class="row"></div>
                                         </div>
                                     </div>
                                 </div>
@@ -201,7 +202,7 @@
                                 </div>
                             </div>
                             <hr>
-                            <div v-for="(item,index) in gb28181Conf.channel">
+                            <div v-for="(item,index) in handleGb28181Channels">
                                 <div class="row mt-3">
                                     <div class="col-lg-3">
                                         <input class="form-control" v-model.trim.lazy="item.chnName" readonly disabled>
@@ -233,7 +234,7 @@
 
 <script type="module">
     import vue from "./assets/js/vue.build.js";
-    import { rpc } from "./assets/js/cul.helper.js";
+    import { rpc } from "./assets/js/lp.utils.js";
     import { useDefaultConf,useGb28181Conf } from "./assets/js/vue.hooks.js";
     import { ignoreCustomElementPlugin,bootstrapSwitchComponent } from "./assets/js/vue.helper.js"
 
@@ -259,19 +260,19 @@
             }
 
             const handleGb28181Channels = computed(() => {
-                // if(defaultConf.length > 0 && Object.keys(gb28181Conf).length > 0) {
-                //     return gb28181Conf.channel.filter(item => {
-                //         const match = defaultConf.find(conf => conf.enable && item.id === conf.id);
-                //         if (match) {
-                //             return {
-                //                 ...item,
-                //                 chnName: match.name
-                //             };
-                //         }
-                //         return false;
-                //     });
-                // }
-                // return [];
+                if(defaultConf.length > 0 && Object.keys(gb28181Conf).length > 0) {
+                    return gb28181Conf.channel.filter(item => {
+                        const match = defaultConf.find(conf => conf.enable && item.id === conf.id);
+                        if (match) {
+                            return {
+                                ...item,
+                                chnName: match.name
+                            };
+                        }
+                        return false;
+                    });
+                }
+                return [];
             });
 
             const unwatch = watchEffect(()=>{

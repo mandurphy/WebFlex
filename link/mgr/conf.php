@@ -64,4 +64,16 @@ class Conf extends Basic
         file_put_contents( "/link/config/misc/timezone/tzselect.json",json_encode($param,JSON_UNESCAPED_UNICODE|JSON_PRETTY_PRINT));
         return $this->handleRet("",'success','保存成功','save successfully');
     }
+
+    public function updatePtzConf($param)
+    {
+        file_put_contents( '/link/config/auto/ptz.json', json_encode($param,JSON_UNESCAPED_UNICODE|JSON_PRETTY_PRINT) );
+        return $this->handleRet("",'success','保存成功','save successfully');
+    }
+
+    public function updateThemeConf($param)
+    {
+        file_put_contents( '/link/config/theme.json', json_encode($param,JSON_UNESCAPED_UNICODE|JSON_PRETTY_PRINT) );
+        return $this->handleRet("",'success','保存成功','save successfully');
+    }
 }

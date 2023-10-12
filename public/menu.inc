@@ -19,7 +19,10 @@
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="javascript:;"><i class="fa-regular fa-moon"></i></a>
+                        <a class="nav-link" v-if="Object.keys(themeConf).length > 0">
+                            <i v-if="themeConf.used==='default'" class="fa-regular fa-moon" @click="updateThemeConf('dark')"></i>
+                            <i v-else class="fa-regular fa-sun" @click="updateThemeConf('default')"></i>
+                        </a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" data-bs-toggle="offcanvas" href="#ThemeCustomizer"><i class="fa fa-gear"></i></a>
@@ -103,7 +106,7 @@
                             <li>
                                 <a href="ndi.php">
                                     <i class="fa-solid fa-desktop"></i>
-                                    <div class="menu-title"><cn>NDI解码</cn><en>NDI decode</en></div>
+                                    <div class="menu-title"><cn>NDI解码</cn><en>NDI Decode</en></div>
                                 </a>
                             </li>
                             <li>
@@ -216,27 +219,19 @@
                     </li>
                 </ul>
             </div>
-            <div class="sidebar-bottom dropdown dropup-center dropup">
-                <div class="dropdown-toggle d-flex align-items-center px-3 gap-3 w-100 h-100" data-bs-toggle="dropdown">
-                    <div class="user-img">
-                        <img src="assets/images/avatar.png" alt="">
+            <div class="sidebar-bottom">
+                <div class="d-flex align-items-center px-3 gap-3 w-100 h-100" data-bs-toggle="dropdown">
+                    <div class="user-icon">
+                        <i class="fa-regular fa-user"></i>
                     </div>
                     <div class="user-info">
                         <h5 class="mb-0 user-name">Admin</h5>
                         <p class="mb-0 user-designation"><cn>系统管理员</cn><en>administrator</en></p>
                     </div>
+                    <div class="logout-icon" @click="onLogout">
+                        <i class="fa-solid fa-right-from-bracket"></i>
+                    </div>
                 </div>
-                <ul class="dropdown-menu dropdown-menu-end">
-<!--                    <li>-->
-<!--                        <div class="dropdown-divider mb-0"></div>-->
-<!--                    </li>-->
-                    <li class="py-2">
-                        <a class="dropdown-item" href="javascript:;" @click="onLogout">
-                            <i class="fa-solid fa-right-from-bracket me-2"></i>
-                            <span>Logout</span>
-                        </a>
-                    </li>
-                </ul>
             </div>
         </aside>
 
@@ -327,12 +322,17 @@
 </div>
 
 <script type="module">
-    import { createApp,ref,watchEffect,onMounted } from "../assets/plugins/vue/vue.esm.prod.js";
-    import { func,updateSysLanguage } from "../assets/js/cul.helper.js";
+    import vue from "../assets/js/vue.build.js";
+    import { func,updateSysLanguage } from "../assets/js/lp.utils.js";
+    import { useThemeConf } from "../assets/js/vue.hooks.js"
+    import { ignoreCustomElementPlugin } from "./assets/js/vue.helper.js"
     import Metismenu from '../assets/plugins/metismenu/js/metisMenu.esm.js';
+
+    const { createApp,ref,watchEffect,onMounted } = vue;
 
     const menu = createApp({
        setup() {
+           const { themeConf,updateThemeConf } = useThemeConf();
 
            const state = {
                metismenu: ref(null),
@@ -393,8 +393,9 @@
                }
            });
 
-           return {...state,onLogout,onToggleMenu,onMouseEnter,onMouseLeave,onCloseSidebar,updateSysLanguage}
+           return {...state,themeConf,updateThemeConf,onLogout,onToggleMenu,onMouseEnter,onMouseLeave,onCloseSidebar,updateSysLanguage}
        }
     });
+    menu.use(ignoreCustomElementPlugin);
     menu.mount('#menu');
 </script>

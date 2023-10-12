@@ -137,7 +137,7 @@
 <?php include ("./public/foot.inc") ?>
 
 <script type="module">
-    import { rpc,rpc6,alertMsg } from "./assets/js/cul.helper.js";
+    import { rpc,rpc6,alertMsg } from "./assets/js/lp.utils.js";
     import { useHardwareConf,useButtonConf,useUartConf } from "./assets/js/vue.hooks.js";
     import { ignoreCustomElementPlugin,bootstrapSwitchComponent,languageOptionDirective } from "./assets/js/vue.helper.js"
     import vue from "./assets/js/vue.build.js";

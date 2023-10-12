@@ -3,6 +3,7 @@
 <html lang="uft-8">
 <head>
     <?php include ("./public/head.inc") ?>
+    <link href="./assets/plugins/vueTreeView/css/vue3-tree-view.css" rel="stylesheet">
 </head>
 <body>
 <?php include ("./public/menu.inc") ?>
@@ -24,9 +25,9 @@
                                 <en>Channel select</en>
                             </div>
                             <div class="col-lg-8">
-                                <div class="row row-cols-5">
+                                <div class="row row-cols-5" v-if="Object.keys(recordConf).length > 0">
                                     <div class="form-check form-check-primary mb-2" v-for="(item,index) in handleEnableConf" :key="item.id">
-                                        <input class="form-check-input" type="checkbox">
+                                        <input class="form-check-input" type="checkbox" v-model="recordConf.any.chns" :value="item.id">
                                         <label class="form-check-label">
                                             {{item.name}}
                                         </label>
@@ -98,12 +99,12 @@
                                 <div class="rec-bar">
                                     <div class="row">
                                         <div class="col-7 d-flex force-align-right">
-                                            <button type="button" :class="['btn border-3',{'btn-primary':!recordState},{'btn-default disabled':recordState}]" @click="onPushStart">
+                                            <button type="button" class="btn border-3 btn-primary" @click="onStartRecord">
                                                 <i class="fa-solid fa-video me-1"></i>
                                                 <cn>录制</cn>
                                                 <en>Record</en>
                                             </button>
-                                            <button type="button" :class="['btn border-3 ms-1',{'btn-primary':recordState},{'btn-default disabled':!recordState}]" @click="onPushStop">
+                                            <button type="button" class="btn border-3 btn-default ms-2" @click="onStopRecord">
                                                 <i class="fa-solid fa-stop me-1"></i>
                                                 <cn>全部停止</cn>
                                                 <en>Stop All</en>
@@ -132,7 +133,7 @@
                         <a class="nav-link active" data-bs-toggle="tab" href="#tab1" role="tab" aria-selected="true">
                             <div class="d-flex align-items-center">
                                 <div class="tab-icon"><i class="fa fa-sign-in me-1"></i></div>
-                                <div class="tab-title"><cn>频道名称</cn><en>Channels</en></div>
+                                <div class="tab-title"><cn>频道信息</cn><en>Channels</en></div>
                             </div>
                         </a>
                     </li>
@@ -140,13 +141,13 @@
                         <a class="nav-link" data-bs-toggle="tab" href="#tab2" role="tab" aria-selected="false">
                             <div class="d-flex align-items-center">
                                 <div class="tab-icon"><i class="fa-solid fa-download me-1"></i></div>
-                                <div class="tab-title"><cn>文件下载</cn><en>Download<</en></div>
+                                <div class="tab-title"><cn>文件管理</cn><en>File Manager</en></div>
                             </div>
                         </a>
                     </li>
                 </ul>
                 <div class="tab-content py-3 pe-2 ps-2">
-                    <div class="tab-pane fade show active" id="tab1" role="tabpanel" v-if="Object.keys(recordConf).length > 0">
+                    <div class="tab-pane fade show active" id="tab1" role="tabpanel">
                         <div class="row">
                             <div class="col-2 text-center">
                                 <cn>频道名称</cn>
@@ -178,35 +179,35 @@
                             <div class="col-1 text-center"></div>
                         </div>
                         <hr >
-                        <div class="row mt-1" v-for="(item,index) in recordConf.channels" :key="item.id">
+                        <div class="row mt-1" v-for="(item,index) in handleMergeRecordConf" :key="item.id">
                             <div class="col-lg-12">
                                 <div class="row">
                                     <div class="col-2 text-center">
                                         <input type="text" class="form-control" v-model.trim.lazy="item.chnName" readonly disabled>
                                     </div>
                                     <div class="col force-align-center">
-                                        <bs-switch v-model="item.mp4" ></bs-switch>
+                                        <bs-switch v-model="item.mp4" @switch-change="onStartRecordByFormat"></bs-switch>
                                     </div>
                                     <div class="col force-align-center">
-                                        <bs-switch v-model="item.ts" ></bs-switch>
+                                        <bs-switch v-model="item.ts" @switch-change="onStartRecordByFormat"></bs-switch>
                                     </div>
                                     <div class="col force-align-center">
-                                        <bs-switch v-model="item.flv" ></bs-switch>
+                                        <bs-switch v-model="item.flv" @switch-change="onStartRecordByFormat"></bs-switch>
                                     </div>
                                     <div class="col force-align-center">
-                                        <bs-switch v-model="item.mkv" ></bs-switch>
+                                        <bs-switch v-model="item.mkv" @switch-change="onStartRecordByFormat"></bs-switch>
                                     </div>
                                     <div class="col force-align-center">
-                                        <bs-switch v-model="item.mov" ></bs-switch>
+                                        <bs-switch v-model="item.mov" @switch-change="onStartRecordByFormat"></bs-switch>
                                     </div>
                                     <div class="col force-align-center">
-                                        <bs-switch v-model="item.isPause" ></bs-switch>
+                                        <bs-switch v-model="item.isPause" @switch-change="onStartRecordByFormat"></bs-switch>
                                     </div>
                                     <div class="col force-align-center">
-                                        --:--:--
+                                        {{item.durTime}}
                                     </div>
                                     <div class="col-1 force-align-center">
-                                        <i class="fa-solid fa-ellipsis-vertical force-cursor-pointer"></i>
+<!--                                        <i class="fa-solid fa-ellipsis-vertical force-cursor-pointer"></i>-->
                                     </div>
                                 </div>
                                 <hr >
@@ -215,9 +216,26 @@
                     </div>
 
                     <div class="tab-pane fade" id="tab2" role="tabpanel">
+<!--                        <div class="row">-->
+<!--                            <div class="col-lg-2" style="background: red;height: 600px">-->
+<!--                                <tree-view :nodes="nodes" :config="config"></tree-view>-->
+<!--                            </div>-->
+<!--                            <div class="col-lg-10" style="background: green;height: 600px"></div>-->
+<!--                        </div>-->
 
+                        <div class="card mb-0" style="height: 600px">
+                            <div class="card-body py-0">
+                                <div class="row h-100">
+                                    <div class="col-lg-2" style="border-right:solid 1px rgba(0,0,0,0.175)">
+                                        <tree-view :nodes="nodes" :config="config"></tree-view>
+                                    </div>
+                                    <div class="col-lg-10">
+                                        <div class=""></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
-
                 </div>
             </div>
         </div>
@@ -226,36 +244,122 @@
 <?php include ("./public/foot.inc") ?>
 
 <script type="module">
-    import { rpc,func,alertMsg } from "./assets/js/cul.helper.js";
+    import { rpc,func,alertMsg } from "./assets/js/lp.utils.js";
     import { useDefaultConf,useRecordConf } from "./assets/js/vue.hooks.js";
     import { ignoreCustomElementPlugin,bootstrapSwitchComponent } from "./assets/js/vue.helper.js"
+    import treeview from "./assets/plugins/vueTreeView/js/vue3-tree-view.esm.js"
     import vue from "./assets/js/vue.build.js";
 
     const {createApp,ref,reactive,watchEffect,computed,onMounted} = vue;
     const app = createApp({
         components:{
-            "bs-switch" : bootstrapSwitchComponent
+            "bs-switch" : bootstrapSwitchComponent,
+            "tree-view" : treeview
         },
-        setup(props,context) {
+        setup: function (props, context) {
 
-            const { defaultConf } = useDefaultConf();
-            const { recordConf,updateRecordConf } = useRecordConf();
+            const {defaultConf} = useDefaultConf();
+            const {recordConf, handleRecordConf ,updateRecordConf} = useRecordConf();
 
             const state = {
-                recordState: false,
-                diskSpace:ref("--/--")
+                recDuration:reactive({}),
+                diskSpace: ref("--/--"),
+                config: reactive({
+                    roots: ["id1", "id2"],
+                }),
+                nodes: reactive({
+                    id1: {
+                        text: "text1",
+                        children: ["id11", "id12"],
+                    },
+                    id11: {
+                        text: "text11",
+                    },
+                    id12: {
+                        text: "text12",
+                    },
+                    id2: {
+                        text: "text2",
+                    },
+                })
             }
 
             const handleEnableConf = computed(() => {
-                return defaultConf.filter((item,index) => {
+                return defaultConf.filter((item, index) => {
                     return item.enable && item.type !== "ndi" && item.type !== "file";
                 })
             });
 
+            const handleMergeRecordConf = computed(() => {
+                if(!recordConf.hasOwnProperty("channels")) return [];
+
+                if(defaultConf.length > 0 && Object.keys(state.recDuration).length > 0) {
+                    return recordConf.channels.filter((chn, index) => {
+                        const conf = defaultConf.find(item => item.id === chn.id);
+                        if (!conf.enable)
+                            recordConf.any.chns = recordConf.any.chns.filter(item => item !== conf.id);
+                        chn.enable = conf.enable;
+                        chn.durTime = state.recDuration["chn" + index];
+                        return conf.enable;
+                    });
+                }
+
+                return recordConf.channels;
+            })
+
+            const onStartRecord = async () => {
+                const isMountDisk = await rpc("rec.isMountDisk");
+                if (!isMountDisk) {
+                    alertMsg('<cn>启动录制失败，没有找到外部存储设备！</cn><en>Failed to start recording,no external storage device was found!</en>', 'error');
+                    return;
+                }
+
+                const any = recordConf.any;
+                const channels = recordConf.channels;
+
+                any.chns.forEach(chn => {
+                    channels.forEach(channel => {
+                        if (chn === channel.id) {
+                            for (let key in channel) {
+                                if (any.hasOwnProperty(key)) {
+                                    channel[key] = any[key];
+                                }
+                            }
+                        }
+                    });
+                });
+
+                const result = await rpc("rec.execute", [JSON.stringify(recordConf, null, 2)]);
+                if (result) {
+                    alertMsg('<cn>启动录制成功</cn><en>Recording started successfully!</en>', 'success');
+                    return;
+                }
+                alertMsg('<cn>启动录制失败，没有找到外部存储设备！</cn><en>Failed to start recording,no external storage device was found!</en>', 'error');
+            }
+
+            const onStopRecord = () => {
+                rpc("rec.stop").then( data => {
+                    if(data){
+                        handleRecordConf();
+                        alertMsg('<cn>停止录制成功</cn><en>Recording stoped successfully!</en>', 'success');
+                        return;
+                    }
+                    alertMsg('<cn>停止录制失败！</cn><en>Failed to stop recording</en>', 'error');
+                } );
+            }
+
+            const onStartRecordByFormat = async () => {
+                const result = await rpc("rec.execute", [JSON.stringify(recordConf, null, 2)]);
+                if (result) {
+                    alertMsg('<cn>启动录制成功</cn><en>Recording started successfully!</en>', 'success');
+                    return;
+                }
+                alertMsg('<cn>启动录制失败，没有找到外部存储设备！</cn><en>Failed to start recording,no external storage device was found!</en>', 'error');
+            }
+
             const handleDiskSpace = () => {
                 func("/link/mgr/system/getMountDiskSpace").then(data => {
-                    console.log(data);
-                    if(data.status === "error") {
+                    if (data.status === "error") {
                         state.diskSpace.value = "--/--";
                         return;
                     }
@@ -263,14 +367,18 @@
                 });
             }
 
-            onMounted(()=>{
+            const handleRecordDurTime = () => {
+                rpc("rec.getDurTime").then( data => Object.assign(state.recDuration,JSON.parse(data)) );
+                setTimeout(handleRecordDurTime,1000);
+            }
+
+            onMounted(() => {
                 handleDiskSpace();
+                handleRecordDurTime();
             })
 
-            return {...state,recordConf,updateRecordConf,handleEnableConf}
+            return {...state, recordConf ,updateRecordConf,handleEnableConf,handleMergeRecordConf,onStartRecord,onStopRecord,onStartRecordByFormat}
         }
-
-
     });
     app.use(ignoreCustomElementPlugin);
     app.mount('#app');
