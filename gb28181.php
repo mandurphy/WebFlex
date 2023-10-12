@@ -60,7 +60,7 @@
                                                     </label>
                                                 </div>
                                                 <div class="col-lg-7">
-                                                    <bs-switch v-model="gb28181Conf.server.enable" size="normal"></bs-switch>
+                                                    <bs-switch v-model="gb28181Conf.server.enable" :size="'normal'"></bs-switch>
                                                 </div>
                                             </div>
                                             <div class="row">
@@ -214,7 +214,7 @@
                                         <input class="form-control" v-model.trim.lazy="item.chnId">
                                     </div>
                                     <div class="col-lg-3 force-align-center">
-                                        <bs-switch v-model="item.enable" size="normal"></bs-switch>
+                                        <bs-switch v-model="item.enable" :size="'normal'"></bs-switch>
                                     </div>
                                 </div>
                                 <hr>

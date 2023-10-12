@@ -48,7 +48,7 @@
                                     </label>
                                 </div>
                                 <div class="col-lg-6">
-                                    <bs-switch v-model="intercomConf.intercom.enable" size="normal"></bs-switch>
+                                    <bs-switch v-model="intercomConf.intercom.enable" :size="'normal'"></bs-switch>
                                 </div>
                             </div>
                             <div class="row mt-4">
@@ -199,7 +199,7 @@
                                             </label>
                                         </div>
                                         <div class="col-lg-6">
-                                            <bs-switch v-model="intercomConf.vmix.enable" size="normal"></bs-switch>
+                                            <bs-switch v-model="intercomConf.vmix.enable" :size="'normal'"></bs-switch>
                                         </div>
                                     </div>
                                     <div class="row mt-4">
@@ -248,7 +248,7 @@
                                             </label>
                                         </div>
                                         <div class="col-lg-6">
-                                            <bs-switch v-model="intercomConf.server.enable" size="normal"></bs-switch>
+                                            <bs-switch v-model="intercomConf.server.enable" :size="'normal'"></bs-switch>
                                         </div>
                                     </div>
                                 </div>
@@ -271,7 +271,7 @@
                                             </label>
                                         </div>
                                         <div class="col-lg-3">
-                                            <bs-switch v-model="intercomConf.tally.enable" size="normal"></bs-switch>
+                                            <bs-switch v-model="intercomConf.tally.enable" :size="'normal'"></bs-switch>
                                         </div>
                                         <div class="col-lg-3">
                                             <button type="button" class="btn border-3 btn-primary px-4">

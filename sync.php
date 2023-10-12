@@ -77,10 +77,10 @@
                                                     <input class="form-control" disabled readonly v-model.trim.lazy="item.name">
                                                 </div>
                                                 <div class="col-lg-4 p-3">
-                                                    <noui-slider v-model="" :min="-500" :max="500" :step="1" :fix="0"></noui-slider>
+                                                    <noui-slider v-model="item.delay" :min="-500" :max="500" :step="1" :fix="0"></noui-slider>
                                                 </div>
                                                 <div class="col-lg-4 p-3">
-                                                    <noui-slider v-model="" :min="0" :max="25" :step="1" :fix="0"></noui-slider>
+                                                    <noui-slider v-model="item.delay2" :min="0" :max="25" :step="1" :fix="0"></noui-slider>
                                                 </div>
                                                 <hr>
                                             </div>
@@ -114,7 +114,7 @@
                                                     <input class="form-control" disabled readonly v-model.trim.lazy="item.name">
                                                 </div>
                                                 <div class="col-lg-4 p-3">
-                                                    <noui-slider v-model="" :min="0" :max="25" :step="1" :fix="0"></noui-slider>
+                                                    <noui-slider v-model="item.delay" :min="0" :max="25" :step="1" :fix="0"></noui-slider>
                                                 </div>
                                                 <hr>
                                             </div>
@@ -124,11 +124,11 @@
                             </div>
                             <div class="row">
                                 <div class="col-lg-12 text-center">
-                                    <button type="button" class="btn btn-primary px-5 py-2" @click="">
+                                    <button type="button" class="btn btn-primary px-5 py-2" @click="updateSyncConf">
                                         <cn>保存</cn>
                                         <en>Save</en>
                                     </button>
-                                    <button type="button" class="btn btn-default px-5 py-2 ms-2" @click="">
+                                    <button type="button" class="btn btn-default px-5 py-2 ms-2" @click="onResetSyncConf">
                                         <cn>重置</cn>
                                         <en>Reset</en>
                                     </button>
@@ -173,7 +173,18 @@
                 })
             });
 
-            return {...state,handleAiConf,handleAoConf}
+            const onResetSyncConf = () => {
+                for(let i=0;i<syncConf.length;i++) {
+                    if(syncConf[i].type === "ao") {
+                        syncConf[i].delay = syncConf[i].defDelay;
+                        continue;
+                    }
+                    syncConf[i].delay=syncConf[i].defDelay;
+                    syncConf[i].delay2=syncConf[i].defDelay2;
+                }
+                updateSyncConf();
+            }
+            return {...state,updateSyncConf,handleAiConf,handleAoConf,onResetSyncConf}
         }
     });
     app.use(ignoreCustomElementPlugin);

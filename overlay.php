@@ -165,7 +165,7 @@
                                             </label>
                                         </div>
                                         <div class="col-lg-6">
-                                            <bs-switch v-model="handleEditData.enable" size="normal"></bs-switch>
+                                            <bs-switch v-model="handleEditData.enable" :size="'normal'"></bs-switch>
                                         </div>
                                     </div>
                                     <div class="row mt-4" v-if="handleEditData.type === 'mask'">

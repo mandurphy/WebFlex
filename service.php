@@ -85,7 +85,7 @@
                                 </label>
                             </div>
                             <div class="col-lg-6">
-                                <bs-switch v-model="serviceConf.sls" size="normal"></bs-switch>
+                                <bs-switch v-model="serviceConf.sls" :size="'normal'"></bs-switch>
                             </div>
                         </div>
                         <div class="row mt-3">

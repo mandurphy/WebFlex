@@ -26,7 +26,7 @@
                                 </label>
                             </div>
                             <div class="col-lg-6">
-                               <bs-switch v-model="mqttConf.enable" size="normal"></bs-switch>
+                               <bs-switch v-model="mqttConf.enable" :size="'normal'"></bs-switch>
                             </div>
                         </div>
                         <div class="row mt-4">
@@ -82,7 +82,7 @@
                                 </label>
                             </div>
                             <div class="col-lg-6">
-                                <bs-switch v-model="frpEnableConf" size="normal"></bs-switch>
+                                <bs-switch v-model="frpEnableConf" :size="'normal'"></bs-switch>
                             </div>
                         </div>
                         <div class="row mt-3">

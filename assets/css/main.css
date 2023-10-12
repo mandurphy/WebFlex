@@ -1350,3 +1350,25 @@ input[type="password"]::-ms-reveal{
     min-width: 76px;
     min-height: 34.8px;
 }
+
+.onvif .modal-lg {
+    max-width: 1050px;
+}
+.onvif .patrol-ctx {
+    border: solid 1px #dddddd;
+    border-radius: 4px;
+}
+
+.onvif .patrol-ctx .patrol-chn {
+    border-right: solid 1px #dddddd;
+}
+
+.onvif .patrol-ctx .patrol-chn .patrol-chn-item {
+    border-bottom: solid 1px #dddddd;
+    cursor: pointer;
+}
+
+.onvif .patrol-ctx .patrol-chn .patrol-chn-item.active {
+    background: #fb0;
+    color: #ffffff;
+}

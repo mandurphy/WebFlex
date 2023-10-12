@@ -75,7 +75,7 @@
                                     </label>
                                 </div>
                                 <div class="col-lg-5">
-                                    <bs-switch v-model="item.dhcp" size="normal"></bs-switch>
+                                    <bs-switch v-model="item.dhcp" :size="'normal'"></bs-switch>
                                 </div>
                             </div>
                             <div class="row mt-3">
@@ -147,7 +147,7 @@
                                             </label>
                                         </div>
                                         <div class="col-lg-8">
-                                            <bs-switch v-model="item.enable" size="normal"></bs-switch>
+                                            <bs-switch v-model="item.enable" :size="'normal'"></bs-switch>
                                         </div>
                                     </div>
                                     <div class="row mt-3">
@@ -210,7 +210,7 @@
                                             </label>
                                         </div>
                                         <div class="col-lg-8">
-                                            <bs-switch v-model="item.dhcp" size="normal"></bs-switch>
+                                            <bs-switch v-model="item.dhcp" :size="'normal'"></bs-switch>
                                         </div>
                                     </div>
                                     <div class="row mt-3">

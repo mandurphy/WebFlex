@@ -152,21 +152,22 @@
                                     </div>
                                 </div>
                                 <div class="card-body">
-                                    <div class="row my-3">
+                                    <div class="row my-3" v-if="ptzConf.script && ptzConf.script.current">
                                         <div class="col-lg-3 d-flex align-items-center justify-content-end">
                                             <cn>方案</cn>
                                             <en>Scene</en>
                                         </div>
                                         <div class="col-lg-3 force-align-center">
-                                            <select class="form-select">
+                                            <select class="form-select" v-model="ptzConf.script.current">
                                                 <option value="plan1" cn="方案1" en="plan1" v-language-option></option>
-                                                <option value="plan2" cn="方案1" en="plan1" v-language-option></option>
-                                                <option value="plan3" cn="方案1" en="plan1" v-language-option></option>
+                                                <option value="plan2" cn="方案2" en="plan2" v-language-option></option>
+                                                <option value="plan3" cn="方案3" en="plan3" v-language-option></option>
                                             </select>
                                         </div>
                                         <div class="col-lg-6">
-                                            <button type="button" class="btn border-3 btn-primary px-3 me-2" @click="showPatrolModal=!showPatrolModal"><cn>编辑</cn><en>Edit</en></button>
-                                            <button type="button" class="btn border-3 btn-primary px-3" @click=""><cn>启用</cn><en>Enable</en></button>
+                                            <button type="button" class="btn border-3 btn-primary px-3 me-2" @click="patrolShowModal=!patrolShowModal"><cn>编辑</cn><en>Edit</en></button>
+                                            <button type="button" class="btn border-3 btn-primary px-3 me-2" @click="onStartPatrolPlan"><cn>启用</cn><en>Start</en></button>
+                                            <button type="button" class="btn border-3 btn-primary px-3" @click="onStopPatrolPlan"><cn>停止</cn><en>Stop</en></button>
                                         </div>
                                     </div>
                                 </div>
@@ -277,12 +278,191 @@
             </div>
         </div>
 
-        <patrol-modal :modal-size="'modal-lg'" :modal-show="showPatrolModal" :had-header="false" :had-footer="false">
-            <div class="row">
-                <div class="col-lg-3">
-                    <div></div>
+        <patrol-modal :modal-size="'modal-lg'" :modal-show="patrolShowModal" modal-title="巡视方案&Auto Patrol" confirm-btn-name="保存&Save"
+                      cancel-btn-name="取消&Cancel" @modal-visible="onPatrolVisible" @confirm-btn-click="updatePtzConf">
+            <div class="row" v-if="ptzConf.script && ptzConf.script.current">
+                <div class="col-lg-12 px-4">
+                    <div class="row">
+                        <div class="col-lg-2 px-0">
+                            <select class="form-select" v-model="patrolPlan">
+                                <option cn="方案1" en="plan1" value="plan1" v-language-option></option>
+                                <option cn="方案2" en="plan2" value="plan2" v-language-option></option>
+                                <option cn="方案3" en="plan3" value="plan3" v-language-option></option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="row mt-3 patrol-ctx">
+                        <div class="col-lg-2 patrol-chn">
+                            <div class="row">
+                                <div v-for="(item,index) in handleAutoPatrolPlan" @click="onPatrolChnClick(index)" :class="['col-lg-12 py-2 patrol-chn-item text-center',{active:patrolActiveItem===index}]">{{item.chnName}}</div>
+                            </div>
+                        </div>
+                        <div class="col-lg-10">
+                            <div class="row mt-3">
+                                <div class="col-lg-12">
+                                    <label style="margin-right: 10px;">启用</label>
+                                    <bs-switch v-model="handleAutoPatrolPlan[patrolActiveItem].enable"></bs-switch>
+                                </div>
+                            </div>
+                            <div class="row mt-4">
+                                <div class="col-lg-12">
+                                    <label>1、<cn>预置点</cn><en>Preset </en></label>
+                                    <select v-model="handleAutoPatrolPlan[patrolActiveItem].exec.preset1" style="cursor: pointer;width: 60px;height: 34px;padding: 6px 12px;border: 1px solid #ccc;border-radius: 4px;">
+                                        <option value="1">1</option>
+                                        <option value="2">2</option>
+                                        <option value="3">3</option>
+                                        <option value="4">4</option>
+                                        <option value="5">5</option>
+                                        <option value="6">6</option>
+                                        <option value="7">7</option>
+                                        <option value="8">8</option>
+                                        <option value="9">9</option>
+                                    </select>
+                                    <label><cn>保持</cn><en>keep</en></label>
+                                    <input v-model.trim.lazy="handleAutoPatrolPlan[patrolActiveItem].exec.keep1" style="cursor: pointer;width: 60px;height: 34px;padding: 6px 12px;border: 1px solid #ccc;border-radius: 4px;">
+                                    <label><cn>秒后,通过垂直速度</cn><en>seconds, by vertical speed</en></label>
+                                    <select v-model="handleAutoPatrolPlan[patrolActiveItem].exec.vspeed1" style="cursor: pointer;width: 70px;height: 34px;padding: 6px 12px;border: 1px solid #ccc;border-radius: 4px;">
+                                        <option value="0">0</option>
+                                        <option value="0.1">0.1</option>
+                                        <option value="0.2">0.2</option>
+                                        <option value="0.3">0.3</option>
+                                        <option value="0.4">0.4</option>
+                                        <option value="0.5">0.5</option>
+                                        <option value="0.6">0.6</option>
+                                        <option value="0.7">0.7</option>
+                                        <option value="0.8">0.8</option>
+                                        <option value="0.9">0.9</option>
+                                        <option value="1">1</option>
+                                    </select>
+                                    <label><cn>水平速度</cn><en>horizontal speed</en></label>
+                                    <select v-model="handleAutoPatrolPlan[patrolActiveItem].exec.hspeed1" style="cursor: pointer;width: 70px;height: 34px;padding: 6px 12px;border: 1px solid #ccc;border-radius: 4px;">
+                                        <option value="0">0</option>
+                                        <option value="0.1">0.1</option>
+                                        <option value="0.2">0.2</option>
+                                        <option value="0.3">0.3</option>
+                                        <option value="0.4">0.4</option>
+                                        <option value="0.5">0.5</option>
+                                        <option value="0.6">0.6</option>
+                                        <option value="0.7">0.7</option>
+                                        <option value="0.8">0.8</option>
+                                        <option value="0.9">0.9</option>
+                                        <option value="1">1</option>
+                                    </select>
+                                    <label><cn>变焦速度</cn><en>focus speed</en></label>
+                                    <select v-model="handleAutoPatrolPlan[patrolActiveItem].exec.zspeed1" style="cursor: pointer;width: 70px;height: 34px;padding: 6px 12px;border: 1px solid #ccc;border-radius: 4px;">
+                                        <option value="0">0</option>
+                                        <option value="0.1">0.1</option>
+                                        <option value="0.2">0.2</option>
+                                        <option value="0.3">0.3</option>
+                                        <option value="0.4">0.4</option>
+                                        <option value="0.5">0.5</option>
+                                        <option value="0.6">0.6</option>
+                                        <option value="0.7">0.7</option>
+                                        <option value="0.8">0.8</option>
+                                        <option value="0.9">0.9</option>
+                                        <option value="1">1</option>
+                                    </select>
+                                    <label><cn>移动到预置点</cn><en>move to preset </en></label>
+                                    <select v-model="handleAutoPatrolPlan[patrolActiveItem].exec.preset2" style="cursor: pointer;width: 60px;height: 34px;padding: 6px 12px;border: 1px solid #ccc;border-radius: 4px;">
+                                        <option value="1">1</option>
+                                        <option value="2">2</option>
+                                        <option value="3">3</option>
+                                        <option value="4">4</option>
+                                        <option value="5">5</option>
+                                        <option value="6">6</option>
+                                        <option value="7">7</option>
+                                        <option value="8">8</option>
+                                        <option value="9">9</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="row mt-3">
+                                <div class="col-lg-12">
+                                    <label>2、<cn>预置点</cn><en>Preset </en></label>
+                                    <select v-model="handleAutoPatrolPlan[patrolActiveItem].exec.preset2" disabled style="width: 60px;height: 34px;padding: 6px 12px;border: 1px solid #ccc;border-radius: 4px;">
+                                        <option value="1">1</option>
+                                        <option value="2">2</option>
+                                        <option value="3">3</option>
+                                        <option value="4">4</option>
+                                        <option value="5">5</option>
+                                        <option value="6">6</option>
+                                        <option value="7">7</option>
+                                        <option value="8">8</option>
+                                        <option value="9">9</option>
+                                    </select>
+                                    <label><cn>保持</cn><en>keep</en></label>
+                                    <input v-model.trim.lazy="handleAutoPatrolPlan[patrolActiveItem].exec.keep2" style="cursor: pointer;width: 60px;height: 34px;padding: 6px 12px;border: 1px solid #ccc;border-radius: 4px;">
+                                    <label><cn>秒后,通过垂直速度</cn><en>seconds, by vertical speed</en></label>
+                                    <select v-model="handleAutoPatrolPlan[patrolActiveItem].exec.vspeed2" style="cursor: pointer;width: 70px;height: 34px;padding: 6px 12px;border: 1px solid #ccc;border-radius: 4px;">
+                                        <option value="0">0</option>
+                                        <option value="0.1">0.1</option>
+                                        <option value="0.2">0.2</option>
+                                        <option value="0.3">0.3</option>
+                                        <option value="0.4">0.4</option>
+                                        <option value="0.5">0.5</option>
+                                        <option value="0.6">0.6</option>
+                                        <option value="0.7">0.7</option>
+                                        <option value="0.8">0.8</option>
+                                        <option value="0.9">0.9</option>
+                                        <option value="1">1</option>
+                                    </select>
+                                    <label><cn>水平速度</cn><en>horizontal speed</en></label>
+                                    <select v-model="handleAutoPatrolPlan[patrolActiveItem].exec.zspeed2" style="cursor: pointer;width: 70px;height: 34px;padding: 6px 12px;border: 1px solid #ccc;border-radius: 4px;">
+                                        <option value="0">0</option>
+                                        <option value="0.1">0.1</option>
+                                        <option value="0.2">0.2</option>
+                                        <option value="0.3">0.3</option>
+                                        <option value="0.4">0.4</option>
+                                        <option value="0.5">0.5</option>
+                                        <option value="0.6">0.6</option>
+                                        <option value="0.7">0.7</option>
+                                        <option value="0.8">0.8</option>
+                                        <option value="0.9">0.9</option>
+                                        <option value="1">1</option>
+                                    </select>
+                                    <label><cn>变焦速度</cn><en>focus speed</en></label>
+                                    <select v-model="handleAutoPatrolPlan[patrolActiveItem].exec.zspeed2" style="cursor: pointer;width: 70px;height: 34px;padding: 6px 12px;border: 1px solid #ccc;border-radius: 4px;">
+                                        <option value="0">0</option>
+                                        <option value="0.1">0.1</option>
+                                        <option value="0.2">0.2</option>
+                                        <option value="0.3">0.3</option>
+                                        <option value="0.4">0.4</option>
+                                        <option value="0.5">0.5</option>
+                                        <option value="0.6">0.6</option>
+                                        <option value="0.7">0.7</option>
+                                        <option value="0.8">0.8</option>
+                                        <option value="0.9">0.9</option>
+                                        <option value="1">1</option>
+                                    </select>
+                                    <label><cn>移动到预置点</cn><en>move to preset </en></label>
+                                    <select v-model="handleAutoPatrolPlan[patrolActiveItem].exec.preset1" disabled style="width: 60px;height: 34px;padding: 6px 12px;border: 1px solid #ccc;border-radius: 4px;">
+                                        <option value="1">1</option>
+                                        <option value="2">2</option>
+                                        <option value="3">3</option>
+                                        <option value="4">4</option>
+                                        <option value="5">5</option>
+                                        <option value="6">6</option>
+                                        <option value="7">7</option>
+                                        <option value="8">8</option>
+                                        <option value="9">9</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="row mt-3">
+                                <div class="col-lg-12">
+                                    <label>3、<cn>依次循环第1步和第2步骤操作。</cn><en>Repeat steps 2 and 3 in turn.</en></label>
+                                </div>
+                            </div>
+
+                            <div class="row my-3">
+                                <div class="col-lg-12">
+                                    <label style="white-space:pre-wrap;"><cn>提示:  预置点必须通过本设备设置后，才会生效。</cn><en>Tip: The preset point will take effect only after it is set by this device.</en></label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-                <div class="col-lg-9"></div>
             </div>
         </patrol-modal>
     </main>
@@ -327,7 +507,9 @@
                 onvifDevStreamIndex:ref(0),
                 onvifSelectNetChnId:ref(-1),
                 onvifDevCurZoom:ref(0),
-                showPatrolModal:ref(false)
+                patrolShowModal:ref(false),
+                patrolPlan:ref("plan1"),
+                patrolActiveItem:ref(0)
             }
 
             const unwatch = watchEffect(() => {
@@ -415,6 +597,12 @@
                         item.title = item.ip;
                     return item;
                 })
+            })
+
+            const handleAutoPatrolPlan = computed(()=>{
+                if(ptzConf.script && ptzConf.script[state.patrolPlan.value])
+                    return ptzConf.script[state.patrolPlan.value];
+                return [];
             })
 
             const onChangePlayerChn = (event) => {
@@ -537,32 +725,16 @@
                                 const params = [ip,uname,passwd];
                                 rpc5("ptz.onPtzGetStatus",params).then(ret => {
                                     if(ret.status === "success") {
-                                        // var ptz = ptzconf[index];
-                                        // console.log(ret.data);
-                                        // ptz["preset"+presetVal] = {
-                                        //     x: parseFloat(ret.data.x),
-                                        //     y: parseFloat(ret.data.y),
-                                        //     z: parseFloat(ret.data.z)
-                                        // }
-                                        //
-                                        // var ptz_conf = {
-                                        //     config: ptzconf,
-                                        //     script: ptzscript
-                                        // }
-                                        //
-                                        // var params = {
-                                        //     path: "config/auto/ptz.json",
-                                        //     data: JSON.stringify(ptz_conf,null,2)
-                                        // }
-                                        // func("saveConfigFile",params,function (data) {
-                                        //     if ( data.error != "" ) {
-                                        //         htmlAlert( "#alert", "danger", "<cn>保存失败！</cn><en>Failed to save</en>", "", 3000 );
-                                        //         return;
-                                        //     }
-                                        // });
+                                        const ptz =ptzConf.config.find(item => item.chnId === state.activeChnId.value);
+                                        ptz["preset"+presetVal] = {
+                                            x: parseFloat(ret.data.x),
+                                            y: parseFloat(ret.data.y),
+                                            z: parseFloat(ret.data.z)
+                                        }
+                                        updatePtzConf("noTip");
                                     }
                                 });
-                            },1000);
+                            },1200);
                         }
                     });
                 }
@@ -626,6 +798,37 @@
                 }
             }
 
+            const onPatrolChnClick = chnId => {
+                state.patrolActiveItem.value = chnId;
+            }
+
+            const onPatrolVisible = visible => {
+                if(visible && handleAutoPatrolPlan.value.length > 0)
+                    state.patrolActiveItem.value = 0;
+            }
+
+            const onStartPatrolPlan = () => {
+                updatePtzConf("noTip").then(()=>{
+                    rpc5("ptz.script").then(ret => {
+                        if(ret.code === 0)
+                            alertMsg('<cn>自动巡视已开启</cn><en>Auto patrol activated!</en>', 'success');
+                    });
+                })
+            }
+
+            const onStopPatrolPlan = () => {
+                for(let i=0;i<ptzConf.script[ptzConf.script.current].length;i++) {
+                    const item = ptzConf.script[ptzConf.script.current][i];
+                    item.enable = false;
+                }
+                updatePtzConf("noTip").then(()=>{
+                    rpc5("ptz.script").then(ret => {
+                        if(ret.code === 0)
+                            alertMsg('<cn>自动巡视已关闭</cn><en>Auto patrol is off!</en>', 'success');
+                    });
+                })
+            }
+
             onMounted(()=>{
                 rpc5("ptz.onGetOnvifDeviceList").then(devices => {
                     clearReactiveArray(state.onvifDevices);
@@ -655,7 +858,8 @@
 
             return {...state,ptzConf,updatePtzConf,handleNetConf,onChangePlayerChn, handleCurPtzConf,
                 handlePtzMove,handleZoomChange,handleCallPreset,handleSetPreset,onSearchOnvifDevices,
-                handleOnvifDevices,onChangeOnvifDevice,handleOnvifDeviceStreams,onBindOnvifChannel}
+                handleOnvifDevices,onChangeOnvifDevice,handleOnvifDeviceStreams,onBindOnvifChannel,
+                handleAutoPatrolPlan,onPatrolChnClick,onPatrolVisible,onStartPatrolPlan,onStopPatrolPlan}
         }
     });
     app.use(ignoreCustomElementPlugin);

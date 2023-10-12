@@ -107,7 +107,7 @@
                                         </label>
                                     </div>
                                     <div class="col-lg-6">
-                                        <bs-switch v-model="defaultConf[mixIndex].enable" size="normal"></bs-switch>
+                                        <bs-switch v-model="defaultConf[mixIndex].enable" :size="'normal'"></bs-switch>
                                     </div>
                                 </div>
                                 <div class="row mt-4">
@@ -118,7 +118,7 @@
                                         </label>
                                     </div>
                                     <div class="col-lg-6">
-                                        <bs-switch v-model="defaultConf[mixIndex].output.enable" size="normal"></bs-switch>
+                                        <bs-switch v-model="defaultConf[mixIndex].output.enable" :size="'normal'"></bs-switch>
                                     </div>
                                 </div>
                             </div>
@@ -202,7 +202,7 @@
                                         </label>
                                     </div>
                                     <div class="col-lg-6">
-                                        <bs-switch v-model="defaultConf[mixIndex].output.mirror" size="normal"></bs-switch>
+                                        <bs-switch v-model="defaultConf[mixIndex].output.mirror" :size="'normal'"></bs-switch>
                                     </div>
                                 </div>
                                 <div class="row mt-4">
@@ -226,7 +226,7 @@
                                         </label>
                                     </div>
                                     <div class="col-lg-6">
-                                        <bs-switch v-model="defaultConf[mixIndex].output.lowLatency" size="normal"></bs-switch>
+                                        <bs-switch v-model="defaultConf[mixIndex].output.lowLatency" :size="'normal'"></bs-switch>
                                     </div>
                                 </div>
                                 <div class="row mt-4">
@@ -300,7 +300,7 @@
                                         </label>
                                     </div>
                                     <div class="col-lg-6">
-                                        <bs-switch v-model="defaultConf[mixIndex].output2.enable" size="normal"></bs-switch>
+                                        <bs-switch v-model="defaultConf[mixIndex].output2.enable" :size="'normal'"></bs-switch>
                                     </div>
                                 </div>
                                 <div class="row mt-4">
@@ -346,7 +346,7 @@
                                         </label>
                                     </div>
                                     <div class="col-lg-6">
-                                        <bs-switch v-model="defaultConf[mixIndex].output2.mirror" size="normal"></bs-switch>
+                                        <bs-switch v-model="defaultConf[mixIndex].output2.mirror" :size="'normal'"></bs-switch>
                                     </div>
                                 </div>
                                 <div class="row mt-4">
@@ -370,7 +370,7 @@
                                         </label>
                                     </div>
                                     <div class="col-lg-6">
-                                        <bs-switch v-model="defaultConf[mixIndex].output2.lowLatency" size="normal"></bs-switch>
+                                        <bs-switch v-model="defaultConf[mixIndex].output2.lowLatency" :size="'normal'"></bs-switch>
                                     </div>
                                 </div>
                                 <div class="row mt-4">

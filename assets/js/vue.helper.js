@@ -268,13 +268,20 @@ export const netFlotChartComponent = {
 
 export const bootstrapSwitchComponent = {
     template: `<input type="checkbox" class="switch form-control" ref="bs_switch">`,
-    props: ['modelValue','size'],
+    props: {
+        modelValue: {
+            type: Boolean,
+            default: false
+        },
+        size: {
+            type: String,
+            default:"small" //normal
+        }
+    },
     setup(props, context) {
 
-        const size = props.size === undefined ? "small" : props.size;
+        const { modelValue,size } = toRefs(props);
         const bs_switch = ref(null);
-
-        const { modelValue } = toRefs(props);
 
         watch(modelValue,()=>{
             $(bs_switch.value).bootstrapSwitch('state', modelValue.value, true);
@@ -283,7 +290,7 @@ export const bootstrapSwitchComponent = {
         onMounted(async () => {
             $(bs_switch.value).bootstrapSwitch({
                 "state": props.modelValue,
-                "size": size,
+                "size": size.value,
                 onInit(dom, event, state) {
                     $(bs_switch.value).on('focus.bootstrapSwitch', () => {
                         this.$wrapper.removeClass("bootstrap-switch-focused")
@@ -402,10 +409,10 @@ export const nouiSliderComponent = {
         }
 
         const formatTooltipValue = value => {
-            if(Number(props.fix) === 0)
+            if(props.fix === 0)
                 value = parseInt(value);
             else
-                value = parseFloat(value).toFixed(Number(props.fix));
+                value = parseFloat(value).toFixed(props.fix);
             return value;
         }
 
@@ -446,8 +453,8 @@ export const nouiSliderComponent = {
             // });
 
             slider.value.noUiSlider.on('end', (values, mark) => {
-                context.emit('update:modelValue', values[mark]);
-                context.emit('slide-end', values[mark]);
+                context.emit('update:modelValue', formatTooltipValue(values[mark]));
+                context.emit('slide-end', formatTooltipValue(values[mark]));
             });
         })
 
@@ -1186,7 +1193,7 @@ export const customModalComponent = {
                         </div>
                         <div class="modal-footer" v-if="hadFooter">
                             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">{{modalCancelBtnName}}</button>
-                            <button type="button" :class="['btn btn-primary',arrowClass]" @click="confirmBtnClick">{{modalConfirmBtnName}}</button>
+                            <button type="button" class="btn btn-primary" @click="confirmBtnClick">{{modalConfirmBtnName}}</button>
                           </div>
                       </div>
                     </div>
@@ -1251,6 +1258,7 @@ export const customModalComponent = {
                 state.bsModal.show();
             else
                 state.bsModal.hide();
+            context.emit('modal-visible', state.show);
         })
 
         const initBsModal = () => {
@@ -1262,8 +1270,10 @@ export const customModalComponent = {
                 state.bsModal.hide();
                 state.show = false;
             }
+            context.emit('modal-visible', state.show);
             state.modal.value.addEventListener('hide.bs.modal',() => {
                 state.show = false;
+                context.emit('modal-visible', state.show);
             });
         }
 

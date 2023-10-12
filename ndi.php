@@ -48,7 +48,7 @@
                                             </label>
                                         </div>
                                         <div class="col-lg-6">
-                                            <bs-switch v-model="defaultConf[chnIndex].enable" @switch-change="updateDefaultConf" size="normal"></bs-switch>
+                                            <bs-switch v-model="defaultConf[chnIndex].enable" @switch-change="updateDefaultConf" :size="'normal'"></bs-switch>
                                         </div>
                                     </div>
                                     <div class="row">

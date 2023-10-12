@@ -598,7 +598,7 @@ export const useSyncConf = () => {
 
     const updateSyncConf = (tip = "tip") => {
         return new Promise((resolver,reject) => {
-            rpc("sync.update", [JSON.stringify( syncConf, null, 2 ) ]).then( data => {
+            rpc("sync.update", [ syncConf ]).then( data => {
                 if ( typeof ( data.error ) != "undefined" ) {
                     reject();
                     if(tip !== "noTip")

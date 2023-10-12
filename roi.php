@@ -83,7 +83,7 @@
                                             </label>
                                         </div>
                                         <div class="col-lg-6">
-                                            <bs-switch v-model="roiConf[chnIndex][areaIndex].enable" size="normal"></bs-switch>
+                                            <bs-switch v-model="roiConf[chnIndex][areaIndex].enable" :size="'normal'"></bs-switch>
                                         </div>
                                     </div>
                                     <div class="row">
@@ -94,7 +94,7 @@
                                             </label>
                                         </div>
                                         <div class="col-lg-6">
-                                            <bs-switch v-model="roiConf[chnIndex][areaIndex].abs" size="normal"></bs-switch>
+                                            <bs-switch v-model="roiConf[chnIndex][areaIndex].abs" :size="'normal'"></bs-switch>
                                         </div>
                                     </div>
                                     <div class="row">
