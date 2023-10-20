@@ -105,6 +105,23 @@
     background-color: var(--bs-body-bg-semi);
 }
 
+/*header*/
+[data-bs-theme=default] .top-header .navbar {
+    background-color: #ffffff;
+    border-bottom: 1px solid #dee2e6;
+}
+
+[data-bs-theme=default] .top-header .navbar .top-right-menu .nav-item .nav-link,
+[data-bs-theme=default] .top-header .navbar .btn-toggle-menu {
+    background-color: #ffffff;
+    border: 1px solid #dee2e6;
+    color: #212529;
+}
+
+[data-bs-theme=default] .search-bar input {
+    background-color: #ffffff;
+}
+
 /* button */
 [data-bs-theme=default] .btn-default {
     background-color: #ffffff;
@@ -184,7 +201,7 @@
 }
 
 
-.bootstrap-switch.bootstrap-switch-focused {
+[data-bs-theme=default] .bootstrap-switch.bootstrap-switch-focused {
     border-color: transparent;
     /*box-shadow: none;*/
     /*border-color: #66afe9;*/
@@ -231,7 +248,9 @@
 }
 
 /* input slect */
-[data-bs-theme=default] .form-control,.form-select {
+[data-bs-theme=default] .form-select,
+[data-bs-theme=default] .form-control {
+    border-color: #dee2e6;
     color: #555;
     font-size: 14px;
 }
@@ -421,5 +440,14 @@
     right: 2rem;
     font-size: 1.5rem;
     color: var(--bs-body-color-semi);
+}
+
+[data-bs-theme=default] .dashboard .temperature .bar .mask{
+    background: #777;
+}
+
+[data-bs-theme=default] .dashboard .iface{
+    background: #555;
+    color: #ddd;
 }
 

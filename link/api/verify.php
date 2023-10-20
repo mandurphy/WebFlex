@@ -11,7 +11,7 @@ class Verify extends Basic
         if($_REQUEST['verify'] == 'true')
         {
             $user = ['admin'=>'admin'];
-            $realm = 'www.linkpi.cn';
+            $realm = 'lph_http';
             if(!isset($_SERVER['PHP_AUTH_DIGEST']))
                 $this->send_verify($realm);
 

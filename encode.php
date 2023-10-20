@@ -244,7 +244,7 @@
                                 <div class="col-lg-12">
                                     <hr >
                                 </div>
-                                <div class="row text-center">
+                                <div class="row text-center mt-3">
                                     <div class="col-lg-12">
                                         <button type="button" class="btn  border-3 btn-primary me-2" @click="saveGlobalConfByLocal"><cn>应用到本地</cn><en>Save to local</en></button>
                                         <button type="button" class="btn  border-3 btn-primary"><cn>应用到群组</cn><en>Save to group</en></button>
@@ -362,7 +362,7 @@
                                             <option value="h264,main">H.264 Main</option>
                                             <option value="h264,high">H.264 High</option>
                                             <option value="h265,main">H.265 Main</option>
-                                            <option value="close,base">Close</option>
+                                            <option value="close,base" cn="关闭" en="Close" v-language-option></option>
                                         </multiple-select>
                                     </div>
                                     <div class="col">
@@ -406,7 +406,7 @@
                                             <option value="h264,main">H.264 Main</option>
                                             <option value="h264,high">H.264 High</option>
                                             <option value="h265,main">H.265 Main</option>
-                                            <option value="close,base">Close</option>
+                                            <option value="close,base" cn="关闭" en="Close" v-language-option></option>
                                         </multiple-select>
                                     </div>
                                     <div class="col">
@@ -587,7 +587,7 @@
                                     </div>
                                     <div class="col-2">
                                         <select class="form-select" v-model="item.cap.rotate">
-                                            <option value="0">0</option>
+                                            <option value="0">0</option>black
                                             <option value="90">90</option>
                                             <option value="180">180</option>
                                             <option value="270">270</option>
@@ -788,7 +788,7 @@
                         </div>
                     </div>
                     
-                    <div class="row">
+                    <div class="row mt-3">
                         <div class="col-lg-12 text-center">
                             <button type="button" class="btn btn-primary border-3 px-5" @click="saveDefaultConf">
                                 <cn>保存</cn>

@@ -5,12 +5,12 @@
                 <div class="btn-toggle-menu" @click="onToggleMenu">
                     <i class="fa-solid fa-bars"></i>
                 </div>
-                <div class="position-relative search-bar d-lg-block d-none" data-bs-toggle="modal" data-bs-target="#searchModal">
-                    <input class="form-control form-control-sm rounded-5 px-5" disabled type="search" placeholder="Search">
-                    <span class="position-absolute ms-3 translate-middle-y start-0 top-50">
-                    <i class="fa fa-search"></i>
-                </span>
-                </div>
+<!--                <div class="position-relative search-bar d-lg-block d-none" data-bs-toggle="modal" data-bs-target="#searchModal">-->
+<!--                    <input class="form-control form-control-sm rounded-5 px-5" disabled type="search" placeholder="Search">-->
+<!--                    <span class="position-absolute ms-3 translate-middle-y start-0 top-50">-->
+<!--                    <i class="fa fa-search"></i>-->
+<!--                </span>-->
+<!--                </div>-->
                 <ul class="navbar-nav top-right-menu gap-2">
                     <li class="nav-item">
                         <a class="nav-link" style="font-size: 20px;">
@@ -24,9 +24,9 @@
                             <i v-else class="fa-regular fa-sun" @click="updateThemeConf('default')"></i>
                         </a>
                     </li>
-                    <li class="nav-item">
-                        <a class="nav-link" data-bs-toggle="offcanvas" href="#ThemeCustomizer"><i class="fa fa-gear"></i></a>
-                    </li>
+<!--                    <li class="nav-item">-->
+<!--                        <a class="nav-link" data-bs-toggle="offcanvas" href="#ThemeCustomizer"><i class="fa fa-gear"></i></a>-->
+<!--                    </li>-->
                 </ul>
             </nav>
         </header>
@@ -52,6 +52,7 @@
                             <div class="menu-title"><cn>设备状态</cn><en>Dashboard</en></div>
                         </a>
                     </li>
+                    <li class="menu-label"><cn>基本设置</cn><en>Basic</en></li>
 <!--                    <li>-->
 <!--                        <a href="dashboard1.php">-->
 <!--                            <div class="parent-icon"><i class="fa fa-tachometer"></i></div>-->
@@ -73,9 +74,22 @@
                     <li>
                         <a href="stream.php">
                             <div class="parent-icon"><i class="fa fa-upload"></i></div>
-                            <div class="menu-title"><cn>输出设置</cn><en>Stream</en></div>
+                            <div class="menu-title"><cn>串流输出</cn><en>Stream</en></div>
                         </a>
                     </li>
+                    <li>
+                        <a href="output.php">
+                            <div class="parent-icon"><i class="fa-solid fa-microchip"></i></div>
+                            <div class="menu-title"><cn>接口输出</cn><en>Output</en></div>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="sys.php">
+                            <div class="parent-icon"><i class="fa-solid fa-gear"></i></div>
+                            <div class="menu-title"><cn>系统设置</cn><en>System</en></div>
+                        </a>
+                    </li>
+                    <li class="menu-label"><cn>视频特效</cn><en>Effect</en></li>
                     <li>
                         <a href="overlay.php">
                             <div class="parent-icon"><i class="fa-solid fa-wand-magic-sparkles"></i></div>
@@ -88,15 +102,7 @@
                             <div class="menu-title"><cn>视频混合</cn><en>Video mix</en></div>
                         </a>
                     </li>
-
-                    <li>
-                        <a href="sys.php">
-                            <div class="parent-icon"><i class="fa-solid fa-gear"></i></div>
-                            <div class="menu-title"><cn>系统设置</cn><en>System</en></div>
-                        </a>
-                    </li>
-
-                    <li class="menu-label"><cn>其他设置</cn><en>Other Setting</en></li>
+                    <li class="menu-label"><cn>其他设置</cn><en>Exte0nd</en></li>
                     <li>
                         <a href="javascript:;" class="has-arrow">
                             <div class="parent-icon"><i class="fa-solid fa-puzzle-piece ms-1 mb-1"></i></div>

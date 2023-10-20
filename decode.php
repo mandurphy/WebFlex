@@ -244,7 +244,7 @@
                                 <div class="col-lg-12">
                                     <hr >
                                 </div>
-                                <div class="row text-center">
+                                <div class="row text-center mt-3">
                                     <div class="col-lg-12">
                                         <button type="button" class="btn  border-3 btn-primary me-2" @click="saveGlobalConfByLocal"><cn>应用到本地</cn><en>Save to local</en></button>
                                         <button type="button" class="btn  border-3 btn-primary"><cn>应用到群组</cn><en>Save to group</en></button>
@@ -587,7 +587,7 @@
                                     </div>
                                     <div class="col-2">
                                         <select class="form-select" v-model="item.cap.rotate">
-                                            <option value="0">0</option>
+                                            <option value="0">0</option>black
                                             <option value="90">90</option>
                                             <option value="180">180</option>
                                             <option value="270">270</option>
@@ -780,7 +780,7 @@
                                         <bs-switch v-model="item.net.decodeA"></bs-switch>
                                     </div>
                                     <div class="col force-align-center">
-                                        <bs-switch v-model="item.net.enable"></bs-switch>
+                                        <bs-switch v-model="item.enable"></bs-switch>
                                     </div>
                                 </div>
                                 <hr >
@@ -788,7 +788,7 @@
                         </div>
                     </div>
                     
-                    <div class="row">
+                    <div class="row mt-3">
                         <div class="col-lg-12 text-center">
                             <button type="button" class="btn btn-primary border-3 px-5" @click="saveDefaultConf">
                                 <cn>保存</cn>
@@ -852,7 +852,7 @@
             
             const handleAdvConf = computed(()=>{
                 return defaultConf.filter((item,index)=>{
-                    return item.enable;
+                    return !!(item.enable && item.type !== "ndi");
                 })
             })
             

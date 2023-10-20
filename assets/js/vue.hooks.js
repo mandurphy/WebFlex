@@ -1,5 +1,5 @@
 
-import {queryData, checkFileExists, func, alertMsg, rpc, rpc2, rpc3, deepCopy, clearReactiveObject,request} from "./lp.utils.js";
+import {queryData, checkFileExists, func, alertMsg, rpc, rpc2, rpc3, deepCopy, clearReactiveObject,clearReactiveArray,request} from "./lp.utils.js";
 import vue from "./vue.build.js";
 const { ref,reactive,onMounted } = vue;
 
@@ -97,6 +97,7 @@ export const useResConf = () => {
     const resConf = reactive([]);
     const handleResConf = () => {
         queryData("res/").then((conf)=>{
+            clearReactiveArray(resConf);
             resConf.splice(0, resConf.length, ...conf);
         })
     }
@@ -508,9 +509,7 @@ export const useRecordConf = () => {
     const recordConf = reactive({});
     const handleRecordConf = () => {
         queryData("config/record.json").then(conf => {
-            // for (let key in recordConf)
-            //     delete recordConf[key];
-            clearReactiveObject(conf);
+            clearReactiveObject(recordConf);
             Object.assign(recordConf,conf)
         })
     }

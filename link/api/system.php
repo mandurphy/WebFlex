@@ -164,4 +164,28 @@ class System extends Verify
             return $this->handleRet('','error',$ex->getMessage(),$ex->getMessage());
         }
     }
+
+    function reboot()
+    {
+        try {
+            $this->link_verify();
+            exec( '/link/shell/reboot.sh' );
+        }
+        catch (Exception $ex)
+        {
+            return $this->handleRet('','error',$ex->getMessage(),$ex->getMessage());
+        }
+    }
+
+    function reset()
+    {
+        try {
+            $this->link_verify();
+            exec( '/link/shell/reset.sh' );
+        }
+        catch (Exception $ex)
+        {
+            return $this->handleRet('','error',$ex->getMessage(),$ex->getMessage());
+        }
+    }
 }

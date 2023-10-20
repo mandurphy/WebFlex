@@ -24,7 +24,7 @@ a {
 }
 
 
-/* header �������أ�http://www.bootstrapmb.com */
+/* header */
 
 .top-header .navbar {
     position: fixed;
@@ -142,7 +142,6 @@ a {
     font-weight: 500;
 }
 
-
 .top-header .navbar .dropdown-menu {
     transform-origin: top center;
     animation: rotateX 300ms  ease-in-out forwards
@@ -225,7 +224,6 @@ a {
 
 .sidebar-wrapper .sidebar-nav {
     margin-top: 60px;
-    height: 100%;
     background-color: #ffffff;
     height: calc(100% - 120px);
 }
@@ -283,8 +281,9 @@ a {
 	text-overflow: ellipsis;
 	overflow: hidden;
 	letter-spacing: .5px;
-	border: 0px solid #ffffff00;
-	transition: all .3s ease-out
+	border: none;
+	transition: all .3s ease-out;
+    cursor: pointer;
 }
 
 .sidebar-wrapper .metismenu a .parent-icon {
@@ -825,6 +824,9 @@ input[type="password"]::-ms-reveal{
     flex: 1;
 }
 
+.login .card {
+    border-radius: 1rem;
+}
 .login .loading, .login .loading > div {
     position: relative;
     box-sizing: border-box;

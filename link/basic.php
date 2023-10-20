@@ -23,19 +23,29 @@ class Basic
 
     protected static function handleRet($data,$status,$msg_cn,$msg_en): string
     {
-        $lang = Basic::load_conf('/link/config/lang.json');
+        session_start();
+        if(!isset($_SESSION["lang"]))
+        {
+            $langConf = Basic::load_conf('/link/config/lang.json');
+            $lang = $langConf['lang'];
+            $_SESSION["lang"] = $lang;
+        }
+        else
+        {
+            $lang = $_SESSION["lang"];
+        }
 
         if(strpos($msg_cn,'&&'))
         {
             $msg_array = explode("&&", $msg_cn);
-            if($lang['lang'] == 'cn')
+            if($lang == 'cn')
                 $msg = $msg_array[0];
             else
                 $msg = $msg_array[1];
         }
         else
         {
-            if($lang['lang'] == 'en')
+            if($lang == 'en')
                 $msg = $msg_en;
             else
                 $msg = $msg_cn;
@@ -46,6 +56,7 @@ class Basic
             'status' => $status,
             'msg' => $msg
         );
+        header('Content-Type: application/json');
         return json_encode($retVal,JSON_UNESCAPED_UNICODE|JSON_PRETTY_PRINT);
     }
 }

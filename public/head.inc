@@ -9,5 +9,6 @@
 <link href="assets/plugins/switch/css/bootstrap-switch.min.css" rel="stylesheet">
 <link href="assets/css/main.css" rel="stylesheet">
 <link href="assets/css/theme/default.css" rel="stylesheet">
+<link href="assets/css/theme/dark.css" rel="stylesheet">
 <link href="assets/css/language.css" rel="stylesheet">
 

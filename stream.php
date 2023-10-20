@@ -77,7 +77,7 @@
                                  <div class="col"></div>
                              </div>
     
-                             <div class="row mt-1">
+                             <div class="row mt-2">
                                  <div class="col-2 text-center p-0 pt-2">
                                      <cn>辅流协议</cn>
                                      <en>Sub protocol</en>
@@ -105,7 +105,7 @@
                                  </div>
                                  <div class="col"></div>
                              </div>
-                             <hr class="mt-4 mb-4">
+                             <hr class="my-4">
                              <div class="row text-center">
                                  <div class="col-lg-12">
                                      <button type="button" class="btn  border-3 btn-primary me-2" @click="saveGlobalConfByLocal"><cn>应用到本地</cn><en>Save to local</en></button>
@@ -119,7 +119,7 @@
          </div>
      </div>
     
-     <div class="row">
+     <div class="row mt-3">
          <div class="col-lg-12 mx-auto">
              <ul class="nav nav-tabs nav-primary" role="tablist">
                  <li class="nav-item" role="presentation">
@@ -719,7 +719,7 @@
                          </div>
                      </div>
                  </div>
-                 <div class="row">
+                 <div class="row mt-3">
                      <div class="col-lg-12 text-center">
                          <button type="button" class="btn btn-primary border-3 px-5" @click="saveDefaultConf">
                              <cn>保存</cn>

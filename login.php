@@ -6,14 +6,14 @@
 </head>
 <body>
 <div class="container-fluid login auth-cover force-align-center" id="app">
-    <div class="card border-3" style="width: 460px">
-        <div class="card-body p-5">
+    <div class="card border-3" style="width: 430px">
+        <div class="card-body p-4">
             <div class="row">
                 <div class="col-lg-12 text-center">
-                    <img src="assets/images/logo-lg.png" class="mb-3" width="300">
+                    <img src="assets/images/logo.png" class="" width="126">
                 </div>
             </div>
-            <div class="form-body mt-4">
+            <div class="form-body mt-2 pb-3">
                 <form @submit.prevent="handleSubmit" class="row g-3" action="/link/action.php" method="post" ref="form" autocomplete="off">
                     <div class="col-12">
                         <label for="username" class="form-label"><cn>用户名</cn><en>Username</en></label>

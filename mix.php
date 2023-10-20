@@ -86,374 +86,19 @@
                 </div>
             </div>
         </div>
-        
-        <div v-if="Object.keys(hardwareConf).length > 0" :class="['row',{'force-display-hide':!hardwareConf.function.videoOut}]">
-            <div class="col-lg-12 mx-auto">
-                <div class="card">
-                    <div class="card-header bg-transparent">
-                        <div class="p-2 mb-0 d-flex align-items-end">
-                            <cn>输出设置</cn>
-                            <en>Output Config</en>
-                        </div>
-                    </div>
-                    <div class="card-body" v-if="defaultConf.length > 0">
-                        <div class="row">
-                            <div class="col-lg-6">
-                                <div class="row">
-                                    <div class="col-lg-3 offset-lg-1 force-align-center">
-                                        <label>
-                                            <cn>Mix开关</cn>
-                                            <en>Mix enable</en>
-                                        </label>
-                                    </div>
-                                    <div class="col-lg-6">
-                                        <bs-switch v-model="defaultConf[mixIndex].enable" :size="'normal'"></bs-switch>
-                                    </div>
-                                </div>
-                                <div class="row mt-4">
-                                    <div class="col-lg-3 offset-lg-1 force-align-center">
-                                        <label>
-                                            <cn>HDMI输出</cn>
-                                            <en>HDMI Output</en>
-                                        </label>
-                                    </div>
-                                    <div class="col-lg-6">
-                                        <bs-switch v-model="defaultConf[mixIndex].output.enable" :size="'normal'"></bs-switch>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-lg-6">
-                                <div class="row mt-4">
-                                    <div class="col-lg-3 offset-lg-1 force-align-center">
-                                        <label>
-                                            <cn>接口模式</cn>
-                                            <en>Interface</en>
-                                        </label>
-                                    </div>
-                                    <div class="col-lg-6">
-                                        <select class="form-select">
-                                            <option value="hdmi">HDMI</option>
-                                            <option value="dvi">DVI</option>
-                                        </select>
-                                    </div>
-                                </div>
-                                <div class="row mt-4">
-                                    <div class="col-lg-3 offset-lg-1 force-align-center">
-                                        <label>
-                                            <cn>分辨率</cn>
-                                            <en>resolution</en>
-                                        </label>
-                                    </div>
-                                    <div class="col-lg-6">
-                                        <select class="form-select" v-model="defaultConf[mixIndex].output.output">
-                                            <option v-if="Object.keys(hardwareConf).length > 0 && hardwareConf.capability.maxOutput === '4K60'" value="3840x2160_60">4K60</option>
-                                            <option v-if="Object.keys(hardwareConf).length > 0 && hardwareConf.capability.maxOutput === '4K60'" value="3840x2160_50">4K50</option>
-                                            <option v-if="Object.keys(hardwareConf).length > 0 && (hardwareConf.capability.maxOutput === '4K60' || hardwareConf.capability.maxOutput === '4K30')" value="3840x2160_30">4K30</option>
-                                            <option value="1080P60">1080P60</option>
-                                            <option value="1080I60">1080I60</option>
-                                            <option value="1080P50">1080P50</option>
-                                            <option value="1080I50">1080I50</option>
-                                            <option value="1080P30">1080P30</option>
-                                            <option value="1080P25">1080P25</option>
-                                            <option value="1080P24">1080P24</option>
-                                            <option value="720P60">720P60</option>
-                                            <option value="720P50">720P50</option>
-                                            <option value="1920x2160_30">1920x2160_30</option>
-                                            <option value="2560x1600_60">2560x1600_60</option>
-                                            <option value="2560x1440_60">2560x1440_60</option>
-                                            <option value="2560x1440_30">2560x1440_30</option>
-                                            <option value="1920x1200_60">1920x1200_60</option>
-                                            <option value="1680x1050_60">1680x1050_60</option>
-                                            <option value="1600x1200_60">1600x1200_60</option>
-                                            <option value="1440x900_60">1440x900_60</option>
-                                            <option value="1366x768_60">1366x768_60</option>
-                                            <option value="1280x1024_60">1280x1024_60</option>
-                                            <option value="1280x800_60">1280x800_60</option>
-                                            <option value="1024x768_60">1024x768_60</option>
-                                            <option value="800x600_60">800x600_60</option>
-                                            <option value="576P50">576P50</option>
-                                            <option value="480P60">480P60</option>
-                                        </select>
-                                    </div>
-                                </div>
-                                <div class="row mt-4">
-                                    <div class="col-lg-3 offset-lg-1 force-align-center">
-                                        <label>
-                                            <cn>旋转</cn>
-                                            <en>rotate</en>
-                                        </label>
-                                    </div>
-                                    <div class="col-lg-6">
-                                        <select class="form-select" v-model="defaultConf[mixIndex].output.rotate">
-                                            <option value="0">0</option>
-                                            <option value="90">90</option>
-                                            <option value="180">180</option>
-                                            <option value="270">270</option>
-                                        </select>
-                                    </div>
-                                </div>
-                                <div class="row mt-4">
-                                    <div class="col-lg-3 offset-lg-1 force-align-center">
-                                        <label>
-                                            <cn>左右镜像</cn>
-                                            <en>mirror</en>
-                                        </label>
-                                    </div>
-                                    <div class="col-lg-6">
-                                        <bs-switch v-model="defaultConf[mixIndex].output.mirror" :size="'normal'"></bs-switch>
-                                    </div>
-                                </div>
-                                <div class="row mt-4">
-                                    <div class="col-lg-3 offset-lg-1 force-align-center">
-                                        <label>
-                                            <cn>视频源</cn>
-                                            <en>video source</en>
-                                        </label>
-                                    </div>
-                                    <div class="col-lg-6">
-                                        <select class="form-select" v-model="defaultConf[mixIndex].output.src">
-                                            <option v-for="(item,index) in handleEnableConf" :value="item.id">{{item.name}}</option>
-                                        </select>
-                                    </div>
-                                </div>
-                                <div class="row mt-4">
-                                    <div class="col-lg-3 offset-lg-1 force-align-center">
-                                        <label>
-                                            <cn>低延时</cn>
-                                            <en>low latency</en>
-                                        </label>
-                                    </div>
-                                    <div class="col-lg-6">
-                                        <bs-switch v-model="defaultConf[mixIndex].output.lowLatency" :size="'normal'"></bs-switch>
-                                    </div>
-                                </div>
-                                <div class="row mt-4">
-                                    <div class="col-lg-3 offset-lg-1 force-align-center">
-                                        <label>
-                                            <cn>色域转换</cn>
-                                            <en>CSC</en>
-                                        </label>
-                                    </div>
-                                    <div class="col-lg-6">
-                                        <select class="form-select" v-model="defaultConf[mixIndex].output.csc.matrix">
-                                            <option value="identity" cn="不转换" en="Identity"></option>
-                                            <option value="601_709">601 to 709</option>
-                                            <option value="709_601">709 to 601</option>
-                                        </select>
-                                    </div>
-                                </div>
-                                <div class="row mt-4">
-                                    <div class="col-lg-3 offset-lg-1 force-align-center">
-                                        <label>
-                                            <cn>亮度</cn>
-                                            <en>luma</en>
-                                        </label>
-                                    </div>
-                                    <div class="col-lg-6">
-                                        <noui-slider v-model="defaultConf[mixIndex].output.csc.luma" :min="0" :max="100" :step="1" :fix="0"></noui-slider>
-                                    </div>
-                                </div>
-                                <div class="row mt-4">
-                                    <div class="col-lg-3 offset-lg-1 force-align-center">
-                                        <label>
-                                            <cn>对比度</cn>
-                                            <en>contrast</en>
-                                        </label>
-                                    </div>
-                                    <div class="col-lg-6">
-                                        <noui-slider v-model="defaultConf[mixIndex].output.csc.contrast" :min="0" :max="100" :step="1" :fix="0"></noui-slider>
-                                    </div>
-                                </div>
-                                <div class="row mt-4">
-                                    <div class="col-lg-3 offset-lg-1 force-align-center">
-                                        <label>
-                                            <cn>饱和度</cn>
-                                            <en>saturation</en>
-                                        </label>
-                                    </div>
-                                    <div class="col-lg-6">
-                                        <noui-slider v-model="defaultConf[mixIndex].output.csc.saturation" :min="0" :max="100" :step="1" :fix="0"></noui-slider>
-                                    </div>
-                                </div>
-                                <div class="row mt-4">
-                                    <div class="col-lg-3 offset-lg-1 force-align-center">
-                                        <label>
-                                            <cn>色调</cn>
-                                            <en>hue</en>
-                                        </label>
-                                    </div>
-                                    <div class="col-lg-6">
-                                        <noui-slider v-model="defaultConf[mixIndex].output.csc.hue" :min="0" :max="100" :step="1" :fix="0"></noui-slider>
-                                    </div>
-                                </div>
-                            </div>
-                            
-                            <div class="col-lg-6">
-                                <div class="row mt-4">
-                                    <div class="col-lg-3 offset-lg-1 force-align-center">
-                                        <label v-if="Object.keys(hardwareConf).length > 0">
-                                            {{hardwareConf.capability.extraVo}}
-                                            <cn>开关</cn>
-                                            <en>enable</en>
-                                        </label>
-                                    </div>
-                                    <div class="col-lg-6">
-                                        <bs-switch v-model="defaultConf[mixIndex].output2.enable" :size="'normal'"></bs-switch>
-                                    </div>
-                                </div>
-                                <div class="row mt-4">
-                                    <div class="col-lg-3 offset-lg-1 force-align-center">
-                                        <label>
-                                            <cn>分辨率</cn>
-                                            <en>resolution</en>
-                                        </label>
-                                    </div>
-                                    <div class="col-lg-6">
-                                        <select class="form-select" v-model="defaultConf[mixIndex].output2.output">
-                                            <option value="1080P60">1080P60</option>
-                                            <option value="1080I60">1080I60</option>
-                                            <option value="1080P50">1080P50</option>
-                                            <option value="1080I50">1080I50</option>
-                                            <option value="1080P30">1080P30</option>
-                                            <option value="720P60">720P60</option>
-                                            <option value="720P50">720P50</option>
-                                        </select>
-                                    </div>
-                                </div>
-                                <div class="row mt-4">
-                                    <div class="col-lg-3 offset-lg-1 force-align-center">
-                                        <label>
-                                            <cn>旋转</cn>
-                                            <en>rotate</en>
-                                        </label>
-                                    </div>
-                                    <div class="col-lg-6">
-                                        <select class="form-select" v-model="defaultConf[mixIndex].output2.rotate">
-                                            <option value="0">0</option>
-                                            <option value="90">90</option>
-                                            <option value="180">180</option>
-                                            <option value="270">270</option>
-                                        </select>
-                                    </div>
-                                </div>
-                                <div class="row mt-4">
-                                    <div class="col-lg-3 offset-lg-1 force-align-center">
-                                        <label>
-                                            <cn>左右镜像</cn>
-                                            <en>mirror</en>
-                                        </label>
-                                    </div>
-                                    <div class="col-lg-6">
-                                        <bs-switch v-model="defaultConf[mixIndex].output2.mirror" :size="'normal'"></bs-switch>
-                                    </div>
-                                </div>
-                                <div class="row mt-4">
-                                    <div class="col-lg-3 offset-lg-1 force-align-center">
-                                        <label>
-                                            <cn>视频源</cn>
-                                            <en>video source</en>
-                                        </label>
-                                    </div>
-                                    <div class="col-lg-6">
-                                        <select class="form-select" v-model="defaultConf[mixIndex].output2.src">
-                                            <option v-for="(item,index) in handleEnableConf" :value="item.id">{{item.name}}</option>
-                                        </select>
-                                    </div>
-                                </div>
-                                <div class="row mt-4">
-                                    <div class="col-lg-3 offset-lg-1 force-align-center">
-                                        <label>
-                                            <cn>低延时</cn>
-                                            <en>low latency</en>
-                                        </label>
-                                    </div>
-                                    <div class="col-lg-6">
-                                        <bs-switch v-model="defaultConf[mixIndex].output2.lowLatency" :size="'normal'"></bs-switch>
-                                    </div>
-                                </div>
-                                <div class="row mt-4">
-                                    <div class="col-lg-3 offset-lg-1 force-align-center">
-                                        <label>
-                                            <cn>色域转换</cn>
-                                            <en>CSC</en>
-                                        </label>
-                                    </div>
-                                    <div class="col-lg-6">
-                                        <select class="form-select" v-model="defaultConf[mixIndex].output2.csc.matrix">
-                                            <option value="identity" cn="不转换" en="Identity"></option>
-                                            <option value="601_709">601 to 709</option>
-                                            <option value="709_601">709 to 601</option>
-                                        </select>
-                                    </div>
-                                </div>
-                                <div class="row mt-4">
-                                    <div class="col-lg-3 offset-lg-1 force-align-center">
-                                        <label>
-                                            <cn>亮度</cn>
-                                            <en>luma</en>
-                                        </label>
-                                    </div>
-                                    <div class="col-lg-6">
-                                        <noui-slider v-model="defaultConf[mixIndex].output2.csc.luma" :min="0" :max="100" :step="1" :fix="0"></noui-slider>
-                                    </div>
-                                </div>
-                                <div class="row mt-4">
-                                    <div class="col-lg-3 offset-lg-1 force-align-center">
-                                        <label>
-                                            <cn>对比度</cn>
-                                            <en>contrast</en>
-                                        </label>
-                                    </div>
-                                    <div class="col-lg-6">
-                                        <noui-slider v-model="defaultConf[mixIndex].output2.csc.contrast" :min="0" :max="100" :step="1" :fix="0"></noui-slider>
-                                    </div>
-                                </div>
-                                <div class="row mt-4">
-                                    <div class="col-lg-3 offset-lg-1 force-align-center">
-                                        <label>
-                                            <cn>饱和度</cn>
-                                            <en>saturation</en>
-                                        </label>
-                                    </div>
-                                    <div class="col-lg-6">
-                                        <noui-slider v-model="defaultConf[mixIndex].output2.csc.saturation" :min="0" :max="100" :step="1" :fix="0"></noui-slider>
-                                    </div>
-                                </div>
-                                <div class="row mt-4">
-                                    <div class="col-lg-3 offset-lg-1 force-align-center">
-                                        <label>
-                                            <cn>色调</cn>
-                                            <en>hue</en>
-                                        </label>
-                                    </div>
-                                    <div class="col-lg-6">
-                                        <noui-slider v-model="defaultConf[mixIndex].output2.csc.hue" :min="0" :max="100" :step="1" :fix="0"></noui-slider>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <hr class="mt-4 mb-4">
-                        <div class="row mb-3">
-                            <button type="button" @click="updateDefaultConf" class="col-2 offset-5 btn border-3 btn-primary text-center"><cn>保存</cn><en>Save</en></button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
     </main>
 </div>
 <?php include ("./public/foot.inc") ?>
 <script src="assets/plugins/nouislider/js/nouislider.min.js"></script>
 <script type="module">
     
-    import { rpc,alertMsg,confirm } from "./assets/js/lp.utils.js";
+    import { rpc,confirm } from "./assets/js/lp.utils.js";
     import { useDefaultConf,useDefLaysConf,useHardwareConf } from "./assets/js/vue.hooks.js";
     import { ignoreCustomElementPlugin,bootstrapSwitchComponent,nouiSliderComponent,languageOptionDirective } from "./assets/js/vue.helper.js"
+    import mutationObserver from './assets/plugins/polyfill/mutationobserver.esm.js';
     import vue from "./assets/js/vue.build.js";
 
-    const {createApp,ref,reactive,watchEffect,computed} = vue;
+    const {createApp,ref,reactive,watchEffect,computed,onMounted} = vue;
     const app = createApp({
         directives:{
             "language-option": languageOptionDirective
@@ -471,7 +116,8 @@
             const state = {
                 chnImgUrl: ref(""),
                 curLayId: ref(-1),
-                mixIndex: ref(-1)
+                mixIndex: ref(-1),
+                curTheme: ref("default")
             }
             
             const updateChnImage = () => {
@@ -615,14 +261,33 @@
             }
             
             const handleLayBackColor = (idx) => {
-                let color = 128;
-                if(idx % 2 === 0)
-                    color += 25 * (idx / 2);
-                else
-                    color -= 25 * (idx / 2 + 1);
+                let color = 0;
+                if(state.curTheme.value !== "dark") {
+                    if(idx % 2 === 0)
+                        color = 128 + 25 * (idx / 2);
+                    else
+                        color = 128 - 25 * (idx / 2 + 1);
+                } else
+                    color = 85 - 15 * (idx / 2 + 1);
                 return "rgb(" + color + "," + color + "," + color + ")";
             }
-            
+
+            onMounted(()=>{
+                const html = document.querySelector('html');
+                const observer = new mutationObserver(mutations => {
+                    mutations.forEach(mutation => {
+                        if (mutation.type === 'attributes' && mutation.attributeName === "data-bs-theme")
+                            state.curTheme.value = mutation.target.getAttribute("data-bs-theme");
+                    });
+                });
+                const config = {
+                    attributes: true,
+                    attributeFilter: ["data-bs-theme"],
+                    subtree: false
+                };
+                observer.observe(html, config);
+            });
+
             return {...state,defaultConf,defLaysConf,hardwareConf,handleEnableConf,handleActiveDefLayConf,
                 hrefDefLayout,onChangeLayout,handleLayBackColor,handleActiveVolume,onUpdateActiveVolume,
                 handleLayoutChnSelect,updateDefaultConf}

@@ -20,14 +20,14 @@
                         <div class="card-body" >
                             <div class="row row-cols-3 text-center">
                                 <div class="col-lg-4 ">
-                                    <pie-chart :value="cpu" :color="theme_color"></pie-chart>
+                                    <pie-chart v-model="cpu" :active-color="theme_color"></pie-chart>
                                     <div>
                                         <cn>CPU使用率</cn>
                                         <en>CPU usage</en>
                                     </div>
                                 </div>
                                 <div class="col-lg-4 text-center">
-                                    <pie-chart :value="mem" :color="theme_color"></pie-chart>
+                                    <pie-chart v-model="mem" :active-color="theme_color"></pie-chart>
                                     <div>
                                         <cn>内存使用率</cn>
                                         <en>Memory usage</en>
@@ -54,7 +54,9 @@
                             </div>
                         </div>
                         <div class="card-body">
-                            <net-chart v-if="tx.length > 0" :color="theme_color" :maxy="maxy" :data1="tx" :data2="rx"></net-chart>
+                            <net-chart v-if="tx.length > 0" :maxy="maxy" :data1="tx" :data2="rx" :key="netFlotKey"
+                                       :line1-color="theme_color" :line2-color="line2_color" :tick-color="tickColor" :border-color="borderColor"
+                                       :tip-border-color="tipBorderColor" :tip-bg-color="tipBgColor" :tip-txt-color="tipTxtColor"></net-chart>
                         </div>
                     </div>
                 </div>
@@ -75,13 +77,21 @@
             <div class="row mt-2">
                 <div class="col-lg-12">
                     <div class="card">
+                        <div class="card-header bg-transparent">
+                            <div class="p-2 mb-0 d-flex align-items-end">
+                                <cn>预览</cn>
+                                <en>Preview</en>
+                                <small style="margin-left: 5px;color: grey;font-size: 12px;">
+                                    <cn>非实时视频，仅预览图片</cn>
+                                    <en>Not a realtime video, picture only</en>
+                                </small>
+                            </div>
+                        </div>
                         <div class="card-body">
-                            <h6 class="mb-0 text-uppercase"><cn>预览</cn><en>Preview</en><small style="margin-left: 5px;color: grey;font-size: 12px;"><cn>非实时视频，仅预览图片</cn><en>Not a realtime video, picture only</en></small></h6>
-                            <div class="my-3 border-top"></div>
                             <div class="row row-cols-2 row-cols-lg-4 g-3">
                                 <div v-for="(item,index) in preview" :key="index" class="col">
-                                    <div class="card border-end">
-                                        <img :src="makeImgUrl(item.id)" class="card-img-top" alt="...">
+                                    <div class="card">
+                                        <img :src="makeImgUrl(item.id)" class="card-img-top">
                                         <div class="chn-volume" :style="{'width':handleChnVolume(item.id,'L')}"></div>
                                         <div class="chn-volume" :style="{'width':handleChnVolume(item.id,'R')}"></div>
                                         <div class="card-body">
@@ -106,6 +116,7 @@
       import { useDefaultConf,useHardwareConf } from "./assets/js/vue.hooks.js";
       import { ignoreCustomElementPlugin,bootstrapSwitchComponent,statusPieChartComponent,statusTemperatureComponent,netFlotChartComponent } from "./assets/js/vue.helper.js"
       import vue from "./assets/js/vue.build.js";
+      import mutationObserver from './assets/plugins/polyfill/mutationobserver.esm.js';
 
       const { createApp,ref,reactive,onMounted } = vue;
       const app  = createApp({
@@ -127,6 +138,13 @@
                   data1:reactive([]),
                   data2:reactive([]),
                   theme_color:ref("#ffbb00"),
+                  line2_color:ref("#555555"),
+                  tipBorderColor:ref("#ffbb00"),
+                  tipBgColor:ref("#ffffff"),
+                  tipTxtColor:ref("#555555"),
+                  tickColor:ref("#eeeeee"),
+                  borderColor:ref("#cccccc"),
+                  netFlotKey:ref(0),
                   preview : reactive([]),
                   input : reactive([]),
                   volume: reactive([])
@@ -235,12 +253,47 @@
                   setTimeout(updateInputState,3000);
               }
 
+              const onListenThemeChange = () => {
+                  const html = document.querySelector('html');
+                  const observer = new mutationObserver(mutations => {
+                      mutations.forEach(mutation => {
+                          if (mutation.type === 'attributes' && mutation.attributeName === "data-bs-theme") {
+                              const theme = mutation.target.getAttribute("data-bs-theme");
+                              if(theme === "default") {
+                                  state.tickColor.value = '#eee';
+                                  state.borderColor.value = '#ccc';
+                                  state.tipBgColor.value = '#fff';
+                                  state.tipBorderColor.value = '#fb0';
+                                  state.tipTxtColor.value = '#555';
+                                  state.line2_color.value = '#555';
+                              }
+                              if(theme === "dark") {
+                                  state.tickColor.value = '#555';
+                                  state.borderColor.value = '#555';
+                                  state.tipBgColor.value = '#333';
+                                  state.tipBorderColor.value = '#aaa';
+                                  state.tipTxtColor.value = '#adb5bd';
+                                  state.line2_color.value = '#999';
+                              }
+                              state.netFlotKey.value++;
+                          }
+                      });
+                  });
+                  const config = {
+                      attributes: true,
+                      attributeFilter: ["data-bs-theme"],
+                      subtree: false
+                  };
+                  observer.observe(html, config);
+              }
+
               onMounted(()=>{
                   updateSysState();
                   updateNetState();
                   updatePreview();
                   updateInputState();
                   updateVolume();
+                  onListenThemeChange();
                 }
               )
 

@@ -2,7 +2,8 @@
 import vue from "./vue.build.js";
 import $ from '../plugins/jquery/jquery.esm.js';
 import '../plugins/switch/js/bootstrap-switch.min.js';
-import { func,confirm,rebootConfirm,alertMsg,axios_post } from './lp.utils.js'
+import mutationObserver from '../plugins/polyfill/mutationobserver.esm.js'
+import {func, confirm, rebootConfirm, alertMsg, axios_post, isEmpty} from './lp.utils.js'
 
 const {ref,reactive,toRefs,watch,watchEffect,
     computed,onMounted,nextTick,defineAsyncComponent} = vue;
@@ -13,9 +14,40 @@ export const ignoreCustomElementPlugin =  {
     }
 };
 
+export const highlightTextPlugin = {
+    install(app, options) {
+        //const urlParam = options.urlParam || 'highlight';
+        //const urlValue = new URLSearchParams(window.location.search).get(urlParam);
+        const urlValue = "预"
+        if (urlValue) {
+            nextTick(()=>{
+                const elements = document.querySelectorAll('main cn, main en');
+                elements.forEach((el) => {
+                    const textContent = el.textContent;
+                    const startIndex = textContent.indexOf(urlValue);
+                    if (startIndex !== -1) {
+                        const endIndex = startIndex + urlValue.length;
+                        const beforeText = textContent.slice(0, startIndex);
+                        const highlightedText = textContent.slice(startIndex, endIndex);
+                        const afterText = textContent.slice(endIndex);
+
+                        const highlightedElement = document.createElement('span');
+                        highlightedElement.style.fontWeight = '700';
+                        highlightedElement.style.color = 'red';
+                        highlightedElement.textContent = highlightedText;
+
+                        el.innerHTML = beforeText;
+                        el.appendChild(highlightedElement);
+                        el.innerHTML += afterText;
+                    }
+                })
+            })
+        }
+    }
+};
+
 export const languageOptionDirective = {
-    async mounted(el, binding, vnode) {
-        await import('../plugins/polyfill/mutationobserver-shim.min.js');
+    mounted(el, binding, vnode) {
         const update = () => {
             const lang = html.getAttribute('data-bs-language');
             el.textContent = el.getAttribute(lang);
@@ -23,11 +55,14 @@ export const languageOptionDirective = {
 
         const html = document.querySelector('html');
         update();
-        const observer = new MutationObserver(() => {
+        const observer = new mutationObserver(() => {
             update();
         });
-
-        const config = {attributes: true};
+        const config = {
+            attributes: true,
+            attributeFilter: ["data-bs-language"],
+            subtree: false
+        };
         observer.observe(html, config);
     }
 };
@@ -81,30 +116,43 @@ export const statusTemperatureComponent = {
     }
 };
 
-
 export const statusPieChartComponent = {
     template: `<div class="pie">
                     <div class="chart" ref="pie_chart"></div>
                     <span class="percent" ref="pie_text"></span>
                </div>`,
-    props: ['value','color'],
+    props: {
+        modelValue: {
+          type:Number,
+          default: 0
+        },
+        activeColor: {
+            type: String,
+            default: "#fb0"
+        },
+        trackColor: {
+            type: String,
+            default: "#777"
+        }
+    },
     setup(props, context) {
 
         const pie_chart = ref(null);
         const pie_text = ref(null);
 
-        const { value } = toRefs(props);
+        const { modelValue } = toRefs(props);
 
-        watch(value,()=>{
-            $(pie_chart.value).data( 'easyPieChart' ).update( props.value);
+        watch(modelValue,newValue => {
+            if($(pie_chart.value).data( 'easyPieChart' ))
+                $(pie_chart.value).data( 'easyPieChart' ).update( newValue);
         })
 
         onMounted(()=>{
             $(pie_chart.value).easyPieChart({
                 easing: 'easeOutElastic',
                 delay: 2000,
-                barColor: props.color,
-                trackColor: '#CCC',
+                barColor: props.activeColor,
+                trackColor: props.trackColor,
                 scaleColor: false,
                 lineWidth: 20,
                 trackWidth: 16,
@@ -122,7 +170,48 @@ export const statusPieChartComponent = {
 
 export const netFlotChartComponent = {
     template: `<div class="col-lg-12 netState" ref="net_chart"> </div>`,
-    props: ['color','maxy','data1','data2'],
+    props: {
+        line1Color: {
+            type: String,
+            default: "#FB0"
+        },
+        line2Color: {
+            type: String,
+            default: "#555"
+        },
+        maxy: {
+            type: Number,
+            maxy: 800
+        },
+        data1: {
+            type: Array,
+            default: [],
+        },
+        data2: {
+            type: Array,
+            default: []
+        },
+        tickColor: {
+            type: String,
+            default:"#eee"
+        },
+        borderColor: {
+            type: String,
+            default: "#ccc"
+        },
+        tipBorderColor:{
+            type: String,
+            default: "#fb0"
+        },
+        tipBgColor: {
+            type: String,
+            default: "#fff"
+        },
+        tipTxtColor: {
+            type: String,
+            default: "#555"
+        }
+    },
     setup(props,context) {
         const net_chart = ref(null);
         let plot = {};
@@ -133,11 +222,12 @@ export const netFlotChartComponent = {
                 display: 'none',
                 top: y - 40,
                 left: x - 120,
-                border: '2px solid ' + color,
+                border: '2px solid ' + props.tipBorderColor,
                 padding: '3px',
                 'font-size': '9px',
                 'border-radius': '5px',
-                'background-color': '#fff',
+                'color':props.tipTxtColor,
+                'background-color': props.tipBgColor,
                 'font-family': 'Verdana, Arial, Helvetica, Tahoma, sans-serif',
                 opacity: 0.9
             }).appendTo("body").fadeIn(200);
@@ -152,13 +242,13 @@ export const netFlotChartComponent = {
                         {
                             data: data1,
                             lines: {
-                                fill: true
+                                fill: true,
                             }
                         },
                         {
                             data: data2,
                             lines: {
-                                show: true
+                                show: true,
                             }
                         }]
                     ,
@@ -166,7 +256,7 @@ export const netFlotChartComponent = {
                         series: {
                             lines: {
                                 show: true,
-                                fill: true
+                                fill: true,
                             },
                             shadowSize: 0
                         },
@@ -193,11 +283,11 @@ export const netFlotChartComponent = {
                         grid: {
                             hoverable: true,
                             clickable: true,
-                            tickColor: "#eeeeee",
+                            tickColor: props.tickColor,
                             borderWidth: 1,
-                            borderColor: "#cccccc"
+                            borderColor: props.borderColor,
                         },
-                        colors: [ color, "#555" ],
+                        colors: [ props.line1Color, props.line2Color ],
                         tooltip: false
                     });
 
