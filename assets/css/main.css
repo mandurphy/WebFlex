@@ -11,12 +11,20 @@ body {
     display: none;
 }
 
+menu {
+    position: absolute;
+}
+
 [data-simplebar] {
     height: 100%;
 }
 
 [data-simplebar] .simplebar-mask {
     z-index: unset;
+}
+
+.simplebar-track.simplebar-horizontal {
+    display: none;
 }
 
 a {
@@ -95,9 +103,6 @@ a {
     font-size: 24px;
 }
 
-
-
-/* dropdown app */
 
 .top-header .navbar .dropdown-app .dropdown-menu {
     width: 270px;
@@ -478,7 +483,7 @@ a {
 }
 
 .page-content {
-    padding: 1.5rem 1.5rem 2.5rem 1.5rem;
+    padding: 2.5rem 1.5rem;
     margin-left: 260px;
     margin-top: 40px;
     transition: ease-out .3s;
@@ -516,17 +521,17 @@ a {
 }
 
 
-.auth-cover-left {
-    display: flex;
-    background-color: #f7f7ff;
-    min-height: 100vh;
-}
+/*.auth-cover-left {*/
+/*    display: flex;*/
+/*    background-color: #f7f7ff;*/
+/*    min-height: 100vh;*/
+/*}*/
 
-.auth-cover-right {
-    display: flex;
-    background-color: #ffffff;
-    min-height: 100vh;
-}
+/*.auth-cover-right {*/
+/*    display: flex;*/
+/*    background-color: #ffffff;*/
+/*    min-height: 100vh;*/
+/*}*/
 
 .font-text1 {
     font-size: 0.8rem;
@@ -566,11 +571,11 @@ a {
 	font-size: 30px !important;
 }
 
-.btn-option {
-	background-color: transparent;
-    border: 0px solid rgb(255 255 255 / 0%);
-    color: var(--bs-body-color)
-}
+/*.btn-option {*/
+/*	background-color: transparent;*/
+/*    border: 0px solid rgb(255 255 255 / 0%);*/
+/*    color: var(--bs-body-color)*/
+/*}*/
 
 @media only screen and (max-width: 1199px) {
 
@@ -584,10 +589,6 @@ a {
 
     .top-header .navbar {
         left: 0;
-    }
-
-   .page-content {
-        margin-left: 0;
     }
 
     .sidebar-wrapper .sidebar-header .sidebar-close {
@@ -646,6 +647,9 @@ a {
 
 }
 
+.jconfirm-content {
+    overflow: hidden !important;
+}
 
 [v-cloak] { display: none !important; }
 
@@ -722,47 +726,44 @@ input[type="password"]::-ms-reveal{
     max-width: 700px;
 }
 
-.simplebar-track.simplebar-horizontal {
-    display: none;
-}
 
-.force-align-center {
+.lp-align-center {
     display:flex;
     align-items:center;
     justify-content: center;
 }
 
-.force-align-right {
+.lp-align-right {
     display:flex;
     align-items:center;
     justify-content: end;
 }
 
-.force-card-title {
+.lp-card-title {
     font-size: 16px;
     font-weight: 600 !important;
 }
 
-.force-text-overflow {
+.lp-text-overflow {
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
 }
 
-.force-cursor-pointer {
+.lp-cursor-pointer {
     cursor: pointer;
 }
 
-.force-display-hide {
+.lp-display-hide {
     display: none;
 }
 
-.force-visibility-hide {
+.lp-visibility-hide {
     visibility: hidden;
 }
 
 
-.force-video-cloud {
+.lp-video-cloud {
     position: absolute;
     width: 100%;
     height: 100%;
@@ -775,7 +776,7 @@ input[type="password"]::-ms-reveal{
     align-items:center;
     justify-content: center;
 }
-.force-video-cloud .loading {
+.lp-video-cloud .loading {
     display: inline-block;
     width: 1.3em;
     height: 1.3em;
@@ -803,11 +804,11 @@ input[type="password"]::-ms-reveal{
     }
 }
 
-.force-aspect-ratio {
+.lp-aspect-ratio {
     position: relative;
     padding-top: 56.25%;
 }
-.force-aspect-ratio .aspect-ratio-content {
+.lp-aspect-ratio .aspect-ratio-content {
     position: absolute;
     top: 0;
     left: 0;
@@ -815,13 +816,52 @@ input[type="password"]::-ms-reveal{
     height: 100%;
 }
 
-.force-equal-height-container {
+.lp-equal-height-container {
     display: flex;
     align-items: stretch;
 }
 
-.force-equal-height-container .force-equal-height-item {
+.lp-equal-height-container .lp-equal-height-item {
     flex: 1;
+}
+
+
+.lp-usb-drive {
+    position: relative;
+    width: 100%;
+    height: 100%;
+}
+
+.lp-usb-drive .lp-usb-body {
+    width: 12px;
+    height: 16px;
+    position: absolute;
+    top: 5px;
+    border-bottom-left-radius: 4px;
+    border-bottom-right-radius: 4px;
+    z-index: 1;
+    border: 2px solid #212529;
+    left: 4px;
+}
+
+.lp-usb-drive .lp-usb-metal {
+    width: 8px;
+    height: 8px;
+    position: absolute;
+    top: -1px;
+    left: 6px;
+    border-radius: 2px;
+    border: 2px solid #212529;
+}
+
+.lp-usb-drive .lp-usb-hole {
+    width: 2px;
+    height: 2px;
+    background-color:#212529;
+    position: absolute;
+    top: 2px;
+    left: 9px;
+    border-radius: 50%;
 }
 
 .login .card {
@@ -1064,12 +1104,12 @@ input[type="password"]::-ms-reveal{
     border-color: lightgray !important
 }
 
-.mix .force-aspect-ratio .aspect-ratio-content select {
+.mix .lp-aspect-ratio .aspect-ratio-content select {
     font-size: 12px !important;
     border-radius: 3px;
 }
 
-.mix .force-aspect-ratio .aspect-ratio-content button.btn-default {
+.mix .lp-aspect-ratio .aspect-ratio-content button.btn-default {
     background-color: #f0f0f0;
     border-color: #f0f0f0;
     color: #555;
@@ -1222,7 +1262,7 @@ input[type="password"]::-ms-reveal{
     outline: none;
 }
 
-.push .force-aspect-ratio {
+.push .lp-aspect-ratio {
     position: relative;
     padding-top: 69.1%;
 }
@@ -1312,11 +1352,11 @@ input[type="password"]::-ms-reveal{
     outline: none;
 }
 
-.roi .force-aspect-ratio {
+.roi .lp-aspect-ratio {
     position: relative;
     padding-top: 55.25%;
 }
-.roi .force-aspect-ratio .aspect-ratio-content {
+.roi .lp-aspect-ratio .aspect-ratio-content {
     position: absolute;
     top: 0;
     left: 0;

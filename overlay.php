@@ -4,7 +4,6 @@
 <head>
     <?php include ("./public/head.inc") ?>
     <link href="assets/plugins/nouislider/css/nouislider.min.css" rel="stylesheet">
-    <link href="assets/plugins/confirm/css/jquery-confirm.min.css" rel="stylesheet">
     <link href="assets/plugins/fileinput/css/fileinput.min.css" rel="stylesheet" >
 </head>
 <body>
@@ -42,10 +41,10 @@
                                                 <en>Effect list</en>
                                             </label>
                                         </div>
-                                        <div class="dropdown ms-auto force-cursor-pointer">
+                                        <div class="dropdown ms-auto lp-cursor-pointer">
                                             <button type="button" class="btn border-3 btn-primary btn-sm dropdown-toggle dropdown-toggle-nocaret" data-bs-toggle="dropdown">
                                                 <i class="fa-solid fa-plus me-1"></i>
-                                                <label class="force-cursor-pointer">
+                                                <label class="lp-cursor-pointer">
                                                     <cn>添加</cn>
                                                     <en>Add</en>
                                                 </label>
@@ -125,13 +124,13 @@
                                                             <en>Border</en>
                                                         </h6>
                                                     </div>
-                                                    <div class="col force-text-overflow">
+                                                    <div class="col lp-text-overflow">
                                                         <span>{{item.content}}</span>
                                                     </div>
                                                     <div class="col text-center">
                                                         <div>x:{{item.x}},y:{{item.y}}</div>
                                                     </div>
-                                                    <div class="col-3 force-align-center">
+                                                    <div class="col-3 lp-align-center">
                                                         <button type="button" class="btn border-3 btn-primary btn-sm" @click="editOverlay(index)"><i class="fa-solid fa-brush me-1"></i><cn>编辑</cn><en>Edit</en></button>
                                                         <button type="button" class="btn border-3 btn-primary btn-sm ms-2" @click="delOverlay(index)"><i class="fa-regular fa-trash-can me-1"></i><cn>删除</cn><en>Delete</en></button>
                                                     </div>
@@ -158,7 +157,7 @@
                                 </div>
                                 <div class="card-body" v-if="Object.keys(handleEditData).length !== 0">
                                     <div class="row">
-                                        <div class="col-lg-3 offset-lg-1 force-align-center">
+                                        <div class="col-lg-3 offset-lg-1 lp-align-center">
                                             <label>
                                                 <cn>显示</cn>
                                                 <en>Visable</en>
@@ -169,7 +168,7 @@
                                         </div>
                                     </div>
                                     <div class="row mt-4" v-if="handleEditData.type === 'mask'">
-                                        <div class="col-lg-3 offset-lg-1 force-align-center">
+                                        <div class="col-lg-3 offset-lg-1 lp-align-center">
                                             <label>
                                                 <cn>强度</cn>
                                                 <en>Strength</en>
@@ -185,7 +184,7 @@
                                         </div>
                                     </div>
                                     <div class="row mt-4" v-if="handleEditData.type === 'pic'">
-                                        <div class="col-lg-3 offset-lg-1 force-align-center">
+                                        <div class="col-lg-3 offset-lg-1 lp-align-center">
                                             <label>
                                                 <cn>图片</cn>
                                                 <en>Image</en>
@@ -198,7 +197,7 @@
                                         </div>
                                     </div>
                                     <div class="row mt-4" v-if="handleEditData.type === 'text'">
-                                        <div class="col-lg-3 offset-lg-1 force-align-center">
+                                        <div class="col-lg-3 offset-lg-1 lp-align-center">
                                             <label>
                                                 <cn>文字</cn>
                                                 <en>Text</en>
@@ -209,7 +208,7 @@
                                         </div>
                                     </div>
                                     <div class="row mt-4" v-if="handleEditData.type === 'time'">
-                                        <div class="col-lg-3 offset-lg-1 force-align-center">
+                                        <div class="col-lg-3 offset-lg-1 lp-align-center">
                                             <label>
                                                 <cn>格式</cn>
                                                 <en>Format</en>
@@ -220,7 +219,7 @@
                                         </div>
                                     </div>
                                     <div class="row mt-4" v-if="handleEditData.type === 'time' || handleEditData.type === 'text'">
-                                        <div class="col-lg-3 offset-lg-1 force-align-center">
+                                        <div class="col-lg-3 offset-lg-1 lp-align-center">
                                             <label>
                                                 <cn>字体</cn>
                                                 <en>Font</en>
@@ -233,7 +232,7 @@
                                         </div>
                                     </div>
                                     <div class="row mt-4" v-if="handleEditData.type === 'text'">
-                                        <div class="col-lg-3 offset-lg-1 force-align-center">
+                                        <div class="col-lg-3 offset-lg-1 lp-align-center">
                                             <label>
                                                 <cn>移动</cn>
                                                 <en>Move</en>
@@ -244,7 +243,7 @@
                                         </div>
                                     </div>
                                     <div class="row mt-4">
-                                        <div class="col-lg-3 offset-lg-1 force-align-center">
+                                        <div class="col-lg-3 offset-lg-1 lp-align-center">
                                             <label>
                                                 <cn>水平位置</cn>
                                                 <en>Pos X</en>
@@ -255,7 +254,7 @@
                                         </div>
                                     </div>
                                     <div class="row mt-4">
-                                        <div class="col-lg-3 offset-lg-1 force-align-center">
+                                        <div class="col-lg-3 offset-lg-1 lp-align-center">
                                             <label>
                                                 <cn>垂直位置</cn>
                                                 <en>Pos Y</en>
@@ -266,7 +265,7 @@
                                         </div>
                                     </div>
                                     <div class="row mt-4" v-if="handleEditData.type === 'text' || handleEditData.type === 'mask' || handleEditData.type === 'rect' || handleEditData.type === 'border'">
-                                        <div class="col-lg-3 offset-lg-1 force-align-center">
+                                        <div class="col-lg-3 offset-lg-1 lp-align-center">
                                             <label>
                                                 <cn>宽度</cn>
                                                 <en>Width</en>
@@ -277,7 +276,7 @@
                                         </div>
                                     </div>
                                     <div class="row mt-4" v-if="handleEditData.type === 'mask' || handleEditData.type === 'rect' || handleEditData.type === 'border'">
-                                        <div class="col-lg-3 offset-lg-1 force-align-center">
+                                        <div class="col-lg-3 offset-lg-1 lp-align-center">
                                             <label>
                                                 <cn>高度</cn>
                                                 <en>Height</en>
@@ -288,7 +287,7 @@
                                         </div>
                                     </div>
                                     <div class="row mt-4" v-if="handleEditData.type === 'border'">
-                                        <div class="col-lg-3 offset-lg-1 force-align-center">
+                                        <div class="col-lg-3 offset-lg-1 lp-align-center">
                                             <label>
                                                 <cn>边框宽度</cn>
                                                 <en>Border</en>
@@ -299,7 +298,7 @@
                                         </div>
                                     </div>
                                     <div class="row mt-4" id="color" v-if="handleEditData.type !== 'pic' && handleEditData.type !== 'mask'">
-                                        <div class="col-lg-3 offset-lg-1 force-align-center">
+                                        <div class="col-lg-3 offset-lg-1 lp-align-center">
                                             <label>
                                                 <cn>颜色</cn>
                                                 <en>Color</en>
@@ -310,7 +309,7 @@
                                         </div>
                                     </div>
                                     <div class="row mt-4" v-if="handleEditData.type === 'text' || handleEditData.type === 'time'">
-                                        <div class="col-lg-3 offset-lg-1 force-align-center">
+                                        <div class="col-lg-3 offset-lg-1 lp-align-center">
                                             <label>
                                                 <cn>背景色</cn>
                                                 <en>Back color</en>
@@ -321,7 +320,7 @@
                                         </div>
                                     </div>
                                     <div class="row mt-4" v-if="handleEditData.type === 'text' || handleEditData.type === 'time' || handleEditData.type === 'pic'">
-                                        <div class="col-lg-3 offset-lg-1 force-align-center">
+                                        <div class="col-lg-3 offset-lg-1 lp-align-center">
                                             <label>
                                                 <cn>缩放</cn>
                                                 <en>Scale</en>
@@ -332,7 +331,7 @@
                                         </div>
                                     </div>
                                     <div class="row mt-4" v-if="handleEditData.type !== 'mask'">
-                                        <div class="col-lg-3 offset-lg-1 force-align-center">
+                                        <div class="col-lg-3 offset-lg-1 lp-align-center">
                                             <label>
                                                 <cn>透明度</cn>
                                                 <en>Alpha</en>
@@ -361,7 +360,7 @@
                                         <div class="ms-auto">
                                             <button class="btn border-2 btn-primary btn-sm" @click="uploadRes">
                                                 <i class="fa-solid fa-upload me-1"></i>
-                                                <label class="force-cursor-pointer">
+                                                <label class="lp-cursor-pointer">
                                                     <cn>上传</cn>
                                                     <en>Upload</en>
                                                 </label>
@@ -374,10 +373,10 @@
                                         <div class="team-list col-lg-12">
                                             <div class="p-0 m-0" v-for="(item,index) in resConf" :key="index">
                                                 <div class="row align-items-center px-2" >
-                                                    <div class="col-8 text-center force-text-overflow">
+                                                    <div class="col-8 text-center lp-text-overflow">
                                                         <span>{{item.name}}</span>
                                                     </div>
-                                                    <div class="col-4 force-align-center">
+                                                    <div class="col-4 lp-align-center">
                                                         <button type="button" class="btn border-3 btn-primary btn-sm" @click="delCurrentRes(item.name)"><i class="fa-regular fa-trash-can me-1"></i><cn>删除</cn><en>Delete</en></button>
                                                     </div>
                                                 </div>
@@ -546,7 +545,7 @@
                             btnClass: 'btn-primary',
                             keys: [ 'enter' ],
                             action: () => {
-                                func("/link/mgr/root/delResFile",resName).then(data => handleResConf());
+                                func("/mgr/root/delResFile",resName).then(data => handleResConf());
                             }
                         },
                         cancel: {

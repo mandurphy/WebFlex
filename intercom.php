@@ -20,7 +20,7 @@
                                 </div>
                                 <div class="card-body text-center">
                                     <div class="intercomBtn">
-                                        <i class="fa fa-microphone force-display-hide"></i>
+                                        <i class="fa fa-microphone lp-display-hide"></i>
                                         <span>{{ item.content }}</span>
                                     </div>
                                 </div>
@@ -41,7 +41,7 @@
                         </div>
                         <div class="card-body">
                             <div class="row mt-3">
-                                <div class="col-lg-3 offset-lg-1 force-align-center">
+                                <div class="col-lg-3 offset-lg-1 lp-align-center">
                                     <label>
                                         <cn>开关</cn>
                                         <en>Enable</en>
@@ -52,7 +52,7 @@
                                 </div>
                             </div>
                             <div class="row mt-4">
-                                <div class="col-lg-3 offset-lg-1 force-align-center">
+                                <div class="col-lg-3 offset-lg-1 lp-align-center">
                                     <label>
                                         <cn>服务器IP</cn>
                                         <en>Server IP</en>
@@ -63,7 +63,7 @@
                                 </div>
                             </div>
                             <div class="row mt-4">
-                                <div class="col-lg-3 offset-lg-1 force-align-center">
+                                <div class="col-lg-3 offset-lg-1 lp-align-center">
                                     <label>
                                         <cn>服务器端口</cn>
                                         <en>Server port</en>
@@ -74,7 +74,7 @@
                                 </div>
                             </div>
                             <div class="row mt-4">
-                                <div class="col-lg-3 offset-lg-1 force-align-center">
+                                <div class="col-lg-3 offset-lg-1 lp-align-center">
                                     <label>
                                         <cn>名称</cn>
                                         <en>Name</en>
@@ -85,7 +85,7 @@
                                 </div>
                             </div>
                             <div class="row mt-4">
-                                <div class="col-lg-3 offset-lg-1 force-align-center">
+                                <div class="col-lg-3 offset-lg-1 lp-align-center">
                                     <label>
                                         <cn>本机ID</cn>
                                         <en>Local ID</en>
@@ -106,7 +106,7 @@
                                 </div>
                             </div>
                             <div class="row mt-4">
-                                <div class="col-lg-3 offset-lg-1 force-align-center">
+                                <div class="col-lg-3 offset-lg-1 lp-align-center">
                                     <label>
                                         <cn>目标ID</cn>
                                         <en>Target ID</en>
@@ -128,7 +128,7 @@
                                 </div>
                             </div>
                             <div class="row mt-4">
-                                <div class="col-lg-3 offset-lg-1 force-align-center">
+                                <div class="col-lg-3 offset-lg-1 lp-align-center">
                                     <label>
                                         <cn>缓冲时间</cn>
                                         <en>Buffer time</en>
@@ -144,7 +144,7 @@
                                 </div>
                             </div>
                             <div class="row mt-4">
-                                <div class="col-lg-3 offset-lg-1 force-align-center">
+                                <div class="col-lg-3 offset-lg-1 lp-align-center">
                                     <label>
                                         <cn>麦克增益</cn>
                                         <en>Mic gain</en>
@@ -161,7 +161,7 @@
                                 </div>
                             </div>
                             <div class="row my-4">
-                                <div class="col-lg-3 offset-lg-1 force-align-center">
+                                <div class="col-lg-3 offset-lg-1 lp-align-center">
                                     <label>
                                         <cn>自动静音</cn>
                                         <en>Auto mute</en>
@@ -192,7 +192,7 @@
                                 </div>
                                 <div class="card-body" >
                                     <div class="row mt-3">
-                                        <div class="col-lg-2 offset-lg-1 force-align-center">
+                                        <div class="col-lg-2 offset-lg-1 lp-align-center">
                                             <label>
                                                 <cn>开关</cn>
                                                 <en>Enable</en>
@@ -203,7 +203,7 @@
                                         </div>
                                     </div>
                                     <div class="row mt-4">
-                                        <div class="col-lg-2 offset-lg-1 force-align-center">
+                                        <div class="col-lg-2 offset-lg-1 lp-align-center">
                                             <label>
                                                 <cn>模式</cn>
                                                 <en>Model</en>
@@ -218,7 +218,7 @@
                                         </div>
                                     </div>
                                     <div class="row my-4">
-                                        <div class="col-lg-2 offset-lg-1 force-align-center">
+                                        <div class="col-lg-2 offset-lg-1 lp-align-center">
                                             <label>
                                                 <cn>导播IP</cn>
                                                 <en>Director IP</en>
@@ -241,7 +241,7 @@
                                 </div>
                                 <div class="card-body" >
                                     <div class="row my-3">
-                                        <div class="col-lg-2 offset-lg-1 force-align-center">
+                                        <div class="col-lg-2 offset-lg-1 lp-align-center">
                                             <label>
                                                 <cn>开关</cn>
                                                 <en>Enable</en>
@@ -264,7 +264,7 @@
                                 </div>
                                 <div class="card-body" >
                                     <div class="row mt-3 mb-4">
-                                        <div class="col-lg-2 offset-lg-1 force-align-center">
+                                        <div class="col-lg-2 offset-lg-1 lp-align-center">
                                             <label>
                                                 <cn>开关</cn>
                                                 <en>Enable</en>

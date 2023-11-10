@@ -5536,7 +5536,7 @@ var FLVDemuxer = function () {
             return this._duration;
         }
 
-        // Force-override media duration. Must be in milliseconds, int32
+        // lp-override media duration. Must be in milliseconds, int32
         ,
         set: function set(duration) {
             this._durationOverrided = true;
@@ -5544,7 +5544,7 @@ var FLVDemuxer = function () {
             this._mediaInfo.duration = duration;
         }
 
-        // Force-override audio track present flag, boolean
+        // lp-override audio track present flag, boolean
 
     }, {
         key: 'overridedHasAudio',
@@ -5554,7 +5554,7 @@ var FLVDemuxer = function () {
             this._mediaInfo.hasAudio = hasAudio;
         }
 
-        // Force-override video track present flag, boolean
+        // lp-override video track present flag, boolean
 
     }, {
         key: 'overridedHasVideo',
@@ -6893,7 +6893,7 @@ var IOController = function () {
     }, {
         key: '_onLoaderComplete',
         value: function _onLoaderComplete(from, to) {
-            // Force-flush stash buffer, and drop unconsumed data
+            // lp-flush stash buffer, and drop unconsumed data
             this._flushStashBuffer(true);
 
             if (this._onComplete) {

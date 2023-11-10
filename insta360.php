@@ -10,15 +10,15 @@
     <div data-simplebar>
         <main class="page-content insta360" id="app" v-cloak>
             <div class="row">
-                <div class="col-lg-6 force-equal-height-container">
-                    <div class="card force-equal-height-item mb-0">
+                <div class="col-lg-6 lp-equal-height-container">
+                    <div class="card lp-equal-height-item mb-0">
                         <div class="card-header bg-transparent">
                             <div class="p-2 mb-0 d-flex align-items-end">
                                 <cn>Insta360预览</cn>
                                 <en>Insta360 Preview</en>
                             </div>
                         </div>
-                        <div class="card-body force-align-center">
+                        <div class="card-body lp-align-center">
                             <div class="row">
                                 <div class="col-lg-12 mt-2">
                                     <img :src="chnImgUrl" class="card-img" alt="...">
@@ -27,8 +27,8 @@
                         </div>
                     </div>
                 </div>
-                <div class="col-lg-6 force-equal-height-container">
-                    <div class="force-equal-height-item mb-0">
+                <div class="col-lg-6 lp-equal-height-container">
+                    <div class="lp-equal-height-item mb-0">
                         <div class="d-flex flex-column h-100">
                             <div class="flex-fill pb-2">
                                 <div class="card h-100">
@@ -60,13 +60,13 @@
                                                 </div>
                                                 <hr>
                                                 <div class="row">
-                                                    <div class="col-lg-4 force-align-center">
+                                                    <div class="col-lg-4 lp-align-center">
                                                         <bs-switch v-model="options.tracking" @switch-change="onUsbCamOptionChange"></bs-switch>
                                                     </div>
-                                                    <div class="col-lg-4 force-align-center">
+                                                    <div class="col-lg-4 lp-align-center">
                                                         <bs-switch v-model="options.whiteboard" @switch-change="onUsbCamOptionChange"></bs-switch>
                                                     </div>
-                                                    <div class="col-lg-4 force-align-center">
+                                                    <div class="col-lg-4 lp-align-center">
                                                         <bs-switch v-model="options.overhead" @switch-change="onUsbCamOptionChange"></bs-switch>
                                                     </div>
                                                 </div>
@@ -87,13 +87,13 @@
                                                 </div>
                                                 <hr>
                                                 <div class="row">
-                                                    <div class="col-lg-4 force-align-center">
+                                                    <div class="col-lg-4 lp-align-center">
                                                         <bs-switch v-model="options.deskview" @switch-change="onUsbCamOptionChange"></bs-switch>
                                                     </div>
-                                                    <div class="col-lg-4 force-align-center">
+                                                    <div class="col-lg-4 lp-align-center">
                                                         <bs-switch v-model="options.hdr" @switch-change="onUsbCamOptionChange"></bs-switch>
                                                     </div>
-                                                    <div class="col-lg-4 force-align-center">
+                                                    <div class="col-lg-4 lp-align-center">
                                                         <bs-switch v-model="options.mirror" @switch-change="onUsbCamOptionChange"></bs-switch>
                                                     </div>
                                                 </div>

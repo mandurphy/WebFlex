@@ -3,7 +3,6 @@
 <html lang="uft-8">
 <head>
     <?php include ("./public/head.inc") ?>
-    <link href="assets/plugins/confirm/css/jquery-confirm.min.css" rel="stylesheet">
 </head>
 <body>
 <?php include ("./public/menu.inc") ?>
@@ -33,21 +32,25 @@
                                                 <cn>编码方式</cn>
                                                 <en>codec</en>
                                             </div>
-                                            <div class="col-2 text-center">
+                                            <div class="col text-center">
                                                 <cn>码率控制</cn>
                                                 <en>rate control</en>
                                             </div>
-                                            <div class="col-2 text-center">
+                                            <div class="col text-center">
                                                 <cn>码率(kb/s)</cn>
                                                 <en>bitrate(kb/s)</en>
                                             </div>
-                                            <div class="col-2 text-center">
+                                            <div class="col text-center">
                                                 <cn>帧率</cn>
                                                 <en>framerate</en>
                                             </div>
-                                            <div class="col-2 text-center">
+                                            <div class="col text-center">
                                                 <cn>GOP(秒)</cn>
                                                 <en>GOP(sec)</en>
+                                            </div>
+                                            <div class="col text-center">
+                                                <cn>帧同步</cn>
+                                                <en>Sync</en>
                                             </div>
                                         </div>
                                     </div>
@@ -96,6 +99,13 @@
                                             </div>
                                             <div class="col">
                                                 <input type="text" class="form-control" v-model.trim.lazy="globalConf.encv.gop">
+                                            </div>
+                                            <div class="col">
+                                                <multiple-select v-model:value1="globalConf.encv.syncTS" v-model:value2="globalConf.encv.syncTSMode" split=",">
+                                                    <option cn="芯象" en="Sinsam" value="true,sinsam" v-language-option></option>
+                                                    <option cn="简易" en="Normal" value="true,linkpi" v-language-option></option>
+                                                    <option cn="关闭" en="Close" value="false,linkpi" v-language-option></option>
+                                                </multiple-select>
                                             </div>
                                         </div>
                                     </div>
@@ -146,12 +156,17 @@
                                             <div class="col">
                                                 <input type="text" class="form-control" v-model.trim.lazy="globalConf.encv2.gop">
                                             </div>
+                                            <div class="col">
+                                                <multiple-select v-model:value1="globalConf.encv2.syncTS" v-model:value2="globalConf.encv2.syncTSMode" split=",">
+                                                    <option cn="芯象" en="Sinsam" value="true,sinsam" v-language-option></option>
+                                                    <option cn="简易" en="Normal" value="true,linkpi" v-language-option></option>
+                                                    <option cn="关闭" en="Close" value="false,linkpi" v-language-option></option>
+                                                </multiple-select>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
-                                <div class="col-lg-12">
-                                    <hr >
-                                </div>
+                                <hr >
                                 <div class="row">
                                     <div class="col-1"></div>
                                     <div class="col-11">
@@ -241,9 +256,7 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="col-lg-12">
-                                    <hr >
-                                </div>
+                                <hr >
                                 <div class="row text-center mt-3">
                                     <div class="col-lg-12">
                                         <button type="button" class="btn  border-3 btn-primary me-2" @click="saveGlobalConfByLocal"><cn>应用到本地</cn><en>Save to local</en></button>
@@ -276,7 +289,7 @@
                             </div>
                         </a>
                     </li>
-                    <li class="nav-item" role="presentation" v-if="Object.keys(hardwareConf).length > 0 && hardwareConf.chip == '3559A' && hardwareConf.chip == '3516E'">
+                    <li class="nav-item" role="presentation" v-if="Object.keys(hardwareConf).length > 0 && hardwareConf.chip !== '3559A' && hardwareConf.chip !== '3516E'">
                         <a class="nav-link" data-bs-toggle="tab" href="#tab3" role="tab" aria-selected="false">
                             <div class="d-flex align-items-center">
                                 <div class="tab-icon"><i class="fa-regular fa-image me-1"></i></div>
@@ -333,6 +346,10 @@
                                 <en>GOP(sec)</en>
                             </div>
                             <div class="col text-center">
+                                <cn>帧同步</cn>
+                                <en>sync</en>
+                            </div>
+                            <div class="col text-center">
                                 <cn>开关</cn>
                                 <en>enable</en>
                             </div>
@@ -382,7 +399,14 @@
                                     <div class="col">
                                         <input type="text" class="form-control" v-model.trim.lazy="item.encv.gop">
                                     </div>
-                                    <div class="col force-align-center">
+                                    <div class="col">
+                                        <multiple-select v-model:value1="item.encv.syncTS" v-model:value2="item.encv.syncTSMode" split=",">
+                                            <option cn="芯象" en="Sinsam" value="true,sinsam" v-language-option></option>
+                                            <option cn="简易" en="Normal" value="true,linkpi" v-language-option></option>
+                                            <option cn="关闭" en="Close" value="false,linkpi" v-language-option></option>
+                                        </multiple-select>
+                                    </div>
+                                    <div class="col lp-align-center">
                                         <bs-switch v-model="item.enable" ></bs-switch>
                                     </div>
                                 </div>
@@ -426,7 +450,14 @@
                                     <div class="col">
                                         <input type="text" class="form-control" v-model.trim.lazy="item.encv2.gop">
                                     </div>
-                                    <div class="col force-align-center">
+                                    <div class="col">
+                                        <multiple-select v-model:value1="item.encv2.syncTS" v-model:value2="item.encv2.syncTSMode" split=",">
+                                            <option cn="芯象" en="Sinsam" value="true,sinsam" v-language-option></option>
+                                            <option cn="简易" en="Normal" value="true,linkpi" v-language-option></option>
+                                            <option cn="关闭" en="Close" value="false,linkpi" v-language-option></option>
+                                        </multiple-select>
+                                    </div>
+                                    <div class="col lp-align-center">
                                         <bs-switch v-model="item.enable2" ></bs-switch>
                                     </div>
                                 </div>
@@ -503,7 +534,7 @@
                                     <div class="col">
                                         <input type="text" class="form-control" v-model.trim.lazy="item.encv.Pqp">
                                     </div>
-                                    <div class="col force-align-center">
+                                    <div class="col lp-align-center">
                                         <bs-switch v-model="item.encv.lowLatency" ></bs-switch>
                                     </div>
                                 </div>
@@ -535,7 +566,7 @@
                                     <div class="col">
                                         <input type="text" class="form-control" v-model.trim.lazy="item.encv2.Pqp">
                                     </div>
-                                    <div class="col force-align-center">
+                                    <div class="col lp-align-center">
                                         <bs-switch v-model="item.encv2.lowLatency" ></bs-switch>
                                     </div>
                                 </div>
@@ -605,10 +636,10 @@
                                     <div class="col">
                                         <input type="text" class="form-control" v-model.trim.lazy="item.cap.crop.B">
                                     </div>
-                                    <div class="col force-align-center">
+                                    <div class="col lp-align-center">
                                         <bs-switch v-model="item.cap.deinterlace" v-if="item.type==='vi'"></bs-switch>
                                     </div>
-                                    <div class="col force-align-center">
+                                    <div class="col lp-align-center">
                                         <bs-switch v-model="item.cap.ntsc" v-if="item.type==='vi'"></bs-switch>
                                     </div>
                                 </div>
@@ -773,13 +804,13 @@
                                             <option value="tcp">TCP</option>
                                         </select>
                                     </div>
-                                    <div class="col force-align-center">
+                                    <div class="col lp-align-center">
                                         <bs-switch v-model="item.net.decodeV"></bs-switch>
                                     </div>
-                                    <div class="col force-align-center">
+                                    <div class="col lp-align-center">
                                         <bs-switch v-model="item.net.decodeA"></bs-switch>
                                     </div>
-                                    <div class="col force-align-center">
+                                    <div class="col lp-align-center">
                                         <bs-switch v-model="item.enable"></bs-switch>
                                     </div>
                                 </div>
@@ -875,6 +906,7 @@
             })
 
             const saveGlobalConfByLocal = () => {
+                console.log(globalConf)
                 for ( let i = 0; i < defaultConf.length; i++ ) {
                     if (defaultConf[i].encv === undefined || defaultConf[i].enca === undefined )
                         continue;

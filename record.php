@@ -3,7 +3,6 @@
 <html lang="uft-8">
 <head>
     <?php include ("./public/head.inc") ?>
-    <link href="./assets/plugins/vueTreeView/css/vue3-tree-view.css" rel="stylesheet">
 </head>
 <body>
 <?php include ("./public/menu.inc") ?>
@@ -12,10 +11,24 @@
         <div class="row">
             <div class="col-lg-12 mx-auto">
                 <div class="card">
-                    <div class="card-header bg-transparent">
-                        <div class="p-2 mb-0 d-flex align-items-end">
-                            <cn>录制参数</cn>
-                            <en>Record Config</en>
+                    <div class="card-header bg-transparent d-flex">
+                        <div class="flex-grow-1">
+                            <div class="p-2 mb-0 d-flex align-items-end">
+                                <cn>录制参数</cn>
+                                <en>Record Config</en>
+                            </div>
+                        </div>
+                        <div class="flex-grow-0 pe-2 pt-2">
+                            <i class="fa-solid fa-gear fa-lg lp-cursor-pointer"></i>
+                        </div>
+                        <div class="flex-grow-0 pe-2 pt-2">
+                            <i class="fa-solid fa-gear fa-lg lp-cursor-pointer"></i>
+                        </div>
+                        <div class="flex-grow-0 pe-2 pt-2">
+                            <i class="fa-solid fa-gear fa-lg lp-cursor-pointer"></i>
+                        </div>
+                        <div class="flex-grow-0 pe-2 pt-2">
+                            <i class="fa-solid fa-gear fa-lg lp-cursor-pointer"></i>
                         </div>
                     </div>
                     <div class="card-body" >
@@ -37,7 +50,7 @@
                         </div>
                         <hr>
                         <div class="row my-3">
-                            <div class="col-lg-3 force-align-center">
+                            <div class="col-lg-3 lp-align-center">
                                 <cn>全局控制</cn>
                                 <en>Overall config</en>
                             </div>
@@ -98,7 +111,7 @@
                             <div class="col-lg-6 offset-lg-3">
                                 <div class="rec-bar">
                                     <div class="row">
-                                        <div class="col-7 d-flex force-align-right">
+                                        <div class="col-7 d-flex lp-align-right">
                                             <button type="button" class="btn border-3 btn-primary" @click="onStartRecord">
                                                 <i class="fa-solid fa-video me-1"></i>
                                                 <cn>录制</cn>
@@ -185,29 +198,29 @@
                                     <div class="col-2 text-center">
                                         <input type="text" class="form-control" v-model.trim.lazy="item.chnName" readonly disabled>
                                     </div>
-                                    <div class="col force-align-center">
+                                    <div class="col lp-align-center">
                                         <bs-switch v-model="item.mp4" @switch-change="onStartRecordByFormat"></bs-switch>
                                     </div>
-                                    <div class="col force-align-center">
+                                    <div class="col lp-align-center">
                                         <bs-switch v-model="item.ts" @switch-change="onStartRecordByFormat"></bs-switch>
                                     </div>
-                                    <div class="col force-align-center">
+                                    <div class="col lp-align-center">
                                         <bs-switch v-model="item.flv" @switch-change="onStartRecordByFormat"></bs-switch>
                                     </div>
-                                    <div class="col force-align-center">
+                                    <div class="col lp-align-center">
                                         <bs-switch v-model="item.mkv" @switch-change="onStartRecordByFormat"></bs-switch>
                                     </div>
-                                    <div class="col force-align-center">
+                                    <div class="col lp-align-center">
                                         <bs-switch v-model="item.mov" @switch-change="onStartRecordByFormat"></bs-switch>
                                     </div>
-                                    <div class="col force-align-center">
+                                    <div class="col lp-align-center">
                                         <bs-switch v-model="item.isPause" @switch-change="onStartRecordByFormat"></bs-switch>
                                     </div>
-                                    <div class="col force-align-center">
+                                    <div class="col lp-align-center">
                                         {{item.durTime}}
                                     </div>
-                                    <div class="col-1 force-align-center">
-<!--                                        <i class="fa-solid fa-ellipsis-vertical force-cursor-pointer"></i>-->
+                                    <div class="col-1 lp-align-center">
+<!--                                        <i class="fa-solid fa-ellipsis-vertical lp-cursor-pointer"></i>-->
                                     </div>
                                 </div>
                                 <hr >
@@ -216,25 +229,6 @@
                     </div>
 
                     <div class="tab-pane fade" id="tab2" role="tabpanel">
-<!--                        <div class="row">-->
-<!--                            <div class="col-lg-2" style="background: red;height: 600px">-->
-<!--                                <tree-view :nodes="nodes" :config="config"></tree-view>-->
-<!--                            </div>-->
-<!--                            <div class="col-lg-10" style="background: green;height: 600px"></div>-->
-<!--                        </div>-->
-
-                        <div class="card mb-0" style="height: 600px">
-                            <div class="card-body py-0">
-                                <div class="row h-100">
-                                    <div class="col-lg-2" style="border-right:solid 1px rgba(0,0,0,0.175)">
-                                        <tree-view :nodes="nodes" :config="config"></tree-view>
-                                    </div>
-                                    <div class="col-lg-10">
-                                        <div class=""></div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
                     </div>
                 </div>
             </div>
@@ -247,14 +241,12 @@
     import { rpc,func,alertMsg } from "./assets/js/lp.utils.js";
     import { useDefaultConf,useRecordConf } from "./assets/js/vue.hooks.js";
     import { ignoreCustomElementPlugin,bootstrapSwitchComponent } from "./assets/js/vue.helper.js"
-    import treeview from "./assets/plugins/vueTreeView/js/vue3-tree-view.esm.js"
     import vue from "./assets/js/vue.build.js";
 
     const {createApp,ref,reactive,watchEffect,computed,onMounted} = vue;
     const app = createApp({
         components:{
-            "bs-switch" : bootstrapSwitchComponent,
-            "tree-view" : treeview
+            "bs-switch" : bootstrapSwitchComponent
         },
         setup: function (props, context) {
 
@@ -264,29 +256,10 @@
             const state = {
                 recDuration:reactive({}),
                 diskSpace: ref("--/--"),
-                config: reactive({
-                    roots: ["id1", "id2"],
-                }),
-                nodes: reactive({
-                    id1: {
-                        text: "text1",
-                        children: ["id11", "id12"],
-                    },
-                    id11: {
-                        text: "text11",
-                    },
-                    id12: {
-                        text: "text12",
-                    },
-                    id2: {
-                        text: "text2",
-                    },
-                })
             }
 
             const handleEnableConf = computed(() => {
                 return defaultConf.filter((item, index) => {
-                    console.log("#########");
                     return item.enable && item.type !== "ndi" && item.type !== "file";
                 })
             });
@@ -359,7 +332,7 @@
             }
 
             const handleDiskSpace = () => {
-                func("/link/mgr/system/getMountDiskSpace").then(data => {
+                func("/mgr/system/getMountDiskSpace").then(data => {
                     if (data.status === "error") {
                         state.diskSpace.value = "--/--";
                         return;

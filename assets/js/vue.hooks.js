@@ -139,7 +139,7 @@ export const useThemeConf = () => {
     const updateThemeConf = (type) => {
         return new Promise((resolve,reject)=>{
             themeConf.used = type;
-            func("/link/mgr/conf/updateThemeConf",themeConf).then(data => {
+            func("/mgr/conf/updateThemeConf",themeConf).then(data => {
                 if ( data.status === "success" ) {
                     const html = document.querySelector('html');
                     html.setAttribute('data-bs-theme', type);
@@ -159,6 +159,7 @@ export const usetNetManagerConf = (tip = "tip") => {
     const netManagerConf = reactive({});
     const handleNetManagerConf = () => {
         queryData("config/netManager.json").then((conf)=>{
+            clearReactiveObject(netManagerConf);
             Object.assign(netManagerConf, conf);
         })
     }
@@ -175,7 +176,6 @@ export const usetNetManagerConf = (tip = "tip") => {
             });
             netManagerConf.interface = adapter;
         }
-
         return new Promise((resolve,reject)=>{
             rpc2("net.update",[JSON.stringify(netManagerConf,null,2)]).then(data=>{
                 if(data) {
@@ -197,7 +197,7 @@ export const usetNetManagerConf = (tip = "tip") => {
 export const usePasswordConf = () => {
     const updateUserPasswd = (param,tip = "tip") => {
         return new Promise((resolve,reject)=>{
-            func("/link/mgr/conf/updatePasswdConf",param).then((data)=>{
+            func("/mgr/conf/updatePasswdConf",param).then((data)=>{
                 if(data.status === "success") {
                     resolve();
                     if(tip !== "noTip")
@@ -222,7 +222,7 @@ export const useVideoBufferConf = () => {
     }
     const updateVideoBufferConf = (tip = "tip") => {
         return new Promise((resolve,reject) => {
-            func("/link/mgr/conf/updateVideoBufferConf",videoBufferConf).then((data)=>{
+            func("/mgr/conf/updateVideoBufferConf",videoBufferConf).then((data)=>{
                 if(data.status === "success") {
                     resolve();
                     if(tip !== "noTip")
@@ -248,7 +248,7 @@ export const useNtpConf = () => {
     }
     const updateNtpConf = (tip = "tip") => {
         return new Promise((resolve,reject) => {
-            func("/link/mgr/conf/updateNtpConf", ntpConf).then((data)=>{
+            func("/mgr/conf/updateNtpConf", ntpConf).then((data)=>{
                 if(data.status === "success") {
                     resolve();
                     if(tip !== "noTip")
@@ -274,7 +274,7 @@ export const useTimezoneConf = () => {
     }
     const updateTimezoneConf = (tip = "tip") => {
         return new Promise((resolve,reject) => {
-            func("/link/mgr/conf/updateTimezoneConf", timezoneConf).then((data)=>{
+            func("/mgr/conf/updateTimezoneConf", timezoneConf).then((data)=>{
                 if(data.status === "success") {
                     resolve();
                     if(tip !== "noTip")
@@ -625,7 +625,7 @@ export const usePtzConf = () => {
     }
     const updatePtzConf = (tip = "tip") => {
         return new Promise((resolve,reject)=>{
-            func("/link/mgr/conf/updatePtzConf",ptzConf).then(data => {
+            func("/mgr/conf/updatePtzConf",ptzConf).then(data => {
                 if ( data.status !== "success" ) {
                     reject();
                     if(tip !== "noTip")
@@ -640,6 +640,39 @@ export const usePtzConf = () => {
     }
     onMounted(handlePtzConf);
     return { ptzConf,updatePtzConf }
+}
+
+export const useUsbFilesConf = () => {
+    const usbFiles = reactive([]);
+    const handleUsbFilesConf = () => {
+        queryData("files/").then(conf => {
+            usbFiles.splice(0, usbFiles.length, ...conf);
+        })
+    }
+    onMounted(handleUsbFilesConf);
+    return { usbFiles }
+}
+
+export const useDiskConf = () => {
+    const diskConf = reactive({});
+    const handleDiskConf = () => {
+        queryData("config/misc/disk.json").then(conf => {
+            Object.assign(diskConf,conf)
+        })
+    }
+    const updateDiskConf = conf => {
+        return new Promise(async (resolve,reject)=>{
+            let result = await func("/mgr/conf/updateDiskConf", conf);
+            if(result.status === "error") {
+                alertMsg(result.msg,result.status);
+                reject();
+                return;
+            }
+            resolve();
+        });
+    }
+    onMounted(handleDiskConf);
+    return { diskConf,updateDiskConf }
 }
 
 

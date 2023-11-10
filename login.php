@@ -1,11 +1,11 @@
-
+<?php include ("./link/session.php") ?>
 <!doctype html>
 <html lang="en" data-bs-theme="dark">
 <head>
     <?php include ("./public/head.inc") ?>
 </head>
 <body>
-<div class="container-fluid login auth-cover force-align-center" id="app">
+<div class="container-fluid login auth-cover lp-align-center" id="app">
     <div class="card border-3" style="width: 430px">
         <div class="card-body p-4">
             <div class="row">
@@ -17,13 +17,13 @@
                 <form @submit.prevent="handleSubmit" class="row g-3" action="/link/action.php" method="post" ref="form" autocomplete="off">
                     <div class="col-12">
                         <label for="username" class="form-label"><cn>用户名</cn><en>Username</en></label>
-                        <input v-model.trim.lazy="username" type="text" class="form-control border-3" name="username" placeholder="Enter Username">
+                        <input v-model.trim.lazy="username" type="text" class="form-control border-3" name="username">
                     </div>
                     <div class="col-12">
                         <label for="password" class="form-label"><cn>密码</cn><en>Password</en></label>
                         <div class="input-group">
-                            <input v-model.trim.lazy="password" :type="!showPasswd ? 'password' : 'text'" class="form-control border-end-0  border-3" name="password" placeholder="Enter Password">
-                            <div class="input-group-text bg-transparent  border-3 force-cursor-pointer" @click="showPasswd = !showPasswd"><i :class="['fa-regular',{'fa-eye-slash':showPasswd},{'fa-eye ':!showPasswd}]"></i></div>
+                            <input v-model.trim.lazy="password" :type="!showPasswd ? 'password' : 'text'" class="form-control border-end-0  border-3" name="password">
+                            <div class="input-group-text border-3 lp-cursor-pointer" @click="showPasswd = !showPasswd"><i :class="['fa-regular',{'fa-eye-slash':showPasswd},{'fa-eye ':!showPasswd}]"></i></div>
                         </div>
                     </div>
                     <div class="col-md-6">
@@ -47,7 +47,7 @@
 
 <script type="module">
 
-    import { alertMsg,getUrlParam } from "./assets/js/lp.utils.js";
+    import { alertMsg,getUrlParam,isEmpty } from "./assets/js/lp.utils.js";
     import { ignoreCustomElementPlugin } from "./assets/js/vue.helper.js";
     import vue from "./assets/js/vue.build.js";
 
@@ -69,9 +69,8 @@
             }
 
             const handleSubmit = () => {
-
-                if(state.username.value === "" || state.password.value === "") {
-                    alertMsg("<cn>账号或密码不能为空</cn><en>Account or password cannot be empty</en>","error")
+                if(isEmpty(state.username.value) || isEmpty(state.password.value)) {
+                    alertMsg("<cn>账号或密码不能为空</cn><en>Account or password cannot be empty</en>", "error")
                     return;
                 }
 
@@ -97,7 +96,7 @@
                 let param = getUrlParam("u");
                 if(param === "e") {
                     alertMsg("<cn>账号或密码错误</cn><en>The account or password is incorrect</en>","error")
-                    removeUrlParam();
+                    //removeUrlParam();
                 }
             })
             return { ...state,handleSubmit }

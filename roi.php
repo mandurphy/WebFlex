@@ -70,13 +70,13 @@
                             </div>
                         </div>
                         <div class="card-body pb-4">
-                            <div class="force-aspect-ratio">
+                            <div class="lp-aspect-ratio">
                                 <div class="aspect-ratio-content d-flex flex-column justify-content-between" v-if="roiConf.length > 0">
                                     <div class="row"></div>
                                     <div class="row"></div>
                                     <div class="row"></div>
                                     <div class="row">
-                                        <div class="col-lg-3 offset-lg-1 force-align-center">
+                                        <div class="col-lg-3 offset-lg-1 lp-align-center">
                                             <label>
                                                 <cn>开关</cn>
                                                 <en>Enable</en>
@@ -87,7 +87,7 @@
                                         </div>
                                     </div>
                                     <div class="row">
-                                        <div class="col-lg-3 offset-lg-1 force-align-center">
+                                        <div class="col-lg-3 offset-lg-1 lp-align-center">
                                             <label>
                                                 <cn>绝对QP</cn>
                                                 <en>ABS QP</en>
@@ -98,7 +98,7 @@
                                         </div>
                                     </div>
                                     <div class="row">
-                                        <div class="col-lg-3 offset-lg-1 force-align-center">
+                                        <div class="col-lg-3 offset-lg-1 lp-align-center">
                                             <label>
                                                 QP
                                             </label>
@@ -108,7 +108,7 @@
                                         </div>
                                     </div>
                                     <div class="row">
-                                        <div class="col-lg-3 offset-lg-1 force-align-center">
+                                        <div class="col-lg-3 offset-lg-1 lp-align-center">
                                             <label>
                                                 <cn>背景帧率</cn>
                                                 <en>BG framerate</en>

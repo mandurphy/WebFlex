@@ -35,10 +35,10 @@
                     </div>
                     <div class="card-body" >
                         <div class="row">
-                            <div class="col-lg-7 force-equal-height-container">
-                                <div class="card force-equal-height-item">
+                            <div class="col-lg-7 lp-equal-height-container">
+                                <div class="card lp-equal-height-item">
                                     <div class="card-body d-flex flex-column">
-                                        <div class="row mt-3 flex-grow-1 force-align-center">
+                                        <div class="row mt-3 flex-grow-1 lp-align-center">
                                             <div class="col-lg-12">
                                                 <h5-player :url="playerUrl" :codec="playerCodec" :audio="playerAudio"></h5-player>
                                             </div>
@@ -46,8 +46,8 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-lg-5 force-equal-height-container">
-                                <div class="card force-equal-height-item">
+                            <div class="col-lg-5 lp-equal-height-container">
+                                <div class="card lp-equal-height-item">
                                     <div class="card-header bg-transparent">
                                         <div class="p-2 mb-0 d-flex align-items-end">
                                             <cn>Onvif PTZ配置</cn>
@@ -57,7 +57,7 @@
                                     <div class="card-body d-flex flex-column justify-content-between" v-if="Object.keys(handleCurPtzConf).length > 0">
                                         <div class="row"></div>
                                         <div class="row">
-                                            <div class="col-lg-3 offset-lg-1 force-align-center">
+                                            <div class="col-lg-3 offset-lg-1 lp-align-center">
                                                 <label>
                                                     <cn>用户名</cn>
                                                     <en>Username</en>
@@ -68,7 +68,7 @@
                                             </div>
                                         </div>
                                         <div class="row">
-                                            <div class="col-lg-3 offset-lg-1 force-align-center">
+                                            <div class="col-lg-3 offset-lg-1 lp-align-center">
                                                 <label>
                                                     <cn>密码</cn>
                                                     <en>Password</en>
@@ -79,7 +79,7 @@
                                             </div>
                                         </div>
                                         <div class="row">
-                                            <div class="col-lg-3 offset-lg-1 force-align-center">
+                                            <div class="col-lg-3 offset-lg-1 lp-align-center">
                                                 <label>
                                                     <cn>水平速度</cn>
                                                     <en>Horizontal speed</en>
@@ -90,7 +90,7 @@
                                             </div>
                                         </div>
                                         <div class="row">
-                                            <div class="col-lg-3 offset-lg-1 force-align-center">
+                                            <div class="col-lg-3 offset-lg-1 lp-align-center">
                                                 <label>
                                                     <cn>垂直速度</cn>
                                                     <en>Vertical speed</en>
@@ -101,7 +101,7 @@
                                             </div>
                                         </div>
                                         <div class="row">
-                                            <div class="col-lg-3 offset-lg-1 force-align-center">
+                                            <div class="col-lg-3 offset-lg-1 lp-align-center">
                                                 <label>
                                                     <cn>变焦速度</cn>
                                                     <en>zoom speed</en>
@@ -126,8 +126,8 @@
             </div>
         </div>
         <div class="row">
-            <div class="col-lg-7 force-equal-height-container">
-                <div class="force-equal-height-item">
+            <div class="col-lg-7 lp-equal-height-container">
+                <div class="lp-equal-height-item">
                     <div class="row">
                         <div class="col-lg-12">
                             <div class="card">
@@ -157,7 +157,7 @@
                                             <cn>方案</cn>
                                             <en>Scene</en>
                                         </div>
-                                        <div class="col-lg-3 force-align-center">
+                                        <div class="col-lg-3 lp-align-center">
                                             <select class="form-select" v-model="ptzConf.script.current">
                                                 <option value="plan1" cn="方案1" en="plan1" v-language-option></option>
                                                 <option value="plan2" cn="方案2" en="plan2" v-language-option></option>
@@ -176,8 +176,8 @@
                     </div>
                 </div>
             </div>
-            <div class="col-lg-5 force-equal-height-container">
-                <div class="card force-equal-height-item">
+            <div class="col-lg-5 lp-equal-height-container">
+                <div class="card lp-equal-height-item">
                     <div class="card-header bg-transparent">
                         <div class="p-2 mb-0 d-flex align-items-end">
                             <cn>查找设备</cn>
@@ -187,7 +187,7 @@
                     <div class="card-body d-flex flex-column justify-content-between">
                         <div class="row"></div>
                         <div class="row">
-                            <div class="col-lg-3 offset-lg-1 force-align-center">
+                            <div class="col-lg-3 offset-lg-1 lp-align-center">
                                 <label>
                                     <cn>设备</cn>
                                     <en>Device</en>
@@ -206,7 +206,7 @@
                             </div>
                         </div>
                         <div class="row">
-                            <div class="col-lg-3 offset-lg-1 force-align-center">
+                            <div class="col-lg-3 offset-lg-1 lp-align-center">
                                 <label>
                                     <cn>用户名</cn>
                                     <en>Username</en>
@@ -217,7 +217,7 @@
                             </div>
                         </div>
                         <div class="row">
-                            <div class="col-lg-3 offset-lg-1 force-align-center">
+                            <div class="col-lg-3 offset-lg-1 lp-align-center">
                                 <label>
                                     <cn>密码</cn>
                                     <en>Password</en>
@@ -228,7 +228,7 @@
                             </div>
                         </div>
                         <div class="row">
-                            <div class="col-lg-3 offset-lg-1 force-align-center">
+                            <div class="col-lg-3 offset-lg-1 lp-align-center">
                                 <label>
                                     <cn>流分辨率</cn>
                                     <en>Resolution</en>
@@ -247,7 +247,7 @@
                             </div>
                         </div>
                         <div class="row">
-                            <div class="col-lg-3 offset-lg-1 force-align-center">
+                            <div class="col-lg-3 offset-lg-1 lp-align-center">
                                 <label>
                                     <cn>绑定通道</cn>
                                     <en>Bind</en>

@@ -23,8 +23,8 @@
                         </div>
                         <div class="card-body" >
                             <div class="row">
-                                <div class="col-lg-7 force-equal-height-container">
-                                    <div class="card force-equal-height-item">
+                                <div class="col-lg-7 lp-equal-height-container">
+                                    <div class="card lp-equal-height-item">
                                         <div class="card-body d-flex flex-column">
                                             <div class="row">
                                                 <div class="d-flex align-items-center gap-3 px-2 py-1">
@@ -41,7 +41,7 @@
                                                     </div>
                                                 </div>
                                             </div>
-                                            <div class="row mt-3 flex-grow-1 force-align-center">
+                                            <div class="row mt-3 flex-grow-1 lp-align-center">
                                                 <div class="col-lg-12">
                                                     <img :src="chnImgUrl" class="card-img" alt="...">
                                                 </div>
@@ -49,11 +49,11 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="col-lg-5 force-equal-height-container" v-if="Object.keys(gb28181Conf).length > 0">
-                                    <div class="card force-equal-height-item">
+                                <div class="col-lg-5 lp-equal-height-container" v-if="Object.keys(gb28181Conf).length > 0">
+                                    <div class="card lp-equal-height-item">
                                         <div class="card-body d-flex flex-column justify-content-between">
                                             <div class="row">
-                                                <div class="col-lg-3 offset-lg-1 force-align-center">
+                                                <div class="col-lg-3 offset-lg-1 lp-align-center">
                                                     <label>
                                                         <cn>启用</cn>
                                                         <en>Enable</en>
@@ -64,7 +64,7 @@
                                                 </div>
                                             </div>
                                             <div class="row">
-                                                <div class="col-lg-3 offset-lg-1 force-align-center">
+                                                <div class="col-lg-3 offset-lg-1 lp-align-center">
                                                     <label>
                                                         <cn>品牌</cn>
                                                         <en>Brand</en>
@@ -75,7 +75,7 @@
                                                 </div>
                                             </div>
                                             <div class="row">
-                                                <div class="col-lg-3 offset-lg-1 force-align-center">
+                                                <div class="col-lg-3 offset-lg-1 lp-align-center">
                                                     <label>
                                                         <cn>设备型号</cn>
                                                         <en>Model</en>
@@ -86,7 +86,7 @@
                                                 </div>
                                             </div>
                                             <div class="row">
-                                                <div class="col-lg-3 offset-lg-1 force-align-center">
+                                                <div class="col-lg-3 offset-lg-1 lp-align-center">
                                                     <label>
                                                         <cn>本机ID</cn>
                                                         <en>Local ID</en>
@@ -97,7 +97,7 @@
                                                 </div>
                                             </div>
                                             <div class="row">
-                                                <div class="col-lg-3 offset-lg-1 force-align-center">
+                                                <div class="col-lg-3 offset-lg-1 lp-align-center">
                                                     <label>
                                                         <cn>服务器ID</cn>
                                                         <en>Server ID</en>
@@ -108,7 +108,7 @@
                                                 </div>
                                             </div>
                                             <div class="row">
-                                                <div class="col-lg-3 offset-lg-1 force-align-center">
+                                                <div class="col-lg-3 offset-lg-1 lp-align-center">
                                                     <label>
                                                         <cn>服务器域</cn>
                                                         <en>Server domain</en>
@@ -119,7 +119,7 @@
                                                 </div>
                                             </div>
                                             <div class="row">
-                                                <div class="col-lg-3 offset-lg-1 force-align-center">
+                                                <div class="col-lg-3 offset-lg-1 lp-align-center">
                                                     <label>
                                                         <cn>服务器IP</cn>
                                                         <en>Server IP</en>
@@ -130,7 +130,7 @@
                                                 </div>
                                             </div>
                                             <div class="row">
-                                                <div class="col-lg-3 offset-lg-1 force-align-center">
+                                                <div class="col-lg-3 offset-lg-1 lp-align-center">
                                                     <label>
                                                         <cn>服务器端口</cn>
                                                         <en>Server Port</en>
@@ -141,7 +141,7 @@
                                                 </div>
                                             </div>
                                             <div class="row">
-                                                <div class="col-lg-3 offset-lg-1 force-align-center">
+                                                <div class="col-lg-3 offset-lg-1 lp-align-center">
                                                     <label>
                                                         <cn>密码</cn>
                                                         <en>Password</en>
@@ -213,7 +213,7 @@
                                     <div class="col-lg-3">
                                         <input class="form-control" v-model.trim.lazy="item.chnId">
                                     </div>
-                                    <div class="col-lg-3 force-align-center">
+                                    <div class="col-lg-3 lp-align-center">
                                         <bs-switch v-model="item.enable" :size="'normal'"></bs-switch>
                                     </div>
                                 </div>

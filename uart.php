@@ -19,7 +19,7 @@
                         </div>
                         <div class="card-body pb-4" v-if="Object.keys(uartConf).length > 0">
                             <div class="row mt-3">
-                                <div class="col-lg-3 offset-lg-1 force-align-center">
+                                <div class="col-lg-3 offset-lg-1 lp-align-center">
                                     <label>
                                         <cn>串口</cn>
                                         <en>Serial port</en>
@@ -33,7 +33,7 @@
                                 </div>
                             </div>
                             <div class="row mt-3">
-                                <div class="col-lg-3 offset-lg-1 force-align-center">
+                                <div class="col-lg-3 offset-lg-1 lp-align-center">
                                     <label>
                                         <cn>波特率</cn>
                                         <en>BaudRate</en>
@@ -48,7 +48,7 @@
                                 </div>
                             </div>
                             <div class="row mt-3">
-                                <div class="col-lg-3 offset-lg-1 force-align-center">
+                                <div class="col-lg-3 offset-lg-1 lp-align-center">
                                     <label>
                                         <cn>网络端口</cn>
                                         <en>Socket port</en>
@@ -59,7 +59,7 @@
                                 </div>
                             </div>
                             <div class="row mt-3">
-                                <div class="col-lg-3 offset-lg-1 force-align-center">
+                                <div class="col-lg-3 offset-lg-1 lp-align-center">
                                     <label>
                                         <cn>IP地址</cn>
                                         <en>IP Address</en>
@@ -90,7 +90,7 @@
                         </div>
                         <div class="card-body pb-4 gpio-btn">
                             <div class="row mt-5">
-                                <div class="col-lg-2 offset-lg-1 force-align-center"></div>
+                                <div class="col-lg-2 offset-lg-1 lp-align-center"></div>
                                 <div class="col-lg-4">
                                     <cn>短按</cn>
                                     <en>Short Press</en>
@@ -101,7 +101,7 @@
                                 </div>
                             </div>
                             <div class="row mt-4" v-for="(item,index) in buttonConf">
-                                <div class="col-lg-2 offset-lg-1 force-align-center">
+                                <div class="col-lg-2 offset-lg-1 lp-align-center">
                                     <label>{{item.name}}</label>
                                 </div>
                                 <div class="col-lg-4">

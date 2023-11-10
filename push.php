@@ -10,8 +10,8 @@
     <div data-simplebar>
         <main class="page-content push" id="app" v-cloak>
             <div class="row">
-                <div class="col-lg-7 force-equal-height-container">
-                    <div class="card force-equal-height-item">
+                <div class="col-lg-7 lp-equal-height-container">
+                    <div class="card lp-equal-height-item">
                         <div class="card-header bg-transparent">
                             <div class="p-2 mb-0 d-flex align-items-end">
                                 <cn>视频预览</cn>
@@ -23,7 +23,7 @@
                             </div>
                         </div>
                         <div class="card-body d-flex">
-                            <div class="row flex-grow-1 force-align-center">
+                            <div class="row flex-grow-1 lp-align-center">
                                 <div class="col-lg-12">
                                     <h5-player :url="playUrl" :codec="playerCodec" :audio="true" :canplay="hadPlayed"></h5-player>
                                 </div>
@@ -31,8 +31,8 @@
                         </div>
                     </div>
                 </div>
-                <div class="col-lg-5 force-equal-height-container">
-                    <div class="force-equal-height-item d-flex flex-column">
+                <div class="col-lg-5 lp-equal-height-container">
+                    <div class="lp-equal-height-item d-flex flex-column">
                         <div class="row flex-grow-1 pb-2">
                             <div class="col-lg-12">
                                 <div class="card h-100 d-flex flex-column">
@@ -45,7 +45,7 @@
                                     <div class="card-body">
                                         <div class="d-flex flex-column justify-content-between h-100" v-if="Object.keys(pushConf).length > 0">
                                             <div class="row">
-                                                <div class="col-lg-4 force-align-right pe-4">
+                                                <div class="col-lg-4 lp-align-right pe-4">
                                                     <label>
                                                         <cn>视频源</cn>
                                                         <en>Video source</en>
@@ -58,7 +58,7 @@
                                                 </div>
                                             </div>
                                             <div class="row">
-                                                <div class="col-lg-4 force-align-right pe-4">
+                                                <div class="col-lg-4 lp-align-right pe-4">
                                                     <label>
                                                         <cn>音频源</cn>
                                                         <en>Audio source</en>
@@ -72,7 +72,7 @@
                                                 </div>
                                             </div>
                                             <div class="row">
-                                                <div class="col-lg-4 force-align-right pe-4">
+                                                <div class="col-lg-4 lp-align-right pe-4">
                                                     <label>
                                                         <cn>码流</cn>
                                                         <en>Stream</en>
@@ -87,7 +87,7 @@
                                                 </div>
                                             </div>
                                             <div class="row">
-                                                <div class="col-lg-4 force-align-right pe-4">
+                                                <div class="col-lg-4 lp-align-right pe-4">
                                                     <label>
                                                         <cn>定时开启</cn>
                                                         <en>start time</en>
@@ -111,7 +111,7 @@
                                                 </div>
                                             </div>
                                             <div class="row">
-                                                <div class="col-lg-4 force-align-right pe-4">
+                                                <div class="col-lg-4 lp-align-right pe-4">
                                                     <label>
                                                         <cn>定时结束</cn>
                                                         <en>stop time</en>
@@ -139,7 +139,7 @@
 <!--                                                <span class="hr-text">OR</span>-->
 <!--                                            </div>-->
                                             <div class="row">
-                                                <div class="col-lg-4 force-align-right pe-4">
+                                                <div class="col-lg-4 lp-align-right pe-4">
                                                     <label>
                                                         <cn>开机启动</cn>
                                                         <en>auto push</en>
@@ -210,9 +210,13 @@
                                     <cn>描述</cn>
                                     <en>Description</en>
                                 </div>
-                                <div class="col-lg-7 text-center">
+                                <div class="col-lg-5 text-center">
                                     <cn>推流地址</cn>
                                     <en>Push Url</en>
+                                </div>
+                                <div class="col-lg-2 text-center">
+                                    <cn>兼容性</cn>
+                                    <en>Compatible</en>
                                 </div>
                                 <div class="col-lg-1 text-center">
                                     <cn>启用</cn>
@@ -234,10 +238,16 @@
                                         <div class="col-lg-2">
                                             <input type="text" class="form-control" v-model.trim.lazy="item.des">
                                         </div>
-                                        <div class="col-lg-7">
+                                        <div class="col-lg-5">
                                             <input type="text" class="form-control" v-model.trim.lazy="item.path">
                                         </div>
-                                        <div class="col-lg-1 force-align-center">
+                                        <div class="col-lg-2">
+                                            <select class="form-select" v-model="item.flvflags">
+                                                <option cn="标准" en="normal" value="" v-language-option></option>
+                                                <option value="ext_header">enhanced-rtmp</option>
+                                            </select>
+                                        </div>
+                                        <div class="col-lg-1 lp-align-center">
                                             <bs-switch v-model="item.enable"></bs-switch>
                                         </div>
                                         <div class="col-lg-1 text-center">
@@ -340,7 +350,7 @@
             });
 
             const handlePushCrontab = () => {
-                func("/link/mgr/system/getPushCrontab").then(result => {
+                func("/mgr/system/getPushCrontab").then(result => {
                     const keys = Object.keys(result.data);
                     keys.forEach(key => {
                         const value = result.data[key];
@@ -431,7 +441,7 @@
                 });
 
                 updatePushConf().then(()=>{
-                    func("/link/mgr/system/setPushCrontab",state.pushCron).then(data => {
+                    func("/mgr/system/setPushCrontab",state.pushCron).then(data => {
                         if(data.status === "success")
                             alertMsg('<cn>保存设置成功</cn><en>Save config success!</en>', 'success');
                     });

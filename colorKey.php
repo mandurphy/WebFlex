@@ -4,7 +4,6 @@
 <head>
     <?php include ("./public/head.inc") ?>
     <link href="assets/plugins/nouislider/css/nouislider.min.css" rel="stylesheet">
-    <link href="assets/plugins/confirm/css/jquery-confirm.min.css" rel="stylesheet">
     <link href="assets/plugins/fileinput/css/fileinput.min.css" rel="stylesheet" >
 </head>
 <body>
@@ -12,8 +11,8 @@
     <div data-simplebar>
         <main class="page-content ndi" id="app" v-cloak>
             <div class="row">
-                <div class="col-lg-7 force-equal-height-container">
-                    <div class="card force-equal-height-item">
+                <div class="col-lg-7 lp-equal-height-container">
+                    <div class="card lp-equal-height-item">
                         <div class="card-header bg-transparent">
                             <div class="p-2 mb-0 d-flex align-items-end">
                                 <cn>通道预览</cn>
@@ -34,8 +33,8 @@
                         </div>
                     </div>
                 </div>
-                <div class="col-lg-5 force-equal-height-container">
-                    <div class="card force-equal-height-item">
+                <div class="col-lg-5 lp-equal-height-container">
+                    <div class="card lp-equal-height-item">
                         <div class="card-header bg-transparent">
                             <div class="p-2 mb-0 d-flex align-items-end">
                                 <cn>参数设定</cn>
@@ -44,7 +43,7 @@
                         </div>
                         <div class="card-body d-flex flex-column justify-content-between" v-if="defaultConf.length > 0">
                             <div class="row">
-                                <div class="col-lg-3 offset-lg-1 force-align-center">
+                                <div class="col-lg-3 offset-lg-1 lp-align-center">
                                     <label>
                                         <cn>启关</cn>
                                         <en>Main enable</en>
@@ -55,7 +54,7 @@
                                 </div>
                             </div>
                             <div class="row">
-                                <div class="col-lg-3 offset-lg-1 force-align-center">
+                                <div class="col-lg-3 offset-lg-1 lp-align-center">
                                     <label>
                                         <cn>前景通道</cn>
                                         <en>Front Channel</en>
@@ -68,7 +67,7 @@
                                 </div>
                             </div>
                             <div class="row">
-                                <div class="col-lg-3 offset-lg-1 force-align-center">
+                                <div class="col-lg-3 offset-lg-1 lp-align-center">
                                     <label>
                                         <cn>背景类型</cn>
                                         <en>Background Type</en>
@@ -82,7 +81,7 @@
                                 </div>
                             </div>
                             <div class="row" v-if="defaultConf[chnIndex].colorKey.srcB.type === 'img'">
-                                <div class="col-lg-3 offset-lg-1 force-align-center">
+                                <div class="col-lg-3 offset-lg-1 lp-align-center">
                                     <label>
                                         <cn>背景图片</cn>
                                         <en>Background Image</en>
@@ -95,7 +94,7 @@
                                 </div>
                             </div>
                             <div class="row" v-else>
-                                <div class="col-lg-3 offset-lg-1 force-align-center">
+                                <div class="col-lg-3 offset-lg-1 lp-align-center">
                                     <label>
                                         <cn>背景通道</cn>
                                         <en>Background Channel</en>
@@ -115,7 +114,7 @@
                                 </div>
                             </div>
                             <div class="row">
-                                <div class="col-lg-3 offset-lg-1 force-align-center">
+                                <div class="col-lg-3 offset-lg-1 lp-align-center">
                                     <label>
                                         <cn>容差</cn>
                                         <en>Tolerance</en>
@@ -126,7 +125,7 @@
                                 </div>
                             </div>
                             <div class="row">
-                                <div class="col-lg-3 offset-lg-1 force-align-center">
+                                <div class="col-lg-3 offset-lg-1 lp-align-center">
                                     <label>
                                         <cn>自动更新</cn>
                                         <en>Auto Update</en>
@@ -160,7 +159,7 @@
                                 <div class="ms-auto">
                                     <button class="btn border-2 btn-primary btn-sm" @click="uploadRes">
                                         <i class="fa-solid fa-upload me-1"></i>
-                                        <label class="force-cursor-pointer">
+                                        <label class="lp-cursor-pointer">
                                             <cn>上传</cn>
                                             <en>Upload</en>
                                         </label>
@@ -173,10 +172,10 @@
                                 <div class="team-list col-lg-12">
                                     <div class="p-0 m-0" v-for="(item,index) in handleResImageConf" :key="index">
                                         <div class="row align-items-center px-2" >
-                                            <div class="col-8 text-center force-text-overflow">
+                                            <div class="col-8 text-center lp-text-overflow">
                                                 <span>{{item.name}}</span>
                                             </div>
-                                            <div class="col-4 force-align-center">
+                                            <div class="col-4 lp-align-center">
                                                 <button type="button" class="btn border-3 btn-primary btn-sm" @click="delCurrentRes(item.name)"><i class="fa-regular fa-trash-can me-1"></i><cn>删除</cn><en>Delete</en></button>
                                             </div>
                                         </div>
@@ -305,7 +304,7 @@
                             btnClass: 'btn-primary',
                             keys: [ 'enter' ],
                             action: () => {
-                                func("/link/mgr/root/delResFile",resName).then(data => handleResConf());
+                                func("/mgr/root/delResFile",resName).then(data => handleResConf());
                             }
                         },
                         cancel: {

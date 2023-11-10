@@ -19,7 +19,7 @@
                     </div>
                     <div class="card-body" v-if="Object.keys(mqttConf).length > 0">
                         <div class="row mt-5">
-                            <div class="col-lg-3 offset-lg-1 force-align-center">
+                            <div class="col-lg-3 offset-lg-1 lp-align-center">
                                 <label>
                                     <cn>启用</cn>
                                     <en>Enable</en>
@@ -30,7 +30,7 @@
                             </div>
                         </div>
                         <div class="row mt-4">
-                            <div class="col-lg-3 offset-lg-1 force-align-center">
+                            <div class="col-lg-3 offset-lg-1 lp-align-center">
                                 <label>
                                     <cn>状态</cn>
                                     <en>Connect</en>
@@ -41,7 +41,7 @@
                             </div>
                         </div>
                         <div class="row mt-4">
-                            <div class="col-lg-3 offset-lg-1 force-align-center">
+                            <div class="col-lg-3 offset-lg-1 lp-align-center">
                                 <label>
                                     <cn>设备名</cn>
                                     <en>Device name</en>
@@ -75,7 +75,7 @@
                     </div>
                     <div class="card-body pb-4 gpio-btn">
                         <div class="row mt-3">
-                            <div class="col-lg-2 offset-lg-1 force-align-center">
+                            <div class="col-lg-2 offset-lg-1 lp-align-center">
                                 <label>
                                     <cn>启用</cn>
                                     <en>Enable</en>

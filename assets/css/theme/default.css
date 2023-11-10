@@ -335,62 +335,36 @@
     box-shadow: 0 0 0 .25rem rgba(255, 193, 7, 0.25)
 }
 
-
-/*login.php*/
-/*[data-bs-theme=default] .auth-cover-right {*/
-/*    background-color: var(--bs-body-bg-semi);*/
-/*}*/
-
-/*[data-bs-theme=default] .auth-cover-right .card {*/
-/*    background-color: var(--bs-body-bg-semi);*/
-/*}*/
-
-/*[data-bs-theme=default] .auth-cover-right .form-control {*/
-/*    color: var(--bs-body-bg-color);*/
-/*    background-color: var(--bs-body-bg-semi);*/
-/*    border: 3px solid var(--bs-default-auth-border-color);*/
-/*}*/
-
-/*[data-bs-theme=default] .auth-cover-right label {*/
-/*    color: var(--bs-body-color-semi);*/
-/*}*/
-
-/*[data-bs-theme=default] .auth-cover-right input:-webkit-autofill {*/
-/*    transition: background-color 5000s ease-in-out 0s;*/
-/*    -webkit-text-fill-color: var(--bs-body-color-semi);*/
-/*    caret-color: var(--bs-body-color-semi);*/
-/*}*/
-
-/*[data-bs-theme=default] .auth-cover-right .input-group-text {*/
-/*    color: var(--bs-body-color-semi);*/
-/*    border-color: var(--bs-default-auth-border-color);*/
-/*}*/
-
-/*[data-bs-theme=default] .auth-cover-right ::placeholder {*/
-/*    color: var(--bs-body-color-semi);*/
-/*}*/
-
-/*[data-bs-theme=default] .auth-cover-right input:focus {*/
-/*    outline: none;*/
-/*    box-shadow: none;*/
-/*}*/
-
-[data-bs-theme=default] .login {
-    background-color: var(--bs-body-bg-semi);
+[data-bs-theme=default] .lp-usb-ctx.active {
+    background-color: var(--bs-default-bg-color) !important;
 }
 
-[data-bs-theme=default] .login .card {
-    background-color: var(--bs-body-bg-semi);
+[data-bs-theme=default] .lp-usb-ctx.active .lp-usb-drive .lp-usb-body {
+    border-color: #fff;
 }
 
-[data-bs-theme=default] .login .form-control {
-    color: var(--bs-body-bg-color);
-    background-color: var(--bs-body-bg-semi);
-    border: 3px solid var(--bs-default-auth-border-color);
+[data-bs-theme=default] .lp-usb-ctx.active .lp-usb-drive .lp-usb-metal {
+    border-color: #fff;
 }
 
-[data-bs-theme=default] .login label {
-    color: var(--bs-body-color-semi);
+[data-bs-theme=default] .lp-usb-ctx.active .lp-usb-drive .lp-usb-hole {
+    background-color: #fff;
+}
+
+[data-bs-theme=default] .login  {
+    background-color: var(--bs-body-bg-color);
+    width: 100%;
+    height: 100%;
+}
+
+[data-bs-theme=default] .login .card  {
+    border-color: var(--bs-default-auth-border-color);
+    background: #333;
+    color: #bbb;
+}
+
+[data-bs-theme=default] .login .card .form-control  {
+    background-color: var(--bs-body-bg-color);
 }
 
 [data-bs-theme=default] .login input:-webkit-autofill {
@@ -401,7 +375,7 @@
 
 [data-bs-theme=default] .login .input-group-text {
     color: var(--bs-body-color-semi);
-    border-color: var(--bs-default-auth-border-color);
+    background-color: var(--bs-body-bg-color);
 }
 
 [data-bs-theme=default] .login ::placeholder {
@@ -411,16 +385,6 @@
 [data-bs-theme=default] .login input:focus {
     outline: none;
     box-shadow: none;
-}
-
-[data-bs-theme=default] .login  {
-    background-color: var(--bs-body-bg-semi);
-    width: 100%;
-    height: 100%;
-}
-
-[data-bs-theme=default] .login .card  {
-    border-color: var(--bs-default-auth-border-color);
 }
 
 [data-bs-theme=default] .login .form-check-primary .form-check-input:not(:checked):focus {

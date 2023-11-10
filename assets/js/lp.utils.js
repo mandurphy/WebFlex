@@ -1,9 +1,8 @@
-
 import JsonRpcClient from '../plugins/jsonrpc/jquery.jsonrpc.js';
 import axios from '../plugins/axios/axios.esm.js';
 import Lobibox from '../plugins/notifications/js/lobibox.min.js'
 import JqueryConfirm from '../plugins/confirm/js/jquery-confirm.esm.js'
-import { useLanguageConf } from './vue.hooks.js';
+import {useLanguageConf} from './vue.hooks.js';
 
 export const getUrlParam = (key) => {
     let param = "";
@@ -20,7 +19,7 @@ export const getUrlParam = (key) => {
 export const updateSysLanguage = async param => {
 
     if(param !== undefined)
-        await func("/link/mgr/conf/updateLangConf", param);
+        await func("/mgr/conf/updateLangConf", param);
 
     let { languageConf } = useLanguageConf();
     const lang = languageConf["lang"];
@@ -29,7 +28,7 @@ export const updateSysLanguage = async param => {
 }
 
 //size mini normal large
-export const alertMsg = (message, type = "success", size = "mini") => {
+export const alertMsg = (message, type = "success",delay = 5000,size = "mini") => {
 
     let icon = "fa-solid fa-circle-check";
     if(type === "error")
@@ -39,20 +38,21 @@ export const alertMsg = (message, type = "success", size = "mini") => {
     if(type === "warning")
         icon = "fa-solid fa-triangle-exclamation";
 
-    Lobibox.notify(type, {
+    return Lobibox.notify(type, {
         pauseDelayOnHover: true,
         continueDelayOnInactiveTab: false,
-        size:size,
-        sound:false,
+        size: size,
+        sound: false,
         position: 'top right',
         icon: icon,
-        msg: message
+        msg: message,
+        delay: delay,
     });
 }
 
 export const confirm = (options) => {
     const jc = new JqueryConfirm();
-    jc.confirm(options);
+    return jc.confirm(options);
 }
 
 export const request = (url) => {
@@ -204,6 +204,8 @@ export const popover = (ele,param) => {
     if(param.content.includes("<cn>")) {
         const html = document.querySelector('html');
         let lang = html.getAttribute('data-bs-language');
+        if(lang === null)
+            lang = "cn";
         const regex = new RegExp(`<${lang}>(.*?)<\/${lang}>`);
         param.content = param.content.match(regex)[1];
     }
@@ -256,7 +258,7 @@ export const rebootConfirm = (msg) => {
                 btnClass: 'btn-primary',
                 keys: [ 'enter' ],
                 action: function () {
-                    func("/link/mgr/system/systemReboot");
+                    func("/mgr/system/systemReboot");
                 }
             },
             cancel: {
@@ -279,7 +281,7 @@ export const resetConfirm = () => {
                 btnClass: 'btn-primary',
                 keys: [ 'enter' ],
                 action: function () {
-                    func("/link/mgr/system/systemReset");
+                    func("/mgr/system/systemReset");
                 }
             },
             cancel: {
@@ -302,6 +304,29 @@ export const splitArray = (array,count) => {
 export const isEmpty = str => {
     return (!str || str.trim() === "");
 }
+
+export const swap = (array, index1, index2) => {
+    const temp = array[index1];
+    array[index1] = array[index2];
+    array[index2] = temp;
+    console.log(array,index1,index2);
+}
+
+export const formatTime = (msec, format="hh:mm:ss") => {
+    const seconds = Math.floor((msec / 1000) % 60);
+    const minutes = Math.floor((msec / (1000 * 60)) % 60);
+    const hours = Math.floor((msec / (1000 * 60 * 60)) % 24);
+    const days = Math.floor(msec / (1000 * 60 * 60 * 24));
+
+    const formattedTime = format
+        .replace('dd', String(days).padStart(2, '0'))
+        .replace('hh', String(hours).padStart(2, '0'))
+        .replace('mm', String(minutes).padStart(2, '0'))
+        .replace('ss', String(seconds).padStart(2, '0'));
+
+    return formattedTime;
+}
+
 
 
 

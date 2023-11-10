@@ -2,8 +2,11 @@
 import vue from "./vue.build.js";
 import $ from '../plugins/jquery/jquery.esm.js';
 import '../plugins/switch/js/bootstrap-switch.min.js';
+import "../plugins/timepicker/js/bootstrap-timepicker.js";
+import * as noUiSlider from "../plugins/nouislider/js/nouislider.esm.js";
 import mutationObserver from '../plugins/polyfill/mutationobserver.esm.js'
-import {func, confirm, rebootConfirm, alertMsg, axios_post, isEmpty} from './lp.utils.js'
+import { func, confirm, rebootConfirm, alertMsg, axios_post, isEmpty,formatTime } from './lp.utils.js'
+import { useDiskConf } from "./vue.hooks.js";
 
 const {ref,reactive,toRefs,watch,watchEffect,
     computed,onMounted,nextTick,defineAsyncComponent} = vue;
@@ -148,6 +151,7 @@ export const statusPieChartComponent = {
         })
 
         onMounted(()=>{
+            pie_text.value.textContent = "0%";
             $(pie_chart.value).easyPieChart({
                 easing: 'easeOutElastic',
                 delay: 2000,
@@ -402,16 +406,39 @@ export const multipleSelectComponent = {
     template: `<select class="form-select" v-model="selectValue" @change="onSelectChange">
                     <slot></slot>
                </select>`,
-    props: ['value1',"value2","split"],
+    props: {
+        value1: {
+          type: [Number,String,Boolean],
+          default: 0
+        },
+        value2: {
+            type: [Number,String,Boolean],
+            default: 0
+        },
+        split: {
+            type: String,
+            default: 0
+        }
+    },
     setup(props,context){
 
         let selectValue = ref("");
+
+        watchEffect(()=>{
+            selectValue.value = props.value1 + props.split + props.value2;
+        })
+
+        const parseValue = (value) => {
+            if (value === "true" || value === "false") {
+                return JSON.parse(value);
+            }
+            return isNaN(Number(value)) ? value : Number(value);
+        };
+
         const onSelectChange = () =>{
-            let [value1,value2] = selectValue.value.split(props.split);
-            value1 = isNaN(Number(value1)) ? value1 : Number(value1);
-            value2 = isNaN(Number(value2)) ? value2 : Number(value2);
-            context.emit('update:value1', value1);
-            context.emit('update:value2', value2);
+            let [value1, value2] = selectValue.value.split(props.split);
+            context.emit('update:value1', parseValue(value1));
+            context.emit('update:value2', parseValue(value2));
         }
 
         onMounted(()=>{
@@ -425,13 +452,24 @@ export const multipleSelectComponent = {
 
 export const multipleInputComponent = {
     template: `<input type="text" class="form-control" v-model="selectValue" @change="onInputChange">`,
-    props: ['value1',"value2","split"],
+    props: {
+        value1: {
+            type: [Number,String],
+            default: 0
+        },
+        value2: {
+            type: [Number,String],
+            default: 0
+        },
+        split: {
+            type: String,
+            default: 0
+        }
+    },
     setup(props,context) {
 
         let selectValue = ref("");
-
         const { value1,value2 } = toRefs(props);
-
         watchEffect(()=>{
             if(typeof value1.value === "string")
                 value1.value = value1.value.trim();
@@ -482,41 +520,87 @@ export const nouiSliderComponent = {
         fix: {
             type: Number,
             default: 0
+        },
+        funcValue: {
+            type: Number,
+        },
+        format: {
+            type: String,
+            default: ""
+        },
+        disable: {
+            type: Boolean,
+            default: false
+        },
+        index: {
+            type: Number,
+            default: 0
         }
     },
     setup(props,context) {
         const slider = ref(null);
         let handle = ref(null);
-
+        let hover = false;
+        let isSlide = false;
         const showTooltip = () => {
             let tooltip = handle.value.querySelector(".noUi-tooltip")
             tooltip.style.display = 'block';
+            hover = true;
         }
 
         const hideTooltip = () => {
             let tooltip = handle.value.querySelector(".noUi-tooltip")
             tooltip.style.display = 'none';
+            hover = false;
         }
 
         const formatTooltipValue = value => {
-            if(props.fix === 0)
-                value = parseInt(value);
-            else
-                value = parseFloat(value).toFixed(props.fix);
+            if(isEmpty(props.format)) {
+                if(props.fix === 0)
+                    value = parseInt(value);
+                else
+                    value = parseFloat(value).toFixed(props.fix);
+            }
+
+            if(props.format === "time")
+                value = formatTime(value);
+
             return value;
         }
 
         watch(() => props.modelValue, (newValue, oldValue) => {
-            if (slider.value) {
+            if (slider.value && !isSlide) {
                 slider.value.noUiSlider.updateOptions({
                     start: newValue,
+                    range: {'min': props.min, 'max': props.max},
                 });
-                hideTooltip();
+                if(!hover)
+                    hideTooltip();
+            }
+        });
+
+        watch(() => props.funcValue, (newValue, oldValue) => {
+            if (slider.value && !isSlide) {
+                slider.value.noUiSlider.updateOptions({
+                    start: newValue,
+                    range: {'min': props.min, 'max': props.max},
+                });
+                if(!hover)
+                    hideTooltip();
+            }
+        });
+
+        watch(() => props.max, (newValue, oldValue) => {
+            if (slider.value && !isSlide) {
+                slider.value.noUiSlider.updateOptions({
+                    range: {'min': props.min, 'max': newValue},
+                });
+                if(!hover)
+                    hideTooltip();
             }
         });
 
         onMounted(async () => {
-            const noUiSlider = await import("../plugins/nouislider/js/nouislider.esm.js");
             noUiSlider.create(slider.value, {
                 start: props.modelValue,
                 connect: [true, false],
@@ -524,8 +608,11 @@ export const nouiSliderComponent = {
                     to: formatTooltipValue,
                 },
                 range: {'min': props.min, 'max': props.max},
-                step: props.step
+                step: props.step,
             });
+
+            if(props.disable)
+                slider.value.noUiSlider.disable();
 
             handle.value = slider.value.querySelector('.noUi-handle');
             hideTooltip();
@@ -538,13 +625,14 @@ export const nouiSliderComponent = {
                 hideTooltip();
             });
 
-            // slider.value.noUiSlider.on('slide', (values, mark) => {
-            //     context.emit('update:modelValue', values[mark]);
-            // });
+            slider.value.noUiSlider.on('slide', (values, mark) => {
+                isSlide = true;
+            });
 
             slider.value.noUiSlider.on('end', (values, mark) => {
+                isSlide = false;
                 context.emit('update:modelValue', formatTooltipValue(values[mark]));
-                context.emit('slide-end', formatTooltipValue(values[mark]));
+                context.emit('slide-end', formatTooltipValue(values[mark]),props.index);
             });
         })
 
@@ -556,7 +644,7 @@ export const h5PlayerComponent = {
     template: `<div style="width:100%; padding-bottom: 56.25%;  position: relative;">
                     <video autoplay controls muted style="width:100%;height: 100%; position: absolute; background: #555;" ref="videoHandler"></video>
                     <div style="position: absolute;width: 100%;height: 100%" ref="jessHandler"></div>
-                    <div class="force-video-cloud" ref="cloudHandler">
+                    <div class="lp-video-cloud" ref="cloudHandler">
                         <div class="loading"></div>
                     </div>
               </div>`,
@@ -687,32 +775,35 @@ export const timepickerComponent = {
                     <input type="text" class="form-control" ref="timepicker">
                     <span class="input-group-text input-group-addon"><i class="fa-regular fa-clock"></i></span>
                </div>`,
-    props: ['modelValue'],
+    props: {
+        modelValue: {
+            type: String,
+            default: "00:00"
+        }
+    },
     setup(props,context){
         const timepicker = ref(null);
         const { modelValue } = toRefs(props);
 
-        import("../plugins/timepicker/js/bootstrap-timepicker.js").then(() => {
-            watch(modelValue,()=>{
-                $(timepicker.value).timepicker('setTime', modelValue.value);
-            })
+        watch(modelValue,()=>{
+            $(timepicker.value).timepicker('setTime', modelValue.value);
+        })
 
-            onMounted(() => {
-                $(timepicker.value).timepicker({
-                    minuteStep: 1,
-                    defaultTime: props.modelValue,
-                    showMeridian: false,
-                    icons: {
-                        up: 'fa-solid fa-angle-up',
-                        down: 'fa-solid fa-angle-down'
-                    },
-                });
+        onMounted(() => {
+            $(timepicker.value).timepicker({
+                minuteStep: 1,
+                defaultTime: props.modelValue,
+                showMeridian: false,
+                icons: {
+                    up: 'fa-solid fa-angle-up',
+                    down: 'fa-solid fa-angle-down'
+                },
+            });
 
-                $(timepicker.value).on("changeTime.timepicker", event => {
-                    context.emit('update:modelValue', event.time.value);
-                });
-            })
-        });
+            $(timepicker.value).on("changeTime.timepicker", event => {
+                context.emit('update:modelValue', event.time.value);
+            });
+        })
 
         return {timepicker}
     }
@@ -988,7 +1079,7 @@ export const upgradeModalComponent = {
                                     <td>{{item.name}}</td>
                                     <td>{{item.build}}</td>
                                     <td>{{item.sys_ver}}</td>
-                                    <td v-if="item.impact === '1'" class="force-color-red">
+                                    <td v-if="item.impact === '1'" class="lp-color-red">
                                         <cn>重要</cn>
                                         <en>impact</en>
                                     </td>
@@ -997,13 +1088,13 @@ export const upgradeModalComponent = {
                                         <en>normal</en>
                                     </td>
                                     <td>
-                                        <a class="force-cursor-pointer" @click="showPatchVersionLog(index)">
+                                        <a class="lp-cursor-pointer" @click="showPatchVersionLog(index)">
                                             <cn>更新日志</cn>
                                             <en>Show logs</en>
                                         </a>
                                     </td>
                                     <td>
-                                        <a class="force-cursor-pointer" @click="handleUpdatePatch(index)">
+                                        <a class="lp-cursor-pointer" @click="handleUpdatePatch(index)">
                                             <div v-if="upgradePatch.id === item.id && hadUpdate">{{updatePercent}}%</div>
                                             <div v-else>
                                                 <cn>更新</cn>
@@ -1012,7 +1103,7 @@ export const upgradeModalComponent = {
                                         </a>
                                     </td>
                                     <td>
-                                        <a class="force-cursor-pointer" @click="handleDownloadPatch(index)">
+                                        <a class="lp-cursor-pointer" @click="handleDownloadPatch(index)">
                                             <cn>下载</cn>
                                             <en>Download</en>
                                         </a>
@@ -1065,14 +1156,14 @@ export const upgradeModalComponent = {
 
         watchEffect(async ()=>{
             if(checkUpgrade.value) {
-                let result = await func("/link/mgr/upgrade/checkHelpNet");
+                let result = await func("/mgr/upgrade/checkHelpNet");
                 if (result.status === "error") {
                     alertMsg(result.msg, "error");
                     return;
                 }
 
                 if(!patchSn.value) {
-                    result = await func("/link/mgr/upgrade/getSystemAliase");
+                    result = await func("/mgr/upgrade/getSystemAliase");
                     if (result.status === "error") {
                         alertMsg(result.msg, "error");
                         context.emit('update:checkUpgrade', false);
@@ -1085,7 +1176,7 @@ export const upgradeModalComponent = {
                     }
                     state.facAliase = result.data[0].aliase;
 
-                    result = await func("/link/mgr/upgrade/getAllSystemPatch");
+                    result = await func("/mgr/upgrade/getAllSystemPatch");
                     if (result.status === "error") {
                         alertMsg(result.msg, "error");
                         context.emit('update:checkUpgrade', false);
@@ -1099,7 +1190,7 @@ export const upgradeModalComponent = {
                     state.systemPatchs.splice(0);
                     state.systemPatchs.push(...result.data);
 
-                    result = await func("/link/mgr/upgrade/checkVersionMaster");
+                    result = await func("/mgr/upgrade/checkVersionMaster");
                     if (result.status === "error") {
                         alertMsg(result.msg, "error");
                         context.emit('update:checkUpgrade', false);
@@ -1130,7 +1221,7 @@ export const upgradeModalComponent = {
                         state.bsModal.show();
                     }
                 } else {
-                    let result = await func("/link/mgr/upgrade/getSystemAliase");
+                    let result = await func("/mgr/upgrade/getSystemAliase");
                     if (result.status === "error") {
                         alertMsg(result.msg, "error");
                         context.emit('update:checkUpgrade', false);
@@ -1143,7 +1234,7 @@ export const upgradeModalComponent = {
                     }
                     state.facAliase = result.data[0].aliase;
 
-                    result = await func("/link/mgr/upgrade/getSystemPatchBySn",{"sn": patchSn.value});
+                    result = await func("/mgr/upgrade/getSystemPatchBySn",{"sn": patchSn.value});
                     if (result.data.length === 0) {
                         alertMsg("<cn>无效固件编号</cn><en>Invalid upgrade sn</en>", "error");
                         context.emit('update:checkUpgrade', false);
@@ -1450,35 +1541,35 @@ export const ptzDirectComponent = {
                             <div class="col-lg-6">
                                 <div class="row">
                                     <div class="col-lg-12 text-center">
-                                        <button type="button" @mousedown="handlePtzMove('left-up')" @mouseup="handlePtzMove('move-stop')" :class="['btn btn-primary',arrowClass,{'force-visibility-hide':!sticks.includes('left-up')}]">
+                                        <button type="button" @mousedown="handlePtzMove('left-up')" @mouseup="handlePtzMove('move-stop')" :class="['btn btn-primary',arrowClass,{'lp-visibility-hide':!sticks.includes('left-up')}]">
                                             <i class="fa-solid fa-circle-arrow-up" style="transform: rotate(-45deg);-o-transform: rotate(-45deg);-webkit-transform: rotate(-45deg);-moz-transform: rotate(-45deg);"></i>
                                         </button>
-                                        <button type="button" @mousedown="handlePtzMove('up')" @mouseup="handlePtzMove('move-stop')" :class="['btn btn-primary',arrowClass,{'force-visibility-hide':!sticks.includes('up')}]" :style="{'margin':'0px '+gop+'px'}">
+                                        <button type="button" @mousedown="handlePtzMove('up')" @mouseup="handlePtzMove('move-stop')" :class="['btn btn-primary',arrowClass,{'lp-visibility-hide':!sticks.includes('up')}]" :style="{'margin':'0px '+gop+'px'}">
                                             <i class="fa-solid fa-circle-arrow-up"></i>
                                         </button>
-                                        <button type="button" @mousedown="handlePtzMove('right-up')" @mouseup="handlePtzMove('move-stop')" :class="['btn btn-primary',arrowClass,{'force-visibility-hide':!sticks.includes('right-up')}]">
+                                        <button type="button" @mousedown="handlePtzMove('right-up')" @mouseup="handlePtzMove('move-stop')" :class="['btn btn-primary',arrowClass,{'lp-visibility-hide':!sticks.includes('right-up')}]">
                                             <i class="fa-solid fa-circle-arrow-up" style="transform: rotate(45deg);-o-transform: rotate(45deg);-webkit-transform: rotate(45deg);-moz-transform: rotate(45deg);"></i>
                                         </button>
                                     </div>
                                     <div class="col-lg-12 text-center" :style="{'marginTop':gop+'px'}">
-                                        <button type="button" @mousedown="handlePtzMove('left')" @mouseup="handlePtzMove('move-stop')" :class="['btn btn-primary',arrowClass,{'force-visibility-hide':!sticks.includes('left')}]">
+                                        <button type="button" @mousedown="handlePtzMove('left')" @mouseup="handlePtzMove('move-stop')" :class="['btn btn-primary',arrowClass,{'lp-visibility-hide':!sticks.includes('left')}]">
                                             <i class="fa-solid fa-circle-arrow-left"></i>
                                         </button>
-                                        <button type="button" @mouseup="handlePtzMove('home')" :class="['btn btn-primary',homeClass,{'force-visibility-hide':!sticks.includes('home')}]" :style="{'margin':'0px '+gop+'px'}">
+                                        <button type="button" @mouseup="handlePtzMove('home')" :class="['btn btn-primary',homeClass,{'lp-visibility-hide':!sticks.includes('home')}]" :style="{'margin':'0px '+gop+'px'}">
                                             <i class="fa-solid fa-house"></i>
                                         </button>
-                                        <button type="button" @mousedown="handlePtzMove('right')" @mouseup="handlePtzMove('move-stop')" :class="['btn btn-primary',arrowClass,{'force-visibility-hide':!sticks.includes('right')}]">
+                                        <button type="button" @mousedown="handlePtzMove('right')" @mouseup="handlePtzMove('move-stop')" :class="['btn btn-primary',arrowClass,{'lp-visibility-hide':!sticks.includes('right')}]">
                                             <i class="fa-solid fa-circle-arrow-right"></i>
                                         </button>
                                     </div>
                                     <div class="col-lg-12 text-center" :style="{'marginTop':gop+'px'}">
-                                        <button type="button" @mousedown="handlePtzMove('left-down')" @mouseup="handlePtzMove('move-stop')" :class="['btn btn-primary',arrowClass,{'force-visibility-hide':!sticks.includes('left-down')}]">
+                                        <button type="button" @mousedown="handlePtzMove('left-down')" @mouseup="handlePtzMove('move-stop')" :class="['btn btn-primary',arrowClass,{'lp-visibility-hide':!sticks.includes('left-down')}]">
                                             <i class="fa-solid fa-circle-arrow-up" style="transform: rotate(-135deg);-o-transform: rotate(-135deg);-webkit-transform: rotate(-135deg);-moz-transform: rotate(-135deg);"></i>
                                         </button>
-                                        <button type="button" @mousedown="handlePtzMove('down')" @mouseup="handlePtzMove('move-stop')" :class="['btn btn-primary',arrowClass,{'force-visibility-hide':!sticks.includes('down')}]" :style="{'margin':'0px '+gop+'px'}">
+                                        <button type="button" @mousedown="handlePtzMove('down')" @mouseup="handlePtzMove('move-stop')" :class="['btn btn-primary',arrowClass,{'lp-visibility-hide':!sticks.includes('down')}]" :style="{'margin':'0px '+gop+'px'}">
                                             <i class="fa-solid fa-circle-arrow-down"></i>
                                         </button>
-                                        <button type="button" @mousedown="handlePtzMove('right-down')" @mouseup="handlePtzMove('move-stop')" :class="['btn btn-primary',arrowClass,{'force-visibility-hide':!sticks.includes('right-down')}]">
+                                        <button type="button" @mousedown="handlePtzMove('right-down')" @mouseup="handlePtzMove('move-stop')" :class="['btn btn-primary',arrowClass,{'lp-visibility-hide':!sticks.includes('right-down')}]">
                                             <i class="fa-solid fa-circle-arrow-up" style="transform: rotate(135deg);-o-transform: rotate(135deg);-webkit-transform: rotate(135deg);-moz-transform: rotate(130deg);"></i>
                                         </button>
                                     </div>
@@ -1622,3 +1713,349 @@ export const ptzDirectComponent = {
     }
 }
 
+export const usbOptionComponent = {
+    template:`<a :class="['nav-link lp-usb-ctx',{'active':hadMountDisk}]" data-bs-toggle="dropdown">
+                    <div class="lp-usb-drive">
+                        <div class="lp-usb-body"></div>
+                        <div class="lp-usb-metal"></div>
+                        <div class="lp-usb-hole"></div>
+                    </div>
+                </a>
+                <div class="dropdown">
+                    <ul class="dropdown-menu dropdown-menu-end">
+                        <li>
+                            <a class="dropdown-item" href="javascript:;" @click="unInstallDisk">
+                                <span class="material-symbols-outlined me-2">
+                                    <i class="fa-solid fa-arrow-up-from-bracket me-2"></i>
+                                    <cn>弹出设备</cn>
+                                    <en>Uninstall</en>
+                                </span>
+                            </a>
+                        </li>
+                        <li><hr></li>
+                        <li>
+                            <a class="dropdown-item" href="javascript:;" @click="formatDisk">
+                                <span class="material-symbols-outlined me-2">
+                                    <i class="fa-solid fa-circle-nodes me-2"></i>
+                                    <cn>格式化</cn>
+                                    <en>Format Disk</en>
+                                </span>
+                            </a>
+                        </li>
+                        <li><hr></li>
+                        <li>
+                            <a class="dropdown-item" href="javascript:;" @click="turnMountDisk">
+                                <span class="material-symbols-outlined me-2">
+                                    <i class="fa-solid fa-right-left me-2"></i>
+                                    <cn>切换存储</cn>
+                                    <en>Change Disk</en>
+                                </span>
+                            </a>
+                        </li>
+                    </ul>
+                </div>`,
+    setup(props,context) {
+
+        const hadMountDisk = ref(false);
+        const { diskConf,updateDiskConf } = useDiskConf();
+
+        const unInstallDisk = () => {
+            confirm({
+                title: '<cn>卸载磁盘</cn><en>UnInstall Disk</en>',
+                content: '<cn>是否卸载磁盘，请确保没有处于录制状态</cn><en>Whether to uninstall the disk, please make sure it is not in the recording state</en>',
+                buttons: {
+                    ok: {
+                        text: "<cn>卸载</cn><en>Confirm</en>",
+                        btnClass: 'btn-primary',
+                        action: () => {
+                            func("/mgr/system/umountDisk").then(res => {
+                                alertMsg(res.msg,res.status);
+                            })
+                        }
+                    },
+                    cancel: {
+                        text: "<cn>取消</cn><en>Cancel</en>",
+                        action: () => {}
+                    }
+                }
+            });
+        }
+
+        const formatDisk = () => {
+            confirm({
+                title: '<cn>格式化磁盘</cn><en>Formatted Disk</en>',
+                content: `<div class="row">
+                            <div class="col-lg-11">
+                                <div class="row mt-2">
+                                    <div class="col-lg-3 offset-lg-1 lp-align-center">
+                                        <label>
+                                            <cn>磁盘格式</cn>
+                                            <en>Format</en>
+                                        </label>
+                                    </div>
+                                    <div class="col-lg-8">
+                                        <select class="form-select" id="diskFormat">
+                                            <option value="ext4">EXT4</option>
+                                            <option value="fat32">FAT32</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="row mt-2">
+                                    <div class="col-lg-3 offset-lg-1 lp-align-center">
+                                        <label>
+                                            <cn>登录密码</cn>
+                                            <en>Password</en>
+                                        </label>
+                                    </div>
+                                    <div class="col-lg-8">
+                                        <div class="input-group">
+                                            <span class="input-group-text input-group-addon">
+                                                <i class="fa-solid fa-key"></i>
+                                            </span>
+                                            <input class="form-control" type="password" id="formatPasswd" autocomplete="off">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row mt-3">
+                                    <div class="col-lg-12">
+                                        <label>
+                                            <cn>Tip: 格式化将清空磁盘数据，且不可逆转，请谨慎操作。</cn>
+                                            <en>Tip: Formatting will erase disk data and is irreversible.</en>
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                          </div>`,
+                buttons: {
+                    ok: {
+                        text: "<cn>格式化</cn><en>Format</en>",
+                        btnClass: 'btn-primary',
+                        action: () => {
+                            const formatPasswd = document.querySelector("#formatPasswd").value;
+                            func("/mgr/system/formatReady",{"psd":formatPasswd}).then (res => {
+                                return new Promise((resolve,reject)=>{
+                                    if(res.status === "error") {
+                                        alertMsg(res.msg,res.status);
+                                        reject();
+                                        return;
+                                    }
+                                    resolve();
+                                })
+                            }).then(()=>{
+                                const diskFormat = document.querySelector("#diskFormat").value;
+                                const notify = alertMsg("<cn>正在格式化，请勿关闭此页面</cn><en>Do not close this page while formatting</en>","success",99999999);
+                                func("/mgr/system/formatDisk",{"format":diskFormat}).then(res => {
+                                    if(res.status === "success") {
+                                        notify.remove();
+                                        setTimeout(()=> alertMsg(res.msg,res.status),600);
+                                    }
+                                })
+                            })
+                        }
+                    },
+                    cancel: {
+                        text: "<cn>取消</cn><en>Cancel</en>",
+                        action: () => {}
+                    }
+                }
+            });
+        }
+
+        const checkMountDisk = () => {
+            func("/mgr/system/getMountDiskSpace").then(res => hadMountDisk.value = res.status === "success")
+            setTimeout(checkMountDisk,1000);
+        }
+
+
+        const turnMountDisk = () => {
+            const html = document.querySelector("html");
+            const lang = html.getAttribute("data-bs-language");
+            const jc = confirm({
+                title: '<cn>磁盘挂载</cn><en>Mount Disk</en>',
+                content: `<div class="row">
+                              <div class="col-lg-12">
+                                    <div class="row mt-3">
+                                        <div class="col-lg-3 offset-lg-1 lp-align-center">
+                                            <label>
+                                                <cn>类型</cn>
+                                                <en>Type</en>
+                                            </label>
+                                        </div>
+                                        <div class="col-lg-7">
+                                            <select class="form-select" id="mount_device">
+                                                 <option value="shared">${lang === "cn" ? "网络磁盘" : "net disk"}</option>
+                                                 <option value="local">${lang === "cn" ? "移动磁盘" : "usb disk"}</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="row mt-3 local-device">
+                                        <div class="col-lg-3 offset-lg-1 lp-align-center">
+                                            <label>
+                                                <cn>设备</cn>
+                                                <en>Device</en>
+                                            </label>
+                                        </div>
+                                        <div class="col-lg-7">
+                                            <select class="form-select" id="local_devices"></select>
+                                        </div>
+                                    </div>
+                                    <div class="row mt-3 share-device">
+                                        <div class="col-lg-3 offset-lg-1 lp-align-center">
+                                            <label>
+                                                <cn>协议</cn>
+                                                <en>Protocol</en>
+                                            </label>
+                                        </div>
+                                        <div class="col-lg-7">
+                                            <select class="form-select" id="shared_protocol">
+                                                 <option value="cifs">${lang === "cn" ? "cifs (windows共享目录)" : "cifs (windows shared directory)"}</option>
+                                                 <option value="nfs">nfs</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="row mt-3 cifs-auth share-device">
+                                        <div class="col-lg-3 offset-lg-1 lp-align-center">
+                                            <label>
+                                                <cn>用户名<small style="color: gray;font-size: 11px;">(选填)</small></cn>
+                                                <en>Username</en>
+                                            </label>
+                                        </div>
+                                        <div class="col-lg-7">
+                                            <input class="form-control" id="shared_uname">
+                                        </div>
+                                    </div>
+                                    <div class="row mt-3 cifs-auth share-device">
+                                        <div class="col-lg-3 offset-lg-1 lp-align-center">
+                                            <label>
+                                                <cn>密码<small style="color: gray;font-size: 11px;">(选填)</small></cn>
+                                                <en>Password</en>
+                                            </label>
+                                        </div>
+                                        <div class="col-lg-7">
+                                            <input class="form-control" id="shared_passwd">
+                                        </div>
+                                    </div>
+                                    <div class="row mt-3 share-device">
+                                        <div class="col-lg-3 offset-lg-1 lp-align-center">
+                                            <label>
+                                                <cn>IP地址</cn>
+                                                <en>IP Address</en>
+                                            </label>
+                                        </div>
+                                        <div class="col-lg-7">
+                                            <input class="form-control" id="shared_ip">
+                                        </div>
+                                    </div>
+                                    <div class="row mt-3 share-device">
+                                        <div class="col-lg-3 offset-lg-1 lp-align-center">
+                                            <label>
+                                                <cn>挂载路径</cn>
+                                                <en>Mount Path</en>
+                                            </label>
+                                        </div>
+                                        <div class="col-lg-7">
+                                            <input class="form-control" id="shared_path">
+                                        </div>
+                                    </div>
+                                    <div class="row" style="padding-top: 30px;padding-left: 30px;color: gray">
+                                        <label class="col-lg-12">
+                                            <cn>Tip: 更换挂载设备时，请确保没有处于录制状态</cn>
+                                            <en>Tip: Make sure that you are not recording when you change the mounted device</en>
+                                        </label>
+                                    </div>
+                              </div>  
+                          </div>`,
+                buttons: {
+                    ok: {
+                        text: "<cn>挂载</cn><en>Mount</en>",
+                        btnClass: 'btn-primary',
+                        action: () => {
+                            updateDiskConf({
+                                enable: true,
+                                used: document.querySelector('#mount_device').value,
+                                shared: {
+                                    ip:document.querySelector('#shared_ip').value,
+                                    type: document.querySelector('#shared_protocol').value,
+                                    path: document.querySelector('#shared_path').value,
+                                    auth : {
+                                        uname: document.querySelector('#shared_uname').value,
+                                        passwd: document.querySelector('#shared_passwd').value,
+                                    }
+                                },
+                                local: {
+                                    device:document.querySelector('#local_devices').value
+                                }
+                            }).then(async ()=> {
+                                alertMsg("<cn>磁盘检测中，请稍后...</cn><en>Disk checking, please wait...</en>","success");
+                                const result = await func("/mgr/system/mountDisk");
+                                if(result.status === "success")
+                                    jc.close();
+                                setTimeout(() => alertMsg(result.msg,result.status),600);
+                            });
+                            return false;
+                        }
+                    },
+                    cancel: {
+                        text: "<cn>取消</cn><en>Cancel</en>",
+                        action: () => {}
+                    }
+                },
+                onOpenBefore: ()=> {
+                    const display = (type,protocol) => {
+                        const shareElements = document.querySelectorAll('.share-device');
+                        const localElements = document.querySelectorAll('.local-device');
+                        shareElements.forEach(element => element.style.display = 'none');
+                        localElements.forEach(element => element.style.display = 'none');
+                        if(type === "shared") {
+                            shareElements.forEach(element => element.style.display = '');
+                            const cifsAuthElements = document.querySelectorAll('.cifs-auth');
+                            document.querySelector('#shared_protocol').value = protocol;
+                            cifsAuthElements.forEach(element => element.style.display = 'none');
+                            if(protocol === 'cifs')
+                                cifsAuthElements.forEach(element => element.style.display = '');
+                            return;
+                        }
+                        localElements.forEach(element => element.style.display = '');
+                    }
+
+                    func("/mgr/system/getLocalDisk").then(result => {
+                        const html = document.querySelector("html");
+                        const lang = html.getAttribute("data-bs-language");
+                        result.data.forEach(item => {
+                            const option = document.createElement('option');
+                            option.value = item.name;
+                            if(item.name === "/dev/mmcblk0p6") {
+                                if(lang === "cn")
+                                    item.name = "内部存储";
+                                else
+                                    item.name = "device storage";
+                            }
+                            option.text = item.name+"( "+item.size+" )";
+                            document.querySelector('#local_devices').add(option);
+                        })
+                    })
+
+                    document.querySelector('#mount_device').value = diskConf.used;
+                    document.querySelector('#local_devices').value = diskConf.local.device;
+                    document.querySelector('#shared_protocol').value = diskConf.shared.type;
+                    document.querySelector('#shared_uname').value = diskConf.shared.auth.uname;
+                    document.querySelector('#shared_passwd').value = diskConf.shared.auth.passwd;
+                    document.querySelector('#shared_ip').value = diskConf.shared.ip;
+                    document.querySelector('#shared_path').value = diskConf.shared.path;
+                    display(diskConf.used,diskConf.shared.type);
+                    document.querySelector('#mount_device').addEventListener('change', () => {
+                        const type = document.querySelector('#mount_device').value;
+                        display(type,"cifs");
+                    });
+                    document.querySelector('#shared_protocol').addEventListener('change', () => {
+                        const protocol = document.querySelector('#shared_protocol').value;
+                        display("shared",protocol);
+                    });
+                }
+            });
+        }
+
+        onMounted(checkMountDisk);
+        return { hadMountDisk, unInstallDisk,formatDisk,turnMountDisk }
+    }
+}

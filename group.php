@@ -54,7 +54,7 @@
                                         <td>
                                             <div class="row" v-for="(it,idx) in Object.keys(item.version)" :key="idx+10000">
                                                 <div class="col-lg-10 p-0">
-                                                    <label class="text-truncate force-align-right">
+                                                    <label class="text-truncate lp-align-right">
                                                         {{it+'_'+item.version[it].split('_')[0]}}
                                                     </label>
                                                 </div>
@@ -89,7 +89,7 @@
                             <div class="row">
                                 <div class="col-lg-5">
                                     <div class="row row-cols-3">
-                                        <div class="col-lg-2 force-align-center">
+                                        <div class="col-lg-2 lp-align-center">
                                             <strong>
                                                 <cn>分组ID</cn>
                                                 <en>Group ID</en>

@@ -24,20 +24,24 @@
                             <i v-else class="fa-regular fa-sun" @click="updateThemeConf('default')"></i>
                         </a>
                     </li>
+                    <li class="nav-item">
+                        <usb-option></usb-option>
+                    </li>
 <!--                    <li class="nav-item">-->
 <!--                        <a class="nav-link" data-bs-toggle="offcanvas" href="#ThemeCustomizer"><i class="fa fa-gear"></i></a>-->
 <!--                    </li>-->
                 </ul>
             </nav>
+
         </header>
 
         <aside class="sidebar-wrapper" @mouseenter="onMouseEnter" @mouseleave="onMouseLeave">
             <div class="sidebar-header">
-                <div class="logo-icon">
-                    <img src="assets/images/logo-sm.png" class="logo-img" alt="">
+                <div class="logo-icon lp-cursor-pointer" @click="onHrefDash">
+                    <img src="assets/images/logo.png" width="78">
                 </div>
                 <div class="logo-name flex-grow-1">
-                    <h5 class="mb-0 fw-bold">LinkPi</h5>
+<!--                    <h5 class="mb-0 fw-bold">LinkPi</h5>-->
                 </div>
 
                 <div class="sidebar-close" @click="onCloseSidebar">
@@ -53,12 +57,6 @@
                         </a>
                     </li>
                     <li class="menu-label"><cn>基本设置</cn><en>Basic</en></li>
-<!--                    <li>-->
-<!--                        <a href="dashboard1.php">-->
-<!--                            <div class="parent-icon"><i class="fa fa-tachometer"></i></div>-->
-<!--                            <div class="menu-title"><cn>设备状态1</cn><en>Dashboard</en></div>-->
-<!--                        </a>-->
-<!--                    </li>-->
                     <li>
                         <a href="decode.php">
                             <div class="parent-icon"><i class="fa fa-image"></i></div>
@@ -67,7 +65,7 @@
                     </li>
                     <li>
                         <a href="encode.php">
-                            <div class="parent-icon"><i class="fa fa-image"></i></div>
+                            <div class="parent-icon"><i class="fa-brands fa-joomla"></i></div>
                             <div class="menu-title"><cn>编码设置</cn><en>Encode</en></div>
                         </a>
                     </li>
@@ -75,6 +73,12 @@
                         <a href="stream.php">
                             <div class="parent-icon"><i class="fa fa-upload"></i></div>
                             <div class="menu-title"><cn>串流输出</cn><en>Stream</en></div>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="push.php">
+                            <div class="parent-icon"><i class="fa-solid fa-fan"></i></div>
+                            <div class="menu-title"><cn>直播推流</cn><en>Multiple Push</en></div>
                         </a>
                     </li>
                     <li>
@@ -122,12 +126,6 @@
                                 </a>
                             </li>
                             <li>
-                                <a href="push.php">
-                                    <i class="fa-solid fa-circle-arrow-up"></i>
-                                    <div class="menu-title"><cn>多平台直播</cn><en>Multiple Push</en></div>
-                                </a>
-                            </li>
-                            <li>
                                 <a href="player.php">
                                     <i class="fa-solid fa-circle-play"></i>
                                     <div class="menu-title"><cn>H5 播放器</cn><en>H5 Player</en></div>
@@ -137,12 +135,6 @@
                                 <a href="intercom.php">
                                     <i class="fa-solid fa-headset"></i>
                                     <div class="menu-title"><cn>集成通信</cn><en>Intercom</en></div>
-                                </a>
-                            </li>
-                            <li>
-                                <a href="explorer.php">
-                                    <i class="fa-brands fa-usb"></i>
-                                    <div class="menu-title"><cn>U盘助手</cn><en>Usb Disk</en></div>
                                 </a>
                             </li>
                             <li>
@@ -240,90 +232,6 @@
                 </div>
             </div>
         </aside>
-
-        <!-- Search Modal -->
-        <div class="modal" id="searchModal" tabindex="-1">
-            <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
-                <div class="modal-content">
-                    <div class="modal-header gap-2">
-                        <div class="position-relative popup-search w-100">
-                            <input class="form-control form-control-lg ps-5 border border-3 border-primary" type="search" placeholder="Search">
-                            <span class="position-absolute ms-3 translate-middle-y start-0 top-50">
-                            <i class="fa fa-search"></i>
-                        </span>
-                        </div>
-                        <button type="button" class="btn-close d-xl-none" data-bs-dismiss="modal" aria-label="Close"></button>
-                    </div>
-                    <div class="modal-body">
-                        <div class="search-list">
-                            <p class="mb-1">Html Templates</p>
-                            <div class="list-group">
-                                <a href="javascript:;" class="list-group-item list-group-item-action active align-items-center d-flex gap-2"><i class="bi bi-filetype-html fs-5"></i>Best Html Templates</a>
-                                <a href="javascript:;" class="list-group-item list-group-item-action align-items-center d-flex gap-2"><i class="bi bi-award fs-5"></i>Html5 Templates</a>
-                                <a href="javascript:;" class="list-group-item list-group-item-action align-items-center d-flex gap-2"><i class="bi bi-box2-heart fs-5"></i>Responsive Html5 Templates</a>
-                                <a href="javascript:;" class="list-group-item list-group-item-action align-items-center d-flex gap-2"><i class="bi bi-camera-video fs-5"></i>eCommerce Html Templates</a>
-                            </div>
-                            <p class="mb-1 mt-3">Web Designe Company</p>
-                            <div class="list-group">
-                                <a href="javascript:;" class="list-group-item list-group-item-action align-items-center d-flex gap-2"><i class="bi bi-chat-right-text fs-5"></i>Best Html Templates</a>
-                                <a href="javascript:;" class="list-group-item list-group-item-action align-items-center d-flex gap-2"><i class="bi bi-cloud-arrow-down fs-5"></i>Html5 Templates</a>
-                                <a href="javascript:;" class="list-group-item list-group-item-action align-items-center d-flex gap-2"><i class="bi bi-columns-gap fs-5"></i>Responsive Html5 Templates</a>
-                                <a href="javascript:;" class="list-group-item list-group-item-action align-items-center d-flex gap-2"><i class="bi bi-collection-play fs-5"></i>eCommerce Html Templates</a>
-                            </div>
-                            <p class="mb-1 mt-3">Software Development</p>
-                            <div class="list-group">
-                                <a href="javascript:;" class="list-group-item list-group-item-action align-items-center d-flex gap-2"><i class="bi bi-cup-hot fs-5"></i>Best Html Templates</a>
-                                <a href="javascript:;" class="list-group-item list-group-item-action align-items-center d-flex gap-2"><i class="bi bi-droplet fs-5"></i>Html5 Templates</a>
-                                <a href="javascript:;" class="list-group-item list-group-item-action align-items-center d-flex gap-2"><i class="bi bi-exclamation-triangle fs-5"></i>Responsive Html5 Templates</a>
-                                <a href="javascript:;" class="list-group-item list-group-item-action align-items-center d-flex gap-2"><i class="bi bi-eye fs-5"></i>eCommerce Html Templates</a>
-                            </div>
-                            <p class="mb-1 mt-3">Online Shoping Portals</p>
-                            <div class="list-group">
-                                <a href="javascript:;" class="list-group-item list-group-item-action align-items-center d-flex gap-2"><i class="bi bi-facebook fs-5"></i>Best Html Templates</a>
-                                <a href="javascript:;" class="list-group-item list-group-item-action align-items-center d-flex gap-2"><i class="bi bi-flower2 fs-5"></i>Html5 Templates</a>
-                                <a href="javascript:;" class="list-group-item list-group-item-action align-items-center d-flex gap-2"><i class="bi bi-geo-alt fs-5"></i>Responsive Html5 Templates</a>
-                                <a href="javascript:;" class="list-group-item list-group-item-action align-items-center d-flex gap-2"><i class="bi bi-github fs-5"></i>eCommerce Html Templates</a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-
-        <!--start theme customization-->
-        <div class="offcanvas offcanvas-end" tabindex="-1" id="ThemeCustomizer" aria-labelledby="ThemeCustomizerLable">
-            <div class="offcanvas-header border-bottom">
-                <h5 class="offcanvas-title" id="ThemeCustomizerLable">Theme Customizer</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
-            </div>
-            <div class="offcanvas-body">
-                <h6 class="mb-0">Theme Variation</h6>
-                <hr>
-                <div class="form-check form-check-inline">
-                    <input class="form-check-input" type="radio" name="inlineRadioOptions" id="LightTheme" value="option1">
-                    <label class="form-check-label" for="LightTheme">Light</label>
-                </div>
-                <div class="form-check form-check-inline">
-                    <input class="form-check-input" type="radio" name="inlineRadioOptions" id="DarkTheme" value="option2" checked="">
-                    <label class="form-check-label" for="DarkTheme">Dark</label>
-                </div>
-                <div class="form-check form-check-inline">
-                    <input class="form-check-input" type="radio" name="inlineRadioOptions" id="SemiDarkTheme" value="option3">
-                    <label class="form-check-label" for="SemiDarkTheme">Semi Dark</label>
-                </div>
-                <hr>
-                <div class="form-check form-check-inline">
-                    <input class="form-check-input" type="radio" name="inlineRadioOptions" id="MinimalTheme" value="option3">
-                    <label class="form-check-label" for="MinimalTheme">Minimal Theme</label>
-                </div>
-                <div class="form-check form-check-inline">
-                    <input class="form-check-input" type="radio" name="inlineRadioOptions" id="ShadowTheme" value="option4">
-                    <label class="form-check-label" for="ShadowTheme">Shadow Theme</label>
-                </div>
-
-            </div>
-        </div>
     </menu>
 </div>
 
@@ -331,23 +239,26 @@
     import vue from "../assets/js/vue.build.js";
     import { func,updateSysLanguage } from "../assets/js/lp.utils.js";
     import { useThemeConf } from "../assets/js/vue.hooks.js"
-    import { ignoreCustomElementPlugin } from "./assets/js/vue.helper.js"
+    import { ignoreCustomElementPlugin,usbOptionComponent } from "../assets/js/vue.helper.js"
     import Metismenu from '../assets/plugins/metismenu/js/metisMenu.esm.js';
 
     const { createApp,ref,watchEffect,onMounted } = vue;
-
     const menu = createApp({
-       setup() {
+        components:{
+            "usb-option": usbOptionComponent,
+        },
+        setup() {
            const { themeConf,updateThemeConf } = useThemeConf();
 
            const state = {
                metismenu: ref(null),
                isMenuToggled : ref(false),
-               isSidebarHovered: ref(false)
+               isSidebarHovered: ref(false),
+               showFormatModal: ref(false)
            }
 
            const onLogout = () => {
-               func("/link/mgr/login/onLogout")
+               func("/mgr/login/onLogout")
                    .then((ret)=>{
                        if(ret.status === "success")
                            location.href = "/";
@@ -361,6 +272,10 @@
                else
                    body.classList.remove('toggled');
            })
+
+           const onHrefDash = () => {
+                location.href="/dashboard.php";
+           }
 
            const onToggleMenu = () => {
                state.isMenuToggled.value = !state.isMenuToggled.value;
@@ -399,7 +314,8 @@
                }
            });
 
-           return {...state,themeConf,updateThemeConf,onLogout,onToggleMenu,onMouseEnter,onMouseLeave,onCloseSidebar,updateSysLanguage}
+           return {...state,themeConf,updateThemeConf,onHrefDash,onLogout,onToggleMenu,
+               onMouseEnter,onMouseLeave,onCloseSidebar,updateSysLanguage}
        }
     });
     menu.use(ignoreCustomElementPlugin);

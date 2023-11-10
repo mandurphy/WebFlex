@@ -78,7 +78,7 @@
                     </div>
                     <div class="card-body">
                         <div class="row mt-3" v-if="Object.keys(serviceConf).length > 0">
-                            <div class="col-lg-2 offset-lg-1 force-align-center">
+                            <div class="col-lg-2 offset-lg-1 lp-align-center">
                                 <label>
                                     <cn>启用</cn>
                                     <en>Enable</en>

@@ -3,6 +3,7 @@
 namespace Link\Mgr;
 
 use Link\Basic;
+
 class System extends Basic
 {
     public function getSystemTime()
@@ -133,18 +134,74 @@ class System extends Basic
     public function getMountDiskSpace()
     {
         $mountDir = '/root/usb';
-        $output = shell_exec('df ' . $mountDir);
+        $output = shell_exec('df -h ' . $mountDir);
         if(strpos($output, $mountDir) != false) {
-            $totalSpace = disk_total_space($mountDir);
-            $freeSpace = disk_free_space($mountDir);
-            $usedSpace = $totalSpace - $freeSpace;
+            $lines = explode("\n", trim($output));
+            $dataLine = $lines[count($lines) - 1];
+            $totalSpace = preg_split('/\s+/', $dataLine)[1];
+            $usedSpace = preg_split('/\s+/', $dataLine)[2];
             $result = array(
-                'total'=> $this->formatBytes($totalSpace),
-                'free' => $this->formatBytes($freeSpace),
-                'used' => $this->formatBytes($usedSpace)
+                'total'=> $totalSpace,
+                'used' => $usedSpace
             );
             return $this->handleRet($result,'success','获取成功','get disk space successfully');
         }
         return $this->handleRet('','error','磁盘未挂载','disk is not mounted');
+    }
+
+    function umountDisk() {
+        exec("umount -l /root/usb");
+        exec("sync");
+        exec("df -h | grep /root/usb | wc -l",$output);
+        if($output[0] == "0")
+            return $this->handleRet("",'success','卸载成功','Uninstall successfully');
+        else
+            return $this->handleRet("",'error','卸载失败,请检测磁盘是否被占用','Uninstallation failed, please check if the disk is occupied');
+    }
+
+    function formatReady($param) {
+        $psd = $param["psd"];
+        $json_string = file_get_contents( '/link/config/passwd.json' );
+        $data = json_decode( $json_string, true );
+        if($data[0]["passwd"] == md5($psd))
+            return $this->handleRet("",'success','正在格式化，请勿关闭此页面','Do not close this page while formatting');
+        else
+            return $this->handleRet("",'error','格式化失败，密码错误','Formatting failed because the password is incorrect');
+    }
+
+    function formatDisk($param) {
+        exec("/link/shell/fusb.sh ".$param["format"]);
+        return $this->handleRet("",'success','格式化完成','Formatting completed');
+    }
+
+    function mountDisk() {
+        exec("/link/shell/mount.sh",$output);
+        if($output[0] == "0")
+            return $this->handleRet("",'error','外部存储设备挂载失败','The external storage device failed to be mounted');
+        return $this->handleRet("",'success','挂载成功','Mount successfully');
+    }
+
+    function getLocalDisk() {
+        $output = shell_exec("ls /dev/sd*");
+        $arys = explode("\n",$output);
+
+        $hardware = json_decode(file_get_contents("/link/config/hardware.json"));
+        $chip = $hardware->chip;
+        if($chip == "SS524V100" || $chip == "SS528V100")
+            $arys[] = "/dev/mmcblk0p6";
+
+        $retList = array();
+        for($i=0;$i<count($arys);$i++) {
+            $item = $arys[$i];
+            if(empty($item) || substr_count($output, $item) > 1)
+                continue;
+            $size = shell_exec("blockdev --getsize64 ".$item);
+            $diskInfo = array(
+                "name" => $item,
+                "size" => $this->formatBytes($size)
+            );
+            $retList[] = $diskInfo;
+        }
+        return $this->handleRet($retList,'success','获取成功','Get local devices successfully');
     }
 }

@@ -35,13 +35,13 @@
                             </div>
                         </div>
                         <div class="card-body pb-4">
-                            <div class="force-aspect-ratio">
+                            <div class="lp-aspect-ratio">
                                 <div class="aspect-ratio-content d-flex flex-column justify-content-between" v-if="defaultConf.length > 0">
                                     <div class="row"></div>
                                     <div class="row"></div>
                                     <div class="row"></div>
                                     <div class="row">
-                                        <div class="col-lg-3 offset-lg-1 force-align-center">
+                                        <div class="col-lg-3 offset-lg-1 lp-align-center">
                                             <label>
                                                 <cn>总开关</cn>
                                                 <en>Main enable</en>
@@ -52,7 +52,7 @@
                                         </div>
                                     </div>
                                     <div class="row">
-                                        <div class="col-lg-3 offset-lg-1 force-align-center">
+                                        <div class="col-lg-3 offset-lg-1 lp-align-center">
                                             <label>
                                                 <cn>已选择</cn>
                                                 <en>Selected</en>
@@ -63,7 +63,7 @@
                                         </div>
                                     </div>
                                     <div class="row">
-                                        <div class="col-lg-3 offset-lg-1 force-align-center">
+                                        <div class="col-lg-3 offset-lg-1 lp-align-center">
                                             <label>
                                                 <cn>源列表</cn>
                                                 <en>Source List</en>

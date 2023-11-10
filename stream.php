@@ -53,25 +53,25 @@
                                      <cn>主流协议</cn>
                                      <en>Main protocol</en>
                                  </div>
-                                 <div class="col force-align-center">
+                                 <div class="col lp-align-center">
                                      <bs-switch v-model="globalConf.stream.http" ></bs-switch>
                                  </div>
-                                 <div v-if="Object.keys(hardwareConf).length > 0 && hardwareConf.function.hls" class="col force-align-center">
+                                 <div v-if="Object.keys(hardwareConf).length > 0 && hardwareConf.function.hls" class="col lp-align-center">
                                      <bs-switch v-model="globalConf.stream.hls" ></bs-switch>
                                  </div>
-                                 <div class="col force-align-center">
+                                 <div class="col lp-align-center">
                                      <bs-switch v-model="globalConf.stream.rtmp" ></bs-switch>
                                  </div>
-                                 <div class="col force-align-center">
+                                 <div class="col lp-align-center">
                                      <bs-switch v-model="globalConf.stream.rtsp.enable" ></bs-switch>
                                  </div>
-                                 <div class="col force-align-center">
+                                 <div class="col lp-align-center">
                                      <bs-switch v-model="globalConf.stream.udp.enable" ></bs-switch>
                                  </div>
                                  <div class="col-2">
                                      <multiple-input type="text" class="form-control" v-model:value1="globalConf.stream.udp.ip" v-model:value2="globalConf.stream.udp.port" split=":"></multiple-input>
                                  </div>
-                                 <div class="col force-align-center">
+                                 <div class="col lp-align-center">
                                      <bs-switch v-model="globalConf.stream.push.enable" ></bs-switch>
                                  </div>
                                  <div class="col"></div>
@@ -82,25 +82,25 @@
                                      <cn>辅流协议</cn>
                                      <en>Sub protocol</en>
                                  </div>
-                                 <div class="col force-align-center">
+                                 <div class="col lp-align-center">
                                      <bs-switch v-model="globalConf.stream2.http" ></bs-switch>
                                  </div>
-                                 <div v-if="Object.keys(hardwareConf).length > 0 && hardwareConf.function.hls" class="col force-align-center">
+                                 <div v-if="Object.keys(hardwareConf).length > 0 && hardwareConf.function.hls" class="col lp-align-center">
                                      <bs-switch v-model="globalConf.stream2.hls" ></bs-switch>
                                  </div>
-                                 <div class="col force-align-center">
+                                 <div class="col lp-align-center">
                                      <bs-switch v-model="globalConf.stream2.rtmp" ></bs-switch>
                                  </div>
-                                 <div class="col force-align-center">
+                                 <div class="col lp-align-center">
                                      <bs-switch v-model="globalConf.stream2.rtsp.enable" ></bs-switch>
                                  </div>
-                                 <div class="col force-align-center">
+                                 <div class="col lp-align-center">
                                      <bs-switch v-model="globalConf.stream2.udp.enable" ></bs-switch>
                                  </div>
                                  <div class="col-2">
                                      <multiple-input type="text" class="form-control" v-model:value1="globalConf.stream2.udp.ip" v-model:value2="globalConf.stream2.udp.port" split=":"></multiple-input>
                                  </div>
-                                 <div class="col force-align-center">
+                                 <div class="col lp-align-center">
                                      <bs-switch v-model="globalConf.stream2.push.enable" ></bs-switch>
                                  </div>
                                  <div class="col"></div>
@@ -231,25 +231,25 @@
                                  <div class="col-2 text-center">
                                      <input type="text" class="form-control" v-model.trim.lazy="item.name">
                                  </div>
-                                 <div class="col force-align-center">
+                                 <div class="col lp-align-center">
                                      <bs-switch v-model="item.stream.http" ></bs-switch>
                                  </div>
-                                 <div v-if="Object.keys(hardwareConf).length > 0 && hardwareConf.function.hls" class="col force-align-center">
+                                 <div v-if="Object.keys(hardwareConf).length > 0 && hardwareConf.function.hls" class="col lp-align-center">
                                      <bs-switch v-model="item.stream.hls" ></bs-switch>
                                  </div>
-                                 <div class="col force-align-center">
+                                 <div class="col lp-align-center">
                                      <bs-switch v-model="item.stream.rtmp" ></bs-switch>
                                  </div>
-                                 <div class="col force-align-center">
+                                 <div class="col lp-align-center">
                                      <bs-switch v-model="item.stream.rtsp.enable" ></bs-switch>
                                  </div>
-                                 <div class="col force-align-center">
+                                 <div class="col lp-align-center">
                                      <bs-switch v-model="item.stream.udp.enable" ></bs-switch>
                                  </div>
                                  <div class="col-2">
                                      <multiple-input type="text" class="form-control" v-model:value1="item.stream.udp.ip" v-model:value2="item.stream.udp.port" split=":"></multiple-input>
                                  </div>
-                                 <div class="col force-align-center">
+                                 <div class="col lp-align-center">
                                      <bs-switch v-model="item.stream.push.enable" ></bs-switch>
                                  </div>
                                  <div class="col-2">
@@ -258,25 +258,25 @@
                              </div>
                              <div class="row mt-1">
                                  <div class="col-2 text-center"></div>
-                                 <div class="col force-align-center">
+                                 <div class="col lp-align-center">
                                      <bs-switch v-model="item.stream2.http" ></bs-switch>
                                  </div>
-                                 <div v-if="Object.keys(hardwareConf).length > 0 && hardwareConf.function.hls" class="col force-align-center">
+                                 <div v-if="Object.keys(hardwareConf).length > 0 && hardwareConf.function.hls" class="col lp-align-center">
                                      <bs-switch v-model="item.stream2.hls" ></bs-switch>
                                  </div>
-                                 <div class="col force-align-center">
+                                 <div class="col lp-align-center">
                                      <bs-switch v-model="item.stream2.rtmp" ></bs-switch>
                                  </div>
-                                 <div class="col force-align-center">
+                                 <div class="col lp-align-center">
                                      <bs-switch v-model="item.stream2.rtsp.enable" ></bs-switch>
                                  </div>
-                                 <div class="col force-align-center">
+                                 <div class="col lp-align-center">
                                      <bs-switch v-model="item.stream2.udp.enable" ></bs-switch>
                                  </div>
                                  <div class="col-2">
                                      <multiple-input type="text" class="form-control" v-model:value1="item.stream2.udp.ip" v-model:value2="item.stream2.udp.port" split=":"></multiple-input>
                                  </div>
-                                 <div class="col force-align-center">
+                                 <div class="col lp-align-center">
                                      <bs-switch v-model="item.stream2.push.enable" ></bs-switch>
                                  </div>
                                  <div class="col-2">
@@ -378,7 +378,7 @@
                                                  <option value="1880">1880</option>
                                              </select>
                                          </div>
-                                         <div class="col force-align-center">
+                                         <div class="col lp-align-center">
                                              <bs-switch v-model="item.stream.udp.rtp"></bs-switch>
                                          </div>
                                      </div>
@@ -474,7 +474,7 @@
                                  <div class="col-1">
                                      <bs-switch v-model="item.stream.rtsp.auth"></bs-switch>
                                  </div>
-                                 <div class="col-1 force-align-center">
+                                 <div class="col-1 lp-align-center">
                                      <bs-switch v-model="item.stream.rtsp.enable"></bs-switch>
                                  </div>
                              </div>
@@ -544,7 +544,7 @@
                                  <div class="col">
                                      <input type="text" class="form-control" v-model.trim.lazy="item.stream.srt.passwd">
                                  </div>
-                                 <div class="col force-align-center">
+                                 <div class="col lp-align-center">
                                      <bs-switch v-model="item.stream.srt.enable"></bs-switch>
                                  </div>
                              </div>
@@ -584,7 +584,7 @@
                                  <div class="col-2">
                                      <input type="text" class="form-control" v-model.trim.lazy="item.ndi.group">
                                  </div>
-                                 <div class="col-1 force-align-center">
+                                 <div class="col-1 lp-align-center">
                                      <bs-switch v-model="item.ndi.enable"></bs-switch>
                                  </div>
                              </div>
@@ -603,6 +603,10 @@
                          </div>
                          <div class="col-2 text-center">
                              Format
+                         </div>
+                         <div class="col-2 text-center">
+                             <cn>兼容性</cn>
+                             <en>Compatible</en>
                          </div>
                          <div class="col-1 text-center">
                              <cn>上传速度</cn>
@@ -629,6 +633,12 @@
                                          <option value="rtp_mpegts">rtp_mpegts</option>
                                      </select>
                                  </div>
+                                 <div class="col-2">
+                                     <select class="form-select" v-model="item.stream.push.flvflags">
+                                         <option cn="标准" en="normal" value="" v-language-option></option>
+                                         <option value="ext_header">enhanced-rtmp</option>
+                                     </select>
+                                 </div>
                                  <div class="col-1 text-center">
                                      <span>{{handlePushSpeed(index*2)}} kb/s</span>
                                  </div>
@@ -646,6 +656,12 @@
                                          <option value="rtp">rtp</option>
                                          <option value="mpegts">mpegts</option>
                                          <option value="rtp_mpegts">rtp_mpegts</option>
+                                     </select>
+                                 </div>
+                                 <div class="col-2">
+                                     <select class="form-select" v-model="item.stream2.push.flvflags">
+                                         <option cn="标准" en="normal" value="" v-language-option></option>
+                                         <option value="ext_header">enhanced-rtmp</option>
                                      </select>
                                  </div>
                                  <div class="col-1 text-center">
@@ -707,7 +723,7 @@
                                  <div class="col-5">
                                      <div class="row">
                                          <div class="col-3">
-                                             <input type="text" class="form-control" v-model.trim.lazy="item.stream.suffix">
+                                             <input type="text" class="form-control" v-model.trim.lazy="item.stream2.suffix">
                                          </div>
                                          <div class="col">
                                              <div class="play-url" v-html="handlePlayUrl(index,'sub')"></div>
@@ -736,13 +752,16 @@
 
 <script type="module">
 
-    import { rpc,alertMsg,extend,deepCopy } from "./assets/js/lp.utils.js";
+    import {rpc, alertMsg, extend, deepCopy, clearReactiveArray} from "./assets/js/lp.utils.js";
     import { useDefaultConf,useHardwareConf,usePortConf } from "./assets/js/vue.hooks.js";
-    import { ignoreCustomElementPlugin,bootstrapSwitchComponent,multipleInputComponent } from "./assets/js/vue.helper.js"
+    import { ignoreCustomElementPlugin,bootstrapSwitchComponent,multipleInputComponent,languageOptionDirective } from "./assets/js/vue.helper.js"
     import vue from "./assets/js/vue.build.js";
 
     const {createApp,ref,reactive,toRefs,watch,watchEffect,computed} = vue;
     const app = createApp({
+        directives:{
+            "language-option": languageOptionDirective
+        },
         components:{
             "bs-switch" : bootstrapSwitchComponent,
             "multiple-input": multipleInputComponent
@@ -811,7 +830,7 @@
 
             const updatePlayUrl = () => {
                 rpc("enc.getEPG").then(data => {
-                    state.playUrls.splice(0,state.playUrls.length);
+                    clearReactiveArray(state.playUrls);
                     for(let i=0;i<data.length;i++){
                         state.playUrls.push({
                             "main": transURL(data[i].url),
@@ -907,9 +926,7 @@
             }
         
             const saveDefaultConf = () => {
-                updateDefaultConf().then(()=>{
-                    updatePlayUrl();
-                })
+                updateDefaultConf().then(updatePlayUrl);
             }
         
             return {...state,defaultConf,hardwareConf,handleEnableConf,handlePlayUrl,handlePushSpeed,saveGlobalConfByLocal,saveDefaultConf}

@@ -21,7 +21,7 @@ class Basic
             throw new Exception("参数格式错误&&param format error");
     }
 
-    protected static function handleRet($data,$status,$msg_cn,$msg_en): string
+    public static function handleRet($data, $status, $msg_cn, $msg_en): string
     {
         session_start();
         if(!isset($_SESSION["lang"]))

@@ -3,7 +3,6 @@
 <html lang="uft-8">
 <head>
     <?php include ("./public/head.inc") ?>
-    <link href="assets/plugins/confirm/css/jquery-confirm.min.css" rel="stylesheet">
     <link href="assets/plugins/fileinput/css/fileinput.min.css" rel="stylesheet" >
 </head>
 <body>
@@ -40,7 +39,7 @@
                         </a>
                     </li>
 
-                    <li v-if="!handleValidNetDevice.some(item => item.type === 'wifi')" class="nav-item force-cursor-pointer" ref="wifiHandler">
+                    <li v-if="!handleValidNetDevice.some(item => item.type === 'wifi')" class="nav-item lp-cursor-pointer" ref="wifiHandler">
                         <a class="nav-link">
                             <div class="d-flex align-items-center">
                                 <wifi-flag icon="wifi-off" width="20" height="20" stroke="#999999" stroke-width="2.3"></wifi-flag>
@@ -52,7 +51,7 @@
                         </a>
                     </li>
 
-                    <li v-if="!handleValidNetDevice.some(item => item.type === 'dongle')" class="nav-item force-cursor-pointer" ref="antenanHandler">
+                    <li v-if="!handleValidNetDevice.some(item => item.type === 'dongle')" class="nav-item lp-cursor-pointer" ref="antenanHandler">
                         <a class="nav-link">
                             <div class="d-flex align-items-center">
                                 <antenan-flag icon="antenan-off" width="20" height="20" stroke="#999999" stroke-width="2.3"></antenan-flag>
@@ -69,7 +68,7 @@
                     <div :class="['tab-pane fade',{'show active':index===0}]" v-for="(item,index) in handleValidNetDevice" :key="index" :id="'tab'+(index+1)" role="tabpanel">
                         <div v-if="item.type === 'lan'">
                             <div class="row mt-3">
-                                <div class="col-lg-2 offset-lg-1 force-align-center">
+                                <div class="col-lg-2 offset-lg-1 lp-align-center">
                                     <label>
                                         DHCP
                                     </label>
@@ -79,7 +78,7 @@
                                 </div>
                             </div>
                             <div class="row mt-3">
-                                <div class="col-lg-2 offset-lg-1 force-align-center">
+                                <div class="col-lg-2 offset-lg-1 lp-align-center">
                                     <label>
                                         IP
                                     </label>
@@ -89,7 +88,7 @@
                                 </div>
                             </div>
                             <div class="row mt-3">
-                                <div class="col-lg-2 offset-lg-1 force-align-center">
+                                <div class="col-lg-2 offset-lg-1 lp-align-center">
                                     <label>
                                         <cn>掩码</cn>
                                         <en>Mask</en>
@@ -100,7 +99,7 @@
                                 </div>
                             </div>
                             <div class="row mt-3">
-                                <div class="col-lg-2 offset-lg-1 force-align-center">
+                                <div class="col-lg-2 offset-lg-1 lp-align-center">
                                     <label>
                                         <cn>网关</cn>
                                         <en>Gateway</en>
@@ -111,7 +110,7 @@
                                 </div>
                             </div>
                             <div class="row mt-3">
-                                <div class="col-lg-2 offset-lg-1 force-align-center">
+                                <div class="col-lg-2 offset-lg-1 lp-align-center">
                                     <label>
                                         DNS
                                     </label>
@@ -121,7 +120,7 @@
                                 </div>
                             </div>
                             <div class="row mt-3">
-                                <div class="col-lg-2 offset-lg-1 force-align-center">
+                                <div class="col-lg-2 offset-lg-1 lp-align-center">
                                     <label>
                                         MAC
                                     </label>
@@ -140,7 +139,7 @@
                             <div class="row mt-4">
                                 <div class="col-lg-6 border-right">
                                     <div class="row mt-4">
-                                        <div class="col-lg-3 force-align-center">
+                                        <div class="col-lg-3 lp-align-center">
                                             <label>
                                                 <cn>启用</cn>
                                                 <en>Enable</en>
@@ -151,7 +150,7 @@
                                         </div>
                                     </div>
                                     <div class="row mt-3">
-                                        <div class="col-lg-3 force-align-center">
+                                        <div class="col-lg-3 lp-align-center">
                                             <label>
                                                 WIFI
                                             </label>
@@ -161,12 +160,12 @@
                                                 <select class="form-select" v-model="wifiConnectId">
                                                     <option v-for="(it,idx) in wifiList" :key="idx+10" :value="it.ssid">{{it.ssid}}</option>
                                                 </select>
-                                                <span class="input-group-text input-group-addon force-cursor-pointer" @click="refreshWifi"><i :class="['fa-solid fa-arrows-rotate',{'spin':wifiRefresh}]"></i></span>
+                                                <span class="input-group-text input-group-addon lp-cursor-pointer" @click="refreshWifi"><i :class="['fa-solid fa-arrows-rotate',{'spin':wifiRefresh}]"></i></span>
                                             </div>
                                         </div>
                                     </div>
                                     <div class="row mt-3">
-                                        <div class="col-lg-3 force-align-center">
+                                        <div class="col-lg-3 lp-align-center">
                                             <label>
                                                 <cn>密码</cn>
                                                 <en>Password</en>
@@ -175,12 +174,12 @@
                                         <div class="col-lg-8">
                                             <div class="input-group">
                                                 <input class="form-control" :type="!showPasswd.wifipwd ? 'password' : 'text'" v-model.trim.lazy="wifiPassword">
-                                                <span class="input-group-text input-group-addon force-cursor-pointer" @click="showPasswd.wifipwd = !showPasswd.wifipwd"><i :class="['fa-regular',{'fa-eye-slash':!showPasswd.wifipwd},{'fa-eye':showPasswd.wifipwd}]"></i></span>
+                                                <span class="input-group-text input-group-addon lp-cursor-pointer" @click="showPasswd.wifipwd = !showPasswd.wifipwd"><i :class="['fa-regular',{'fa-eye-slash':!showPasswd.wifipwd},{'fa-eye':showPasswd.wifipwd}]"></i></span>
                                             </div>
                                         </div>
                                     </div>
                                     <div class="row mt-4">
-                                        <div class="col-lg-3 force-align-center">
+                                        <div class="col-lg-3 lp-align-center">
                                             <label>
                                                 <cn>状态</cn>
                                                 <en>Status</en>
@@ -204,7 +203,7 @@
                                 </div>
                                 <div class="col-lg-6">
                                     <div class="row mt-4">
-                                        <div class="col-lg-3 force-align-center">
+                                        <div class="col-lg-3 lp-align-center">
                                             <label>
                                                 DHCP
                                             </label>
@@ -214,7 +213,7 @@
                                         </div>
                                     </div>
                                     <div class="row mt-3">
-                                        <div class="col-lg-3 force-align-center">
+                                        <div class="col-lg-3 lp-align-center">
                                             <label>
                                                 IP
                                             </label>
@@ -224,7 +223,7 @@
                                         </div>
                                     </div>
                                     <div class="row mt-3">
-                                        <div class="col-lg-3 force-align-center">
+                                        <div class="col-lg-3 lp-align-center">
                                             <label>
                                                 <cn>掩码</cn>
                                                 <en>Mask</en>
@@ -235,7 +234,7 @@
                                         </div>
                                     </div>
                                     <div class="row mt-3">
-                                        <div class="col-lg-3 force-align-center">
+                                        <div class="col-lg-3 lp-align-center">
                                             <label>
                                                 <cn>网关</cn>
                                                 <en>Gateway</en>
@@ -246,7 +245,7 @@
                                         </div>
                                     </div>
                                     <div class="row mt-3">
-                                        <div class="col-lg-3 force-align-center">
+                                        <div class="col-lg-3 lp-align-center">
                                             <label>
                                                 DNS
                                             </label>
@@ -265,7 +264,7 @@
                         </div>
                         <div v-else>
                             <div class="row mt-4">
-                                <div class="col-lg-2 offset-lg-1 force-align-center">
+                                <div class="col-lg-2 offset-lg-1 lp-align-center">
                                     <label>
                                         <cn>运营商</cn>
                                         <en>Operator</en>
@@ -276,7 +275,7 @@
                                 </div>
                             </div>
                             <div class="row mt-3">
-                                <div class="col-lg-2 offset-lg-1 force-align-center">
+                                <div class="col-lg-2 offset-lg-1 lp-align-center">
                                     <label>
                                         <cn>服务</cn>
                                         <en>Service</en>
@@ -287,7 +286,7 @@
                                 </div>
                             </div>
                             <div class="row mt-4">
-                                <div class="col-lg-2 offset-lg-1 force-align-center">
+                                <div class="col-lg-2 offset-lg-1 lp-align-center">
                                     <label>
                                         IP
                                     </label>
@@ -297,7 +296,7 @@
                                 </div>
                             </div>
                             <div class="row mt-3">
-                                <div class="col-lg-2 offset-lg-1 force-align-center">
+                                <div class="col-lg-2 offset-lg-1 lp-align-center">
                                     <label>
                                         <cn>掩码</cn>
                                         <en>Mask</en>
@@ -308,7 +307,7 @@
                                 </div>
                             </div>
                             <div class="row mt-3">
-                                <div class="col-lg-2 offset-lg-1 force-align-center">
+                                <div class="col-lg-2 offset-lg-1 lp-align-center">
                                     <label>
                                         <cn>网关</cn>
                                         <en>Gateway</en>
@@ -319,7 +318,7 @@
                                 </div>
                             </div>
                             <div class="row mt-3">
-                                <div class="col-lg-2 offset-lg-1 force-align-center">
+                                <div class="col-lg-2 offset-lg-1 lp-align-center">
                                     <label>
                                         DNS
                                     </label>
@@ -329,7 +328,7 @@
                                 </div>
                             </div>
                             <div class="row mt-3 mb-4">
-                                <div class="col-lg-2 offset-lg-1 force-align-center">
+                                <div class="col-lg-2 offset-lg-1 lp-align-center">
                                     <label>
                                         MAC
                                     </label>
@@ -355,7 +354,7 @@
                             <div class="card-body">
                                 <div class="row">
                                     <div class="row">
-                                        <div class="col-lg-2 offset-lg-1 force-align-center">
+                                        <div class="col-lg-2 offset-lg-1 lp-align-center">
                                             <label>
                                                 <cn>旧密码</cn>
                                                 <en>Current</en>
@@ -364,12 +363,12 @@
                                         <div class="col-lg-6">
                                             <div class="input-group">
                                                 <input class="form-control" :type="!showPasswd.oldpwd ? 'password' : 'text'" v-model.trim.lazy="userPasswd.oldpwd">
-                                                <span class="input-group-text input-group-addon force-cursor-pointer" @click="showPasswd.oldpwd = !showPasswd.oldpwd"><i :class="['fa-regular',{'fa-eye-slash':!showPasswd.oldpwd},{'fa-eye':showPasswd.oldpwd}]"></i></span>
+                                                <span class="input-group-text input-group-addon lp-cursor-pointer" @click="showPasswd.oldpwd = !showPasswd.oldpwd"><i :class="['fa-regular',{'fa-eye-slash':!showPasswd.oldpwd},{'fa-eye':showPasswd.oldpwd}]"></i></span>
                                             </div>
                                         </div>
                                     </div>
                                     <div class="row mt-3">
-                                        <div class="col-lg-2 offset-lg-1 force-align-center">
+                                        <div class="col-lg-2 offset-lg-1 lp-align-center">
                                             <label>
                                                 <label>
                                                     <cn>新密码</cn>
@@ -380,12 +379,12 @@
                                         <div class="col-lg-6">
                                             <div class="input-group">
                                                 <input class="form-control" :type="!showPasswd.newpwd ? 'password' : 'text'" v-model.trim.lazy="userPasswd.newpwd">
-                                                <span class="input-group-text input-group-addon force-cursor-pointer" @click="showPasswd.newpwd = !showPasswd.newpwd"><i :class="['fa-regular',{'fa-eye-slash':!showPasswd.newpwd},{'fa-eye':showPasswd.newpwd}]"></i></span>
+                                                <span class="input-group-text input-group-addon lp-cursor-pointer" @click="showPasswd.newpwd = !showPasswd.newpwd"><i :class="['fa-regular',{'fa-eye-slash':!showPasswd.newpwd},{'fa-eye':showPasswd.newpwd}]"></i></span>
                                             </div>
                                         </div>
                                     </div>
                                     <div class="row mt-3">
-                                        <div class="col-lg-2 offset-lg-1 force-align-center">
+                                        <div class="col-lg-2 offset-lg-1 lp-align-center">
                                             <label>
                                                 <cn>确认密码</cn>
                                                 <en>Confirm</en>
@@ -394,7 +393,7 @@
                                         <div class="col-lg-6">
                                             <div class="input-group">
                                                 <input class="form-control" :type="!showPasswd.confirm ? 'password' : 'text'" v-model.trim.lazy="userPasswd.confirm">
-                                                <span class="input-group-text input-group-addon force-cursor-pointer" @click="showPasswd.confirm = !showPasswd.confirm"><i :class="['fa-regular',{'fa-eye-slash':!showPasswd.confirm},{'fa-eye':showPasswd.confirm}]"></i></span>
+                                                <span class="input-group-text input-group-addon lp-cursor-pointer" @click="showPasswd.confirm = !showPasswd.confirm"><i :class="['fa-regular',{'fa-eye-slash':!showPasswd.confirm},{'fa-eye':showPasswd.confirm}]"></i></span>
                                             </div>
                                         </div>
                                     </div>
@@ -417,7 +416,7 @@
                             </div>
                             <div class="card-body py-4">
                                 <div class="row py-2">
-                                    <div class="col-lg-2 offset-lg-1 force-align-center">
+                                    <div class="col-lg-2 offset-lg-1 lp-align-center">
                                         <label>
                                             <cn>场景</cn>
                                             <en>Scene</en>
@@ -450,7 +449,7 @@
                     </div>
                     <div class="card-body py-4">
                         <div class="row">
-                            <div class="col-lg-2 offset-lg-1 force-align-center">
+                            <div class="col-lg-2 offset-lg-1 lp-align-center">
                                 <label>
                                     <cn>系统时间</cn>
                                     <en>system time</en>
@@ -464,7 +463,7 @@
                             </div>
                         </div>
                         <div class="row mt-3" v-if="Object.keys(ntpConf).length > 0">
-                            <div class="col-lg-2 offset-lg-1 force-align-center">
+                            <div class="col-lg-2 offset-lg-1 lp-align-center">
                                 <label>
                                     <cn>NTP同步</cn>
                                     <en>NTP sync</en>
@@ -478,7 +477,7 @@
                             </div>
                         </div>
                         <div class="row mt-3">
-                            <div class="col-lg-2 offset-lg-1 force-align-center">
+                            <div class="col-lg-2 offset-lg-1 lp-align-center">
                                 <label>
                                     <cn>时区设置</cn>
                                     <en>time zone</en>
@@ -504,7 +503,7 @@
                             </div>
                         </div>
                         <div class="row mt-3">
-                            <div class="col-lg-2 offset-lg-1 force-align-center">
+                            <div class="col-lg-2 offset-lg-1 lp-align-center">
                                 <label>
                                     <cn>维护时间</cn>
                                     <en>reboot time</en>
@@ -597,16 +596,16 @@
                         <hr>
                         <div>
                             <div class="row row-cols-4 row-cols-lg-4 px-5">
-                                <div class="force-align-center">
+                                <div class="lp-align-center">
                                     <bs-switch v-model="exportConfigs.config"></bs-switch>
                                 </div>
-                                <div class="force-align-center">
+                                <div class="lp-align-center">
                                     <bs-switch v-model="exportConfigs.defLays"></bs-switch>
                                 </div>
-                                <div class="force-align-center">
+                                <div class="lp-align-center">
                                     <bs-switch v-model="exportConfigs.push"></bs-switch>
                                 </div>
-                                <div class="force-align-center">
+                                <div class="lp-align-center">
                                     <bs-switch v-model="exportConfigs.passwd"></bs-switch>
                                 </div>
                             </div>
@@ -632,16 +631,16 @@
                         <hr>
                         <div>
                             <div class="row row-cols-4 row-cols-lg-4 px-5">
-                                <div class="force-align-center">
+                                <div class="lp-align-center">
                                     <bs-switch v-model="exportConfigs.record"></bs-switch>
                                 </div>
-                                <div class="force-align-center">
+                                <div class="lp-align-center">
                                     <bs-switch v-model="exportConfigs.port"></bs-switch>
                                 </div>
-                                <div class="force-align-center">
+                                <div class="lp-align-center">
                                     <bs-switch v-model="exportConfigs.cron"></bs-switch>
                                 </div>
-                                <div class="force-align-center">
+                                <div class="lp-align-center">
                                     <bs-switch v-model="exportConfigs.videoBuffer"></bs-switch>
                                 </div>
                             </div>
@@ -783,7 +782,7 @@
                                         <cn>授权码</cn>
                                         <en>Auth code</en>
                                     </div>
-                                    <div class="col-lg-3 force-align-center">
+                                    <div class="col-lg-3 lp-align-center">
                                         <input type="text" class="form-control" v-model.trim.lazy="helpCode" readonly disabled>
                                     </div>
                                     <div class="col-lg-6">
@@ -808,7 +807,7 @@
                                         <cn>服务地址</cn>
                                         <en>Server</en>
                                     </div>
-                                    <div class="col-lg-5 force-align-center" v-if="Object.keys(netManagerConf).length > 0">
+                                    <div class="col-lg-5 lp-align-center" v-if="Object.keys(netManagerConf).length > 0">
                                         <input type="text" class="form-control" v-model.trim.lazy="netManagerConf.onlineServer">
                                     </div>
                                     <div class="col-lg-4">
@@ -829,7 +828,7 @@
                     </div>
                     <div class="card-body" v-if="Object.keys(versionConf).length > 0">
                         <div class="row mt-1">
-                            <div class="col-lg-2 offset-lg-1 force-align-center">
+                            <div class="col-lg-2 offset-lg-1 lp-align-center">
                                 <label>
                                     <cn>应用版本</cn>
                                     <en>App version</en>
@@ -840,7 +839,7 @@
                             </div>
                         </div>
                         <div class="row mt-3">
-                            <div class="col-lg-2 offset-lg-1 force-align-center">
+                            <div class="col-lg-2 offset-lg-1 lp-align-center">
                                 <label>
                                     <cn>SDK版本</cn>
                                     <en>SDK version</en>
@@ -851,7 +850,7 @@
                             </div>
                         </div>
                         <div class="row mt-3">
-                            <div class="col-lg-2 offset-lg-1 force-align-center">
+                            <div class="col-lg-2 offset-lg-1 lp-align-center">
                                 <label>
                                     <cn>系统版本</cn>
                                     <en>Sys version</en>
@@ -863,7 +862,7 @@
                         </div>
                         <hr class="my-4">
                         <div class="row mt-3">
-                            <div class="col-lg-2 offset-lg-1 force-align-center">
+                            <div class="col-lg-2 offset-lg-1 lp-align-center">
                                 <label>
                                     <cn>上传升级</cn>
                                     <en>upload packet</en>
@@ -875,7 +874,7 @@
                             </div>
                         </div>
                         <div class="row mt-1 mb-4">
-                            <div class="col-lg-2 offset-lg-1 force-align-center">
+                            <div class="col-lg-2 offset-lg-1 lp-align-center">
                                 <label>
                                     <cn>在线升级</cn>
                                     <en>online update</en>
@@ -1016,7 +1015,11 @@
             
             watchEffect(()=>{
                 if(Object.keys(netManagerConf).length > 0) {
-                    if(state.wifiHandler.value && Object.keys(state.wifiPopover).length === 0) {
+                    if(state.wifiHandler.value) {
+                        if(Object.keys(state.wifiPopover).length > 0) {
+                            state.wifiPopover.dispose();
+                            state.wifiPopover = {};
+                        }
                         state.wifiPopover = popover(state.wifiHandler.value, {
                             placement:"bottom",
                             trigger:"hover",
@@ -1029,7 +1032,11 @@
                         }
                     }
 
-                    if(state.antenanHandler.value && Object.keys(state.antenanPopover).length === 0) {
+                    if(state.antenanHandler.value) {
+                        if(Object.keys(state.antenanPopover).length > 0) {
+                            state.antenanPopover.dispose();
+                            state.antenanPopover = {};
+                        }
                         state.antenanPopover = popover(state.antenanHandler.value, {
                             placement:"bottom",
                             trigger:"hover",
@@ -1163,7 +1170,7 @@
             const syncTimeFromPc = () => {
                 let time1 = formatDate("yyyy/MM/dd/hh/mm/ss");
                 let time2 = formatDate("yyyy-MM-dd hh:mm:ss");
-                func("/link/mgr/system/setSystemTime",{time1:time1,time2:time2}).then((data)=>{
+                func("/mgr/system/setSystemTime",{time1:time1,time2:time2}).then((data)=>{
                     if(data.status === "success") {
                         alertMsg('<cn>时间同步成功</cn><en>system time synchronization successful!</en>', 'success');
                         state.sysTime.value = time2;
@@ -1181,9 +1188,9 @@
 
             const saveSysConf = () => {
                 Promise.all([
-                    func("/link/mgr/conf/updateNtpConf", ntpConf),
-                    func("/link/mgr/conf/updateTimezoneConf", timezoneConf),
-                    func("/link/mgr/system/setSystemCrontab", { day: state.cronDay.value, time: state.cronTime.value }),
+                    func("/mgr/conf/updateNtpConf", ntpConf),
+                    func("/mgr/conf/updateTimezoneConf", timezoneConf),
+                    func("/mgr/system/setSystemCrontab", { day: state.cronDay.value, time: state.cronTime.value }),
                 ]).then((results) => {
                     const [data1, data2, data3] = results;
                     if(data1.status==="success" && data2.status==="success" && data3.status==="success")
@@ -1265,14 +1272,14 @@
 
             const startHelp = () => {
                 state.helpCode.value = Math.floor(Math.random()*1000);
-                func("/link/mgr/system/startHelp",{helpCode: state.helpCode.value}).then((data)=>{
+                func("/mgr/system/startHelp",{helpCode: state.helpCode.value}).then((data)=>{
                     if(data.status === "success")
                         alertMsg('<cn>连接成功，请向客服提供授权码以便控制您的编码器。</cn><en>Connect success, please provide auth code to customer service to control your encoder!</en>', 'success');
                 })
             }
 
             const stopHelp = () => {
-                func("/link/mgr/system/stopHelp").then((data)=>{
+                func("/mgr/system/stopHelp").then((data)=>{
                     if(data.status === "success") {
                         state.helpCode.value = "";
                         alertMsg('<cn>已断开连接</cn><en>Disconnect success</en>', 'success');
@@ -1281,7 +1288,7 @@
             }
 
             const systemNetTest = () => {
-                // func("/link/mgr/system/systemNetTest").then(data => {
+                // func("/mgr/system/systemNetTest").then(data => {
                 //     const str = data.data.join();
                 //     if(str === "")
                 //         alertMsg('<cn>域名解析超时</cn><en>DNS timeout</en>!', 'error');
@@ -1344,7 +1351,7 @@
             }
 
             const getSysAbortTime = () => {
-                func("/link/mgr/system/getSystemTime").then(result => {
+                func("/mgr/system/getSystemTime").then(result => {
                     state.sysTime.value = result.data;
                     setInterval(()=>{
                         let currentTime = new Date(state.sysTime.value);
@@ -1359,7 +1366,7 @@
                     },1000);
                 });
 
-                func("/link/mgr/system/getSystemCrontab").then(result => {
+                func("/mgr/system/getSystemCrontab").then(result => {
                     if ( result.data === null || result.data.split( " " ).length !== 6 ) {
                         state.cronDay.value = "x";
                         state.cronTime.value = "0";

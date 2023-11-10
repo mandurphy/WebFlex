@@ -46,7 +46,7 @@
                                 <label for="password" class="form-label"><cn>密码</cn><en>Password</en></label>
                                 <div class="input-group">
                                     <input v-model.trim.lazy="password" :type="!showPasswd ? 'password' : 'text'" class="form-control border-end-0  border-3" name="password" placeholder="Enter Password">
-                                    <div class="input-group-text bg-transparent  border-3 force-cursor-pointer" @click="showPasswd = !showPasswd"><i :class="['fa-regular',{'fa-eye-slash':showPasswd},{'fa-eye ':!showPasswd}]"></i></div>
+                                    <div class="input-group-text bg-transparent  border-3 lp-cursor-pointer" @click="showPasswd = !showPasswd"><i :class="['fa-regular',{'fa-eye-slash':showPasswd},{'fa-eye ':!showPasswd}]"></i></div>
                                 </div>
                             </div>
                             <div class="col-md-6">
