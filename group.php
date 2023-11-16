@@ -18,7 +18,48 @@
                             </div>
                         </div>
                         <div class="card-body">
-                            <table class="table table-striped">
+                            <div class="row">
+                                <div class="col-lg-8">
+                                    <div class="row">
+                                        <div class="col-lg-2 lp-align-center">
+                                            <strong>
+                                                <cn>本机分组ID</cn>
+                                                <en>Group ID</en>
+                                            </strong>
+                                        </div>
+                                        <div class="col-lg-3">
+                                            <select v-if="Object.keys(groupConf).length > 0" class="form-select" v-model.number="groupConf.groupId">
+                                                <option value="0">0</option>
+                                                <option value="1">1</option>
+                                                <option value="2">2</option>
+                                                <option value="3">3</option>
+                                                <option value="4">4</option>
+                                                <option value="5">5</option>
+                                                <option value="6">6</option>
+                                                <option value="7">7</option>
+                                                <option value="8">8</option>
+                                                <option value="9">9</option>
+                                            </select>
+                                        </div>
+                                        <div class="col-lg-7 p-0">
+                                            <button type="button" class="btn btn-primary border-3 me-2" @click="updateGroupConf">
+                                                <cn>保存</cn>
+                                                <en>Save</en>
+                                            </button>
+                                            <button type="button" class="btn btn-primary border-3 me-2" @click="refreshGroupList">
+                                                <cn>同分组搜索</cn>
+                                                <en>Search again</en>
+                                            </button>
+                                            <button type="button" class="btn btn-primary border-3" @click="refreshGroupList">
+                                                <cn>同机型搜索</cn>
+                                                <en>Search again</en>
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <hr class="mt-3">
+                            <table class="table table-striped mt-2">
                                 <thead>
                                     <tr>
                                         <th class="text-center">
@@ -86,31 +127,6 @@
                                         </td>
                                 </tbody>
                             </table>
-                            <div class="row">
-                                <div class="col-lg-5">
-                                    <div class="row row-cols-3">
-                                        <div class="col-lg-2 lp-align-center">
-                                            <strong>
-                                                <cn>分组ID</cn>
-                                                <en>Group ID</en>
-                                            </strong>
-                                        </div>
-                                        <div class="col-5">
-                                            <input class="form-control">
-                                        </div>
-                                        <div class="col-5 p-0">
-                                            <button type="button" class="btn btn-primary border-3 me-2">
-                                                <cn>保存</cn>
-                                                <en>Save</en>
-                                            </button>
-                                            <button type="button" class="btn btn-primary border-3">
-                                                <cn>重新搜索</cn>
-                                                <en>Search again</en>
-                                            </button>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
                         </div>
                     </div>
                 </div>
@@ -121,7 +137,7 @@
 
 <script type="module">
     import { rpc,alertMsg,splitArray } from "./assets/js/lp.utils.js";
-    import { useDefaultConf } from "./assets/js/vue.hooks.js";
+    import { useGroupConf } from "./assets/js/vue.hooks.js";
     import { ignoreCustomElementPlugin,bootstrapSwitchComponent } from "./assets/js/vue.helper.js"
     import vue from "./assets/js/vue.build.js";
 
@@ -131,26 +147,53 @@
             "bs-switch" : bootstrapSwitchComponent
         },
         setup(props,context) {
-            
-            const { defaultConf,updateDefaultConf } = useDefaultConf();
+
+            const { groupConf,updateGroupConf } = useGroupConf();
 
             const state = {
-                groupList: reactive([])
+                groupList: reactive([]),
+                intervalId: ref(-1),
             }
 
-            const refreshGroupList = () => {
+            const getGroupList = () => {
                 rpc("group.getList").then( data => {
                     state.groupList.splice(0);
                     state.groupList.push(...data);
-                    console.log(data);
                 } );
+                setTimeout(getGroupList,3000);
+            }
+
+            const refreshGroupList = () => {
+                rpc("group.clearMember")
+                        .then(result => {
+                            console.log(result);
+                            return new Promise((resolve,reject) => {
+                                if(result)
+                                    resolve();
+                                else
+                                    reject();
+                            });
+                        })
+                        .then(()=>{
+                            clearInterval(state.intervalId.value);
+                            let count = 0;
+                            state.intervalId.value = setInterval(()=>{
+                                rpc("group.getList").then( data => {
+                                    count++;
+                                    state.groupList.splice(0);
+                                    state.groupList.push(...data);
+                                    if(count === 5)
+                                        clearInterval(state.intervalId.value);
+                                } );
+                            },1000);
+                        });
             }
 
             onMounted(()=>{
                 refreshGroupList();
             })
             
-            return {...state,defaultConf,updateDefaultConf,splitArray}
+            return {...state,splitArray,groupConf,updateGroupConf,refreshGroupList}
         }
     });
     app.use(ignoreCustomElementPlugin);

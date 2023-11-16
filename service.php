@@ -25,12 +25,12 @@
                                 </label>
                             </div>
                             <div class="col-lg-8">
-                                <textarea  class="form-control" name="config" v-model="rtmpConf"></textarea>
+                                <textarea  class="form-control" name="config" v-model="rtmpConf" style="min-height: 250px"></textarea>
                             </div>
                         </div>
                         <div class="row mt-4">
                             <div class="col-lg-12 text-center">
-                                <button type="button" class="btn border-3 btn-primary px-4" @click="">
+                                <button type="button" class="btn border-3 btn-primary px-4" @click="updateRtmpConf">
                                     <cn>保存</cn>
                                     <en>Save</en>
                                 </button>
@@ -55,12 +55,12 @@
                                 </label>
                             </div>
                             <div class="col-lg-8">
-                                <textarea  class="form-control" name="config" v-model="ndiConf"></textarea>
+                                <textarea  class="form-control" name="config" v-model="ndiConf" style="min-height: 250px"></textarea>
                             </div>
                         </div>
                         <div class="row mt-4">
                             <div class="col-lg-12 text-center">
-                                <button type="button" class="btn border-3 btn-primary px-4" @click="">
+                                <button type="button" class="btn border-3 btn-primary px-4" @click="updateNdiConf">
                                     <cn>保存</cn>
                                     <en>Save</en>
                                 </button>
@@ -96,12 +96,12 @@
                                 </label>
                             </div>
                             <div class="col-lg-8">
-                                <textarea  class="form-control" name="config" v-model="slsConf"></textarea>
+                                <textarea  class="form-control" name="config" v-model="slsConf" style="min-height: 250px"></textarea>
                             </div>
                         </div>
                         <div class="row mt-4">
                             <div class="col-lg-12 text-center">
-                                <button type="button" class="btn border-3 btn-primary px-4" @click="">
+                                <button type="button" class="btn border-3 btn-primary px-4" @click="saveSrtConf">
                                     <cn>保存</cn>
                                     <en>Save</en>
                                 </button>
@@ -116,9 +116,9 @@
 <?php include ("./public/foot.inc") ?>
 
 <script type="module">
-    import { rpc4,alertMsg } from "./assets/js/lp.utils.js";
+    import { alertMsg } from "./assets/js/lp.utils.js";
     import { useServiceConf,useSlsConf,useRtmpConf,useNdiConf } from "./assets/js/vue.hooks.js";
-    import { ignoreCustomElementPlugin,bootstrapSwitchComponent } from "./assets/js/vue.helper.js"
+    import { ignoreCustomElementPlugin,bootstrapSwitchComponent } from "./assets/js/vue.helper.js";
     import vue from "./assets/js/vue.build.js";
 
     const {createApp,ref,reactive,watch,watchEffect,computed,onMounted} = vue;
@@ -127,46 +127,26 @@
             "bs-switch" : bootstrapSwitchComponent
         },
         setup(props,context) {
-            
-            const { serviceConf } = useServiceConf();
-            const { slsConf } = useSlsConf();
-            const { rtmpConf } = useRtmpConf();
-            const { ndiConf } = useNdiConf();
-            
-            const saveUartConf = () => {
-                // rpc( "uart.update", [ JSON.stringify( uartConf, null, 2 ) ]).then(data => {
-                //     if ( typeof ( data.error ) != "undefined" )
-                //         alertMsg('<cn>保存设置失败</cn><en>Save config failed!</en>', 'error');
-                //     else
-                //         alertMsg('<cn>保存设置成功</cn><en>Save config success!</en>', 'success');
-                // })
-            }
-            
-            const saveButtonConf = () => {
-                // rpc6( "gpio.update", [ JSON.stringify( buttonConf, null, 2 ) ]).then(data => {
-                //     if ( typeof ( data.error ) != "undefined" )
-                //         alertMsg('<cn>保存设置失败</cn><en>Save config failed!</en>', 'error');
-                //     else
-                //         alertMsg('<cn>保存设置成功</cn><en>Save config success!</en>', 'success');
-                // })
-            }
-            
-            const handleMqttState = () => {
-                rpc4("mqtt.getMqttState").then(data => {
-                    if(data.connected)
-                        state.mqttConnect.value = '<cn>已连接</cn><en>connected</en>';
+
+            const { serviceConf,updateServiceConf } = useServiceConf();
+            const { slsConf,updateSlsConf } = useSlsConf();
+            const { rtmpConf,updateRtmpConf } = useRtmpConf();
+            const { ndiConf,updateNdiConf } = useNdiConf();
+
+            const saveSrtConf = () => {
+                Promise.all([
+                    updateServiceConf("noTip"),
+                    updateSlsConf("noTip")
+                ]).then((results) => {
+                    const [data1, data2] = results;
+                    if(data1.status==="success" && data2.status==="success")
+                        alertMsg('<cn>保存设置成功</cn><en>Save config successfully!</en>', 'success');
                     else
-                        state.mqttConnect.value = '<cn>未连接</cn><en>not connected</en>';
+                        alertMsg('<cn>保存设置失败</cn><en>Save config failed!</en>', 'error');
                 });
-                setTimeout(handleMqttState,2000);
             }
             
-            onMounted(()=>{
-                handleMqttState();
-            })
-            
-            
-            return {serviceConf,slsConf,rtmpConf,ndiConf}
+            return {serviceConf,slsConf,rtmpConf,updateRtmpConf,ndiConf,updateNdiConf,saveSrtConf}
         }
     });
     app.use(ignoreCustomElementPlugin);

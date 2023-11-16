@@ -1,5 +1,5 @@
 
-import {queryData, checkFileExists, func, alertMsg, rpc, rpc2, rpc3, deepCopy, clearReactiveObject,clearReactiveArray,request} from "./lp.utils.js";
+import {queryData, checkFileExists, func, alertMsg, rpc, rpc2, rpc3,rpc4, deepCopy, clearReactiveObject,clearReactiveArray,request} from "./lp.utils.js";
 import vue from "./vue.build.js";
 const { ref,reactive,onMounted } = vue;
 
@@ -74,14 +74,14 @@ export const useOverlayConf = () => {
         })
     }
     const updateOverlayConf = (tip = "tip") => {
-        return new Promise((resolver,reject)=>{
+        return new Promise((resolve,reject)=>{
             rpc("enc.updateOverlay", [ JSON.stringify( overlayConf, null, 2 ) ]).then(data => {
                 if ( typeof ( data.error ) != "undefined" ) {
                     reject();
                     if(tip !== "noTip")
                         alertMsg('<cn>保存设置失败</cn><en>Save config failed!</en>', 'error');
                 } else {
-                    resolver();
+                    resolve();
                     if(tip !== "noTip")
                         alertMsg('<cn>保存设置成功</cn><en>Save config success!</en>', 'success');
                 }
@@ -374,9 +374,7 @@ export const useIntercomConf = () => {
             Object.assign(intercomConf,conf)
         })
     }
-    onMounted(()=>{
-        handleIntercomConf();
-    })
+    onMounted(handleIntercomConf);
     return { intercomConf }
 }
 
@@ -387,8 +385,23 @@ export const useMqttConf = () => {
             Object.assign(mqttConf,conf)
         })
     }
+    const updateMqttConf = (tip='tip') => {
+        return new Promise((resolve,reject) => {
+            rpc4( "mqtt.update", [mqttConf]).then( data => {
+                if ( typeof ( data.error ) != "undefined" ) {
+                    reject();
+                    if(tip !== "noTip")
+                        alertMsg('<cn>保存设置失败</cn><en>Save config failed!</en>', 'error');
+                } else {
+                    resolve();
+                    if(tip !== "noTip")
+                        alertMsg('<cn>保存设置成功</cn><en>Save config success!</en>', 'success');
+                }
+            } );
+        })
+    }
     onMounted(handleMqttConf);
-    return { mqttConf }
+    return { mqttConf,updateMqttConf }
 }
 
 export const useFrpEnableConf = () => {
@@ -398,10 +411,23 @@ export const useFrpEnableConf = () => {
             frpEnableConf.value = conf;
         })
     }
-    onMounted(()=>{
-        handleFrpEnableConf();
-    })
-    return { frpEnableConf }
+    const updateFrpEnableConf = (tip='tip') => {
+        return new Promise((resolve,reject) => {
+            func("/mgr/conf/updateFrpEnableConf",frpEnableConf.value.toString()).then(data => {
+                if ( data.status !== "success" ) {
+                    reject(data);
+                    if(tip !== "noTip")
+                        alertMsg('<cn>保存设置失败</cn><en>Save config failed!</en>', 'error');
+                } else {
+                    resolve(data);
+                    if(tip !== "noTip")
+                        alertMsg('<cn>保存设置成功</cn><en>Save config successfully!</en>', 'success');
+                }
+            })
+        })
+    }
+    onMounted(handleFrpEnableConf);
+    return { frpEnableConf,updateFrpEnableConf }
 }
 
 export const useFrpcConf = () => {
@@ -411,21 +437,50 @@ export const useFrpcConf = () => {
             frpcConf.value = conf;
         })
     }
+    const updateFrpcConf = (tip='tip') => {
+        return new Promise((resolve,reject) => {
+            func("/mgr/conf/updateFrpcConf",frpcConf.value).then(data => {
+                if ( data.status !== "success" ) {
+                    reject(data);
+                    if(tip !== "noTip")
+                        alertMsg('<cn>保存设置失败</cn><en>Save config failed!</en>', 'error');
+                } else {
+                    resolve(data);
+                    if(tip !== "noTip")
+                        alertMsg('<cn>保存设置成功</cn><en>Save config successfully!</en>', 'success');
+                }
+            })
+        })
+    }
     onMounted(handleFrpcConf);
-    return { frpcConf }
+    return { frpcConf,updateFrpcConf }
 }
 
 export const useServiceConf = () => {
-    const serviceConf= ref("");
+    const serviceConf= reactive({});
     const handleServiceConf = () => {
         queryData("config/service.json").then((conf)=>{
-            serviceConf.value = conf;
+            clearReactiveObject(serviceConf);
+            Object.assign(serviceConf,conf);
         })
     }
-    onMounted(()=>{
-        handleServiceConf();
-    })
-    return { serviceConf }
+    const updateServiceConf = (tip='tip') => {
+        return new Promise((resolve,reject) => {
+            func("/mgr/conf/updateServiceConf",serviceConf).then(data => {
+                if ( data.status !== "success" ) {
+                    reject(data);
+                    if(tip !== "noTip")
+                        alertMsg('<cn>保存设置失败</cn><en>Save config failed!</en>', 'error');
+                } else {
+                    resolve(data);
+                    if(tip !== "noTip")
+                        alertMsg('<cn>保存设置成功</cn><en>Save config successfully!</en>', 'success');
+                }
+            })
+        })
+    }
+    onMounted(handleServiceConf);
+    return { serviceConf,updateServiceConf }
 }
 
 export const useSlsConf = () => {
@@ -435,8 +490,23 @@ export const useSlsConf = () => {
             slsConf.value = conf;
         })
     }
+    const updateSlsConf = (tip='tip') => {
+        return new Promise((resolve,reject) => {
+            func("/mgr/conf/updateSlsConf",slsConf.value).then(data => {
+                if ( data.status !== "success" ) {
+                    reject(data);
+                    if(tip !== "noTip")
+                        alertMsg('<cn>保存设置失败</cn><en>Save config failed!</en>', 'error');
+                } else {
+                    resolve(data);
+                    if(tip !== "noTip")
+                        alertMsg('<cn>保存设置成功</cn><en>Save config successfully!</en>', 'success');
+                }
+            })
+        })
+    }
     onMounted(handleSlsConf);
-    return { slsConf }
+    return { slsConf,updateSlsConf }
 }
 
 export const useRtmpConf = () => {
@@ -446,21 +516,49 @@ export const useRtmpConf = () => {
             rtmpConf.value = conf;
         })
     }
-    onMounted(()=>{
-        handleRtmpConf();
-    })
-    return { rtmpConf }
+    const updateRtmpConf = (tip = 'tip') => {
+        return new Promise((resolve,reject) => {
+            func("/mgr/conf/updateRtmpConf",rtmpConf.value).then(data => {
+                if ( data.status !== "success" ) {
+                    reject();
+                    if(tip !== "noTip")
+                        alertMsg('<cn>保存设置失败</cn><en>Save config failed!</en>', 'error');
+                } else {
+                    resolve();
+                    if(tip !== "noTip")
+                        alertMsg('<cn>保存设置成功</cn><en>Save config successfully!</en>', 'success');
+                }
+            })
+        })
+    }
+    onMounted(handleRtmpConf);
+    return { rtmpConf,updateRtmpConf }
 }
 
 export const useNdiConf = () => {
     const ndiConf= ref("");
     const handleNdiConf = () => {
         queryData("config/ndi.json").then((conf)=>{
-            ndiConf.value = JSON.stringify(conf,null,2);
+            ndiConf.value = JSON.stringify(conf,null,4);
+        })
+    }
+    const updateNdiConf = (tip = 'tip') => {
+        return new Promise((resolve,reject) => {
+            func("/mgr/conf/updateNdiConf",ndiConf.value).then(data => {
+                if ( data.status !== "success" ) {
+                    reject();
+                    if(tip !== "noTip")
+                        alertMsg('<cn>保存设置失败,格式错误</cn><en>Failed to save, format error!</en>', 'error');
+                } else {
+                    resolve();
+                    if(tip !== "noTip")
+                        alertMsg('<cn>保存设置成功</cn><en>Save config successfully!</en>', 'success');
+                }
+            })
         })
     }
     onMounted(handleNdiConf);
-    return { ndiConf }
+    return { ndiConf,updateNdiConf }
 }
 
 export const useSsidConf = () => {
@@ -514,7 +612,7 @@ export const useRecordConf = () => {
         })
     }
     const updateRecordConf = (tip = "tip") => {
-        return new Promise((resolver,reject) => {
+        return new Promise((resolve,reject) => {
             rpc("rec.update", [JSON.stringify(recordConf, null, 2)]).then(data => {
                 if(tip !== "noTip") {
                     if ( typeof ( data.error ) !== "undefined" )
@@ -531,6 +629,19 @@ export const useRecordConf = () => {
     return { recordConf,handleRecordConf,updateRecordConf }
 }
 
+export const useRecordFiles = () => {
+    const recordFiles = reactive({});
+    const handleRecordFiles = () => {
+        func("/mgr/root/getRecordFiles").then(conf => {
+            console.log(conf.data);
+            clearReactiveObject(recordFiles);
+            Object.assign(recordFiles,conf.data);
+        })
+    }
+    onMounted(handleRecordFiles);
+    return { recordFiles,handleRecordFiles }
+}
+
 export const useGb28181Conf = () => {
     const gb28181Conf = reactive({});
     const handleGb28181Conf = () => {
@@ -540,14 +651,14 @@ export const useGb28181Conf = () => {
     }
 
     const updateGb28181Conf = (tip = "tip") => {
-        return new Promise((resolver,reject) => {
+        return new Promise((resolve,reject) => {
             rpc( "gb28181.update", [JSON.stringify( gb28181Conf, null, 2 ) ]).then( data => {
                 if ( typeof ( data.error ) != "undefined" ) {
                     reject();
                     if(tip !== "noTip")
                         alertMsg('<cn>保存设置失败</cn><en>Save config failed!</en>', 'error');
                 } else {
-                    resolver();
+                    resolve();
                     if(tip !== "noTip")
                         alertMsg('<cn>保存设置成功</cn><en>Save config successfully!</en>', 'success');
                 }
@@ -568,14 +679,14 @@ export const useRoiConf = () => {
     }
 
     const updateRoiConf = (tip = "tip") => {
-        return new Promise((resolver,reject) => {
+        return new Promise((resolve,reject) => {
             rpc( "enc.updateRoi", [JSON.stringify( roiConf, null, 2 ) ]).then( data => {
                 if ( typeof ( data.error ) != "undefined" ) {
                     reject();
                     if(tip !== "noTip")
                         alertMsg('<cn>保存设置失败</cn><en>Save config failed!</en>', 'error');
                 } else {
-                    resolver();
+                    resolve();
                     if(tip !== "noTip")
                         alertMsg('<cn>保存设置成功</cn><en>Save config successfully!</en>', 'success');
                 }
@@ -596,14 +707,14 @@ export const useSyncConf = () => {
     }
 
     const updateSyncConf = (tip = "tip") => {
-        return new Promise((resolver,reject) => {
+        return new Promise((resolve,reject) => {
             rpc("sync.update", [ syncConf ]).then( data => {
                 if ( typeof ( data.error ) != "undefined" ) {
                     reject();
                     if(tip !== "noTip")
                         alertMsg('<cn>保存设置失败</cn><en>Save config failed!</en>', 'error');
                 } else {
-                    resolver();
+                    resolve();
                     if(tip !== "noTip")
                         alertMsg('<cn>保存设置成功</cn><en>Save config successfully!</en>', 'success');
                 }
@@ -657,6 +768,7 @@ export const useDiskConf = () => {
     const diskConf = reactive({});
     const handleDiskConf = () => {
         queryData("config/misc/disk.json").then(conf => {
+            clearReactiveObject(diskConf);
             Object.assign(diskConf,conf)
         })
     }
@@ -672,7 +784,37 @@ export const useDiskConf = () => {
         });
     }
     onMounted(handleDiskConf);
-    return { diskConf,updateDiskConf }
+    return { diskConf,handleDiskConf,updateDiskConf }
+}
+
+export const useGroupConf = () => {
+    const groupConf = reactive({});
+    const handleGroupConf = () => {
+        queryData("config/group.json").then(conf => {
+            clearReactiveObject(groupConf);
+            Object.assign(groupConf,conf);
+        })
+    }
+
+    const updateGroupConf = (tip = "tip") => {
+        return new Promise(async (resolve,reject)=>{
+            rpc("group.update", [groupConf]).then (data => {
+                if (!data) {
+                    reject();
+                    if(tip !== "noTip")
+                        alertMsg('<cn>保存设置失败</cn><en>Save config failed!</en>', 'error');
+                } else {
+                    resolve();
+                    if(tip !== "noTip")
+                        alertMsg('<cn>保存设置成功</cn><en>Save config successfully!</en>', 'success');
+                }
+            } );
+        });
+
+    }
+
+    onMounted(handleGroupConf);
+    return { groupConf,updateGroupConf }
 }
 
 

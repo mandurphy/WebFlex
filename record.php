@@ -18,16 +18,7 @@
                                 <en>Record Config</en>
                             </div>
                         </div>
-                        <div class="flex-grow-0 pe-2 pt-2">
-                            <i class="fa-solid fa-gear fa-lg lp-cursor-pointer"></i>
-                        </div>
-                        <div class="flex-grow-0 pe-2 pt-2">
-                            <i class="fa-solid fa-gear fa-lg lp-cursor-pointer"></i>
-                        </div>
-                        <div class="flex-grow-0 pe-2 pt-2">
-                            <i class="fa-solid fa-gear fa-lg lp-cursor-pointer"></i>
-                        </div>
-                        <div class="flex-grow-0 pe-2 pt-2">
+                        <div class="flex-grow-0 pe-2 pt-2" @click="setRecordOption">
                             <i class="fa-solid fa-gear fa-lg lp-cursor-pointer"></i>
                         </div>
                     </div>
@@ -229,33 +220,113 @@
                     </div>
 
                     <div class="tab-pane fade" id="tab2" role="tabpanel">
+                        <div class="row">
+                            <div class="col-lg-12"></div>
+                        </div>
+                        <div class="row" v-for="(dir,index) in Object.keys(recordFiles)" :key="index">
+                            <div class="col-lg-12">
+                                <div class="card">
+                                    <div class="card-header rec-file-title py-2 d-flex">
+                                        <div class="flex-grow-1 text-center font-20">
+                                            <span>{{dir}}</span>
+                                        </div>
+                                        <div class="flex-grow-0 pe-2 pt-2">
+                                            <i class="fa-solid fa-trash-can fa-lg lp-cursor-pointer" @click="delRecordFileByName(dir)"></i>
+                                        </div>
+                                    </div>
+                                    <div class="card-body">
+                                        <div class="row row-cols-2 row-cols-lg-5 g-3">
+                                            <div v-for="(item,idx) in Object.keys(recordFiles[dir])" :key="idx*100" class="col">
+                                                <div class="card">
+                                                    <div class="card-header bg-transparent font-14 d-flex">
+                                                        <div class="flex-grow-1 text-center">
+                                                            <span class="ms-5">{{handleChnNameById(item)}}</span>
+                                                        </div>
+                                                        <div v-if="handleMp4Array(dir,item).length" class="flex-grow-0 lp-cursor-pointer" @click="showVideoPlayer(dir,item)">
+                                                            <i class="fa-regular fa-circle-play font-16"></i>
+                                                        </div>
+                                                        <div class="flex-grow-0 ms-2 lp-cursor-pointer">
+                                                            <div class="dropdown ms-auto">
+                                                                <div type="button" class="btn-option dropdown-toggle dropdown-toggle-nocaret cursor-pointer" data-bs-toggle="dropdown">
+                                                                    <i class="fa-regular fa-circle-down font-16"></i>
+                                                                </div>
+                                                                <ul class="dropdown-menu">
+                                                                    <li v-for="(itm,ix) in handleRecordFileFormat(dir,item)" class="text-center" @click="onDownloadRecordFile(dir,item,itm)">
+                                                                        <a class="dropdown-item" href="javascript:;">{{itm}}</a>
+                                                                    </li>
+                                                                </ul>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="card-body">
+                                                        <div class="row">
+                                                            <div class="col-lg-12">
+                                                                <img :src="makeImgUrl(dir,item)" class="card-img-top">
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
+        <player-modal :modal-title="playerModalTitle" :modal-show="showPlayerModal" :modal-size="'modal-lg'" :had-footer="playerModalFooter"
+                      :confirm-btn-name="'上一分段&Previous Fragment'" :cancel-btn-name="'下一分段&Next Fragment'">
+            <video-player :url="playerUrl"></video-player>
+        </player-modal>
+        <setting-modal :modal-title="'分段设置&Fragment Setting'" :modal-show="showSettingModal"
+                      :confirm-btn-name="'保存&Save'" :cancel-btn-name="'取消&Cancel'" @confirm-btn-click="saveFragmentSetting">
+            <div class="row">
+                <div class="col-lg-3 offset-lg-1 lp-align-center">
+                    <cn>分段大小 (GB)</cn>
+                    <en>Fragment size(GB)</en>
+                </div>
+                <div class="col-lg-4">
+                    <input type="text" class="form-control disabled"  disabled readonly v-model.number.trim.lazy="handleFragmentConf.segmentSize">
+                </div>
+                <div class="col-lg-3 lp-align-center">
+                    <bs-switch v-model="handleFragmentConf.segmentSizeEnable"></bs-switch>
+                </div>
+            </div>
+        </setting-modal>
     </main>
 </div>
 <?php include ("./public/foot.inc") ?>
 
 <script type="module">
-    import { rpc,func,alertMsg } from "./assets/js/lp.utils.js";
-    import { useDefaultConf,useRecordConf } from "./assets/js/vue.hooks.js";
-    import { ignoreCustomElementPlugin,bootstrapSwitchComponent } from "./assets/js/vue.helper.js"
+    import {rpc, func, alertMsg, confirm} from "./assets/js/lp.utils.js";
+    import { useDefaultConf,useRecordConf,useRecordFiles } from "./assets/js/vue.hooks.js";
+    import { ignoreCustomElementPlugin,bootstrapSwitchComponent,customModalComponent,videoPlayerComponent } from "./assets/js/vue.helper.js"
     import vue from "./assets/js/vue.build.js";
 
     const {createApp,ref,reactive,watchEffect,computed,onMounted} = vue;
     const app = createApp({
         components:{
-            "bs-switch" : bootstrapSwitchComponent
+            "bs-switch" : bootstrapSwitchComponent,
+            "player-modal": customModalComponent,
+            "setting-modal": customModalComponent,
+            "video-player": videoPlayerComponent,
         },
         setup: function (props, context) {
 
-            const {defaultConf} = useDefaultConf();
-            const {recordConf, handleRecordConf ,updateRecordConf} = useRecordConf();
+            const { defaultConf } = useDefaultConf();
+            const { recordConf, handleRecordConf ,updateRecordConf } = useRecordConf();
+            const { recordFiles,handleRecordFiles } = useRecordFiles();
 
             const state = {
                 recDuration:reactive({}),
                 diskSpace: ref("--/--"),
+                showPlayerModal: ref(false),
+                playerUrl: ref(""),
+                playerModalTitle: ref("正在播放"),
+                playerModalFooter: ref(false),
+                showSettingModal: ref(false)
             }
 
             const handleEnableConf = computed(() => {
@@ -266,7 +337,6 @@
 
             const handleMergeRecordConf = computed(() => {
                 if(!recordConf.hasOwnProperty("channels")) return [];
-
                 if(defaultConf.length > 0 && Object.keys(state.recDuration).length > 0) {
                     return recordConf.channels.filter((chn, index) => {
                         const conf = defaultConf.find(item => item.id === chn.id);
@@ -277,8 +347,20 @@
                         return conf.enable;
                     });
                 }
-
                 return recordConf.channels;
+            })
+
+            const handleFragmentConf = computed(() => {
+                if(!recordConf.hasOwnProperty("channels")) return {};
+                if(!recordConf["any"].hasOwnProperty("fragment")){
+                    recordConf["any"]["fragment"] = {
+                        segmentDura: 0,
+                        segmentSize: 1,
+                        segmentDuraEnable: false,
+                        segmentSizeEnable: false
+                    }
+                }
+                return recordConf["any"]["fragment"];
             })
 
             const onStartRecord = async () => {
@@ -306,6 +388,7 @@
                 const result = await rpc("rec.execute", [JSON.stringify(recordConf, null, 2)]);
                 if (result) {
                     alertMsg('<cn>启动录制成功</cn><en>Recording started successfully!</en>', 'success');
+                    setTimeout(handleRecordFiles,500);
                     return;
                 }
                 alertMsg('<cn>启动录制失败，没有找到外部存储设备！</cn><en>Failed to start recording,no external storage device was found!</en>', 'error');
@@ -322,13 +405,18 @@
                 } );
             }
 
-            const onStartRecordByFormat = async () => {
+            const onStartRecordByFormat = async type => {
                 const result = await rpc("rec.execute", [JSON.stringify(recordConf, null, 2)]);
                 if (result) {
-                    alertMsg('<cn>启动录制成功</cn><en>Recording started successfully!</en>', 'success');
+                    if(type) {
+                        setTimeout(handleRecordFiles,500);
+                        alertMsg('<cn>启动录制成功</cn><en>Recording started successfully!</en>', 'success');
+                    } else {
+                        alertMsg('<cn>停止录制成功</cn><en>Recording started successfully!</en>', 'success');
+                    }
                     return;
                 }
-                alertMsg('<cn>启动录制失败，没有找到外部存储设备！</cn><en>Failed to start recording,no external storage device was found!</en>', 'error');
+                alertMsg('<cn>操作失败，没有找到外部存储设备！</cn><en>Operation failed, external storage device not found! </en>', 'error');
             }
 
             const handleDiskSpace = () => {
@@ -346,12 +434,106 @@
                 setTimeout(handleRecordDurTime,1000);
             }
 
+            const handleChnNameById = chnId => {
+                if(defaultConf.length > 0) {
+                    const chnConf = defaultConf.find(item => item.id === parseInt(chnId));
+                    return chnConf.name;
+                }
+                return "";
+            }
+
+            const makeImgUrl = (dir,chnId) => {
+                const [dateName,fileName] = dir.split("_");
+                return  "files/" + dir + "/" + chnId + "/" + fileName + "0.jpg";
+            }
+
+            const delRecordFileByName = dirName => {
+                confirm({
+                    title: '<cn>删除</cn><en>Delete</en>',
+                    content: '<cn>是否删除文件'+dirName+' ？</cn><en>Do you want to delete the file '+dirName+' ?</en>',
+                    buttons: {
+                        ok: {
+                            text: "<cn>删除</cn><en>Delete</en>",
+                            btnClass: 'btn-primary',
+                            keys: ['enter'],
+                            action: () => {
+                                func("/mgr/root/delRecordFile",{"name":dirName}).then(res => {
+                                    alertMsg(res.msg,res.status);
+                                    if(res.status === "success")
+                                        handleRecordFiles();
+                                })
+                            }
+                        },
+                        cancel: {
+                            text: "<cn>取消</cn><en>Cancel</en>",
+                            action: () => {}
+                        }
+                    }
+                });
+            }
+
+            const handleMp4Array = (dir,chnId) => {
+                return recordFiles[dir][chnId].filter(file => file.toLowerCase().endsWith('.mp4'));
+            }
+
+            const showVideoPlayer = (dir,chnId) => {
+                const mp4Array = handleMp4Array(dir,chnId);
+                state.playerModalFooter.value = mp4Array.length  > 1;
+                state.playerUrl.value = "files/" + dir + "/" + chnId + "/" + mp4Array[0];
+                if(mp4Array.length > 1)
+                    state.playerModalTitle.value = "正在播放 "+dir+"(1/"+count+")&Playing "+dir+"(1/"+mp4Array.length+")";
+                else
+                    state.playerModalTitle.value = "正在播放 "+dir+"&Playing "+dir;
+                state.showPlayerModal.value = !state.showPlayerModal.value;
+            }
+
+            const handleRecordFileFormat= (dir,chnId) => {
+                const formats = [];
+                recordFiles[dir][chnId].forEach(file => {
+                    const [,fileFormat] = file.split(".");
+                    if(fileFormat !== "jpg" && !formats.includes(fileFormat))
+                        formats.push(fileFormat.toUpperCase());
+                })
+                return formats;
+            }
+
+            const onDownloadRecordFile = (dir,chnId,format) => {
+                format = format.toLowerCase();
+                const count = recordFiles[dir][chnId].filter(file => file.toLowerCase().endsWith('.'+format)).length;
+                recordFiles[dir][chnId].forEach((file,index) => {
+                    const [,fileFormat] = file.split(".");
+                    if(fileFormat === format) {
+                        setTimeout(()=> {
+                            const url = "/files/"+dir+"/"+chnId+"/"+file;
+                            let downName = dir+"."+format;
+                            if(count > 1)
+                                downName = dir+"_"+(index+1)+"."+format;
+                            const eleA = document.createElement('a');
+                            eleA.href = url;
+                            eleA.download = downName;
+                            eleA.dispatchEvent(new MouseEvent('click'));
+                        },200 * index)
+                    }
+                })
+            }
+
+            const setRecordOption = () => {
+                state.showSettingModal.value = !state.showSettingModal.value;
+            }
+
+            const saveFragmentSetting = () => {
+                updateRecordConf();
+            }
+
             onMounted(() => {
                 handleDiskSpace();
                 handleRecordDurTime();
             })
 
-            return {...state, recordConf ,updateRecordConf,handleEnableConf,handleMergeRecordConf,onStartRecord,onStopRecord,onStartRecordByFormat}
+            return {...state, recordConf ,updateRecordConf,handleEnableConf,recordFiles,handleMergeRecordConf,
+                handleFragmentConf, onStartRecord,onStopRecord,onStartRecordByFormat,handleChnNameById,makeImgUrl,
+                delRecordFileByName, showVideoPlayer,handleMp4Array,handleRecordFileFormat,onDownloadRecordFile,
+                setRecordOption,saveFragmentSetting}
         }
     });
     app.use(ignoreCustomElementPlugin);

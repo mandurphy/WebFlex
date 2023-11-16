@@ -19,8 +19,8 @@
                                     </div>
                                 </div>
                                 <div class="card-body text-center">
-                                    <div class="intercomBtn">
-                                        <i class="fa fa-microphone lp-display-hide"></i>
+                                    <div :class="['intercomBtn','state'+item.state]">
+                                        <i :class="['fa fa-microphone intercomMic',{'lp-display-hide':!item.talking}]"></i>
                                         <span>{{ item.content }}</span>
                                     </div>
                                 </div>
@@ -274,7 +274,7 @@
                                             <bs-switch v-model="intercomConf.tally.enable" :size="'normal'"></bs-switch>
                                         </div>
                                         <div class="col-lg-3">
-                                            <button type="button" class="btn border-3 btn-primary px-4">
+                                            <button type="button" class="btn border-3 btn-primary px-4" @click="showTallyModal = !showTallyModal">
                                                 <cn>测试</cn>
                                                 <en>Test</en>
                                             </button>
@@ -286,17 +286,62 @@
                     </div>
                 </div>
             </div>
-            <div class="row mt-3">
-                <button type="button" @click="saveConf" class="col-2 offset-5 btn border-3 btn-primary text-center"><cn>保存</cn><en>Save</en></button>
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="card">
+                        <div class="card-body">
+                            <div class="row my-4">
+                                <button type="button" @click="saveConf" class="col-2 offset-5 btn border-3 btn-primary text-center"><cn>保存</cn><en>Save</en></button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
+            <tally-modal :modal-title="'Tally灯测试&Tally test'" :modal-show="showTallyModal"
+                           :confirm-btn-name="'测试&Test'" :cancel-btn-name="'取消&Cancel'" @confirm-btn-click="onTallyTest">
+                <div class="row">
+                    <div class="col-lg-2 lp-align-center">
+                        <cn>PVM</cn>
+                        <en>PVM</en>
+                    </div>
+                    <div class="col-lg-2 lp-align-center">
+                        <select class="form-select" v-model="tallyPVMVal">
+                            <option value="1">1</option>
+                            <option value="2">2</option>
+                            <option value="3">3</option>
+                            <option value="4">4</option>
+                            <option value="5">5</option>
+                            <option value="6">6</option>
+                            <option value="7">7</option>
+                            <option value="8">8</option>
+                        </select>
+                    </div>
+                    <div class="col-lg-2 lp-align-center">
+                        <cn>PGM</cn>
+                        <en>PGM</en>
+                    </div>
+                    <div class="col-lg-3 lp-align-center">
+                        <select class="form-select" v-model="tallyPGMVal">
+                            <option value="1">1</option>
+                            <option value="2">2</option>
+                            <option value="3">3</option>
+                            <option value="4">4</option>
+                            <option value="5">5</option>
+                            <option value="6">6</option>
+                            <option value="7">7</option>
+                            <option value="8">8</option>
+                        </select>
+                    </div>
+                </div>
+            </tally-modal>
         </main>
     </div>
     <?php include ("./public/foot.inc") ?>
 
 <script type="module">
-    import { rpc,alertMsg } from "./assets/js/lp.utils.js";
+    import { rpc,alertMsg,clearReactiveObject } from "./assets/js/lp.utils.js";
     import { useIntercomConf } from "./assets/js/vue.hooks.js";
-    import { ignoreCustomElementPlugin,bootstrapSwitchComponent,languageOptionDirective } from "./assets/js/vue.helper.js"
+    import { ignoreCustomElementPlugin,bootstrapSwitchComponent,languageOptionDirective,customModalComponent } from "./assets/js/vue.helper.js"
     import vue from "./assets/js/vue.build.js";
     const {createApp,ref,reactive,watch,watchEffect,computed,onMounted} = vue;
 
@@ -305,34 +350,75 @@
             "language-option": languageOptionDirective
         },
         components:{
-            "bs-switch" : bootstrapSwitchComponent
+            "bs-switch" : bootstrapSwitchComponent,
+            "tally-modal": customModalComponent
         },
         setup(props,context) {
     
             const { intercomConf } = useIntercomConf();
 
             const state = {
-                deviceList: reactive([
-                    { id: 1, title: 'offline', content: '1' },
-                    { id: 2, title: 'offline', content: '2' },
-                    { id: 3, title: 'offline', content: '3' },
-                    { id: 4, title: 'offline', content: '4' },
-                    { id: 5, title: 'offline', content: '5' },
-                    { id: 6, title: 'offline', content: '6' },
-                    { id: 7, title: 'offline', content: '7' },
-                    { id: 8, title: 'offline', content: '8' },
-                ]),
+                showTallyModal:ref(false),
+                tallyPVMVal: ref(1),
+                tallyPGMVal: ref(1),
+                intercomState: reactive({})
             }
             
             const handleDevicesArray = computed(()=>{
+
+                const deviceList = [
+                    { id: 1, title: 'offline', content: '1',talking:false, state:-1 },
+                    { id: 2, title: 'offline', content: '2',talking:false, state:-1 },
+                    { id: 3, title: 'offline', content: '3',talking:false, state:-1 },
+                    { id: 4, title: 'offline', content: '4',talking:false, state:-1 },
+                    { id: 5, title: 'offline', content: '5',talking:false, state:-1 },
+                    { id: 6, title: 'offline', content: '6',talking:false, state:-1 },
+                    { id: 7, title: 'offline', content: '7',talking:false, state:-1 },
+                    { id: 8, title: 'offline', content: '8',talking:false, state:-1 },
+                ];
+
+                if(Object.keys(state.intercomState).length > 0 && Object.keys(intercomConf).length > 0) {
+                    state.intercomState.intercom.forEach((item,index) => {
+                        deviceList.forEach((dev,idx) => {
+                            if(dev.id === item.id || dev.id === parseInt(intercomConf.intercom.did)) {
+                                if(dev.id === item.id) {
+                                    dev.title = item.name;
+                                } else {
+                                    dev.title = intercomConf.intercom.name;
+                                    dev.talking = state.intercomState.talking;
+                                }
+                                const count = state.intercomState.tally.length;
+                                if(idx < count)
+                                    dev.state = state.intercomState.tally[idx];
+                                else
+                                    dev.state = 0;
+                            }
+                        })
+                    })
+                }
+
                 const result = [];
                 const columns = 4;
-                for (let i = 0; i < state.deviceList.length; i += columns) {
-                    result.push(state.deviceList.slice(i, i + columns));
+                for (let i = 0; i < deviceList.length; i += columns) {
+                    result.push(deviceList.slice(i, i + columns));
                 }
                 return result;
             });
-            
+
+            const onTallyTest = () => {
+                const list=new Array(8).fill(0);
+                list[state.tallyPVMVal.value-1] = 2;
+                list[state.tallyPGMVal.value-1] = 1;
+                rpc( "intercom.setTally", [list]);
+            }
+
+            const handleIntercomState = () => {
+                rpc( "intercom.getState").then(data => {
+                    clearReactiveObject(state.intercomState);
+                    Object.assign(state.intercomState,data);
+                })
+                setTimeout(handleIntercomState,500);
+            }
             
             const saveConf = () => {
                 rpc("intercom.update", [ intercomConf ]).then(( res ) => {
@@ -343,8 +429,10 @@
                     }
                 });
             }
+
+            onMounted(handleIntercomState);
             
-            return {...state,intercomConf,handleDevicesArray,saveConf}
+            return {...state,intercomConf,handleDevicesArray,onTallyTest,saveConf}
         }
     });
     app.use(ignoreCustomElementPlugin);

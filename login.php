@@ -13,21 +13,23 @@
                     <img src="assets/images/logo.png" class="" width="126">
                 </div>
             </div>
-            <div class="form-body mt-2 pb-3">
+            <div class="form-body mt-4 pb-3">
                 <form @submit.prevent="handleSubmit" class="row g-3" action="/link/action.php" method="post" ref="form" autocomplete="off">
                     <div class="col-12">
-                        <label for="username" class="form-label"><cn>用户名</cn><en>Username</en></label>
-                        <input v-model.trim.lazy="username" type="text" class="form-control border-3" name="username">
+                        <div class="input-group">
+                            <div class="input-group-text border-0 lp-cursor-pointer"><i class="fa-solid fa-user"></i></div>
+                            <input v-model.trim.lazy="username" type="text" class="form-control border-3" name="username">
+                        </div>
                     </div>
                     <div class="col-12">
-                        <label for="password" class="form-label"><cn>密码</cn><en>Password</en></label>
                         <div class="input-group">
+                            <div class="input-group-text border-0 lp-cursor-pointer"><i class="fa-solid fa-key"></i></div>
                             <input v-model.trim.lazy="password" :type="!showPasswd ? 'password' : 'text'" class="form-control border-end-0  border-3" name="password">
-                            <div class="input-group-text border-3 lp-cursor-pointer" @click="showPasswd = !showPasswd"><i :class="['fa-regular',{'fa-eye-slash':showPasswd},{'fa-eye ':!showPasswd}]"></i></div>
+                            <div class="input-group-text border-0 lp-cursor-pointer" @click="showPasswd = !showPasswd"><i :class="['fa-regular',{'fa-eye-slash':showPasswd},{'fa-eye ':!showPasswd}]"></i></div>
                         </div>
                     </div>
                     <div class="col-md-6">
-                        <div class="form-check form-switch form-check-primary border-3">
+                        <div class="form-check form-switch form-check-primary border-2">
                             <input class="form-check-input" type="checkbox" v-model="remember">
                             <label class="form-check-label"><cn>记住密码</cn><en>Remember Me</en></label>
                         </div>

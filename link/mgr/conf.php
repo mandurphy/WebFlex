@@ -82,4 +82,42 @@ class Conf extends Basic
         file_put_contents( '/link/config/misc/disk.json', json_encode($param,JSON_UNESCAPED_SLASHES|JSON_UNESCAPED_UNICODE|JSON_PRETTY_PRINT) );
         return $this->handleRet("",'success','保存成功','save successfully');
     }
+
+    public function updateRtmpConf($param)
+    {
+        file_put_contents( '/link/config/rtmp.conf', $param);
+        return $this->handleRet("",'success','保存成功','save successfully');
+    }
+
+    public function updateNdiConf($param)
+    {
+        if(is_null(json_decode($param)))
+            return $this->handleRet("",'error','保存失败,格式错误','Failed to save, format error');
+        file_put_contents( '/link/config/ndi.json', json_encode($param,JSON_UNESCAPED_SLASHES|JSON_UNESCAPED_UNICODE|JSON_PRETTY_PRINT));
+        return $this->handleRet("",'success','保存成功','save successfully');
+    }
+
+    public function updateServiceConf($param)
+    {
+        file_put_contents( '/link/config/service.json', json_encode($param,JSON_UNESCAPED_SLASHES|JSON_UNESCAPED_UNICODE|JSON_PRETTY_PRINT));
+        return $this->handleRet("",'success','保存成功','save successfully');
+    }
+
+    public function updateSlsConf($param)
+    {
+        file_put_contents( '/link/config/sls.conf', $param);
+        return $this->handleRet("",'success','保存成功','save successfully');
+    }
+
+    public function updateFrpEnableConf($param)
+    {
+        file_put_contents( '/link/config/rproxy/frp_enable', $param);
+        return $this->handleRet("",'success','保存成功','save successfully');
+    }
+
+    public function updateFrpcConf($param)
+    {
+        file_put_contents( '/link/config/rproxy/frpc.ini', $param);
+        return $this->handleRet("",'success','保存成功','save successfully');
+    }
 }

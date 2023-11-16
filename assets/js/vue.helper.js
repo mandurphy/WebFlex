@@ -381,7 +381,7 @@ export const bootstrapSwitchComponent = {
             $(bs_switch.value).bootstrapSwitch('state', modelValue.value, true);
         })
 
-        onMounted(async () => {
+        onMounted(() => {
             $(bs_switch.value).bootstrapSwitch({
                 "state": props.modelValue,
                 "size": size.value,
@@ -396,7 +396,6 @@ export const bootstrapSwitchComponent = {
                 }
             })
         })
-
         return { bs_switch }
     }
 };
@@ -686,12 +685,12 @@ export const h5PlayerComponent = {
             if(canplay.value) {
                 if(url.value !== "") {
                     if(state.hadInitPlayer)
-                        destoryPlayer();
+                        destroyPlayer();
                     setTimeout(initPlayer,300);
                 }
             } else {
                 if(state.hadInitPlayer)
-                    destoryPlayer();
+                    destroyPlayer();
             }
         })
 
@@ -742,7 +741,7 @@ export const h5PlayerComponent = {
             }
             state.hadInitPlayer = true;
         }
-        const destoryPlayer = () => {
+        const destroyPlayer = () => {
             if(Object.keys(state.h5Player).length > 0) {
                 if(state.h5Player.hasOwnProperty("unload")) {
                     state.h5Player.unload();
@@ -765,6 +764,69 @@ export const h5PlayerComponent = {
         }
 
         onMounted(checkDelay);
+
+        return { ...state }
+    }
+};
+
+export const videoPlayerComponent = {
+    template: `<div style="width:100%; padding-bottom: 56.25%;  position: relative;">
+                    <video autoplay controls muted style="width:100%;height: 100%; position: absolute; background: #555;" ref="videoHandler"></video>
+                    <div class="lp-video-cloud" ref="cloudHandler">
+                        <div class="loading"></div>
+                    </div>
+              </div>`,
+    props: {
+        url: {
+            type: String,
+            default: ""
+        },
+        canplay: {
+            type: Boolean,
+            default: true
+        }
+    },
+    setup(props,context) {
+
+        const { url,canplay } = toRefs(props);
+        const state = {
+            videoHandler: ref(null),
+            cloudHandler: ref(null),
+            hadInitPlayer: false,
+        }
+
+        watchEffect(()=>{
+            if(canplay.value) {
+                if(url.value !== "") {
+                    if(state.hadInitPlayer)
+                        destroyPlayer();
+                    setTimeout(initPlayer,300);
+                }
+            } else {
+                if(state.hadInitPlayer)
+                    destroyPlayer();
+            }
+        })
+
+        const initPlayer = () => {
+            if(url.value === "")
+                return;
+
+            state.videoHandler.value.style.display = 'block';
+            state.videoHandler.value.src = url.value;
+            state.videoHandler.value.play();
+
+            state.videoHandler.value.addEventListener("canplay",() => {
+                state.cloudHandler.value.style.display = 'none'
+            });
+            state.hadInitPlayer = true;
+        }
+        
+        const destroyPlayer = () => {
+            state.cloudHandler.value.style.display = 'flex';
+            state.videoHandler.value.removeEventListener("canplay",()=>{});
+            state.hadInitPlayer = false;
+        }
 
         return { ...state }
     }
@@ -1374,7 +1436,7 @@ export const customModalComponent = {
                         </div>
                         <div class="modal-footer" v-if="hadFooter">
                             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">{{modalCancelBtnName}}</button>
-                            <button type="button" class="btn btn-primary" @click="confirmBtnClick">{{modalConfirmBtnName}}</button>
+                            <button type="button" v-if="hadConfirmlBtn" class="btn btn-primary" @click="confirmBtnClick">{{modalConfirmBtnName}}</button>
                           </div>
                       </div>
                     </div>
@@ -1419,11 +1481,15 @@ export const customModalComponent = {
         cancelBtnName: {
             type: String,
             default:"取消"
-        }
+        },
+        hadConfirmlBtn: {
+            type: Boolean,
+            default: true
+        },
     },
     setup(props,context) {
 
-        const { modalShow,modalFade } = toRefs(props);
+        const { modalShow,modalFade,modalTitle } = toRefs(props);
         const state = {
             modal: ref(null),
             modalTitle: ref(""),
@@ -1433,13 +1499,17 @@ export const customModalComponent = {
             bsModal: {},
         }
 
-        watch(modalShow,()=>{
+        watch(modalShow,() => {
             state.show = !state.show;
             if(state.show)
                 state.bsModal.show();
             else
                 state.bsModal.hide();
             context.emit('modal-visible', state.show);
+        })
+
+        watch(modalTitle,() => {
+            updateLangText();
         })
 
         const initBsModal = () => {
@@ -1496,6 +1566,16 @@ export const customModalComponent = {
                 updateLangText();
                 initBsModal();
             })
+
+            const observer = new mutationObserver(() => {
+                updateLangText();
+            });
+            const config = {
+                attributes: true,
+                attributeFilter: ["data-bs-language"],
+                subtree: false
+            };
+            observer.observe(html, config);
         })
 
         return { ...state,modalFade,confirmBtnClick }
@@ -1723,7 +1803,7 @@ export const usbOptionComponent = {
                 </a>
                 <div class="dropdown">
                     <ul class="dropdown-menu dropdown-menu-end">
-                        <li>
+                        <li v-if="hadMountDisk">
                             <a class="dropdown-item" href="javascript:;" @click="unInstallDisk">
                                 <span class="material-symbols-outlined me-2">
                                     <i class="fa-solid fa-arrow-up-from-bracket me-2"></i>
@@ -1732,8 +1812,8 @@ export const usbOptionComponent = {
                                 </span>
                             </a>
                         </li>
-                        <li><hr></li>
-                        <li>
+                        <li v-if="hadMountDisk"><hr></li>
+                        <li v-if="hadMountDisk && Object.keys(diskConf).length > 0 && diskConf.used==='local' && diskConf.local.device!=='/dev/mmcblk0p6'">
                             <a class="dropdown-item" href="javascript:;" @click="formatDisk">
                                 <span class="material-symbols-outlined me-2">
                                     <i class="fa-solid fa-circle-nodes me-2"></i>
@@ -1742,13 +1822,22 @@ export const usbOptionComponent = {
                                 </span>
                             </a>
                         </li>
-                        <li><hr></li>
+                        <li v-if="hadMountDisk && Object.keys(diskConf).length > 0 && diskConf.used==='local' && diskConf.local.device!=='/dev/mmcblk0p6'"><hr></li>
                         <li>
                             <a class="dropdown-item" href="javascript:;" @click="turnMountDisk">
                                 <span class="material-symbols-outlined me-2">
                                     <i class="fa-solid fa-right-left me-2"></i>
-                                    <cn>切换存储</cn>
+                                    <cn>切换挂载</cn>
                                     <en>Change Disk</en>
+                                </span>
+                            </a>
+                        </li>
+                        <li v-if="hadMountDisk"><hr></li>
+                        <li v-if="hadMountDisk">
+                            <a class="dropdown-item text-center" href="javascript:;">
+                                <span class="material-symbols-outlined me-2">
+                                    <cn>已用</cn><en>Used</en>
+                                    {{hadMountInfo.used + ' / ' + hadMountInfo.total}}
                                 </span>
                             </a>
                         </li>
@@ -1756,8 +1845,9 @@ export const usbOptionComponent = {
                 </div>`,
     setup(props,context) {
 
+        const hadMountInfo = reactive({});
         const hadMountDisk = ref(false);
-        const { diskConf,updateDiskConf } = useDiskConf();
+        const { diskConf,handleDiskConf,updateDiskConf } = useDiskConf();
 
         const unInstallDisk = () => {
             confirm({
@@ -1787,13 +1877,13 @@ export const usbOptionComponent = {
                 content: `<div class="row">
                             <div class="col-lg-11">
                                 <div class="row mt-2">
-                                    <div class="col-lg-3 offset-lg-1 lp-align-center">
+                                    <div class="col-lg-3 lp-align-center">
                                         <label>
                                             <cn>磁盘格式</cn>
                                             <en>Format</en>
                                         </label>
                                     </div>
-                                    <div class="col-lg-8">
+                                    <div class="col-lg-9">
                                         <select class="form-select" id="diskFormat">
                                             <option value="ext4">EXT4</option>
                                             <option value="fat32">FAT32</option>
@@ -1801,24 +1891,19 @@ export const usbOptionComponent = {
                                     </div>
                                 </div>
                                 <div class="row mt-2">
-                                    <div class="col-lg-3 offset-lg-1 lp-align-center">
+                                    <div class="col-lg-3 lp-align-center">
                                         <label>
                                             <cn>登录密码</cn>
                                             <en>Password</en>
                                         </label>
                                     </div>
-                                    <div class="col-lg-8">
-                                        <div class="input-group">
-                                            <span class="input-group-text input-group-addon">
-                                                <i class="fa-solid fa-key"></i>
-                                            </span>
-                                            <input class="form-control" type="password" id="formatPasswd" autocomplete="off">
-                                        </div>
+                                    <div class="col-lg-9">
+                                        <input class="form-control" type="password" id="formatPasswd" autocomplete="off">
                                     </div>
                                 </div>
-                                <div class="row mt-3">
-                                    <div class="col-lg-12">
-                                        <label>
+                                <div class="row mt-4">
+                                    <div class="col-lg-12 p-0">
+                                        <label class="ms-3">
                                             <cn>Tip: 格式化将清空磁盘数据，且不可逆转，请谨慎操作。</cn>
                                             <en>Tip: Formatting will erase disk data and is irreversible.</en>
                                         </label>
@@ -1844,12 +1929,16 @@ export const usbOptionComponent = {
                             }).then(()=>{
                                 const diskFormat = document.querySelector("#diskFormat").value;
                                 const notify = alertMsg("<cn>正在格式化，请勿关闭此页面</cn><en>Do not close this page while formatting</en>","success",99999999);
-                                func("/mgr/system/formatDisk",{"format":diskFormat}).then(res => {
-                                    if(res.status === "success") {
-                                        notify.remove();
-                                        setTimeout(()=> alertMsg(res.msg,res.status),600);
-                                    }
-                                })
+                                func("/mgr/system/formatDisk",{"format":diskFormat});
+                                let interval = setInterval(()=>{
+                                    func("/mgr/system/checkFormatProgress").then(res => {
+                                        if(res.data === 0) {
+                                            clearInterval(interval);
+                                            notify.remove();
+                                            setTimeout(()=> alertMsg(res.msg,res.status),600);
+                                        }
+                                    })
+                                },5000);
                             })
                         }
                     },
@@ -1862,10 +1951,12 @@ export const usbOptionComponent = {
         }
 
         const checkMountDisk = () => {
-            func("/mgr/system/getMountDiskSpace").then(res => hadMountDisk.value = res.status === "success")
+            func("/mgr/system/getMountDiskSpace").then(res => {
+                Object.assign(hadMountInfo,res.data);
+                hadMountDisk.value = (res.status === "success");
+            })
             setTimeout(checkMountDisk,1000);
         }
-
 
         const turnMountDisk = () => {
             const html = document.querySelector("html");
@@ -1986,6 +2077,7 @@ export const usbOptionComponent = {
                                     device:document.querySelector('#local_devices').value
                                 }
                             }).then(async ()=> {
+                                handleDiskConf();
                                 alertMsg("<cn>磁盘检测中，请稍后...</cn><en>Disk checking, please wait...</en>","success");
                                 const result = await func("/mgr/system/mountDisk");
                                 if(result.status === "success")
@@ -2056,6 +2148,6 @@ export const usbOptionComponent = {
         }
 
         onMounted(checkMountDisk);
-        return { hadMountDisk, unInstallDisk,formatDisk,turnMountDisk }
+        return { hadMountInfo,hadMountDisk, diskConf,unInstallDisk,formatDisk,turnMountDisk }
     }
 }

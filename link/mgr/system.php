@@ -149,7 +149,8 @@ class System extends Basic
         return $this->handleRet('','error','磁盘未挂载','disk is not mounted');
     }
 
-    function umountDisk() {
+    function umountDisk()
+    {
         exec("umount -l /root/usb");
         exec("sync");
         exec("df -h | grep /root/usb | wc -l",$output);
@@ -159,7 +160,8 @@ class System extends Basic
             return $this->handleRet("",'error','卸载失败,请检测磁盘是否被占用','Uninstallation failed, please check if the disk is occupied');
     }
 
-    function formatReady($param) {
+    function formatReady($param)
+    {
         $psd = $param["psd"];
         $json_string = file_get_contents( '/link/config/passwd.json' );
         $data = json_decode( $json_string, true );
@@ -169,19 +171,34 @@ class System extends Basic
             return $this->handleRet("",'error','格式化失败，密码错误','Formatting failed because the password is incorrect');
     }
 
-    function formatDisk($param) {
+    function formatDisk($param)
+    {
         exec("/link/shell/fusb.sh ".$param["format"]);
         return $this->handleRet("",'success','格式化完成','Formatting completed');
     }
 
-    function mountDisk() {
+    function checkFormatProgress()
+    {
+        $command1 = "ps aux | grep 'mkfs.ext4 -T largefile /dev/sda1' | grep -v grep";
+        $command2 = "ps aux | grep 'mkfs.vfat -F 32 /dev/sda1' | grep -v grep";
+        $output1 = shell_exec($command1);
+        $output2 = shell_exec($command2);
+        if (!empty($output1) || !empty($output2))
+            return $this->handleRet(-1,'success','格式化进行中','Formatting in progress');
+        return $this->handleRet(0,'success','格式化完成','Formatting completed');
+    }
+
+    function mountDisk()
+    {
         exec("/link/shell/mount.sh",$output);
         if($output[0] == "0")
             return $this->handleRet("",'error','外部存储设备挂载失败','The external storage device failed to be mounted');
         return $this->handleRet("",'success','挂载成功','Mount successfully');
     }
 
-    function getLocalDisk() {
+
+    function getLocalDisk()
+    {
         $output = shell_exec("ls /dev/sd*");
         $arys = explode("\n",$output);
 

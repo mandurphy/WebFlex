@@ -90,8 +90,10 @@
                                 </div>
                                 <div class="row text-center mt-3">
                                     <div class="col-lg-12">
-                                        <button type="button" class="btn  border-3 btn-primary me-2" @click="saveGlobalConfByLocal"><cn>应用到本地</cn><en>Save to local</en></button>
-                                        <button type="button" class="btn  border-3 btn-primary"><cn>应用到群组</cn><en>Save to group</en></button>
+                                        <button type="button" class="btn  border-3 btn-primary me-2" @click="saveGlobalConfByLocal">
+                                            <cn>应用到全部</cn>
+                                            <en>Apply to all/en>
+                                        </button>
                                     </div>
                                 </div>
                             </div>
