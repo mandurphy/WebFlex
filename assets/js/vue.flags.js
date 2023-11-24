@@ -59,38 +59,31 @@ export const wifiFlagComponent = {
                         </svg>
                     </div>  
                </div>`,
-    props:['icon','width','height','stroke','strokeWidth','color'],
-    setup(props,context) {
-        const { stroke,icon,color } = toRefs(props);
-
-        const state = {
-            icon: ref("wifi"),
-            width: ref(20),
-            height: ref(20),
-            stroke: ref("#2c3e50"),
-            strokeWidth: ref(2),
-            color: ref("#cccccc")
+    props: {
+        icon: {
+            type: String,
+            default: "wifi"
+        },
+        width: {
+            type: Number,
+            default: 20
+        },
+        height: {
+            type: Number,
+            default: 20
+        },
+        stroke: {
+            type: String,
+            default: "#2c3e50"
+        },
+        strokeWidth: {
+            type: Number,
+            default: 2
+        },
+        color: {
+            type: String,
+            default: "#cccccc"
         }
-
-        watchEffect(()=>{
-            if(stroke.value !== undefined)
-                state.stroke.value = stroke.value;
-            if(icon.value !== undefined)
-                state.icon.value = icon.value;
-            if(color.value !== undefined)
-                state.color.value = color.value;
-        })
-
-        onMounted(()=>{
-            if(props.width !== undefined)
-                state.width.value = props.width;
-            if(props.height !== undefined)
-                state.height.value = props.height;
-            if(props.strokeWidth !== undefined)
-                state.strokeWidth.value = props.strokeWidth;
-        })
-
-        return { ...state }
     }
 }
 
@@ -163,37 +156,30 @@ export const antenanFlagComponent = {
                         </svg>
                     </div>  
                </div>`,
-    props:['icon','width','height','stroke','strokeWidth','color'],
-    setup(props,context) {
-        const { stroke,icon,color } = toRefs(props);
-
-        const state = {
-            icon: ref("antenan"),
-            width: ref(20),
-            height: ref(20),
-            stroke: ref("#2c3e50"),
-            strokeWidth: ref(2),
-            color: ref("#cccccc")
+    props: {
+        icon: {
+            type: String,
+            default: "antenan"
+        },
+        width: {
+            type: Number,
+            default: 20
+        },
+        height: {
+            type: Number,
+            default: 20
+        },
+        stroke: {
+            type: String,
+            default: "#2c3e50"
+        },
+        strokeWidth: {
+            type: Number,
+            default: 2
+        },
+        color: {
+            type: String,
+            default: "#cccccc"
         }
-
-        watchEffect(()=>{
-            if(stroke.value !== undefined)
-                state.stroke.value = stroke.value;
-            if(icon.value !== undefined)
-                state.icon.value = icon.value;
-            if(color.value !== undefined)
-                state.color.value = color.value;
-        })
-
-        onMounted(()=>{
-            if(props.width !== undefined)
-                state.width.value = props.width;
-            if(props.height !== undefined)
-                state.height.value = props.height;
-            if(props.strokeWidth !== undefined)
-                state.strokeWidth.value = props.strokeWidth;
-        })
-
-        return { ...state }
     }
 }

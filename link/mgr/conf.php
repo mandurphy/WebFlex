@@ -120,4 +120,40 @@ class Conf extends Basic
         file_put_contents( '/link/config/rproxy/frpc.ini', $param);
         return $this->handleRet("",'success','保存成功','save successfully');
     }
+
+    public function updateRttyConf($param)
+    {
+        file_put_contents( '/link/config/rtty.json', json_encode($param,JSON_UNESCAPED_SLASHES|JSON_UNESCAPED_UNICODE|JSON_PRETTY_PRINT));
+        return $this->handleRet("",'success','保存成功','save successfully');
+    }
+
+    public function updateMacConf($param)
+    {
+        $param = strtolower(str_replace(':', '', $param));
+        file_put_contents( '/link/config/mac', $param);
+        return $this->handleRet("",'success','保存成功','save successfully');
+    }
+
+    public function updateMac2Conf($param)
+    {
+        $param = strtolower(str_replace(':', '', $param));
+        file_put_contents( '/link/config/mac2', $param);
+        return $this->handleRet("",'success','保存成功','save successfully');
+    }
+
+    function updateHardwareConf($param)
+    {
+        $hardwardConf = file_get_contents('/link/config/hardware.json');
+        $hardwardConf = json_decode($hardwardConf, true);
+        foreach($hardwardConf["function"] as $key => $val)
+        {
+            if(isset($param["function"][$key]))
+            {
+                $hardwardConf["function"][$key]= $param["function"][$key];
+            }
+
+        }
+        file_put_contents ( '/link/config/hardware.json' ,  json_encode($hardwardConf,JSON_UNESCAPED_SLASHES|JSON_UNESCAPED_UNICODE|JSON_PRETTY_PRINT));
+        return $this->handleRet("",'success','保存成功','save successfully');
+    }
 }

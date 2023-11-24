@@ -1,6 +1,6 @@
 <?php include ("./link/session.php") ?>
 <!doctype html>
-<html lang="en" data-bs-theme="dark">
+<html lang="en">
 <head>
     <?php include ("./public/head.inc") ?>
 </head>
@@ -17,19 +17,19 @@
                 <form @submit.prevent="handleSubmit" class="row g-3" action="/link/action.php" method="post" ref="form" autocomplete="off">
                     <div class="col-12">
                         <div class="input-group">
-                            <div class="input-group-text border-0 lp-cursor-pointer"><i class="fa-solid fa-user"></i></div>
-                            <input v-model.trim.lazy="username" type="text" class="form-control border-3" name="username">
+                            <div class="input-group-text border-0 lp-cursor-pointer input-group-title"><i class="fa-solid fa-user font-17"></i></div>
+                            <input v-model.trim.lazy="username" type="text" class="form-control border-0 border-start" name="username">
                         </div>
                     </div>
                     <div class="col-12">
                         <div class="input-group">
-                            <div class="input-group-text border-0 lp-cursor-pointer"><i class="fa-solid fa-key"></i></div>
-                            <input v-model.trim.lazy="password" :type="!showPasswd ? 'password' : 'text'" class="form-control border-end-0  border-3" name="password">
-                            <div class="input-group-text border-0 lp-cursor-pointer" @click="showPasswd = !showPasswd"><i :class="['fa-regular',{'fa-eye-slash':showPasswd},{'fa-eye ':!showPasswd}]"></i></div>
+                            <div class="input-group-text border-0 lp-cursor-pointer input-group-title"><i class="fa-solid fa-key font-17"></i></div>
+                            <input v-model.trim.lazy="password" :type="!showPasswd ? 'password' : 'text'" class="form-control border-0 border-start input-passwd" name="password">
+                            <div class="input-group-text border-0 lp-cursor-pointer font-16" @click="showPasswd = !showPasswd"><i :class="['fa-regular',{'fa-eye-slash':showPasswd},{'fa-eye ':!showPasswd}]"></i></div>
                         </div>
                     </div>
-                    <div class="col-md-6">
-                        <div class="form-check form-switch form-check-primary border-2">
+                    <div class="col-6">
+                        <div class="form-check form-switch form-check-primary border-0">
                             <input class="form-check-input" type="checkbox" v-model="remember">
                             <label class="form-check-label"><cn>记住密码</cn><en>Remember Me</en></label>
                         </div>

@@ -182,7 +182,7 @@
                                     count++;
                                     state.groupList.splice(0);
                                     state.groupList.push(...data);
-                                    if(count === 5)
+                                    if(count === 10)
                                         clearInterval(state.intervalId.value);
                                 } );
                             },1000);

@@ -1023,6 +1023,7 @@ export const uploadModalComponent = {
             }
             state.modal.value.addEventListener('hide.bs.modal',() => {
                 state.show = false;
+                context.emit('update:modelShow', false);
             });
         }
 
@@ -1416,6 +1417,7 @@ export const upgradeModalComponent = {
         onMounted(()=>{
             state.bsModal = new bootstrap.Modal(state.modal.value);
             state.modal.value.addEventListener('hide.bs.modal',() => {
+                context.emit('update:modelShow', false);
                 context.emit('update:checkUpgrade', false);
             });
         })
@@ -1524,6 +1526,7 @@ export const customModalComponent = {
             context.emit('modal-visible', state.show);
             state.modal.value.addEventListener('hide.bs.modal',() => {
                 state.show = false;
+                context.emit('update:modelShow', state.show);
                 context.emit('modal-visible', state.show);
             });
         }

@@ -553,6 +553,10 @@ a {
     font-size: 16px !important;
 }
 
+.font-17 {
+    font-size: 16px !important;
+}
+
 .font-18 {
     font-size: 18px !important;
 }
@@ -876,6 +880,11 @@ input[type="password"]::-ms-reveal{
     background-clip: unset;
 }
 
+.login .input-group input {
+    line-height: 2.1rem;
+    font-size: 1.3rem;
+}
+
 .dashboard .w_chart {
     position: relative;
     display: inline-block;
@@ -1179,6 +1188,18 @@ input[type="password"]::-ms-reveal{
 .sys .rear180 {
     transform:rotateY(-180deg);
     -webkit-transform: rotateY(-180deg);
+}
+
+.sys .pointLoading::after {
+    content: "";
+    animation: pointLoading 1s steps(4, end) infinite;
+}
+
+@keyframes pointLoading {
+    0% { content: "."; }
+    33% { content: ".."; }
+    66% { content: "..."; }
+    100% { content: "...."; }
 }
 
 .push .push-bar {

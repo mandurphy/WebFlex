@@ -429,17 +429,26 @@
 
 [data-bs-theme=dark] .login .input-group-text {
     color: var(--bs-body-color-semi);
-    border-color: var(--bs-default-auth-border-color);
+    border: 2px solid var(--bs-border-color-translucent) !important;
     background: transparent;
 }
 
-[data-bs-theme=dark] .login ::placeholder {
+[data-bs-theme=dark] .login .input-group input {
+    border: 2px solid var(--bs-border-color-translucent) !important;
     color: var(--bs-body-color-semi);
 }
 
-[data-bs-theme=dark] .login input:focus {
+[data-bs-theme=dark] .login input::placeholder {
+    color: #555;
+}
+
+[data-bs-theme=dark] .login .input-group input:focus {
     outline: none;
     box-shadow: none;
+}
+
+[data-bs-theme=dark] .login .input-group input.input-passwd {
+    border-right: none !important;
 }
 
 [data-bs-theme=dark] .login .form-check-primary .form-check-input:not(:checked):focus {
@@ -447,6 +456,12 @@
     --bs-form-switch-bg: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='-4 -4 8 8'%3e%3ccircle r='3' fill='rgba%28255, 255, 255, 0.25%29'/%3e%3c/svg%3e");
     outline: 0;
     background-color: var(--bs-body-bg-semi);
+}
+
+[data-bs-theme=dark] .login .form-check-primary .form-check-input:not(:checked):not(:focus) {
+    --bs-form-switch-bg: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='-4 -4 8 8'%3e%3ccircle r='3' fill='rgba%2885, 85, 85, 1%29'/%3e%3c/svg%3e");
+    background-color: var(--bs-body-bg-semi);
+    border-color: #495057;
 }
 
 [data-bs-theme=dark] .user-icon {
@@ -517,6 +532,12 @@
 [data-bs-theme=dark] .push .push-bar {
     background-color: transparent;
     border-color: transparent;
+}
+
+[data-bs-theme=dark] .sys .input-group-text {
+    color: var(--bs-body-color-semi);
+    border: 2px solid var(--bs-border-color-translucent) !important;
+    background: transparent;
 }
 
 [data-bs-theme=dark] .mix .lp-aspect-ratio .aspect-ratio-content button.btn-default {

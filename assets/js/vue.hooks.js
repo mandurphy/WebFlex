@@ -1,5 +1,5 @@
 
-import {queryData, checkFileExists, func, alertMsg, rpc, rpc2, rpc3,rpc4, deepCopy, clearReactiveObject,clearReactiveArray,request} from "./lp.utils.js";
+import {queryData, checkFileExists, func, alertMsg, rpc, rpc2, rpc3, rpc4, deepCopy, clearReactiveObject, clearReactiveArray, request, isEmpty} from "./lp.utils.js";
 import vue from "./vue.build.js";
 const { ref,reactive,onMounted } = vue;
 
@@ -36,8 +36,23 @@ export const useHardwareConf = () => {
             Object.assign(hardwareConf, conf);
         })
     }
+    const updateHardwareConf = (tip = "tip") => {
+        return new Promise((resolve,reject) => {
+            func("/mgr/conf/updateHardwareConf",hardwareConf).then(data => {
+                if ( data.status !== "success" ) {
+                    reject();
+                    if(tip !== "noTip")
+                        alertMsg('<cn>保存设置失败</cn><en>Save config failed!</en>', 'error');
+                } else {
+                    resolve();
+                    if(tip !== "noTip")
+                        alertMsg('<cn>保存设置成功</cn><en>Save config successfully!</en>', 'success');
+                }
+            })
+        })
+    }
     onMounted(handleHardwareConf);
-    return { hardwareConf }
+    return { hardwareConf,updateHardwareConf }
 }
 
 export const usePortConf = () => {
@@ -118,23 +133,13 @@ export const useDefLaysConf = () => {
     return { defLaysConf }
 }
 
-export const useLanguageConf = () => {
-    const languageConf = reactive({});
-    const handleLanguageConf = () => {
-        let conf = request("config/lang.json");
-        Object.assign(languageConf, conf);
-    }
-
-    handleLanguageConf();
-
-    return { languageConf }
-}
-
 export const useThemeConf = () => {
     const themeConf = reactive({});
     const handleThemeConf = () => {
-        let conf = request("config/theme.json");
-        Object.assign(themeConf, conf);
+        queryData("config/theme.json").then(conf => {
+            clearReactiveObject(themeConf);
+            Object.assign(themeConf,conf);
+        })
     }
     const updateThemeConf = (type) => {
         return new Promise((resolve,reject)=>{
@@ -143,6 +148,7 @@ export const useThemeConf = () => {
                 if ( data.status === "success" ) {
                     const html = document.querySelector('html');
                     html.setAttribute('data-bs-theme', type);
+                    localStorage.setItem("theme",type);
                     resolve();
                     return;
                 }
@@ -150,35 +156,80 @@ export const useThemeConf = () => {
             })
         })
     }
-    handleThemeConf();
+    onMounted(handleThemeConf);
     return { themeConf,updateThemeConf }
 }
 
 
-export const usetNetManagerConf = (tip = "tip") => {
+export const useNetManagerConf = (tip = "tip") => {
     const netManagerConf = reactive({});
-    const handleNetManagerConf = () => {
-        queryData("config/netManager.json").then((conf)=>{
-            clearReactiveObject(netManagerConf);
-            Object.assign(netManagerConf, conf);
-        })
+
+    const formatMac = mac => {
+        mac = mac.toUpperCase();
+        mac = mac.replace(/[\'\"\\\/\b\f\n\r\t]/g, '');
+        mac = mac.replace(/(.{2})(.{2})(.{2})(.{2})(.{2})(.{2})/, '$1:$2:$3:$4:$5:$6');
+        return mac;
     }
-    const updateNetManagerConf = (param,tip = "tip") => {
-        if(param !== undefined) {
-            const adapter = {};
-            deepCopy(param).forEach(item => {
-                if(item.type !== "dongle") {
-                    const dev = item.dev;
-                    delete item.dev;
-                    delete item.type;
-                    adapter[dev] = item;
+    const handleNetManagerConf = async () => {
+
+        const [conf,mac, mac2] = await Promise.all([
+            queryData("config/netManager.json"),
+            queryData("config/mac"),
+            await checkFileExists("config/mac2") ? queryData("config/mac2") : Promise.resolve("")
+        ]);
+
+        Object.keys(conf.interface).forEach(item => {
+            if(item.includes("eth")) {
+                if(item === "eth0")
+                    conf.interface[item].mac = formatMac(mac);
+                else
+                    conf.interface[item].mac = formatMac(mac2);
+            }
+        });
+        clearReactiveObject(netManagerConf);
+        Object.assign(netManagerConf, conf);
+    }
+
+    const updateNetManagerConf = (tip = "tip") => {
+        let mac = "",mac2 = "";
+        const conf = deepCopy(netManagerConf);
+        Object.keys(conf.interface).forEach(item => {
+            if(item.includes("eth")) {
+                if(conf.interface[item].hasOwnProperty("mac")) {
+                    if(item === "eth0")
+                        mac = conf.interface[item].mac;
+                    else
+                        mac2 = conf.interface[item].mac;
                 }
-            });
-            netManagerConf.interface = adapter;
-        }
+                delete conf.interface[item].mac;
+            }
+        });
+
         return new Promise((resolve,reject)=>{
-            rpc2("net.update",[JSON.stringify(netManagerConf,null,2)]).then(data=>{
-                if(data) {
+            const macRegex = /^([0-9A-Fa-f]{2}[:-]){5}([0-9A-Fa-f]{2})$/;
+            const promiseList = [];
+            if(!isEmpty(mac)) {
+                if(!macRegex.test(mac)) {
+                    reject();
+                    if(tip !== "noTip")
+                        alertMsg('<cn>Mac地址格式错误</cn><en>Mac address format error</en>', 'error');
+                    return;
+                } else
+                    promiseList.push(func("/mgr/conf/updateMacConf",mac));
+            }
+            if(!isEmpty(mac2)) {
+                if(!macRegex.test(mac2)) {
+                    reject();
+                    if(tip !== "noTip")
+                        alertMsg('<cn>Mac地址格式错误</cn><en>Mac address format error</en>', 'error');
+                    return;
+                } else
+                    promiseList.push(func("/mgr/conf/updateMac2Conf",mac2));
+            }
+            promiseList.push(rpc2("net.update",[JSON.stringify(conf,null,2)]));
+
+            Promise.all(promiseList).then((results) => {
+                if(results.every(ret => typeof ret === "boolean" ? ret : (ret?.status === "success"))) {
                     resolve();
                     if(tip !== "noTip")
                         alertMsg('<cn>保存设置成功</cn><en>Save config successfully!</en>', 'success');
@@ -815,6 +866,156 @@ export const useGroupConf = () => {
 
     onMounted(handleGroupConf);
     return { groupConf,updateGroupConf }
+}
+
+export const useRttyConf = () => {
+    const rttyConf = reactive({});
+    const handleGroupConf = () => {
+        rpc("enc.getSN").then(sn=> {
+            queryData("config/rtty.json").then(conf => {
+                conf.id = sn;
+                clearReactiveObject(rttyConf);
+                Object.assign(rttyConf,conf);
+            })
+        })
+    }
+    const updateRttyConf = (tip = "tip") => {
+        return new Promise(async (resolve,reject)=>{
+            func("/mgr/conf/updateRttyConf",rttyConf).then(data => {
+                if ( data.status !== "success" ) {
+                    reject(data);
+                    if(tip !== "noTip")
+                        alertMsg('<cn>保存设置失败</cn><en>Save config failed!</en>', 'error');
+                } else {
+                    resolve(data);
+                    if(tip !== "noTip")
+                        alertMsg('<cn>保存设置成功</cn><en>Save config successfully!</en>', 'success');
+                }
+            })
+        });
+
+    }
+    onMounted(handleGroupConf);
+    return { rttyConf,updateRttyConf }
+}
+
+export const useFacConf = () => {
+    const curFac = ref("");
+    const facConf = reactive([]);
+    const handleFacConf = () => {
+        func("/mgr/root/scanFacDir").then(data => {
+            if(data.status === "success") {
+                clearReactiveArray(facConf);
+                facConf.push(...(data.data));
+            }
+        })
+    }
+
+    const updateFacConf = (tip = "tip") => {
+        return new Promise((resolve,reject) => {
+            func("/mgr/root/changeFacType",curFac.value).then(data => {
+                if ( data.status !== "success" ) {
+                    reject(data);
+                    if(tip !== "noTip")
+                        alertMsg('<cn>保存设置失败</cn><en>Save config failed!</en>', 'error');
+                } else {
+                    resolve(data);
+                    if(tip !== "noTip")
+                        alertMsg('<cn>保存设置成功</cn><en>Save config successfully!</en>', 'success');
+                }
+            })
+        })
+    }
+    onMounted(handleFacConf);
+    return { curFac,facConf,updateFacConf }
+}
+
+export const useColorModeConf = () => {
+    const colorModeConf = ref(0);
+    const handleColorModeConf = () => {
+        func("/mgr/root/getColorMode").then(data => {
+            if(data.status === "success") {
+                data.data = data.data.replace(/\\+/g, '');
+                colorModeConf.value = parseInt(data.data);
+            }
+        })
+    }
+
+    const updateColorModeConf = (tip = "tip") => {
+        return new Promise((resolve,reject) => {
+            func("/mgr/root/setColorMode",colorModeConf.value).then(data => {
+                if ( data.status !== "success" ) {
+                    reject(data);
+                    if(tip !== "noTip")
+                        alertMsg('<cn>保存设置失败</cn><en>Save config failed!</en>', 'error');
+                } else {
+                    resolve(data);
+                    if(tip !== "noTip")
+                        alertMsg('<cn>保存设置成功</cn><en>Save config successfully!</en>', 'success');
+                }
+            })
+        })
+    }
+    onMounted(handleColorModeConf);
+    return { colorModeConf,updateColorModeConf }
+}
+
+export const useLphConf = () => {
+    const lphConf = ref("");
+    const handleLphConf = () => {
+        func("/mgr/root/getLphAuth").then(data => {
+            if(data.status === "success")
+                lphConf.value = data.data;
+        })
+    }
+
+    const updateLphConf = (tip = "tip") => {
+        return new Promise((resolve,reject) => {
+            func("/mgr/root/setLphAuth",lphConf.value).then(data => {
+                if ( data.status !== "success" ) {
+                    reject(data);
+                    if(tip !== "noTip")
+                        alertMsg('<cn>保存设置失败</cn><en>Save config failed!</en>', 'error');
+                } else {
+                    resolve(data);
+                    if(tip !== "noTip")
+                        alertMsg('<cn>保存设置成功</cn><en>Save config successfully!</en>', 'success');
+                }
+            })
+        })
+    }
+    onMounted(handleLphConf);
+    return { lphConf,updateLphConf }
+}
+
+export const useEdidConf = () => {
+    const edidConf = ref("");
+    const handleEdidConf = () => {
+        func("/mgr/root/getEdidConf").then(data => {
+            if(data.status === "success") {
+                const [edid,] = data.data.split(".");
+                edidConf.value = edid;
+            }
+        })
+    }
+
+    const updateEdidConf = (tip = "tip") => {
+        return new Promise((resolve,reject) => {
+            func("/mgr/root/setEdidConf",edidConf.value).then(data => {
+                if ( data.status !== "success" ) {
+                    reject(data);
+                    if(tip !== "noTip")
+                        alertMsg('<cn>保存设置失败</cn><en>Save config failed!</en>', 'error');
+                } else {
+                    resolve(data);
+                    if(tip !== "noTip")
+                        alertMsg('<cn>保存设置成功</cn><en>Save config successfully!</en>', 'success');
+                }
+            })
+        })
+    }
+    onMounted(handleEdidConf);
+    return { edidConf,updateEdidConf }
 }
 
 

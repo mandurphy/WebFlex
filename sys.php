@@ -12,8 +12,8 @@
         <div class="row">
             <div class="col-lg-6">
                 <ul class="nav nav-tabs nav-primary" role="tablist">
-                    <li class="nav-item" role="presentation" v-for="(item,index) in handleValidNetDevice" :key="index">
-                        <a :class="['nav-link',{'active':index===0}]" data-bs-toggle="tab" :href="'#tab'+(index+1)" role="tab" aria-selected="true">
+                    <li class="nav-item" role="presentation" v-if="Object.keys(netAdapter).length > 0 && Object.keys(netManagerConf).length > 0" v-for="(item,index) in Object.values(netAdapter)" :key="index">
+                        <a v-if="netManagerConf.interface.hasOwnProperty(item.dev)" :class="['nav-link',{'active':index===0}]" data-bs-toggle="tab" :href="'#tab'+(index+1)" role="tab" aria-selected="true">
                             <div v-if="item.type === 'lan'" class="d-flex align-items-center">
                                 <div class="tab-icon"><i :class="['fa-solid me-1',{'fa-code-merge':index%2===1},{'fa-code-fork':index%2===0}]"></i></i></div>
                                 <div class="tab-title">
@@ -22,14 +22,14 @@
                                     <span v-if="index > 0">{{index+1}}</span>
                                 </div>
                             </div>
-                            <div v-else-if="item.type === 'wifi'" class="d-flex align-items-center">
-                                <wifi-flag :icon="'wifi-'+(item.rssi > 3 ? 4 : (item.rssi < 3 ? (item.rssi === 0 ? 0 : 2) : 3))" width="20" height="20" stroke="#cccccc" color="#777777" stroke-width="2.3"></wifi-flag>
+                            <div v-if="item.type === 'wifi'" class="d-flex align-items-center">
+                                <wifi-flag :icon="'wifi-'+(item.rssi > 3 ? 4 : (item.rssi < 3 ? (item.rssi === 0 ? 1 : 2) : 3))" width="20" height="20" stroke="#cccccc" color="#777777" stroke-width="2.3"></wifi-flag>
                                 <div class="tab-title">
                                     <cn>无线网</cn>
                                     <en>WIFI</en>
                                 </div>
                             </div>
-                            <div v-else class="d-flex align-items-center">
+                            <div v-if="item.type === 'dongle'" class="d-flex align-items-center">
                                 <antenan-flag :icon="'antenan-'+(item.rssi > 3 ? 4 : (item.rssi < 3 ? (item.rssi === 0 ? 0 : 2) : 3))" width="20" height="20" stroke="#cccccc" color="#777777" stroke-width="2.3"></antenan-flag>
                                 <div class="tab-title">
                                     <cn>移动网络</cn>
@@ -39,7 +39,7 @@
                         </a>
                     </li>
 
-                    <li v-if="!handleValidNetDevice.some(item => item.type === 'wifi')" class="nav-item lp-cursor-pointer" ref="wifiHandler">
+                    <li v-if="!Object.values(netAdapter).some(item => item.type === 'wifi')" class="nav-item lp-cursor-pointer" ref="wifiHandler">
                         <a class="nav-link">
                             <div class="d-flex align-items-center">
                                 <wifi-flag icon="wifi-off" width="20" height="20" stroke="#999999" stroke-width="2.3"></wifi-flag>
@@ -51,7 +51,7 @@
                         </a>
                     </li>
 
-                    <li v-if="!handleValidNetDevice.some(item => item.type === 'dongle')" class="nav-item lp-cursor-pointer" ref="antenanHandler">
+                    <li v-if="!Object.values(netAdapter).some(item => item.type === 'dongle')" class="nav-item lp-cursor-pointer" ref="antenanHandler">
                         <a class="nav-link">
                             <div class="d-flex align-items-center">
                                 <antenan-flag icon="antenan-off" width="20" height="20" stroke="#999999" stroke-width="2.3"></antenan-flag>
@@ -65,8 +65,8 @@
                 </ul>
 
                 <div class="tab-content py-3 pe-2 ps-2">
-                    <div :class="['tab-pane fade',{'show active':index===0}]" v-for="(item,index) in handleValidNetDevice" :key="index" :id="'tab'+(index+1)" role="tabpanel">
-                        <div v-if="item.type === 'lan'">
+                    <div v-if="Object.keys(netAdapter).length > 0 && Object.keys(netManagerConf).length > 0" v-for="(item,index) in Object.values(netAdapter)" :class="['tab-pane fade',{'show active':index===0}]" :key="index" :id="'tab'+(index+1)" role="tabpanel">
+                        <div v-if="netManagerConf.interface.hasOwnProperty(item.dev) && item.type === 'lan'">
                             <div class="row mt-3">
                                 <div class="col-lg-2 offset-lg-1 lp-align-center">
                                     <label>
@@ -74,7 +74,7 @@
                                     </label>
                                 </div>
                                 <div class="col-lg-5">
-                                    <bs-switch v-model="item.dhcp" :size="'normal'"></bs-switch>
+                                    <bs-switch v-model="netManagerConf.interface[item.dev].dhcp" :size="'normal'"></bs-switch>
                                 </div>
                             </div>
                             <div class="row mt-3">
@@ -84,7 +84,7 @@
                                     </label>
                                 </div>
                                 <div class="col-lg-6">
-                                    <input class="form-control" v-model.trim.lazy="item.ip">
+                                    <input class="form-control" v-model.trim.lazy="netManagerConf.interface[item.dev].ip">
                                 </div>
                             </div>
                             <div class="row mt-3">
@@ -95,7 +95,7 @@
                                     </label>
                                 </div>
                                 <div class="col-lg-6">
-                                    <input class="form-control" v-model.trim.lazy="item.mask">
+                                    <input class="form-control" v-model.trim.lazy="netManagerConf.interface[item.dev].mask">
                                 </div>
                             </div>
                             <div class="row mt-3">
@@ -106,7 +106,7 @@
                                     </label>
                                 </div>
                                 <div class="col-lg-6">
-                                    <input class="form-control" v-model.trim.lazy="item.gw">
+                                    <input class="form-control" v-model.trim.lazy="netManagerConf.interface[item.dev].gw">
                                 </div>
                             </div>
                             <div class="row mt-3">
@@ -116,7 +116,7 @@
                                     </label>
                                 </div>
                                 <div class="col-lg-6">
-                                    <input class="form-control" v-model.trim.lazy="item.dns">
+                                    <input class="form-control" v-model.trim.lazy="netManagerConf.interface[item.dev].dns">
                                 </div>
                             </div>
                             <div class="row mt-3">
@@ -126,16 +126,19 @@
                                     </label>
                                 </div>
                                 <div class="col-lg-6">
-                                    <input class="form-control" disabled v-model.trim.lazy="item.mac">
+                                    <div class="input-group">
+                                        <input class="form-control" type="text" :disabled="macLock" v-model.trim.lazy="netManagerConf.interface[item.dev].mac">
+                                        <span class="input-group-text input-group-addon lp-cursor-pointer" @click="macLock=!macLock"><i :class="['fa-solid',{'fa-lock':macLock},{'fa-unlock':!macLock}]"></i></span>
+                                    </div>
                                 </div>
                             </div>
                             <div class="row mt-4">
                                 <div class="col-lg-12 text-center">
-                                    <button type="button" class="btn border-3 btn-primary px-4" @click="updateNetManagerConf(handleValidNetDevice)"><cn>保存</cn><en>Save</en></button>
+                                    <button type="button" class="btn border-3 btn-primary px-4" @click="updateNetManagerConf"><cn>保存</cn><en>Save</en></button>
                                 </div>
                             </div>
                         </div>
-                        <div v-else-if="item.type === 'wifi'">
+                        <div v-if="netManagerConf.interface.hasOwnProperty(item.dev) && item.type === 'wifi'">
                             <div class="row mt-4">
                                 <div class="col-lg-6 border-right">
                                     <div class="row mt-4">
@@ -146,7 +149,7 @@
                                             </label>
                                         </div>
                                         <div class="col-lg-8">
-                                            <bs-switch v-model="item.enable" :size="'normal'"></bs-switch>
+                                            <bs-switch v-model="netManagerConf.interface[item.dev].enable" :size="'normal'" @switch-change="enableWifi"></bs-switch>
                                         </div>
                                     </div>
                                     <div class="row mt-3">
@@ -158,7 +161,7 @@
                                         <div class="col-lg-8">
                                             <div class="input-group">
                                                 <select class="form-select" v-model="wifiConnectId">
-                                                    <option v-for="(it,idx) in wifiList" :key="idx+10" :value="it.ssid">{{it.ssid}}</option>
+                                                    <option v-for="(it,idx) in wifiList" :key="idx+10" :value="formatWifiSSID(it.ssid)">{{formatWifiSSID(it.ssid)}}</option>
                                                 </select>
                                                 <span class="input-group-text input-group-addon lp-cursor-pointer" @click="refreshWifi"><i :class="['fa-solid fa-arrows-rotate',{'spin':wifiRefresh}]"></i></span>
                                             </div>
@@ -186,13 +189,19 @@
                                             </label>
                                         </div>
                                         <div class="col-lg-8">
-                                            <label v-if="!wifiConnectStatus">
-                                                <cn>未连接</cn><en>not connected </en>
+                                            <label v-if="!netManagerConf.interface[item.dev].enable">
+                                                <cn>未启用</cn><en>Disabled</en>
                                             </label>
-                                            <label v-if="wifiConnectStatus">
+                                            <label v-else-if="(!item.ssid && wifiPassword) || (!item.linkup && item.ssid)">
+                                                <cn class="pointLoading">连接中</cn><en class="pointLoading">connecting</en>
+                                            </label>
+                                            <label v-else-if="item.linkup && item.ssid">
                                                 <cn>已连接</cn><en>connected </en>
+                                                {{formatWifiSSID(item.ssid)}}
                                             </label>
-                                            <label v-if="wifiConnectStatus"> {{wifiConnectName}}</label>
+                                            <label v-else>
+                                                <cn>未连接</cn><en>not connected</en>
+                                            </label>
                                         </div>
                                     </div>
                                     <div class="row mt-4">
@@ -209,7 +218,7 @@
                                             </label>
                                         </div>
                                         <div class="col-lg-8">
-                                            <bs-switch v-model="item.dhcp" :size="'normal'"></bs-switch>
+                                            <bs-switch v-model="netManagerConf.interface[item.dev].dhcp" :size="'normal'"></bs-switch>
                                         </div>
                                     </div>
                                     <div class="row mt-3">
@@ -219,7 +228,7 @@
                                             </label>
                                         </div>
                                         <div class="col-lg-8">
-                                            <input class="form-control" v-model.trim.lazy="item.ip">
+                                            <input class="form-control" v-model.trim.lazy="netManagerConf.interface[item.dev].ip">
                                         </div>
                                     </div>
                                     <div class="row mt-3">
@@ -230,7 +239,7 @@
                                             </label>
                                         </div>
                                         <div class="col-lg-8">
-                                            <input class="form-control" v-model.trim.lazy="item.mask">
+                                            <input class="form-control" v-model.trim.lazy="netManagerConf.interface[item.dev].mask">
                                         </div>
                                     </div>
                                     <div class="row mt-3">
@@ -241,7 +250,7 @@
                                             </label>
                                         </div>
                                         <div class="col-lg-8">
-                                            <input class="form-control" v-model.trim.lazy="item.gw">
+                                            <input class="form-control" v-model.trim.lazy="netManagerConf.interface[item.dev].gw">
                                         </div>
                                     </div>
                                     <div class="row mt-3">
@@ -251,19 +260,19 @@
                                             </label>
                                         </div>
                                         <div class="col-lg-8">
-                                            <input class="form-control" v-model.trim.lazy="item.dns">
+                                            <input class="form-control" v-model.trim.lazy="netManagerConf.interface[item.dev].dns">
                                         </div>
                                     </div>
                                     <div class="row mt-4 mb-4">
                                         <div class="col-lg-12 text-center">
-                                            <button type="button" class="btn border-3 btn-primary px-4" @click="updateNetManagerConf(handleValidNetDevice)"><cn>保存</cn><en>Save</en></button>
+                                            <button type="button" class="btn border-3 btn-primary px-4" @click="updateNetManagerConf"><cn>保存</cn><en>Save</en></button>
                                         </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                        <div v-else>
-                            <div class="row mt-4">
+                        <div v-if="item.type === 'dongle'">
+                            <div class="row mt-3">
                                 <div class="col-lg-2 offset-lg-1 lp-align-center">
                                     <label>
                                         <cn>运营商</cn>
@@ -271,7 +280,8 @@
                                     </label>
                                 </div>
                                 <div class="col-lg-6">
-                                    <div v-html="item.oper === '' ? (`<cn>检测中...</cn><en>Detecting...</en>`) : item.oper"></div>
+                                    <div v-if="!netAdapter[item.dev].oper" v-html="`<cn class='pointLoading'>检测中</cn><en class='pointLoading'>Detecting...</en>`"></div>
+                                    <input v-else class="form-control" v-model.trim.lazy="netAdapter[item.dev].oper" readonly>
                                 </div>
                             </div>
                             <div class="row mt-3">
@@ -282,17 +292,39 @@
                                     </label>
                                 </div>
                                 <div class="col-lg-6">
-                                    <div>{{item.service}}</div>
+                                    <input class="form-control" v-model.trim.lazy="netAdapter[item.dev].service" readonly>
                                 </div>
                             </div>
-                            <div class="row mt-4">
+                            <div class="row mt-3">
+                                <div class="col-lg-2 offset-lg-1 lp-align-center">
+                                    <label>
+                                        <cn>上行</cn>
+                                        <en>Service</en>
+                                    </label>
+                                </div>
+                                <div class="col-lg-6">
+                                    <input class="form-control" :value="formatNetSpeed(netAdapter[item.dev].tx)" readonly>
+                                </div>
+                            </div>
+                            <div class="row mt-3">
+                                <div class="col-lg-2 offset-lg-1 lp-align-center">
+                                    <label>
+                                        <cn>下行</cn>
+                                        <en>Service</en>
+                                    </label>
+                                </div>
+                                <div class="col-lg-6">
+                                    <input class="form-control" :value="formatNetSpeed(netAdapter[item.dev].rx)" readonly>
+                                </div>
+                            </div>
+                            <div class="row mt-3">
                                 <div class="col-lg-2 offset-lg-1 lp-align-center">
                                     <label>
                                         IP
                                     </label>
                                 </div>
                                 <div class="col-lg-6">
-                                    <input class="form-control" v-model.trim.lazy="item.ip" readonly disabled>
+                                    <input class="form-control" v-model.trim.lazy="netAdapter[item.dev].ip" readonly>
                                 </div>
                             </div>
                             <div class="row mt-3">
@@ -303,10 +335,10 @@
                                     </label>
                                 </div>
                                 <div class="col-lg-6">
-                                    <input class="form-control" v-model.trim.lazy="item.mask" readonly disabled>
+                                    <input class="form-control" v-model.trim.lazy="netAdapter[item.dev].mask" readonly>
                                 </div>
                             </div>
-                            <div class="row mt-3">
+                            <div class="row mt-3 mb-2">
                                 <div class="col-lg-2 offset-lg-1 lp-align-center">
                                     <label>
                                         <cn>网关</cn>
@@ -314,27 +346,7 @@
                                     </label>
                                 </div>
                                 <div class="col-lg-6">
-                                    <input class="form-control" v-model.trim.lazy="item.gw" readonly disabled>
-                                </div>
-                            </div>
-                            <div class="row mt-3">
-                                <div class="col-lg-2 offset-lg-1 lp-align-center">
-                                    <label>
-                                        DNS
-                                    </label>
-                                </div>
-                                <div class="col-lg-6">
-                                    <input class="form-control" v-model.trim.lazy="item.dns" readonly disabled>
-                                </div>
-                            </div>
-                            <div class="row mt-3 mb-4">
-                                <div class="col-lg-2 offset-lg-1 lp-align-center">
-                                    <label>
-                                        MAC
-                                    </label>
-                                </div>
-                                <div class="col-lg-6">
-                                    <input class="form-control" v-model.trim.lazy="item.mac" readonly disabled>
+                                    <input class="form-control" v-model.trim.lazy="netAdapter[item.dev].gw" readonly>
                                 </div>
                             </div>
                         </div>
@@ -949,12 +961,12 @@
     import vue from "./assets/js/vue.build.js";
     import JsZip from "./assets/plugins/jszip/jszip.esm.js"
     import * as fileSave from "./assets/plugins/jszip/filesaver.esm.js";
-    import { rpc2,alertMsg,func,queryData,extend,popover,formatDate,deepCopy,rebootConfirm,resetConfirm } from "./assets/js/lp.utils.js";
-    import { useHardwareConf,usetNetManagerConf,usePasswordConf,useVideoBufferConf,useNtpConf,useTimezoneConf,usePortConf,useVersionConf,useVerLogsConf,useWpaConf } from "./assets/js/vue.hooks.js";
+    import { rpc2,alertMsg,func,queryData,popover,formatDate,rebootConfirm,resetConfirm,clearReactiveObject } from "./assets/js/lp.utils.js";
+    import { useHardwareConf,useNetManagerConf,usePasswordConf,useVideoBufferConf,useNtpConf,useTimezoneConf,usePortConf,useVersionConf,useVerLogsConf,useWpaConf } from "./assets/js/vue.hooks.js";
     import { ignoreCustomElementPlugin,bootstrapSwitchComponent,languageOptionDirective,uploadModalComponent,upgradeModalComponent,customModalComponent,loadingButtonComponent } from "./assets/js/vue.helper.js"
     import { wifiFlagComponent,antenanFlagComponent } from "./assets/js/vue.flags.js";
 
-    const { createApp,ref,reactive,watchEffect,computed,onMounted } = vue;
+    const { createApp,ref,reactive,watch,watchEffect,computed,onMounted } = vue;
     const app = createApp({
         directives:{
             "language-option": languageOptionDirective
@@ -972,7 +984,7 @@
         setup(props,context) {
 
             const { hardwareConf } = useHardwareConf();
-            const { netManagerConf,updateNetManagerConf } = usetNetManagerConf();
+            const { netManagerConf,updateNetManagerConf } = useNetManagerConf();
             const { wpaConf } = useWpaConf();
             const { updateUserPasswd } = usePasswordConf();
             const { videoBufferConf,updateVideoBufferConf } = useVideoBufferConf();
@@ -984,8 +996,7 @@
             const { saveAs } = fileSave;
 
             const state = {
-                netState: ref({}),
-                netAdapter: ref({}),
+                netAdapter: reactive({}),
                 wifiHandler: ref(null),
                 wifiPopover: {},
                 antenanHandler:ref(null),
@@ -994,8 +1005,6 @@
                 wifiList:reactive([]),
                 wifiPassword:ref(""),
                 wifiConnectId:ref(""),
-                wifiConnectStatus:ref(false),
-                wifiConnectName:ref(""),
                 sysTime: ref("1970-01-01 08:00:00"),
                 timezoneCitys: reactive([]),
                 cronDay: ref("never"),
@@ -1010,60 +1019,59 @@
                 showSearchModal:ref(false),
                 checkLoading:ref(false),
                 checkUpgrade:ref(false),
-                patchSN:ref("")
+                patchSN:ref(""),
+                macLock:ref(true)
             }
-            
-            watchEffect(()=>{
-                if(Object.keys(netManagerConf).length > 0) {
-                    if(state.wifiHandler.value) {
-                        if(Object.keys(state.wifiPopover).length > 0) {
-                            state.wifiPopover.dispose();
-                            state.wifiPopover = {};
-                        }
-                        state.wifiPopover = popover(state.wifiHandler.value, {
-                            placement:"bottom",
-                            trigger:"hover",
-                            content:`<cn>请先插入USB WIFI网卡</cn><en>Please insert the USB WIFI network card first</en>`,
-                        });
-                    } else {
-                        if(!state.wifiHandler.value && Object.keys(state.wifiPopover).length !== 0) {
-                            state.wifiPopover.dispose();
-                            state.wifiPopover = {};
-                        }
-                    }
 
-                    if(state.antenanHandler.value) {
-                        if(Object.keys(state.antenanPopover).length > 0) {
-                            state.antenanPopover.dispose();
-                            state.antenanPopover = {};
-                        }
-                        state.antenanPopover = popover(state.antenanHandler.value, {
-                            placement:"bottom",
-                            trigger:"hover",
-                            content:`<cn>请先插入移动网卡</cn><en>Please insert the Cellular network card first</en>`,
-                        })
-                    } else {
-                        if(!state.antenanHandler.value && Object.keys(state.antenanPopover).length !== 0) {
-                            state.antenanPopover.dispose();
-                            state.antenanPopover = {};
-                        }
+            watch(state.wifiHandler,() => {
+                if(state.wifiHandler.value) {
+                    if(Object.keys(state.wifiPopover).length > 0) {
+                        state.wifiPopover.dispose();
+                        state.wifiPopover = {};
                     }
-
-                    if(state.wifiList.length === 0) {
-                        const devices = netManagerConf.interface;
-                        if(devices.hasOwnProperty("wlan0") && devices.wlan0.enable)
-                            refreshWifi("noLoading");
+                    state.wifiPopover = popover(state.wifiHandler.value, {
+                        placement:"bottom",
+                        trigger:"hover",
+                        content:`<cn>请先插入USB WIFI网卡</cn><en>Please insert the USB WIFI network card first</en>`,
+                    });
+                    if(document.querySelector('a[href="#tab1"]'))
+                        document.querySelector('a[href="#tab1"]').click();
+                } else {
+                    if(!state.wifiHandler.value && Object.keys(state.wifiPopover).length !== 0) {
+                        state.wifiPopover.dispose();
+                        state.wifiPopover = {};
                     }
                 }
+            })
 
+            watch(state.antenanHandler, () => {
+                if(state.antenanHandler.value) {
+                    if(Object.keys(state.antenanPopover).length > 0) {
+                        state.antenanPopover.dispose();
+                        state.antenanPopover = {};
+                    }
+                    state.antenanPopover = popover(state.antenanHandler.value, {
+                        placement:"bottom",
+                        trigger:"hover",
+                        content:`<cn>请先插入移动网卡</cn><en>Please insert the Cellular network card first</en>`,
+                    })
+                    if(document.querySelector('a[href="#tab1"]'))
+                        document.querySelector('a[href="#tab1"]').click();
+                } else {
+                    if(!state.antenanHandler.value && Object.keys(state.antenanPopover).length !== 0) {
+                        state.antenanPopover.dispose();
+                        state.antenanPopover = {};
+                    }
+                }
+            })
+            
+            watchEffect(()=>{
                 if(!state.checkUpgrade.value)
                     state.checkLoading.value = false;
 
-                if(wpaConf.length > 0 && state.wifiPassword.value === "") {
-                    for(let i=0;i<wpaConf.length;i++) {
-                        if(state.wifiConnectId.value === wpaConf[i].ssid)
-                            state.wifiPassword.value = wpaConf[i].psk;
-                    }
+                if(wpaConf.length > 0 && state.wifiConnectId.value === "") {
+                    state.wifiConnectId.value = wpaConf[0].ssid
+                    state.wifiPassword.value = wpaConf[0].psk;
                 }
 
                 if(Object.keys(timezoneConf).length > 0 && state.timezoneCitys.length === 0)
@@ -1072,31 +1080,8 @@
 
             const getAdapterNetState = () => {
                 rpc2("net.getState").then(data => {
-                    if(Object.keys(data.interface).length !== Object.keys(state.netAdapter.value).length) {
-                        const fetch = {};
-                        Object.keys(data.interface).forEach(key => {
-                            const { ip, mask, gw, dns, type, dev, rssi, oper, service } = data.interface[key];
-                            fetch[key] = { ip, mask, gw, dns, type, dev };
-                            if(rssi !== undefined)
-                                fetch[key].rssi = rssi;
-                            if(oper !== undefined)
-                                fetch[key].oper = oper;
-                            if(service !== undefined)
-                                fetch[key].service = service;
-                        });
-                        state.netAdapter.value = fetch;
-                    } else {
-                        Object.keys(data.interface).forEach(key => {
-                            const { rssi } = data.interface[key];
-                            if(rssi !== undefined)
-                                state.netAdapter.value[key].rssi = rssi;
-                        });
-                    }
-
-                    state.netState.value = data;
-                    const devices = state.netState.value.interface;
-                    if(devices.hasOwnProperty("wlan0") && state.wifiConnectId.value === "")
-                        state.wifiConnectId.value = devices.wlan0.ssid;
+                    clearReactiveObject(state.netAdapter);
+                    Object.assign(state.netAdapter,data.interface);
                 });
                 setTimeout(getAdapterNetState,2000);
             }
@@ -1107,64 +1092,58 @@
                 })
             });
 
-            const handleValidNetDevice = computed(()=>{
-                let adapters = [];
-                if(Object.keys(state.netAdapter.value).length > 0 && Object.keys(netManagerConf).length > 0) {
-                    const interface_confs = netManagerConf.interface;
-                    for (const [adapter_name, adapter_status] of Object.entries(state.netAdapter.value)) {
-                        let adpt = {};
-                        if(interface_confs.hasOwnProperty(adapter_name)) {
-                            if(adapter_status.ip === "")
-                                adpt = (extend(deepCopy(adapter_status),deepCopy(interface_confs[adapter_name])));
-                            else
-                                adpt = (extend(deepCopy(interface_confs[adapter_name]),deepCopy(adapter_status)));
-                        } else {
-                            if(adapter_status.type !== "dongle") {
-                                adpt = {enable: false, dhcp: false, ip: "192.168.1.101",
-                                    mask: "255.255.255.0", gw: "192.168.1.1", dns: "8.8.8.8"}
-                                adpt = (extend(deepCopy(adapter_status),adpt));
-                            } else {
-                                adpt = deepCopy(adapter_status);
-                            }
-                        }
-                        adapters.push(adpt)
-                    }
-                }
-                return adapters;
-            })
+            const enableWifi = state => {
+                updateNetManagerConf("noTip").then(()=>{
+                    if(state)
+                        alertMsg('<cn>WIFI已启用</cn><en>WIFI enable successfully!</en>', 'success');
+                    else
+                        alertMsg('<cn>WIFI已关闭</cn><en>WIFI disable successfully!</en>', 'success');
+                })
+            }
 
-            const refreshWifi = tip => {
-                const scanwifi = () => {
-                    rpc2("net.scanWifi").then(data => {
+            const refreshWifi = (tip = 'loading',refresh = true) => {
+                const scanwifi = type => {
+                    rpc2("net.scanWifi",[refresh]).then(data => {
+                        if(data.length === 0)
+                            data.push({ssid:state.wifiConnectId});
                         state.wifiList.splice(0, state.wifiList.length, ...data);
                         state.wifiRefresh.value = false;
-                        if(state.wifiConnectId.value === "" && state.wifiList.length > 0)
-                            state.wifiConnectId.value = state.wifiList[0].ssid;
                     })
                 }
-                if(tip !== "noLoading") {
-                    state.wifiRefresh.value = true;
-                    setTimeout(scanwifi,2000);
-                } else {
-                    scanwifi();
+                if(tip === "noLoading") {
+                    scanwifi(refresh);
+                    return;
                 }
+                state.wifiRefresh.value = true;
+                setTimeout(scanwifi,2000);
             }
 
             const connectWifi = () => {
+                state.wifiPassword.value = state.wifiPassword.value.replace(/\s/g, '');
+                if(state.wifiPassword.value.length < 8) {
+                    alertMsg('<cn>WIFI密码格式错误，密码长度不能少于8位</cn><en>The wifi password format is wrong. The password length cannot be less than 8 characters!</en>', 'error');
+                    return;
+                }
                 rpc2("net.setSimpleWifi", [state.wifiConnectId.value,state.wifiPassword.value]).then(data => {
-                    if(data) {
-                        state.wifiConnectStatus.value = true;
-                        state.wifiConnectName.value = state.wifiConnectId.value;
-                        alertMsg('<cn>WIFI连接成功</cn><en>WIFI connected successfully!</en>', 'success');
-                    }
+                    if(data)
+                        alertMsg('<cn>设置成功，如果长时间处于连接状态，请检查wifi密码是否正确</cn><en>The setting is successful. If you are connected for a long time, please check whether the wifi password is correct</en>', 'success');
                     else
-                    {
-                        state.wifiConnectStatus.value = false;
-                        state.wifiConnectName.value = "";
-                        alertMsg('<cn>WIFI连接失败</cn><en>WIFI connected failed!</en>', 'error');
-                    }
-
+                        alertMsg('<cn>设置失败</cn><en>Save failed!</en>', 'error');
                 });
+            }
+
+            const  formatWifiSSID = ssid => {
+                const rep = ssid.replace(/\\x/g, '%');
+                return decodeURIComponent(rep);
+            }
+
+            const formatNetSpeed = speed => {
+                if (speed < 1024) {
+                    return speed + " kb/s";
+                } else {
+                    const formattedSpeed = parseFloat(speed / 1024).toFixed(1);
+                    return formattedSpeed.replace(/\.0$/, '') + " mb/s";
+                }
             }
 
             const syncTimeFromPc = () => {
@@ -1192,8 +1171,7 @@
                     func("/mgr/conf/updateTimezoneConf", timezoneConf),
                     func("/mgr/system/setSystemCrontab", { day: state.cronDay.value, time: state.cronTime.value }),
                 ]).then((results) => {
-                    const [data1, data2, data3] = results;
-                    if(data1.status==="success" && data2.status==="success" && data3.status==="success")
+                    if(results.every(ret => typeof ret === "boolean" ? ret : (ret?.status === "success")))
                         alertMsg('<cn>保存设置成功</cn><en>Save config successfully!</en>', 'success');
                     else
                         alertMsg('<cn>保存设置失败</cn><en>Save config failed!</en>', 'error');
@@ -1297,8 +1275,8 @@
                 //     else
                 //         alertMsg('<cn>网络不可用</cn><en>Network Unavailable</en>！', 'error');
                 // })
-                console.log(netManagerConf,"########");
-                updateNetManagerConf();
+                console.log(state,"########");
+                //updateNetManagerConf("noTip");
             }
 
             const showBootstrapModal = type => {
@@ -1381,12 +1359,13 @@
                 updateRenderData();
                 getSysAbortTime();
                 getAdapterNetState();
+                refreshWifi("noLoading",false);
             })
 
-            return {...state,hardwareConf,netManagerConf,handleValidNetDevice,videoBufferConf,ntpConf,timezoneConf,portConf,versionConf,verLogsConf,
-                refreshWifi,connectWifi,updateNetManagerConf,handleSysScene, updateUserPasswd,updateVideoBufferConf,updatePortConf,showBootstrapModal,
-                uploadSuccess,uploadError,rebootConfirm,resetConfirm, onTimeAreaChange,syncTimeFromPc,saveSysConf,exportConf,importConf,startHelp,stopHelp,
-                systemNetTest,checkUpdatePatch,searchUpdatePatch,searchPatchBySn}
+            return {...state,hardwareConf,netManagerConf,videoBufferConf,ntpConf,timezoneConf,portConf,versionConf,verLogsConf,
+                enableWifi,refreshWifi,connectWifi,formatWifiSSID,updateNetManagerConf,handleSysScene, updateUserPasswd,updateVideoBufferConf,
+                updatePortConf,showBootstrapModal,formatNetSpeed, uploadSuccess,uploadError,rebootConfirm,resetConfirm, onTimeAreaChange,
+                syncTimeFromPc,saveSysConf,exportConf,importConf,startHelp,stopHelp, systemNetTest,checkUpdatePatch,searchUpdatePatch,searchPatchBySn}
         }
     });
     app.use(ignoreCustomElementPlugin);

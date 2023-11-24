@@ -110,6 +110,47 @@
                     </div>
                 </div>
             </div>
+            <div class="col-lg-6">
+                <div class="card">
+                    <div class="card-header bg-transparent">
+                        <div class="p-2 mb-0 d-flex align-items-end">
+                            Frp
+                        </div>
+                    </div>
+                    <div class="card-body pb-4 gpio-btn">
+                        <div class="row mt-3">
+                            <div class="col-lg-2 offset-lg-1 lp-align-center">
+                                <label>
+                                    <cn>启用</cn>
+                                    <en>Enable</en>
+                                </label>
+                            </div>
+                            <div class="col-lg-6">
+                                <bs-switch v-model="frpEnableConf" :size="'normal'"></bs-switch>
+                            </div>
+                        </div>
+                        <div class="row mt-3">
+                            <div class="col-lg-2 offset-lg-1 d-flex justify-content-center">
+                                <label>
+                                    <cn>配置</cn>
+                                    <en>Config</en>
+                                </label>
+                            </div>
+                            <div class="col-lg-8">
+                                <textarea  class="form-control" name="config" v-model="frpcConf" style="min-height: 250px"></textarea>
+                            </div>
+                        </div>
+                        <div class="row mt-4">
+                            <div class="col-lg-12 text-center">
+                                <button type="button" class="btn border-3 btn-primary px-4" @click="saveFrpConf">
+                                    <cn>保存</cn>
+                                    <en>Save</en>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     </main>
 </div>
@@ -117,7 +158,7 @@
 
 <script type="module">
     import { alertMsg } from "./assets/js/lp.utils.js";
-    import { useServiceConf,useSlsConf,useRtmpConf,useNdiConf } from "./assets/js/vue.hooks.js";
+    import { useServiceConf,useSlsConf,useRtmpConf,useNdiConf,useFrpEnableConf,useFrpcConf } from "./assets/js/vue.hooks.js";
     import { ignoreCustomElementPlugin,bootstrapSwitchComponent } from "./assets/js/vue.helper.js";
     import vue from "./assets/js/vue.build.js";
 
@@ -132,6 +173,8 @@
             const { slsConf,updateSlsConf } = useSlsConf();
             const { rtmpConf,updateRtmpConf } = useRtmpConf();
             const { ndiConf,updateNdiConf } = useNdiConf();
+            const { frpEnableConf,updateFrpEnableConf } = useFrpEnableConf();
+            const { frpcConf,updateFrpcConf } = useFrpcConf();
 
             const saveSrtConf = () => {
                 Promise.all([
@@ -145,8 +188,21 @@
                         alertMsg('<cn>保存设置失败</cn><en>Save config failed!</en>', 'error');
                 });
             }
+
+            const saveFrpConf = () => {
+                Promise.all([
+                    updateFrpEnableConf("noTip"),
+                    updateFrpcConf("noTip")
+                ]).then((results) => {
+                    const [data1, data2] = results;
+                    if(data1.status==="success" && data2.status==="success")
+                        alertMsg('<cn>保存设置成功</cn><en>Save config successfully!</en>', 'success');
+                    else
+                        alertMsg('<cn>保存设置失败</cn><en>Save config failed!</en>', 'error');
+                });
+            }
             
-            return {serviceConf,slsConf,rtmpConf,updateRtmpConf,ndiConf,updateNdiConf,saveSrtConf}
+            return {serviceConf,slsConf,rtmpConf,updateRtmpConf,ndiConf,updateNdiConf,frpEnableConf,frpcConf,saveSrtConf,saveFrpConf}
         }
     });
     app.use(ignoreCustomElementPlugin);

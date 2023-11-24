@@ -221,4 +221,8 @@ class System extends Basic
         }
         return $this->handleRet($retList,'success','获取成功','Get local devices successfully');
     }
+
+    function reloadRtty() {
+        exec("pkill rtty");
+    }
 }

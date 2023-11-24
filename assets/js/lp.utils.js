@@ -2,7 +2,6 @@ import JsonRpcClient from '../plugins/jsonrpc/jquery.jsonrpc.js';
 import axios from '../plugins/axios/axios.esm.js';
 import Lobibox from '../plugins/notifications/js/lobibox.min.js'
 import JqueryConfirm from '../plugins/confirm/js/jquery-confirm.esm.js'
-import {useLanguageConf} from './vue.hooks.js';
 
 export const getUrlParam = (key) => {
     let param = "";
@@ -16,15 +15,15 @@ export const getUrlParam = (key) => {
     return param;
 }
 
-export const updateSysLanguage = async param => {
-
-    if(param !== undefined)
-        await func("/mgr/conf/updateLangConf", param);
-
-    let { languageConf } = useLanguageConf();
-    const lang = languageConf["lang"];
-    const html = document.querySelector('html');
-    html.setAttribute('data-bs-language', lang);
+export const updateSysLanguage = param => {
+    if(param) {
+        func("/mgr/conf/updateLangConf", param).then(result => {
+            if(result.status === "success") {
+                const html = document.querySelector('html');
+                html.setAttribute('data-bs-language', param);
+            }
+        })
+    }
 }
 
 //size mini normal large
