@@ -93,7 +93,7 @@ class Conf extends Basic
     {
         if(is_null(json_decode($param)))
             return $this->handleRet("",'error','保存失败,格式错误','Failed to save, format error');
-        file_put_contents( '/link/config/ndi.json', json_encode($param,JSON_UNESCAPED_SLASHES|JSON_UNESCAPED_UNICODE|JSON_PRETTY_PRINT));
+        file_put_contents( '/link/config/ndi.json', $param);
         return $this->handleRet("",'success','保存成功','save successfully');
     }
 

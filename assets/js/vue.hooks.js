@@ -1018,5 +1018,15 @@ export const useEdidConf = () => {
     return { edidConf,updateEdidConf }
 }
 
+export const useSnConf = () => {
+    const sn = ref("");
+    const handleSnConf = () => {
+        rpc( "enc.getSN").then( data => sn.value = data.replace(/[\r\n]/g,""));
+    }
+
+    onMounted(handleSnConf);
+    return { sn }
+}
+
 
 

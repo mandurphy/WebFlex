@@ -147,7 +147,7 @@
             </div>
         </div>
         <mqtt-modal :modal-title="'扫一扫绑定设备&Scan qrcode'" :modal-show="showMqttModal"
-                    :had-confirml-btn="false" :cancel-btn-name="'确定&OK'" @modal-visible="onModalVisible">
+                    :had-confirm-btn="false" :cancel-btn-name="'确定&OK'" @modal-visible="onModalVisible">
             <div class="text-center" ref="qrcodeHandler"></div>
         </mqtt-modal>
     </main>

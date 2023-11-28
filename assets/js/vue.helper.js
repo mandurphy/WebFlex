@@ -1438,7 +1438,7 @@ export const customModalComponent = {
                         </div>
                         <div class="modal-footer" v-if="hadFooter">
                             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">{{modalCancelBtnName}}</button>
-                            <button type="button" v-if="hadConfirmlBtn" class="btn btn-primary" @click="confirmBtnClick">{{modalConfirmBtnName}}</button>
+                            <button type="button" v-if="hadConfirmBtn" class="btn btn-primary" @click="confirmBtnClick">{{modalConfirmBtnName}}</button>
                           </div>
                       </div>
                     </div>
@@ -1484,7 +1484,7 @@ export const customModalComponent = {
             type: String,
             default:"取消"
         },
-        hadConfirmlBtn: {
+        hadConfirmBtn: {
             type: Boolean,
             default: true
         },
