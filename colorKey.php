@@ -221,7 +221,7 @@
 
             const state = {
                 chnIndex: ref(-1),
-                chnImgUrl: ref("assets/images/nosignal.jpg"),
+                chnImgUrl: ref("assets/img/nosignal.jpg"),
                 hadImg: false,
                 hadEnable: false,
                 hadPick: ref(false),
@@ -258,7 +258,7 @@
                 if(state.hadEnable && state.hadImg)
                     state.chnImgUrl.value = "snap/snap" + state.chnIndex.value + ".jpg?rnd=" + Math.random();
                 else
-                    state.chnImgUrl.value = "assets/images/nosignal.jpg";
+                    state.chnImgUrl.value = "assets/img/nosignal.jpg";
 
                 setTimeout(() => { rpc( "enc.snap" ) },200)
                 setTimeout(updateChnImage,500);

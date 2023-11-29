@@ -128,7 +128,7 @@
 
             const state = {
                 chnIndex: ref(-1),
-                chnImgUrl: ref("assets/images/nosignal.jpg"),
+                chnImgUrl: ref("assets/img/nosignal.jpg"),
                 ptz: reactive({ p: 0, t: 0, z: 300 }),
                 options: reactive({tracking: false, whiteboard: false, overhead: false, deskview: false, hdr: false, mirror: false}),
                 stepP: 0,
@@ -152,7 +152,7 @@
                 if(defaultConf[state.chnIndex.value].enable)
                     state.chnImgUrl.value = "snap/snap" + state.chnIndex.value + ".jpg?rnd=" + Math.random();
                 else
-                    state.chnImgUrl.value = "assets/images/nosignal.jpg";
+                    state.chnImgUrl.value = "assets/img/nosignal.jpg";
 
                 setTimeout(() => { rpc( "enc.snap" ) },200)
                 setTimeout(updateChnImage,500);

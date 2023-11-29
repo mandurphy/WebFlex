@@ -986,7 +986,7 @@ input[type="password"]::-ms-reveal{
 
 .dashboard .hdmi .icon {
     display: inline-block;
-    background-image:url(../../assets/images/input.png);
+    background-image:url(../../assets/img/input.png);
     /*margin:0 auto;*/
     width:68px;
     height:26px;
@@ -997,7 +997,7 @@ input[type="password"]::-ms-reveal{
 
 .dashboard .sdi .icon {
     display: inline-block;
-    background-image:url(../../assets/images/input.png);
+    background-image:url(../../assets/img/input.png);
     /*margin:0 auto;*/
     width:45px;
     height:54px;

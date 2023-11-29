@@ -122,7 +122,7 @@
                 if(defaultConf[state.mixIndex.value].enable)
                     state.chnImgUrl.value = "snap/snap" + defaultConf[state.mixIndex.value].id + ".jpg?rnd=" + Math.random();
                 else
-                    state.chnImgUrl.value = "assets/images/nosignal.jpg";
+                    state.chnImgUrl.value = "assets/img/nosignal.jpg";
                 setTimeout(() => { rpc( "enc.snap" ) },200)
                 setTimeout(updateChnImage,500);
             }

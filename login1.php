@@ -10,7 +10,7 @@
         <div class="col-12 col-xl-7 col-xxl-8 auth-cover-left align-items-center justify-content-center d-none d-xl-flex back-login">
             <div class="card rounded-0 mb-0 border-0 bg-transparent">
                 <div class="card-body">
-                    <img src="assets/images/products.png" class="img-fluid auth-img-cover-login" width="800" alt="">
+                    <img src="assets/img/products.png" class="img-fluid auth-img-cover-login" width="800" alt="">
                 </div>
             </div>
         </div>
@@ -19,7 +19,7 @@
                 <div class="card-body p-sm-5">
                     <div class="row">
                         <div class="col-lg-12 text-center">
-                            <img src="assets/images/logo-lg.png" class="mb-3" width="300">
+                            <img src="assets/img/logo-lg.png" class="mb-3" width="300">
                         </div>
                     </div>
                     <div class="separator section-padding mt-3">
