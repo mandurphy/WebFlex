@@ -185,7 +185,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="col-lg-4">
+                <div class="col-lg-4" v-if="showMcuVersion">
                     <div class="card">
                         <div class="card-header bg-transparent">
                             <div class="p-2 mb-0 d-flex align-items-end">
@@ -194,25 +194,16 @@
                             </div>
                         </div>
                         <div class="card-body" >
-                            <div class="row mt-2">
-                                <div class="col-lg-4 d-flex lp-align-center">
-                                    <cn>ColorMode</cn>
-                                    <en>ColorMode</en>
+                            <div class="row my-2" v-if="Object.keys(mcuConf).length > 0" v-for="(item,index) in Object.keys(mcuConf)">
+                                <div class="col-lg-3 text-center">
+                                    {{item.replace('Version','')}}
                                 </div>
-                                <div class="col-lg-8">
-                                    <select class="form-select" v-model.number="colorModeConf">
-                                        <option value="0">Mode1</option>
-                                        <option value="1">Mode2</option>
-                                        <option value="2">Mode3</option>
-                                    </select>
-                                </div>
-                            </div>
-                            <div class="row mt-3">
-                                <div class="col-lg-12 text-center">
-                                    <button type="button" class="btn btn-primary border-2 px-3" @click="updateColorModeConf">
-                                        <cn>保存</cn>
-                                        <en>Save</en>
-                                    </button>
+                                <div class="col-lg-9">
+                                    <div class="row" v-for="(it,idx) in mcuConf[item]">
+                                        <div class="col-lg-12">
+                                            {{it}}
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -224,7 +215,7 @@
 <?php include ("./public/foot.inc") ?>
 
 <script type="module">
-    import { useHardwareConf,useFacConf,useLphConf,useColorModeConf,useEdidConf } from "./assets/js/vue.hooks.js";
+    import { useHardwareConf,useFacConf,useLphConf,useColorModeConf,useEdidConf,useMcuConf } from "./assets/js/vue.hooks.js";
     import { ignoreCustomElementPlugin,bootstrapSwitchComponent,languageOptionDirective } from "./assets/js/vue.helper.js"
     import vue from "./assets/js/vue.build.js";
 
@@ -243,14 +234,19 @@
             const { lphConf,updateLphConf } = useLphConf();
             const { colorModeConf,updateColorModeConf } = useColorModeConf();
             const { edidConf,updateEdidConf} = useEdidConf();
+            const { mcuConf } = useMcuConf();
+
+            const showMcuVersion = ref(false);
 
             watchEffect(()=>{
                 if(Object.keys(hardwareConf).length > 0)
                     curFac.value = hardwareConf.fac;
+                if(Object.keys(mcuConf).length > 0)
+                    showMcuVersion.value = true;
             })
 
-            return {hardwareConf,updateHardwareConf,curFac,facConf,updateFacConf,
-                colorModeConf,updateColorModeConf,edidConf,updateEdidConf,lphConf,updateLphConf}
+            return {hardwareConf,updateHardwareConf,curFac,facConf,updateFacConf, colorModeConf,
+                updateColorModeConf,edidConf,updateEdidConf,lphConf,updateLphConf,mcuConf,showMcuVersion}
         }
     });
     app.use(ignoreCustomElementPlugin);

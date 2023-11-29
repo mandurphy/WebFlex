@@ -1,6 +1,6 @@
 <?php
 
-namespace Link\Mgr;
+namespace Link\Ctx;
 
 use Link\Basic;
 
@@ -57,7 +57,7 @@ class System extends Basic
         $sshPort=2000+intval($helpCode);
         $rtspPort=5000+intval($helpCode);
         exec("pkill ngrokc" );
-        exec("/usr/bin/ngrokc -SER[Shost:".$hardware["other"]["help"].",Sport:4443] -AddTun[Type:http,Lhost:127.0.0.1,Lport:80,Sdname:".$authCode."] -AddTun[Type:tcp,Lhost:127.0.0.1,Lport:22,Rport:".$sshPort."] -AddTun[Type:tcp,Lhost:127.0.0.1,Lport:554,Rport:".$rtspPort."] > /tmp/ngrok &" );
+        exec("/usr/bin/ngrokc -SER[Shost:".$hardware["other"]["help"].",Sport:4443] -AddTun[Type:http,Lhost:127.0.0.1,Lport:80,Sdname:".$helpCode."] -AddTun[Type:tcp,Lhost:127.0.0.1,Lport:22,Rport:".$sshPort."] -AddTun[Type:tcp,Lhost:127.0.0.1,Lport:554,Rport:".$rtspPort."] > /tmp/ngrok &" );
         return $this->handleRet("",'success','保存成功','save successfully');
     }
 
@@ -67,9 +67,9 @@ class System extends Basic
         return $this->handleRet("",'success','保存成功','save successfully');
     }
 
-    public function systemNetTest()
+    public function systemNetTest($param)
     {
-        exec('ping www.baidu.com -c1',$output);
+        exec('ping '.$param.' -c1',$output);
         return $this->handleRet($output,'success','执行成功','exec successfully');
     }
 

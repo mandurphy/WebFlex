@@ -95,9 +95,16 @@
                                         <td>
                                             <div class="row" v-for="(it,idx) in Object.keys(item.version)" :key="idx">
                                                 <div class="col-lg-10 p-0">
+<!--                                                    <label class="text-truncate lp-align-right monospace">-->
+<!--                                                        {{it+'_'+item.version[it].split('_')[0]}}-->
+<!--                                                    </label>-->
                                                     <label class="text-truncate lp-align-right">
-                                                        {{it+'_'+item.version[it].split('_')[0]}}
+                                                        <span v-if="it==='app'">{{it}}</span>
+                                                        <span v-if="it==='sdk'" style="letter-spacing: 0.05rem">{{it}}</span>
+                                                        <span v-if="it==='sys'" style="letter-spacing: 0.1rem">{{it}}</span>
+                                                        <span>{{'_'+item.version[it].split('_')[0]}}</span>
                                                     </label>
+
                                                 </div>
                                             </div>
                                         </td>

@@ -33,7 +33,7 @@ try
             $func_name = $query[$i];
         }
     }
-    $class_name ="Link\\".$class_name;
+    $class_name ="Link\\Ctx\\".$class_name;
     $class = new ReflectionClass($class_name);
     $func = $class->getMethod($func_name);
     $result = $func->invokeArgs($class->newInstance(), [$param['data']]);

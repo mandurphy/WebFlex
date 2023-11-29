@@ -1401,3 +1401,19 @@ input[type="password"]::-ms-reveal{
     background: #fb0;
     color: #ffffff;
 }
+
+.service textarea {
+    min-height: 250px;
+    overflow: auto;
+    resize: none;
+}
+
+.service textarea::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+}
+
+.service textarea::-webkit-scrollbar-thumb {
+    background-color: #777;
+    border-radius: 5px;
+}

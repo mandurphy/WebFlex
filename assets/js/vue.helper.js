@@ -1219,14 +1219,14 @@ export const upgradeModalComponent = {
 
         watchEffect(async ()=>{
             if(checkUpgrade.value) {
-                let result = await func("/mgr/upgrade/checkHelpNet");
+                let result = await func("/upgrade/checkHelpNet");
                 if (result.status === "error") {
                     alertMsg(result.msg, "error");
                     return;
                 }
 
                 if(!patchSn.value) {
-                    result = await func("/mgr/upgrade/getSystemAliase");
+                    result = await func("/upgrade/getSystemAliase");
                     if (result.status === "error") {
                         alertMsg(result.msg, "error");
                         context.emit('update:checkUpgrade', false);
@@ -1239,7 +1239,7 @@ export const upgradeModalComponent = {
                     }
                     state.facAliase = result.data[0].aliase;
 
-                    result = await func("/mgr/upgrade/getAllSystemPatch");
+                    result = await func("/upgrade/getAllSystemPatch");
                     if (result.status === "error") {
                         alertMsg(result.msg, "error");
                         context.emit('update:checkUpgrade', false);
@@ -1253,7 +1253,7 @@ export const upgradeModalComponent = {
                     state.systemPatchs.splice(0);
                     state.systemPatchs.push(...result.data);
 
-                    result = await func("/mgr/upgrade/checkVersionMaster");
+                    result = await func("/upgrade/checkVersionMaster");
                     if (result.status === "error") {
                         alertMsg(result.msg, "error");
                         context.emit('update:checkUpgrade', false);
@@ -1284,7 +1284,7 @@ export const upgradeModalComponent = {
                         state.bsModal.show();
                     }
                 } else {
-                    let result = await func("/mgr/upgrade/getSystemAliase");
+                    let result = await func("/upgrade/getSystemAliase");
                     if (result.status === "error") {
                         alertMsg(result.msg, "error");
                         context.emit('update:checkUpgrade', false);
@@ -1297,7 +1297,7 @@ export const upgradeModalComponent = {
                     }
                     state.facAliase = result.data[0].aliase;
 
-                    result = await func("/mgr/upgrade/getSystemPatchBySn",{"sn": patchSn.value});
+                    result = await func("/upgrade/getSystemPatchBySn",{"sn": patchSn.value});
                     if (result.data.length === 0) {
                         alertMsg("<cn>无效固件编号</cn><en>Invalid upgrade sn</en>", "error");
                         context.emit('update:checkUpgrade', false);
@@ -1861,7 +1861,7 @@ export const usbOptionComponent = {
                         text: "<cn>卸载</cn><en>Confirm</en>",
                         btnClass: 'btn-primary',
                         action: () => {
-                            func("/mgr/system/umountDisk").then(res => {
+                            func("/system/umountDisk").then(res => {
                                 alertMsg(res.msg,res.status);
                             })
                         }
@@ -1920,7 +1920,7 @@ export const usbOptionComponent = {
                         btnClass: 'btn-primary',
                         action: () => {
                             const formatPasswd = document.querySelector("#formatPasswd").value;
-                            func("/mgr/system/formatReady",{"psd":formatPasswd}).then (res => {
+                            func("/system/formatReady",{"psd":formatPasswd}).then (res => {
                                 return new Promise((resolve,reject)=>{
                                     if(res.status === "error") {
                                         alertMsg(res.msg,res.status);
@@ -1932,9 +1932,9 @@ export const usbOptionComponent = {
                             }).then(()=>{
                                 const diskFormat = document.querySelector("#diskFormat").value;
                                 const notify = alertMsg("<cn>正在格式化，请勿关闭此页面</cn><en>Do not close this page while formatting</en>","success",99999999);
-                                func("/mgr/system/formatDisk",{"format":diskFormat});
+                                func("/system/formatDisk",{"format":diskFormat});
                                 let interval = setInterval(()=>{
-                                    func("/mgr/system/checkFormatProgress").then(res => {
+                                    func("/system/checkFormatProgress").then(res => {
                                         if(res.data === 0) {
                                             clearInterval(interval);
                                             notify.remove();
@@ -1954,7 +1954,7 @@ export const usbOptionComponent = {
         }
 
         const checkMountDisk = () => {
-            func("/mgr/system/getMountDiskSpace").then(res => {
+            func("/system/getMountDiskSpace").then(res => {
                 Object.assign(hadMountInfo,res.data);
                 hadMountDisk.value = (res.status === "success");
             })
@@ -2082,7 +2082,7 @@ export const usbOptionComponent = {
                             }).then(async ()=> {
                                 handleDiskConf();
                                 alertMsg("<cn>磁盘检测中，请稍后...</cn><en>Disk checking, please wait...</en>","success");
-                                const result = await func("/mgr/system/mountDisk");
+                                const result = await func("/system/mountDisk");
                                 if(result.status === "success")
                                     jc.close();
                                 setTimeout(() => alertMsg(result.msg,result.status),600);
@@ -2113,7 +2113,7 @@ export const usbOptionComponent = {
                         localElements.forEach(element => element.style.display = '');
                     }
 
-                    func("/mgr/system/getLocalDisk").then(result => {
+                    func("/system/getLocalDisk").then(result => {
                         const html = document.querySelector("html");
                         const lang = html.getAttribute("data-bs-language");
                         result.data.forEach(item => {

@@ -258,7 +258,7 @@
            }
 
            const onLogout = () => {
-               func("/mgr/login/onLogout")
+               func("/login/onLogout")
                    .then((ret)=>{
                        if(ret.status === "success")
                            location.href = "/";

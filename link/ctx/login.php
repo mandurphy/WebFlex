@@ -1,6 +1,6 @@
 <?php
 
-namespace Link\Mgr;
+namespace Link\Ctx;
 
 use Link\Basic;
 class Login extends Basic

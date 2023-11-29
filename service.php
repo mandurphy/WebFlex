@@ -25,7 +25,7 @@
                                 </label>
                             </div>
                             <div class="col-lg-8">
-                                <textarea  class="form-control" name="config" v-model="rtmpConf" style="min-height: 250px"></textarea>
+                                <textarea  class="form-control" name="config" v-model="rtmpConf"></textarea>
                             </div>
                         </div>
                         <div class="row mt-4">
@@ -55,7 +55,7 @@
                                 </label>
                             </div>
                             <div class="col-lg-8">
-                                <textarea  class="form-control" name="config" v-model="ndiConf" style="min-height: 250px"></textarea>
+                                <textarea  class="form-control" name="config" v-model="ndiConf"></textarea>
                             </div>
                         </div>
                         <div class="row mt-4">
@@ -96,7 +96,7 @@
                                 </label>
                             </div>
                             <div class="col-lg-8">
-                                <textarea  class="form-control" name="config" v-model="slsConf" style="min-height: 250px"></textarea>
+                                <textarea  class="form-control" name="config" v-model="slsConf"></textarea>
                             </div>
                         </div>
                         <div class="row mt-4">
@@ -137,7 +137,7 @@
                                 </label>
                             </div>
                             <div class="col-lg-8">
-                                <textarea  class="form-control" name="config" v-model="frpcConf" style="min-height: 250px"></textarea>
+                                <textarea  class="form-control" name="config" v-model="frpcConf"></textarea>
                             </div>
                         </div>
                         <div class="row mt-4">

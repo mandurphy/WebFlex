@@ -38,7 +38,7 @@ export const useHardwareConf = () => {
     }
     const updateHardwareConf = (tip = "tip") => {
         return new Promise((resolve,reject) => {
-            func("/mgr/conf/updateHardwareConf",hardwareConf).then(data => {
+            func("/conf/updateHardwareConf",hardwareConf).then(data => {
                 if ( data.status !== "success" ) {
                     reject();
                     if(tip !== "noTip")
@@ -144,7 +144,7 @@ export const useThemeConf = () => {
     const updateThemeConf = (type) => {
         return new Promise((resolve,reject)=>{
             themeConf.used = type;
-            func("/mgr/conf/updateThemeConf",themeConf).then(data => {
+            func("/conf/updateThemeConf",themeConf).then(data => {
                 if ( data.status === "success" ) {
                     const html = document.querySelector('html');
                     html.setAttribute('data-bs-theme', type);
@@ -215,7 +215,7 @@ export const useNetManagerConf = (tip = "tip") => {
                         alertMsg('<cn>Mac地址格式错误</cn><en>Mac address format error</en>', 'error');
                     return;
                 } else
-                    promiseList.push(func("/mgr/conf/updateMacConf",mac));
+                    promiseList.push(func("/conf/updateMacConf",mac));
             }
             if(!isEmpty(mac2)) {
                 if(!macRegex.test(mac2)) {
@@ -224,7 +224,7 @@ export const useNetManagerConf = (tip = "tip") => {
                         alertMsg('<cn>Mac地址格式错误</cn><en>Mac address format error</en>', 'error');
                     return;
                 } else
-                    promiseList.push(func("/mgr/conf/updateMac2Conf",mac2));
+                    promiseList.push(func("/conf/updateMac2Conf",mac2));
             }
             promiseList.push(rpc2("net.update",[JSON.stringify(conf,null,2)]));
 
@@ -248,7 +248,7 @@ export const useNetManagerConf = (tip = "tip") => {
 export const usePasswordConf = () => {
     const updateUserPasswd = (param,tip = "tip") => {
         return new Promise((resolve,reject)=>{
-            func("/mgr/conf/updatePasswdConf",param).then((data)=>{
+            func("/conf/updatePasswdConf",param).then((data)=>{
                 if(data.status === "success") {
                     resolve();
                     if(tip !== "noTip")
@@ -273,7 +273,7 @@ export const useVideoBufferConf = () => {
     }
     const updateVideoBufferConf = (tip = "tip") => {
         return new Promise((resolve,reject) => {
-            func("/mgr/conf/updateVideoBufferConf",videoBufferConf).then((data)=>{
+            func("/conf/updateVideoBufferConf",videoBufferConf).then((data)=>{
                 if(data.status === "success") {
                     resolve();
                     if(tip !== "noTip")
@@ -299,7 +299,7 @@ export const useNtpConf = () => {
     }
     const updateNtpConf = (tip = "tip") => {
         return new Promise((resolve,reject) => {
-            func("/mgr/conf/updateNtpConf", ntpConf).then((data)=>{
+            func("/conf/updateNtpConf", ntpConf).then((data)=>{
                 if(data.status === "success") {
                     resolve();
                     if(tip !== "noTip")
@@ -325,7 +325,7 @@ export const useTimezoneConf = () => {
     }
     const updateTimezoneConf = (tip = "tip") => {
         return new Promise((resolve,reject) => {
-            func("/mgr/conf/updateTimezoneConf", timezoneConf).then((data)=>{
+            func("/conf/updateTimezoneConf", timezoneConf).then((data)=>{
                 if(data.status === "success") {
                     resolve();
                     if(tip !== "noTip")
@@ -464,7 +464,7 @@ export const useFrpEnableConf = () => {
     }
     const updateFrpEnableConf = (tip='tip') => {
         return new Promise((resolve,reject) => {
-            func("/mgr/conf/updateFrpEnableConf",frpEnableConf.value.toString()).then(data => {
+            func("/conf/updateFrpEnableConf",frpEnableConf.value.toString()).then(data => {
                 if ( data.status !== "success" ) {
                     reject(data);
                     if(tip !== "noTip")
@@ -490,7 +490,7 @@ export const useFrpcConf = () => {
     }
     const updateFrpcConf = (tip='tip') => {
         return new Promise((resolve,reject) => {
-            func("/mgr/conf/updateFrpcConf",frpcConf.value).then(data => {
+            func("/conf/updateFrpcConf",frpcConf.value).then(data => {
                 if ( data.status !== "success" ) {
                     reject(data);
                     if(tip !== "noTip")
@@ -517,7 +517,7 @@ export const useServiceConf = () => {
     }
     const updateServiceConf = (tip='tip') => {
         return new Promise((resolve,reject) => {
-            func("/mgr/conf/updateServiceConf",serviceConf).then(data => {
+            func("/conf/updateServiceConf",serviceConf).then(data => {
                 if ( data.status !== "success" ) {
                     reject(data);
                     if(tip !== "noTip")
@@ -543,7 +543,7 @@ export const useSlsConf = () => {
     }
     const updateSlsConf = (tip='tip') => {
         return new Promise((resolve,reject) => {
-            func("/mgr/conf/updateSlsConf",slsConf.value).then(data => {
+            func("/conf/updateSlsConf",slsConf.value).then(data => {
                 if ( data.status !== "success" ) {
                     reject(data);
                     if(tip !== "noTip")
@@ -569,7 +569,7 @@ export const useRtmpConf = () => {
     }
     const updateRtmpConf = (tip = 'tip') => {
         return new Promise((resolve,reject) => {
-            func("/mgr/conf/updateRtmpConf",rtmpConf.value).then(data => {
+            func("/conf/updateRtmpConf",rtmpConf.value).then(data => {
                 if ( data.status !== "success" ) {
                     reject();
                     if(tip !== "noTip")
@@ -595,7 +595,7 @@ export const useNdiConf = () => {
     }
     const updateNdiConf = (tip = 'tip') => {
         return new Promise((resolve,reject) => {
-            func("/mgr/conf/updateNdiConf",ndiConf.value).then(data => {
+            func("/conf/updateNdiConf",ndiConf.value).then(data => {
                 if ( data.status !== "success" ) {
                     reject();
                     if(tip !== "noTip")
@@ -683,7 +683,7 @@ export const useRecordConf = () => {
 export const useRecordFiles = () => {
     const recordFiles = reactive({});
     const handleRecordFiles = () => {
-        func("/mgr/root/getRecordFiles").then(conf => {
+        func("/root/getRecordFiles").then(conf => {
             console.log(conf.data);
             clearReactiveObject(recordFiles);
             Object.assign(recordFiles,conf.data);
@@ -787,7 +787,7 @@ export const usePtzConf = () => {
     }
     const updatePtzConf = (tip = "tip") => {
         return new Promise((resolve,reject)=>{
-            func("/mgr/conf/updatePtzConf",ptzConf).then(data => {
+            func("/conf/updatePtzConf",ptzConf).then(data => {
                 if ( data.status !== "success" ) {
                     reject();
                     if(tip !== "noTip")
@@ -825,7 +825,7 @@ export const useDiskConf = () => {
     }
     const updateDiskConf = conf => {
         return new Promise(async (resolve,reject)=>{
-            let result = await func("/mgr/conf/updateDiskConf", conf);
+            let result = await func("/conf/updateDiskConf", conf);
             if(result.status === "error") {
                 alertMsg(result.msg,result.status);
                 reject();
@@ -881,7 +881,7 @@ export const useRttyConf = () => {
     }
     const updateRttyConf = (tip = "tip") => {
         return new Promise(async (resolve,reject)=>{
-            func("/mgr/conf/updateRttyConf",rttyConf).then(data => {
+            func("/conf/updateRttyConf",rttyConf).then(data => {
                 if ( data.status !== "success" ) {
                     reject(data);
                     if(tip !== "noTip")
@@ -903,7 +903,7 @@ export const useFacConf = () => {
     const curFac = ref("");
     const facConf = reactive([]);
     const handleFacConf = () => {
-        func("/mgr/root/scanFacDir").then(data => {
+        func("/root/scanFacDir").then(data => {
             if(data.status === "success") {
                 clearReactiveArray(facConf);
                 facConf.push(...(data.data));
@@ -913,7 +913,7 @@ export const useFacConf = () => {
 
     const updateFacConf = (tip = "tip") => {
         return new Promise((resolve,reject) => {
-            func("/mgr/root/changeFacType",curFac.value).then(data => {
+            func("/root/changeFacType",curFac.value).then(data => {
                 if ( data.status !== "success" ) {
                     reject(data);
                     if(tip !== "noTip")
@@ -933,7 +933,7 @@ export const useFacConf = () => {
 export const useColorModeConf = () => {
     const colorModeConf = ref(0);
     const handleColorModeConf = () => {
-        func("/mgr/root/getColorMode").then(data => {
+        func("/root/getColorMode").then(data => {
             if(data.status === "success") {
                 data.data = data.data.replace(/\\+/g, '');
                 colorModeConf.value = parseInt(data.data);
@@ -943,7 +943,7 @@ export const useColorModeConf = () => {
 
     const updateColorModeConf = (tip = "tip") => {
         return new Promise((resolve,reject) => {
-            func("/mgr/root/setColorMode",colorModeConf.value).then(data => {
+            func("/root/setColorMode",colorModeConf.value).then(data => {
                 if ( data.status !== "success" ) {
                     reject(data);
                     if(tip !== "noTip")
@@ -963,7 +963,7 @@ export const useColorModeConf = () => {
 export const useLphConf = () => {
     const lphConf = ref("");
     const handleLphConf = () => {
-        func("/mgr/root/getLphAuth").then(data => {
+        func("/root/getLphAuth").then(data => {
             if(data.status === "success")
                 lphConf.value = data.data;
         })
@@ -971,7 +971,7 @@ export const useLphConf = () => {
 
     const updateLphConf = (tip = "tip") => {
         return new Promise((resolve,reject) => {
-            func("/mgr/root/setLphAuth",lphConf.value).then(data => {
+            func("/root/setLphAuth",lphConf.value).then(data => {
                 if ( data.status !== "success" ) {
                     reject(data);
                     if(tip !== "noTip")
@@ -991,7 +991,7 @@ export const useLphConf = () => {
 export const useEdidConf = () => {
     const edidConf = ref("");
     const handleEdidConf = () => {
-        func("/mgr/root/getEdidConf").then(data => {
+        func("/root/getEdidConf").then(data => {
             if(data.status === "success") {
                 const [edid,] = data.data.split(".");
                 edidConf.value = edid;
@@ -1001,7 +1001,7 @@ export const useEdidConf = () => {
 
     const updateEdidConf = (tip = "tip") => {
         return new Promise((resolve,reject) => {
-            func("/mgr/root/setEdidConf",edidConf.value).then(data => {
+            func("/root/setEdidConf",edidConf.value).then(data => {
                 if ( data.status !== "success" ) {
                     reject(data);
                     if(tip !== "noTip")
@@ -1027,6 +1027,22 @@ export const useSnConf = () => {
     onMounted(handleSnConf);
     return { sn }
 }
+
+export const useMcuConf = () => {
+    const mcuConf =reactive({});
+    const handleMcuConf = () => {
+        func("/conf/handleMcuConf").then(data => {
+            if(data.status === "success") {
+                clearReactiveObject(mcuConf);
+                Object.assign(mcuConf,data.data);
+            }
+        })
+    }
+
+    onMounted(handleMcuConf);
+    return { mcuConf }
+}
+
 
 
 

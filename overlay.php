@@ -545,7 +545,7 @@
                             btnClass: 'btn-primary',
                             keys: [ 'enter' ],
                             action: () => {
-                                func("/mgr/root/delResFile",resName).then(data => handleResConf());
+                                func("/root/delResFile",resName).then(data => handleResConf());
                             }
                         },
                         cancel: {

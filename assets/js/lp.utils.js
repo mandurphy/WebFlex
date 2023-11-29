@@ -17,7 +17,7 @@ export const getUrlParam = (key) => {
 
 export const updateSysLanguage = param => {
     if(param) {
-        func("/mgr/conf/updateLangConf", param).then(result => {
+        func("/conf/updateLangConf", param).then(result => {
             if(result.status === "success") {
                 const html = document.querySelector('html');
                 html.setAttribute('data-bs-language', param);
@@ -257,7 +257,7 @@ export const rebootConfirm = (msg) => {
                 btnClass: 'btn-primary',
                 keys: [ 'enter' ],
                 action: function () {
-                    func("/mgr/system/systemReboot");
+                    func("/system/systemReboot");
                 }
             },
             cancel: {
@@ -280,7 +280,7 @@ export const resetConfirm = () => {
                 btnClass: 'btn-primary',
                 keys: [ 'enter' ],
                 action: function () {
-                    func("/mgr/system/systemReset");
+                    func("/system/systemReset");
                 }
             },
             cancel: {

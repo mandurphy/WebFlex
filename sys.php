@@ -161,7 +161,7 @@
                                         <div class="col-lg-8">
                                             <div class="input-group">
                                                 <select class="form-select" v-model="wifiConnectId">
-                                                    <option v-for="(it,idx) in wifiList" :key="idx+10" :value="formatWifiSSID(it.ssid)">{{formatWifiSSID(it.ssid)}}</option>
+                                                    <option v-for="(it,idx) in wifiList" :key="idx+10" :value="it.ssid">{{it.ssid}}</option>
                                                 </select>
                                                 <span class="input-group-text input-group-addon lp-cursor-pointer" @click="refreshWifi"><i :class="['fa-solid fa-arrows-rotate',{'spin':wifiRefresh}]"></i></span>
                                             </div>
@@ -197,7 +197,7 @@
                                             </label>
                                             <label v-else-if="item.linkup && item.ssid">
                                                 <cn>已连接</cn><en>connected </en>
-                                                {{formatWifiSSID(item.ssid)}}
+                                                {{item.ssid}}
                                             </label>
                                             <label v-else>
                                                 <cn>未连接</cn><en>not connected</en>
@@ -481,8 +481,21 @@
                                     <en>NTP sync</en>
                                 </label>
                             </div>
-                            <div class="col-lg-6">
+                            <div class="col-lg-3">
                                 <input class="form-control" v-model.trim.lazy="ntpConf.server">
+                            </div>
+                            <div class="col-lg-3">
+                                <div class="input-group">
+                                    <span class="input-group-text input-group-addon">
+                                        <cn>间隔</cn>
+                                        <en>inr</en>
+                                    </span>
+                                    <input class="form-control" v-model.trim.lazy="ntpConf.interval">
+                                    <span class="input-group-text input-group-addon">
+                                        <cn>分钟</cn>
+                                        <en>min</en>
+                                    </span>
+                                </div>
                             </div>
                             <div class="col-lg-2">
                                 <bs-switch v-model="ntpConf.enable"></bs-switch>
@@ -823,6 +836,7 @@
                                         <input type="text" class="form-control" v-model.trim.lazy="netManagerConf.onlineServer">
                                     </div>
                                     <div class="col-lg-4">
+                                        <button type="button" class="btn border-3 btn-primary px-3 me-2" @click="updateNetManagerConf"><cn>保存</cn><en>Save</en></button>
                                         <button type="button" class="btn border-3 btn-primary px-4 net-test" @click="systemNetTest"><cn>网络测试</cn><en>Start Test</en></button>
                                     </div>
                                 </div>
@@ -910,7 +924,7 @@
                       @upload-success="uploadSuccess" @upload-error="uploadError">
         </upload-modal>
 
-        <logger-modal modal-size="modal-lg" had-header="false" had-footer="false" :modal-show="showVerLogModal" modal-fade="true" content-class="logCtx" body-class="logBody"  >
+        <logger-modal :modal-size="'modal-lg'" :had-header="false" :had-footer="false" :modal-show="showVerLogModal" :modal-fade="true" :content-class="'logCtx'" :body-class="'logBody'"  >
             <div data-simplebar class="mt-2">
                 <div v-for="(item,index) in verLogsConf" :key="index" class="mt-3">
                     <button v-if="index===0" type="button" class="btn-clear close" @click="showBootstrapModal('log')"><i class="fa-solid fa-x"></i></button>
@@ -931,8 +945,8 @@
             </div>
         </logger-modal>
 
-        <search-modal modal-title="固件搜索&Search" :modal-show="showSearchModal"
-                      confirm-btn-name="搜索&Search" cancel-btn-name="取消&Cancel"
+        <search-modal :modal-title="'固件搜索&Search'" :modal-show="showSearchModal"
+                      :confirm-btn-name="'搜索&Search'" :cancel-btn-name="'取消&Cancel'"
                       @confirm-btn-click="searchPatchBySn">
             <div class="row my-3">
                 <div class="col-lg-3 offset-lg-1">
@@ -1103,7 +1117,9 @@
 
             const refreshWifi = (tip = 'loading',refresh = true) => {
                 const scanwifi = type => {
+                    console.log(type);
                     rpc2("net.scanWifi",[refresh]).then(data => {
+                        console.log(data,"#########");
                         if(data.length === 0)
                             data.push({ssid:state.wifiConnectId});
                         state.wifiList.splice(0, state.wifiList.length, ...data);
@@ -1132,11 +1148,6 @@
                 });
             }
 
-            const  formatWifiSSID = ssid => {
-                const rep = ssid.replace(/\\x/g, '%');
-                return decodeURIComponent(rep);
-            }
-
             const formatNetSpeed = speed => {
                 if (speed < 1024) {
                     return speed + " kb/s";
@@ -1149,7 +1160,7 @@
             const syncTimeFromPc = () => {
                 let time1 = formatDate("yyyy/MM/dd/hh/mm/ss");
                 let time2 = formatDate("yyyy-MM-dd hh:mm:ss");
-                func("/mgr/system/setSystemTime",{time1:time1,time2:time2}).then((data)=>{
+                func("/system/setSystemTime",{time1:time1,time2:time2}).then((data)=>{
                     if(data.status === "success") {
                         alertMsg('<cn>时间同步成功</cn><en>system time synchronization successful!</en>', 'success');
                         state.sysTime.value = time2;
@@ -1167,9 +1178,9 @@
 
             const saveSysConf = () => {
                 Promise.all([
-                    func("/mgr/conf/updateNtpConf", ntpConf),
-                    func("/mgr/conf/updateTimezoneConf", timezoneConf),
-                    func("/mgr/system/setSystemCrontab", { day: state.cronDay.value, time: state.cronTime.value }),
+                    func("/conf/updateNtpConf", ntpConf),
+                    func("/conf/updateTimezoneConf", timezoneConf),
+                    func("/system/setSystemCrontab", { day: state.cronDay.value, time: state.cronTime.value }),
                 ]).then((results) => {
                     if(results.every(ret => typeof ret === "boolean" ? ret : (ret?.status === "success")))
                         alertMsg('<cn>保存设置成功</cn><en>Save config successfully!</en>', 'success');
@@ -1250,14 +1261,14 @@
 
             const startHelp = () => {
                 state.helpCode.value = Math.floor(Math.random()*1000);
-                func("/mgr/system/startHelp",{helpCode: state.helpCode.value}).then((data)=>{
+                func("/system/startHelp",{helpCode: state.helpCode.value}).then((data)=>{
                     if(data.status === "success")
                         alertMsg('<cn>连接成功，请向客服提供授权码以便控制您的编码器。</cn><en>Connect success, please provide auth code to customer service to control your encoder!</en>', 'success');
                 })
             }
 
             const stopHelp = () => {
-                func("/mgr/system/stopHelp").then((data)=>{
+                func("/system/stopHelp").then((data)=>{
                     if(data.status === "success") {
                         state.helpCode.value = "";
                         alertMsg('<cn>已断开连接</cn><en>Disconnect success</en>', 'success');
@@ -1266,17 +1277,15 @@
             }
 
             const systemNetTest = () => {
-                // func("/mgr/system/systemNetTest").then(data => {
-                //     const str = data.data.join();
-                //     if(str === "")
-                //         alertMsg('<cn>域名解析超时</cn><en>DNS timeout</en>!', 'error');
-                //     else if(str.indexOf(" 0%")>0)
-                //         alertMsg('<cn>网络可用</cn><en>Network available</en>！', 'success');
-                //     else
-                //         alertMsg('<cn>网络不可用</cn><en>Network Unavailable</en>！', 'error');
-                // })
-                console.log(state,"########");
-                //updateNetManagerConf("noTip");
+                func("/system/systemNetTest",netManagerConf.onlineServer).then(data => {
+                    const str = data.data.join();
+                    if(str === "")
+                        alertMsg('<cn>域名解析超时</cn><en>DNS timeout</en>!', 'error');
+                    else if(str.indexOf(" 0%")>0)
+                        alertMsg('<cn>网络可用</cn><en>Network available</en>！', 'success');
+                    else
+                        alertMsg('<cn>网络不可用</cn><en>Network Unavailable</en>！', 'error');
+                })
             }
 
             const showBootstrapModal = type => {
@@ -1329,7 +1338,7 @@
             }
 
             const getSysAbortTime = () => {
-                func("/mgr/system/getSystemTime").then(result => {
+                func("/system/getSystemTime").then(result => {
                     state.sysTime.value = result.data;
                     setInterval(()=>{
                         let currentTime = new Date(state.sysTime.value);
@@ -1344,7 +1353,7 @@
                     },1000);
                 });
 
-                func("/mgr/system/getSystemCrontab").then(result => {
+                func("/system/getSystemCrontab").then(result => {
                     if ( result.data === null || result.data.split( " " ).length !== 6 ) {
                         state.cronDay.value = "x";
                         state.cronTime.value = "0";
@@ -1363,7 +1372,7 @@
             })
 
             return {...state,hardwareConf,netManagerConf,videoBufferConf,ntpConf,timezoneConf,portConf,versionConf,verLogsConf,
-                enableWifi,refreshWifi,connectWifi,formatWifiSSID,updateNetManagerConf,handleSysScene, updateUserPasswd,updateVideoBufferConf,
+                enableWifi,refreshWifi,connectWifi,updateNetManagerConf,handleSysScene, updateUserPasswd,updateVideoBufferConf,
                 updatePortConf,showBootstrapModal,formatNetSpeed, uploadSuccess,uploadError,rebootConfirm,resetConfirm, onTimeAreaChange,
                 syncTimeFromPc,saveSysConf,exportConf,importConf,startHelp,stopHelp, systemNetTest,checkUpdatePatch,searchUpdatePatch,searchPatchBySn}
         }

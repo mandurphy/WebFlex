@@ -6,11 +6,9 @@
 </head>
 <body>
 <?php include ("./public/menu.inc") ?>
-<div data-simplebar>
-    <main class="page-content">
-        <?php include( "./mixer/index.html" ) ?>
-    </main>
-</div>
+<main class="page-content defLayout text-center">
+    <?php include( "./mixer/index.html" ) ?>
+</main>
 <?php include ("./public/foot.inc") ?>
 </body>
 </html>

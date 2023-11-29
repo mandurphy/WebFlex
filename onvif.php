@@ -569,6 +569,12 @@
                             }
                         }
                     }
+
+                    if(state.activeChnId.value === -1) {
+                        const netChn = defaultConf.find(item => item.type === "net");
+                        if(netChn)
+                            state.activeChnId.value = netChn.id;
+                    }
                     unwatch();
                 }
             })
@@ -581,10 +587,16 @@
 
             const handleCurPtzConf = computed(()=>{
                 if(ptzConf.hasOwnProperty("config")) {
-                    for(let i=0;i<ptzConf.config.length;i++) {
-                        if(ptzConf.config[i].chnId === state.activeChnId.value)
-                            return ptzConf.config[i];
+                    if(state.activeChnId.value !== -1) {
+                        for(let i=0;i<ptzConf.config.length;i++) {
+                            if(ptzConf.config[i].chnId === state.activeChnId.value)
+                                return ptzConf.config[i];
+                        }
+                    } else {
+                        if(ptzConf.config.length > 0)
+                            return ptzConf.config[0];
                     }
+
                 }
                 return {};
             })
@@ -832,9 +844,11 @@
             onMounted(()=>{
                 rpc5("ptz.onGetOnvifDeviceList").then(devices => {
                     clearReactiveArray(state.onvifDevices);
-                    state.onvifDevices.splice(0, state.onvifDevices.length, ...devices);
-                    state.onvifDevUserName.value = state.onvifDevices[state.onvifDevIndex.value].uname;
-                    state.onvifDevPassword.value = state.onvifDevices[state.onvifDevIndex.value].passwd;
+                    state.onvifDevices.push(...devices);
+                    if(state.onvifDevices.length > state.onvifDevIndex.value) {
+                        state.onvifDevUserName.value = state.onvifDevices[state.onvifDevIndex.value].uname;
+                        state.onvifDevPassword.value = state.onvifDevices[state.onvifDevIndex.value].passwd;
+                    }
                 })
 
                 setTimeout(()=>{

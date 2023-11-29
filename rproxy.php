@@ -217,7 +217,7 @@
 
             const saveRttyConf = () => {
                 updateRttyConf().then(()=>{
-                    func("/mgr/system/reloadRtty");
+                    func("/system/reloadRtty");
                 })
             }
             

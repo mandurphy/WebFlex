@@ -350,7 +350,7 @@
             });
 
             const handlePushCrontab = () => {
-                func("/mgr/system/getPushCrontab").then(result => {
+                func("/system/getPushCrontab").then(result => {
                     const keys = Object.keys(result.data);
                     keys.forEach(key => {
                         const value = result.data[key];
@@ -441,7 +441,7 @@
                 });
 
                 updatePushConf().then(()=>{
-                    func("/mgr/system/setPushCrontab",state.pushCron).then(data => {
+                    func("/system/setPushCrontab",state.pushCron).then(data => {
                         if(data.status === "success")
                             alertMsg('<cn>保存设置成功</cn><en>Save config success!</en>', 'success');
                     });

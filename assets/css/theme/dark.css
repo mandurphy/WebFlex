@@ -18,17 +18,21 @@
     --bs-default-bg-color:#ffbb00;
     --bs-default-txt-color:#333;
     --bs-default-acitve-color:#eeaa00;
-    --bs-default-hr-color:#bbbbbb;
+    --bs-default-hr-color:#585858;
     --bs-default-nav-color:#999999;
     --bs-default-nav-active-color:#333;
     --bs-default-slider-color:#fb0;
     --bs-default-slider-bg-color:#ffbb00;
+    --bs-default-form-border-color:#434343;
+    --bs-default-form-color:#adb5bd;
 }
 
 /* body */
 [data-bs-theme=dark] body {
     background-color: var(--bs-body-bg-semi);
     color: var(--bs-body-color-semi);
+
+    /*background: #191b1e;*/
 }
 
 [data-bs-theme=dark] .simplebar-scrollbar:before {
@@ -272,8 +276,10 @@
 /* input slect */
 [data-bs-theme=dark] .form-select,
 [data-bs-theme=dark] .form-control {
-    color: var(--bs-body-color-semi);
-    border-color: var(--bs-border-color-translucent);
+    /*color: var(--bs-body-color-semi);*/
+    /*border-color: var(--bs-border-color-translucent);*/
+    color: var(--bs-default-form-color);
+    border-color: var(--bs-default-form-border-color);
     font-size: 14px;
 }
 
@@ -538,6 +544,10 @@
     color: var(--bs-body-color-semi);
     border: 2px solid var(--bs-border-color-translucent) !important;
     background: transparent;
+}
+
+[data-bs-theme=dark] .sys .border-right {
+    border-color: var(--bs-border-color-translucent);
 }
 
 [data-bs-theme=dark] .mix .lp-aspect-ratio .aspect-ratio-content button.btn-default {

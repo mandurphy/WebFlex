@@ -420,7 +420,7 @@
             }
 
             const handleDiskSpace = () => {
-                func("/mgr/system/getMountDiskSpace").then(data => {
+                func("/system/getMountDiskSpace").then(data => {
                     if (data.status === "error") {
                         state.diskSpace.value = "--/--";
                         return;
@@ -457,7 +457,7 @@
                             btnClass: 'btn-primary',
                             keys: ['enter'],
                             action: () => {
-                                func("/mgr/root/delRecordFile",{"name":dirName}).then(res => {
+                                func("/root/delRecordFile",{"name":dirName}).then(res => {
                                     alertMsg(res.msg,res.status);
                                     if(res.status === "success")
                                         handleRecordFiles();

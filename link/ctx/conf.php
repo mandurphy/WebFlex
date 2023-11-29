@@ -1,6 +1,6 @@
 <?php
 
-namespace Link\Mgr;
+namespace Link\Ctx;
 
 use Link\Basic;
 class Conf extends Basic
@@ -155,5 +155,22 @@ class Conf extends Basic
         }
         file_put_contents ( '/link/config/hardware.json' ,  json_encode($hardwardConf,JSON_UNESCAPED_SLASHES|JSON_UNESCAPED_UNICODE|JSON_PRETTY_PRINT));
         return $this->handleRet("",'success','保存成功','save successfully');
+    }
+
+    function handleMcuConf($param)
+    {
+        $files = array('/tmp/mcuVersion', '/tmp/fpgaVersion');
+        $ctx = array();
+        foreach ($files as $file) {
+            if (file_exists($file)) {
+                $ctx[basename($file)] = file($file, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
+            }
+        }
+        return $this->handleRet($ctx,'success','获取成功','get config successfully');
+    }
+
+    function saveConfigFile($param) {
+        file_put_contents( "/link/".$param["path"], $param['data'] );
+        return json_encode(array("result" => "OK"),JSON_UNESCAPED_SLASHES|JSON_UNESCAPED_UNICODE|JSON_PRETTY_PRINT);
     }
 }
