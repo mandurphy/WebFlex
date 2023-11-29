@@ -1,6 +1,6 @@
 <?php
 
-use Link\Mgr\Login;
+use Link\Ctx\Login;
 require __DIR__ . '/autoload.php';
 
 $login = new Login();

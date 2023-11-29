@@ -136,7 +136,7 @@ export const useDefLaysConf = () => {
 export const useThemeConf = () => {
     const themeConf = reactive({});
     const handleThemeConf = () => {
-        queryData("config/theme.json").then(conf => {
+        queryData("config/theme_standard.json").then(conf => {
             clearReactiveObject(themeConf);
             Object.assign(themeConf,conf);
         })

@@ -225,4 +225,26 @@ class System extends Basic
     function reloadRtty() {
         exec("pkill rtty");
     }
+
+    function changeWebVersion($param) {
+        if($param === "classic")
+        {
+            $netManager = json_decode(file_get_contents("/link/config/netManager.json"),true);
+            $net = $netManager["interface"]["eth0"];
+
+            $net["gateway"] = $net["gw"];
+            unset($net["gw"]);
+            unset($net["enable"]);
+
+            $wifi = $netManager["interface"]["wlan0"];
+            $wifi["gateway"] = $net["gw"];
+            unset($wifi["gw"]);
+
+            file_put_contents("/link/config/net.json",json_encode($net,JSON_UNESCAPED_SLASHES|JSON_UNESCAPED_UNICODE|JSON_PRETTY_PRINT));
+            file_put_contents("/link/config/wifi.json",json_encode($wifi,JSON_UNESCAPED_SLASHES|JSON_UNESCAPED_UNICODE|JSON_PRETTY_PRINT));
+            file_put_contents("/link/config/auto/webVer.json",json_encode(array("web"=>"classic")));
+            exec("sync && reboot");
+        }
+        return $this->handleRet($param,'success','切换成功','switch successfully');
+    }
 }

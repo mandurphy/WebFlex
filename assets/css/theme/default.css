@@ -331,6 +331,11 @@
     box-shadow: 0 0 0 .25rem rgba(255, 193, 7, 0.25)
 }
 
+[data-bs-theme=default] .jconfirm.jconfirm-white .jconfirm-bg,
+[data-bs-theme=default] .jconfirm.jconfirm-light .jconfirm-bg {
+    background-color: #c2c2c2;
+}
+
 [data-bs-theme=default] .lp-usb-ctx.active {
     background-color: var(--bs-default-bg-color) !important;
 }

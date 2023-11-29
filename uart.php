@@ -9,7 +9,7 @@
     <div data-simplebar>
         <main class="page-content uart" id="app" v-cloak>
             <div class="row">
-                <div class="col-lg-6">
+                <div class="col-lg-6" v-if="Object.keys(hardwareConf).length > 0 && hardwareConf.function.serialport">
                     <div class="card">
                         <div class="card-header bg-transparent">
                             <div class="p-2 mb-0 d-flex align-items-end">

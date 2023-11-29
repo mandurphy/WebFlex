@@ -39,7 +39,7 @@
                         </a>
                     </li>
 
-                    <li v-if="!Object.values(netAdapter).some(item => item.type === 'wifi')" class="nav-item lp-cursor-pointer" ref="wifiHandler">
+                    <li v-if="Object.keys(hardwareConf).length > 0 && hardwareConf.function.wifi && !Object.values(netAdapter).some(item => item.type === 'wifi')" class="nav-item lp-cursor-pointer" ref="wifiHandler">
                         <a class="nav-link">
                             <div class="d-flex align-items-center">
                                 <wifi-flag icon="wifi-off" width="20" height="20" stroke="#999999" stroke-width="2.3"></wifi-flag>
@@ -67,7 +67,7 @@
                 <div class="tab-content py-3 pe-2 ps-2">
                     <div v-if="Object.keys(netAdapter).length > 0 && Object.keys(netManagerConf).length > 0" v-for="(item,index) in Object.values(netAdapter)" :class="['tab-pane fade',{'show active':index===0}]" :key="index" :id="'tab'+(index+1)" role="tabpanel">
                         <div v-if="netManagerConf.interface.hasOwnProperty(item.dev) && item.type === 'lan'">
-                            <div class="row mt-3">
+                            <div v-if="Object.keys(hardwareConf).length > 0 && hardwareConf.function.dhcp" class="row mt-3">
                                 <div class="col-lg-2 offset-lg-1 lp-align-center">
                                     <label>
                                         DHCP
@@ -138,7 +138,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div v-if="netManagerConf.interface.hasOwnProperty(item.dev) && item.type === 'wifi'">
+                        <div v-if="Object.keys(hardwareConf).length > 0 && hardwareConf.function.wifi && netManagerConf.interface.hasOwnProperty(item.dev) && item.type === 'wifi'">
                             <div class="row mt-4">
                                 <div class="col-lg-6 border-right">
                                     <div class="row mt-4">
@@ -681,7 +681,7 @@
                 </div>
             </div>
         </div>
-        <div class="row">
+        <div class="row" v-if="Object.keys(hardwareConf).length > 0 && hardwareConf.function.portCtrl">
             <div class="col-lg-12">
                 <div class="card">
                     <div class="card-header bg-transparent">

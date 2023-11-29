@@ -114,7 +114,7 @@
                             </div>
                         </a>
                     </li>
-                    <li class="nav-item" role="presentation" @click="tabType = 'file'">
+                    <li v-if="Object.keys(hardwareConf).length > 0 && hardwareConf.function.carousel" class="nav-item" role="presentation" @click="tabType = 'file'">
                         <a class="nav-link" data-bs-toggle="tab" href="#tab2" role="tab" aria-selected="false">
                             <div class="d-flex align-items-center">
                                 <div class="tab-icon"><i class="fa-regular fa-file-audio me-1"></i></div>
@@ -499,7 +499,7 @@
                 onGetPlayPosition();
             });
             
-            return {...state,defaultConf,handleVideoFileConf,handleUsbMp4File,onAddVideoFile, onVideoFileOption,formatTime,onTimelineSliderEnd,
+            return {...state,defaultConf,hardwareConf,handleVideoFileConf,handleUsbMp4File,onAddVideoFile, onVideoFileOption,formatTime,onTimelineSliderEnd,
                 onHandleFileDuration,onHandleFilePostion,handleNetConf,saveGlobalConfByLocal,saveDefaultConf}
         }
     });

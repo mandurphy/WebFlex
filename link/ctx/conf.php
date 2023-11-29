@@ -73,7 +73,7 @@ class Conf extends Basic
 
     public function updateThemeConf($param)
     {
-        file_put_contents( '/link/config/theme.json', json_encode($param,JSON_UNESCAPED_SLASHES|JSON_UNESCAPED_UNICODE|JSON_PRETTY_PRINT) );
+        file_put_contents( '/link/config/theme_standard.json', json_encode($param,JSON_UNESCAPED_SLASHES|JSON_UNESCAPED_UNICODE|JSON_PRETTY_PRINT) );
         return $this->handleRet("",'success','保存成功','save successfully');
     }
 

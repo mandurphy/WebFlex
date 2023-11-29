@@ -148,7 +148,7 @@
                          </div>
                      </a>
                  </li>
-                 <li class="nav-item" role="presentation">
+                 <li v-if="Object.keys(hardwareConf).length > 0 && hardwareConf.function.rtspAuth" class="nav-item" role="presentation">
                      <a class="nav-link" data-bs-toggle="tab" href="#tab4" role="tab" aria-selected="false">
                          <div class="d-flex align-items-center">
                              <div class="tab-icon"><i class="fa-solid fa-gear me-1"></i></div>

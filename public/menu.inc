@@ -25,6 +25,11 @@
                         </a>
                     </li>
                     <li class="nav-item">
+                        <a class="nav-link" style="font-size: 19px;" @click="changeWeb">
+                            <i class="fa-solid fa-arrow-right-arrow-left"></i>
+                        </a>
+                    </li>
+                    <li class="nav-item">
                         <usb-option></usb-option>
                     </li>
 <!--                    <li class="nav-item">-->
@@ -81,7 +86,7 @@
                             <div class="menu-title"><cn>直播推流</cn><en>Multiple Push</en></div>
                         </a>
                     </li>
-                    <li>
+                    <li v-if="Object.keys(hardwareConf).length > 0 && hardwareConf.function.videoOut">
                         <a href="output.php">
                             <div class="parent-icon"><i class="fa-solid fa-microchip"></i></div>
                             <div class="menu-title"><cn>接口输出</cn><en>Output</en></div>
@@ -93,14 +98,14 @@
                             <div class="menu-title"><cn>系统设置</cn><en>System</en></div>
                         </a>
                     </li>
-                    <li class="menu-label"><cn>视频特效</cn><en>Effect</en></li>
-                    <li>
+                    <li v-if="Object.keys(hardwareConf).length > 0 && (hardwareConf.function.overlay || hardwareConf.function.mix)" class="menu-label"><cn>视频特效</cn><en>Effect</en></li>
+                    <li v-if="Object.keys(hardwareConf).length > 0 && hardwareConf.function.overlay">
                         <a href="overlay.php">
                             <div class="parent-icon"><i class="fa-solid fa-wand-magic-sparkles"></i></div>
                             <div class="menu-title"><cn>叠加特效</cn><en>Overlay</en></div>
                         </a>
                     </li>
-                    <li>
+                    <li v-if="Object.keys(hardwareConf).length > 0 && hardwareConf.function.mix">
                         <a href="mix.php">
                             <div class="parent-icon"><i class="fa-solid fa-chart-simple"></i></div>
                             <div class="menu-title"><cn>视频混合</cn><en>Video mix</en></div>
@@ -113,13 +118,13 @@
                             <div class="menu-title"><cn>扩展功能</cn><en>Extend</en></div>
                         </a>
                         <ul>
-                            <li>
+                            <li v-if="Object.keys(hardwareConf).length > 0 && hardwareConf.function.ndi">
                                 <a href="ndi.php">
                                     <i class="fa-solid fa-desktop"></i>
                                     <div class="menu-title"><cn>NDI解码</cn><en>NDI Decode</en></div>
                                 </a>
                             </li>
-                            <li>
+                            <li v-if="Object.keys(hardwareConf).length > 0 && hardwareConf.function.record">
                                 <a href="record.php">
                                     <i class="fa-solid fa-folder-open"></i>
                                     <div class="menu-title"><cn>文件录制</cn><en>Record</en></div>
@@ -131,13 +136,13 @@
                                     <div class="menu-title"><cn>H5 播放器</cn><en>H5 Player</en></div>
                                 </a>
                             </li>
-                            <li>
+                            <li v-if="Object.keys(hardwareConf).length > 0 && hardwareConf.function.intercom">
                                 <a href="intercom.php">
                                     <i class="fa-solid fa-headset"></i>
                                     <div class="menu-title"><cn>集成通信</cn><en>Intercom</en></div>
                                 </a>
                             </li>
-                            <li>
+                            <li v-if="Object.keys(hardwareConf).length > 0 && (hardwareConf.function.serialport || hardwareConf.function.button)">
                                 <a href="uart.php">
                                     <i class="fa-solid fa-link"></i>
                                     <div class="menu-title"><cn>串口、按键</cn><en>Serial, Button</en></div>
@@ -237,8 +242,8 @@
 
 <script type="module">
     import vue from "../assets/js/vue.build.js";
-    import { func,updateSysLanguage } from "../assets/js/lp.utils.js";
-    import { useThemeConf } from "../assets/js/vue.hooks.js"
+    import { func,updateSysLanguage,confirm } from "../assets/js/lp.utils.js";
+    import { useThemeConf,useHardwareConf } from "../assets/js/vue.hooks.js"
     import { ignoreCustomElementPlugin,usbOptionComponent } from "../assets/js/vue.helper.js"
     import Metismenu from '../assets/plugins/metismenu/js/metisMenu.esm.js';
 
@@ -249,6 +254,7 @@
         },
         setup() {
            const { themeConf,updateThemeConf } = useThemeConf();
+            const { hardwareConf } = useHardwareConf();
 
            const state = {
                metismenu: ref(null),
@@ -295,6 +301,25 @@
                state.isMenuToggled.value = false;
            }
 
+           const changeWeb = () => {
+               confirm({
+                   title: '<cn>切换版本</cn><en>Switch Web</en>',
+                   content: '<cn>是否切换至经典版页面,并重新启动？</cn><en>Whether to switch to the classic version and restart?</en>',
+                   buttons: {
+                       ok: {
+                           text: "<cn>切换</cn><en>Switch</en>",
+                           btnClass: 'btn-primary',
+                           keys: ['enter'],
+                           action: () => func("/system/changeWebVersion","classic")
+                       },
+                       cancel: {
+                           text: "<cn>取消</cn><en>Cancel</en>"
+                       }
+
+                   }
+               });
+           }
+
            onMounted(()=>{
                new Metismenu(state.metismenu.value);
                let as = document.querySelectorAll(".sidebar-wrapper .metismenu li a");
@@ -314,8 +339,8 @@
                }
            });
 
-           return {...state,themeConf,updateThemeConf,onHrefDash,onLogout,onToggleMenu,
-               onMouseEnter,onMouseLeave,onCloseSidebar,updateSysLanguage}
+           return {...state,hardwareConf,themeConf,updateThemeConf,onHrefDash,onLogout,onToggleMenu,
+               onMouseEnter,onMouseLeave,onCloseSidebar,updateSysLanguage,changeWeb}
        }
     });
     menu.use(ignoreCustomElementPlugin);
