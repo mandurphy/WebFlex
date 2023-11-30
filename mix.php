@@ -147,13 +147,16 @@
             });
     
             const handleActiveVolume = index => {
-                return defaultConf[state.mixIndex.value].srcA.indexOf(defaultConf[state.mixIndex.value].srcV[index]) === -1;
+                const idx = defaultConf[state.mixIndex.value].srcV[index].toString();
+                return !defaultConf[state.mixIndex.value].srcA.includes(idx) && !defaultConf[state.mixIndex.value].srcA.includes(Number(idx));
             };
             
             const onUpdateActiveVolume = chnId => {
                 if(chnId === "-1")
                     return;
-                defaultConf[state.mixIndex.value].srcA = defaultConf[state.mixIndex.value].srcA.map(item => item+="");
+                chnId = chnId.toString();
+                defaultConf[state.mixIndex.value].srcA = defaultConf[state.mixIndex.value].srcA.map(item => item = item.toString());
+                defaultConf[state.mixIndex.value].srcV = defaultConf[state.mixIndex.value].srcV.map(item => item = item.toString());
                 let idx = defaultConf[state.mixIndex.value].srcA.indexOf(chnId);
                 if(idx === -1)
                     defaultConf[state.mixIndex.value].srcA.push(chnId);
