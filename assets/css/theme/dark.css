@@ -425,7 +425,8 @@
 }
 
 [data-bs-theme=dark] .login  {
-    background-color: #202122;
+    /*background-color: #202122;*/
+    background-color: var(--bs-default-body-bg-color);
     width: 100%;
     height: 100%;
 }
