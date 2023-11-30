@@ -908,20 +908,16 @@
                 for ( let i = 0; i < defaultConf.length; i++ ) {
                     if (defaultConf[i].stream === undefined )
                         continue;
-                    extend(defaultConf[i].stream, deepCopy(state.globalConf.stream));
-                    extend(defaultConf[i].stream2, deepCopy(state.globalConf.stream2));
-                    let port1 = defaultConf[i].stream.udp.port;
-                    if(port1.indexOf("+") > 0) {
-                        port1 = port1.replace(/[+\s]/g, '');
-                        port1 = isNaN(Number(port1)) ? (3000+i) : (Number(port1)+i);
-                        defaultConf[i].stream.udp.port = port1;
-                    }
 
-                    let port2 = defaultConf[i].stream2.udp.port;
-                    if(port2.indexOf("+") > 0) {
-                        port2 = port2.replace(/[+\s]/g, '');
-                        port2 = isNaN(Number(port2)) ? (3000+i) : (Number(port2)+i);
-                        defaultConf[i].stream2.udp.port = port2;
+                    for (let key of ['stream', 'stream2']) {
+                        delete state.globalConf[key].suffix;
+                        extend(defaultConf[i][key], deepCopy(state.globalConf[key]));
+                        let port = defaultConf[i][key].udp.port;
+                        if(port.indexOf("+") > 0) {
+                            port = port.replace(/[+\s]/g, '');
+                            port = isNaN(Number(port)) ? (3000+i) : (Number(port)+i);
+                            defaultConf[i][key].udp.port = port;
+                        }
                     }
                 }
                 saveDefaultConf();

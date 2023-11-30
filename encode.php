@@ -874,6 +874,7 @@
                     }
                 }
                 Object.assign(globalConf, deepCopy(defaultConf[0]));
+                globalConf.enca.audioSrc = "source";
                 unwatch();
             });
             
@@ -908,7 +909,6 @@
             })
 
             const saveGlobalConfByLocal = () => {
-                console.log(globalConf)
                 for ( let i = 0; i < defaultConf.length; i++ ) {
                     if (defaultConf[i].encv === undefined || defaultConf[i].enca === undefined )
                         continue;

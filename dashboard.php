@@ -65,7 +65,7 @@
                 <div class="col-lg-12">
                     <div class="card">
                         <div class="card-body iface py-3">
-                            <div v-for="(item,index) in input" :key="index" :class="[{'hdmi':item.protocol==='HDMI'},{'sdi':item.protocol==='SDI'},{'disable':!item.avalible}]">
+                            <div v-for="(item,index) in input" :key="index" :class="['me-5',{'hdmi':item.protocol==='HDMI'},{'sdi':item.protocol==='SDI'},{'disable':!item.avalible}]">
                                 <span class="info">{{item.info}}</span>
                                 <div class="icon my-1"></div>
                                 <span class="name">{{item.name}}</span>
