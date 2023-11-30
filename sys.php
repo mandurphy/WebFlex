@@ -950,15 +950,13 @@
                       @confirm-btn-click="searchPatchBySn">
             <div class="row my-3">
                 <div class="col-lg-3 offset-lg-1">
-                    <div style="font-size: 14px;line-height: 20px;color: #666">
+                    <div class="snTitle">
                         <cn>固件编号:</cn>
                         <en>Patch Serial:</en>
                     </div>
                 </div>
                 <div class="col-lg-6">
-                    <div>
-                        <input v-model.trim.lazy="patchSN" autocomplete="off" style="width: 100%;border: none;border-bottom: 1px solid #ccc;outline: none;"/>
-                    </div>
+                    <input class="snInput" v-model.trim.lazy="patchSN" autocomplete="off"/>
                 </div>
             </div>
         </search-modal>

@@ -432,3 +432,11 @@
     background-color: #fff;
 }
 
+[data-bs-theme=default] .sys .snInput {
+    border-bottom: 1px solid #ccc;
+    color: var(--bs-body-color-semi);
+}
+
+[data-bs-theme=default] .sys .snTitle {
+    color: #666666;
+}

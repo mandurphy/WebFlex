@@ -23,46 +23,21 @@ if($action == "update")
 
 if($action == "download")
 {
-//    header('Content-Type: application/octet-stream');
-//    header('Content-Disposition: attachment; filename="' . $name . '"');
-//    $bufferSize = 8192; // 每次读取的字节数
-//    $handle = fopen($remote, 'rb');
-//    if ($handle) {
-//        while (!feof($handle)) {
-//            echo fread($handle, $bufferSize);
-//            ob_flush();
-//            flush();
-//        }
-//        fclose($handle);
-//    } else {
-//        header("HTTP/1.0 404 Not Found");
-//        echo "File not found.";
-//    }
-
-    $header_array = get_headers($remote, true);
-    $file_size = $header_array['Content-Length'];
-    echo json_encode(["size"=>$file_size]);
-    fastcgi_finish_request();
-
-    $rfile = fopen ($remote, "rb");
-    if ($rfile)
-    {
-        $dfile = fopen ($dpath, "wb");
-        if ($dfile)
-        {
-            while(!feof($rfile))
-            {
-                fwrite($dfile, fread($rfile, 1024 * 8 ), 1024 * 8 );
-            }
+    header('Content-Type: application/octet-stream');
+    header('Content-Disposition: attachment; filename="' . $name . '"');
+    $bufferSize = 8192; // 每次读取的字节数
+    $handle = fopen($remote, 'rb');
+    $handle = fopen($remote, 'rb');
+    if ($handle) {
+        while (!feof($handle)) {
+            echo fread($handle, $bufferSize);
+            ob_flush();
+            flush();
         }
-    }
-    if ($rfile)
-    {
-        fclose($rfile);
-    }
-    if ($dfile)
-    {
-        fclose($dfile);
+        fclose($handle);
+    } else {
+        header("HTTP/1.0 404 Not Found");
+        echo "File not found.";
     }
 }
 

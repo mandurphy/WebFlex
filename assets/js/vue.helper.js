@@ -1399,19 +1399,28 @@ export const upgradeModalComponent = {
                 chip:chip, type:type
             }
 
-            const fileName = name;
-            axios_post('/link/upgrade.php',params, { responseType: 'arraybuffer' })
-                .then(data => {
-                    const blob = new Blob([data], { type: 'application/octet-stream' });
-                    const url = URL.createObjectURL(blob);
-                    const a = document.createElement('a');
-                    a.href = url;
-                    a.download = fileName;
-                    document.body.appendChild(a);
-                    a.click();
-                    document.body.removeChild(a);
-                    URL.revokeObjectURL(url);
-                })
+            // const fileName = name;
+            // axios_post('/link/upgrade.php',params, { responseType: 'arraybuffer' })
+            //     .then(data => {
+            //         const blob = new Blob([data], { type: 'application/octet-stream' });
+            //         const url = URL.createObjectURL(blob);
+            //         const a = document.createElement('a');
+            //         a.href = url;
+            //         a.download = fileName;
+            //         document.body.appendChild(a);
+            //         a.click();
+            //         document.body.removeChild(a);
+            //         URL.revokeObjectURL(url);
+            //     })
+
+            const url = "http://help.linkpi.cn:5735/upgrade/"+chip+"/"+type+"/"+name;
+            const downName = "";
+            const a = document.createElement('a');
+            const e = document.createEvent('MouseEvents');
+            e.initEvent('click', false, false);
+            a.href = url;
+            a.download = downName;
+            a.dispatchEvent(e);
         }
 
         onMounted(()=>{

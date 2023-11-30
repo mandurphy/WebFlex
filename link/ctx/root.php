@@ -101,7 +101,7 @@ class Root extends Basic
     }
 
     function getLphAuth() {
-        $data = file_get_contents('/link/web/.htaccess');
+        $data = file_get_contents('/link/webflex/.htaccess');
         $ctx1 = 'location /link {rewrite ^(.*)/link/([a-zA-Z0-9\_]+)/([a-zA-Z0-9\_]+)$ $1/link/monitor.php?class=$2&func=$3&verify=true&login=true last;}';
         $ctx2 = 'location /link {rewrite ^(.*)/link/([a-zA-Z0-9\_]+)/([a-zA-Z0-9\_]+)$ $1/link/monitor.php?class=$2&func=$3&verify=true&login=false last;}';
         $ctx3 = 'location /link {rewrite ^(.*)/link/([a-zA-Z0-9\_]+)/([a-zA-Z0-9\_]+)$ $1/link/monitor.php?class=$2&func=$3&verify=false&login=true last;}';

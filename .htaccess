@@ -1,0 +1,1 @@
+location /link {rewrite ^(.*)/link/([a-zA-Z0-9\_]+)/([a-zA-Z0-9\_]+)$ $1/link/monitor.php?class=$2&func=$3&verify=true&login=true last;}

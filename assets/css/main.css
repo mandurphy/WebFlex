@@ -1195,6 +1195,17 @@ input[type="password"]::-ms-reveal{
     animation: pointLoading 1s steps(4, end) infinite;
 }
 
+.sys .snInput {
+    width: 100%;
+    border: none;
+    outline: none;
+}
+
+.sys .snTitle {
+    font-size: 14px;
+    line-height: 20px;
+}
+
 @keyframes pointLoading {
     0% { content: "."; }
     33% { content: ".."; }
