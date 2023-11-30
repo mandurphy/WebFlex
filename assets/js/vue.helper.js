@@ -1446,7 +1446,8 @@ export const customModalComponent = {
                             <slot></slot>
                         </div>
                         <div class="modal-footer" v-if="hadFooter">
-                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">{{modalCancelBtnName}}</button>
+                            <button v-if="cancelCloseModal" type="button" class="btn btn-secondary" data-bs-dismiss="modal">{{modalCancelBtnName}}</button>
+                            <button v-else type="button" class="btn btn-secondary" @click="cancelBtnClick">{{modalCancelBtnName}}</button>
                             <button type="button" v-if="hadConfirmBtn" class="btn btn-primary" @click="confirmBtnClick">{{modalConfirmBtnName}}</button>
                           </div>
                       </div>
@@ -1497,6 +1498,10 @@ export const customModalComponent = {
             type: Boolean,
             default: true
         },
+        cancelCloseModal:{
+            type: Boolean,
+            default: true
+        }
     },
     setup(props,context) {
 
@@ -1542,6 +1547,10 @@ export const customModalComponent = {
 
         const confirmBtnClick = () => {
             context.emit("confirm-btn-click");
+        }
+
+        const cancelBtnClick = () => {
+            context.emit("cancel-btn-click");
         }
 
         const updateLangText = () => {
@@ -1590,7 +1599,7 @@ export const customModalComponent = {
             observer.observe(html, config);
         })
 
-        return { ...state,modalFade,confirmBtnClick }
+        return { ...state,modalFade,confirmBtnClick,cancelBtnClick }
     }
 }
 

@@ -407,6 +407,19 @@
     background-color: var(--bs-default-txt-color);
 }
 
+[data-bs-theme=dark] .modal-header,
+[data-bs-theme=dark] .modal-body,
+[data-bs-theme=dark] .modal-footer
+{
+    border-color: var(--bs-border-color-translucent);
+}
+
+[data-bs-theme=dark] table tr,
+[data-bs-theme=dark] table th
+{
+    border-color: var(--bs-border-color-translucent);
+}
+
 [data-bs-theme=dark] .login  {
     background-color: var(--bs-body-bg-semi);
     width: 100%;
@@ -558,19 +571,6 @@
 
 [data-bs-theme=dark] .sys .snTitle {
     color: var(--bs-body-color-semi);
-}
-
-[data-bs-theme=dark] .sys .modal-header,
-[data-bs-theme=dark] .sys .modal-body,
-[data-bs-theme=dark] .sys .modal-footer
-{
-    border-color: var(--bs-border-color-translucent);
-}
-
-[data-bs-theme=dark] .sys table tr,
-[data-bs-theme=dark] .sys table th
-{
-    border-color: var(--bs-border-color-translucent);
 }
 
 [data-bs-theme=dark] .mix .lp-aspect-ratio .aspect-ratio-content button.btn-default {

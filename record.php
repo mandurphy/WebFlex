@@ -276,8 +276,10 @@
                 </div>
             </div>
         </div>
-        <player-modal :modal-title="playerModalTitle" :modal-show="showPlayerModal" :modal-size="'modal-lg'" :had-footer="playerModalFooter"
-                      :confirm-btn-name="'上一分段&Previous Fragment'" :cancel-btn-name="'下一分段&Next Fragment'">
+        <player-modal :modal-title="playerModalTitle" :modal-show="showPlayerModal" :modal-size="'modal-xl'" :had-footer="playerModalFooter"
+                      :confirm-btn-name="'上一分段&Previous Fragment'" :cancel-btn-name="'下一分段&Next Fragment'"
+                      :cancel-close-modal="false" @cancel-btn-click="playFragment('next')"
+                      @confirm-btn-click="playFragment('last')" @modal-visible="playModalVisible">
             <video-player :url="playerUrl"></video-player>
         </player-modal>
         <setting-modal :modal-title="'分段设置&Fragment Setting'" :modal-show="showSettingModal"
@@ -473,7 +475,7 @@
             }
 
             const handleMp4Array = (dir,chnId) => {
-                return recordFiles[dir][chnId].filter(file => file.toLowerCase().endsWith('.mp4'));
+                return recordFiles[dir][chnId].filter(file => file.toLowerCase().endsWith('.mp4')).reverse();
             }
 
             const showVideoPlayer = (dir,chnId) => {
@@ -481,17 +483,41 @@
                 state.playerModalFooter.value = mp4Array.length  > 1;
                 state.playerUrl.value = "files/" + dir + "/" + chnId + "/" + mp4Array[0];
                 if(mp4Array.length > 1)
-                    state.playerModalTitle.value = "正在播放 "+dir+"(1/"+count+")&Playing "+dir+"(1/"+mp4Array.length+")";
+                    state.playerModalTitle.value = "正在播放 "+dir+" (1/"+mp4Array.length+")&Playing "+dir+" (1/"+mp4Array.length+")";
                 else
                     state.playerModalTitle.value = "正在播放 "+dir+"&Playing "+dir;
                 state.showPlayerModal.value = !state.showPlayerModal.value;
+            }
+
+            const playFragment = type =>{
+                if(state.playerUrl.value) {
+                    const [,dir,chnId,fileName] = state.playerUrl.value.split("/");
+                    const mp4Array = handleMp4Array(dir,chnId);
+                    let index = mp4Array.indexOf(fileName);
+                    if(type === "next") {
+                        if(index+1 < mp4Array.length)
+                            index += 1;
+                    }
+
+                    if(type === "last") {
+                        if(index-1 >= 0)
+                            index -= 1;
+                    }
+                    state.playerUrl.value = "files/" + dir + "/" + chnId + "/" + mp4Array[index];
+                    state.playerModalTitle.value = "正在播放 "+dir+" ("+(index+1)+"/"+mp4Array.length+")&Playing "+dir+" ("+(index+1)+"/"+mp4Array.length+")";
+                }
+            }
+
+            const playModalVisible = visible => {
+                if(!visible)
+                    state.playerUrl.value = "";
             }
 
             const handleRecordFileFormat= (dir,chnId) => {
                 const formats = [];
                 recordFiles[dir][chnId].forEach(file => {
                     const [,fileFormat] = file.split(".");
-                    if(fileFormat !== "jpg" && !formats.includes(fileFormat))
+                    if(fileFormat !== "jpg" && !formats.includes(fileFormat.toUpperCase()))
                         formats.push(fileFormat.toUpperCase());
                 })
                 return formats;
@@ -533,7 +559,7 @@
             return {...state, recordConf ,updateRecordConf,handleEnableConf,recordFiles,handleMergeRecordConf,
                 handleFragmentConf, onStartRecord,onStopRecord,onStartRecordByFormat,handleChnNameById,makeImgUrl,
                 delRecordFileByName, showVideoPlayer,handleMp4Array,handleRecordFileFormat,onDownloadRecordFile,
-                setRecordOption,saveFragmentSetting}
+                setRecordOption,saveFragmentSetting,playFragment,playModalVisible}
         }
     });
     app.use(ignoreCustomElementPlugin);

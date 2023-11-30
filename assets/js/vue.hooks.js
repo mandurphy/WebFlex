@@ -684,7 +684,6 @@ export const useRecordFiles = () => {
     const recordFiles = reactive({});
     const handleRecordFiles = () => {
         func("/root/getRecordFiles").then(conf => {
-            console.log(conf.data);
             clearReactiveObject(recordFiles);
             Object.assign(recordFiles,conf.data);
         })
