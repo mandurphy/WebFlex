@@ -947,7 +947,7 @@
 
         <search-modal :modal-title="'固件搜索&Search'" :modal-show="showSearchModal"
                       :confirm-btn-name="'搜索&Search'" :cancel-btn-name="'取消&Cancel'"
-                      @confirm-btn-click="searchPatchBySn" @modal-visible="searchModalVisible">
+                      @confirm-btn-click="searchPatchBySn">
             <div class="row my-3">
                 <div class="col-lg-3 offset-lg-1">
                     <div class="snTitle">
@@ -1307,6 +1307,7 @@
             }
 
             const checkUpdatePatch = () => {
+                state.patchSN.value = "";
                 state.checkLoading.value = true;
                 setTimeout(()=>{
                     state.checkUpgrade.value = true;
@@ -1361,11 +1362,6 @@
                 });
             }
 
-            const searchModalVisible = visible => {
-                if(!visible)
-                    state.patchSN.value = "";
-            }
-
             onMounted(()=>{
                 updateRenderData();
                 getSysAbortTime();
@@ -1376,7 +1372,7 @@
             return {...state,hardwareConf,netManagerConf,videoBufferConf,ntpConf,timezoneConf,portConf,versionConf,verLogsConf,
                 enableWifi,refreshWifi,connectWifi,updateNetManagerConf,handleSysScene, updateUserPasswd,updateVideoBufferConf,
                 updatePortConf,showBootstrapModal,formatNetSpeed, uploadSuccess,uploadError,rebootConfirm,resetConfirm, onTimeAreaChange,
-                syncTimeFromPc,saveSysConf,exportConf,importConf,startHelp,stopHelp, systemNetTest,checkUpdatePatch,searchUpdatePatch,searchPatchBySn,searchModalVisible}
+                syncTimeFromPc,saveSysConf,exportConf,importConf,startHelp,stopHelp, systemNetTest,checkUpdatePatch,searchUpdatePatch,searchPatchBySn}
         }
     });
     app.use(ignoreCustomElementPlugin);
