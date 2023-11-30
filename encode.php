@@ -794,7 +794,8 @@
                                         <select class="form-select" v-model="item.net.bufferMode">
                                             <option value="0" cn="一般" en="Normal" v-language-option></option>
                                             <option value="1" cn="实时" en="NoBuffer" v-language-option></option>
-                                            <option value="2" cn="同步" en="Sync" v-language-option></option>
+                                            <option value="2" cn="缓冲" en="Buffer" v-language-option></option>
+                                            <option value="3" cn="帧同步" en="Sync" v-language-option></option>
                                         </select>
                                     </div>
                                     <div class="col">
