@@ -879,6 +879,7 @@
                             const conf = deepCopy(state.globalConf);
                             const streams = ['stream', 'stream2'];
                             streams.forEach((stream) => {
+                                delete conf[stream].suffix;
                                 if (conf[stream].udp.ip.includes("+")) {
                                     let ip = conf[stream].udp.ip.replace(/[+\s]/g, '');
                                     ip = updateMulticastAddress(ip, index * 20);

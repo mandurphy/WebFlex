@@ -396,6 +396,7 @@
                 for ( let i = 0; i < defaultConf.length; i++ ) {
                     if (defaultConf[i].type !== "net")
                         continue;
+                    delete state.globalConf.net.path;
                     extend(defaultConf[i].net, deepCopy(state.globalConf.net));
                 }
                 saveDefaultConf();
