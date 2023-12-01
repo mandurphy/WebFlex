@@ -82,7 +82,7 @@
                                                     </label>
                                                 </div>
                                                 <div class="col-lg-7">
-                                                    <input class="form-control" v-model.trim.lazy="gb28181Conf.server.mode">
+                                                    <input class="form-control" v-model.trim.lazy="gb28181Conf.server.Mode">
                                                 </div>
                                             </div>
                                             <div class="row">
@@ -264,10 +264,8 @@
                     return gb28181Conf.channel.filter(item => {
                         const match = defaultConf.find(conf => conf.enable && item.id === conf.id);
                         if (match) {
-                            return {
-                                ...item,
-                                chnName: match.name
-                            };
+                            item.chnName = match.name;
+                            return true;
                         }
                         return false;
                     });
