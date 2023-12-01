@@ -117,7 +117,7 @@
                             <div class="parent-icon"><i class="fa-solid fa-puzzle-piece ms-1 mb-1"></i></div>
                             <div class="menu-title"><cn>扩展功能</cn><en>Extend</en></div>
                         </a>
-                        <ul>
+                        <ul class="ps-3">
                             <li v-if="Object.keys(hardwareConf).length > 0 && hardwareConf.function.ndi">
                                 <a href="ndi.php">
                                     <i class="fa-solid fa-desktop"></i>
@@ -155,7 +155,7 @@
                             <div class="parent-icon"><i class="fa-solid fa-gears"></i></div>
                             <div class="menu-title"><cn>高级设置</cn><en>Options</en></div>
                         </a>
-                        <ul>
+                        <ul class="ps-3">
                             <li>
                                 <a href="group.php">
                                     <i class="fa-solid fa-server"></i>
@@ -181,7 +181,7 @@
                             <div class="parent-icon"><i class="fa-solid fa-flask"></i></div>
                             <div class="menu-title"><cn>实验功能</cn><en>Laboratory</en></div>
                         </a>
-                        <ul>
+                        <ul class="ps-3">
                             <li>
                                 <a href="gb28181.php">
                                     <i class="fa-solid fa-cloud"></i>
