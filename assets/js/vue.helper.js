@@ -470,11 +470,9 @@ export const multipleInputComponent = {
         let selectValue = ref("");
         const { value1,value2 } = toRefs(props);
         watchEffect(()=>{
-            if(typeof value1.value === "string")
-                value1.value = value1.value.trim();
-            if(typeof value2.value === "string")
-                value2.value = value2.value.trim();
-            selectValue.value = value1.value + props.split + value2.value;
+            const val1 = (typeof value1.value === "string") ? value1.value.trim() : value1.value;
+            const val2 = (typeof value2.value === "string") ? value2.value.trim() : value2.value;
+            selectValue.value = val1 + props.split + val2;
         })
 
         const onInputChange = () =>{

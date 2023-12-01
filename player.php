@@ -99,12 +99,11 @@
             
             const handleActivePlayerConf = computed(()=>{
                 return defaultConf.filter((item,index)=>{
-                    return !!(item.enable && item.stream.rtmp);
+                    return !!(item.enable && item.type !=="ndi" && item.stream.rtmp);
                 })
             })
             
             const onChangeBufferTime = () => {
-                console.log(state.bufferTime.value)
                 localStorage.setItem("bufferTime",state.bufferTime.value);
             }
             

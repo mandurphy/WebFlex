@@ -23,14 +23,14 @@
                                 </div>
                             </div>
                             <div v-if="item.type === 'wifi'" class="d-flex align-items-center">
-                                <wifi-flag :icon="'wifi-'+(item.rssi > 3 ? 4 : (item.rssi < 3 ? (item.rssi === 0 ? 1 : 2) : 3))" width="20" height="20" stroke="#cccccc" color="#777777" stroke-width="2.3"></wifi-flag>
+                                <wifi-flag :icon="'wifi-'+(item.rssi > 3 ? 4 : (item.rssi < 3 ? (item.rssi === 0 ? 1 : 2) : 3))" :width="20" :height="20" :stroke="'#cccccc'" :color="'#777777'" :stroke-width="2.3"></wifi-flag>
                                 <div class="tab-title">
                                     <cn>无线网</cn>
                                     <en>WIFI</en>
                                 </div>
                             </div>
                             <div v-if="item.type === 'dongle'" class="d-flex align-items-center">
-                                <antenan-flag :icon="'antenan-'+(item.rssi > 3 ? 4 : (item.rssi < 3 ? (item.rssi === 0 ? 0 : 2) : 3))" width="20" height="20" stroke="#cccccc" color="#777777" stroke-width="2.3"></antenan-flag>
+                                <antenan-flag :icon="'antenan-'+(item.rssi > 3 ? 4 : (item.rssi < 3 ? (item.rssi === 0 ? 0 : 2) : 3))" :width="20" :height="20" :stroke="'#cccccc'" :color="'#777777'" :stroke-width="2.3"></antenan-flag>
                                 <div class="tab-title">
                                     <cn>移动网络</cn>
                                     <en>Cellular network</en>
@@ -42,7 +42,7 @@
                     <li v-if="Object.keys(hardwareConf).length > 0 && hardwareConf.function.wifi && !Object.values(netAdapter).some(item => item.type === 'wifi')" class="nav-item lp-cursor-pointer" ref="wifiHandler">
                         <a class="nav-link">
                             <div class="d-flex align-items-center">
-                                <wifi-flag icon="wifi-off" width="20" height="20" stroke="#999999" stroke-width="2.3"></wifi-flag>
+                                <wifi-flag icon="wifi-off" :width="20" :height="20" :stroke="'#999999'" :stroke-width="2.3"></wifi-flag>
                                 <div class="tab-title">
                                     <cn>无线网</cn>
                                     <en>WIFI</en>
@@ -54,7 +54,7 @@
                     <li v-if="!Object.values(netAdapter).some(item => item.type === 'dongle')" class="nav-item lp-cursor-pointer" ref="antenanHandler">
                         <a class="nav-link">
                             <div class="d-flex align-items-center">
-                                <antenan-flag icon="antenan-off" width="20" height="20" stroke="#999999" stroke-width="2.3"></antenan-flag>
+                                <antenan-flag icon="antenan-off" :width="20" :height="20" :stroke="'#999999'" :stroke-width="2.3"></antenan-flag>
                                 <div class="tab-title">
                                     <cn>移动网络</cn>
                                     <en>Cellular network</en>
@@ -1093,6 +1093,17 @@
             const getAdapterNetState = () => {
                 rpc2("net.getState").then(data => {
                     clearReactiveObject(state.netAdapter);
+                    const ignoreAry = [];
+                    if(hardwareConf.fac === "ENC5V2") {
+                        Object.values(data.interface).forEach(item => {
+                            if(item.type === "lan" && item.dev.includes("eth"))
+                                ignoreAry.push(item.dev);
+                        })
+                    }
+                    ignoreAry.forEach(item => {
+                        if(item !== "eth0")
+                            delete data.interface[item];
+                    })
                     Object.assign(state.netAdapter,data.interface);
                 });
                 setTimeout(getAdapterNetState,2000);

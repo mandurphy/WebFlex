@@ -754,7 +754,7 @@
 
 <script type="module">
 
-    import {rpc, alertMsg, extend, deepCopy, clearReactiveArray} from "./assets/js/lp.utils.js";
+    import {rpc, extend, deepCopy, clearReactiveArray} from "./assets/js/lp.utils.js";
     import { useDefaultConf,useHardwareConf,usePortConf } from "./assets/js/vue.hooks.js";
     import { ignoreCustomElementPlugin,bootstrapSwitchComponent,multipleInputComponent,languageOptionDirective } from "./assets/js/vue.helper.js"
     import vue from "./assets/js/vue.build.js";
@@ -896,7 +896,7 @@
                 return state.pushSpeed[index];
             }
 
-            const handleEnableConf = computed(() => defaultConf.filter((item,index) => !!(item.enable || item.enable2)));
+            const handleEnableConf = computed(() => defaultConf.filter(item => !!(item.enable || item.enable2)));
 
             const handlePlayUrl = (index,type)=>{
                 if(state.playUrls.length > index)
