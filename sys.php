@@ -1115,7 +1115,6 @@
 
             const refreshWifi = (tip = 'loading',refresh = true) => {
                 const scanwifi = type => {
-                    console.log(type);
                     rpc2("net.scanWifi",[refresh]).then(data => {
                         if(data.length === 0)
                             data.push({ssid:state.wifiConnectId});

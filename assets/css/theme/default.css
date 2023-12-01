@@ -1,20 +1,18 @@
 
 [data-bs-theme=default] {
 	--bs-body-color-semi: #adb5bd;
-	--bs-body-bg-semi: #212529;
     --bs-body-bg-semi-2:#191b1e;
     --bs-light-text-semi: #f8f9fa;
-
 	--bs-border-color-translucent-semi: rgba(255, 255, 255, 0.15);
     --bs-border-color: #dee2e6;
-
     --bs-body-bg-color: #f0f0f4;
     --bs-body-bg: #ffffff;
 
     --bs-default-simplebar-color: #727477;
     --bs-default-auth-border-color:#495057;
     --bs-default-body-color:#555;
-    --bs-default-bg-color:#ffbb00;
+    --bs-default-bg-color:#212529;
+    --bs-default-active-bg-color:#ffbb00;
     --bs-default-acitve-color:#eeaa00;
     --bs-default-hr-color:#bbbbbb;
     --bs-default-nav-color:#999999;
@@ -38,7 +36,7 @@
 [data-bs-theme=default] .sidebar-wrapper .sidebar-header,
 [data-bs-theme=default] .sidebar-wrapper .sidebar-bottom,
 [data-bs-theme=default] .sidebar-wrapper {
-    background-color: var(--bs-body-bg-semi);
+    background-color: var(--bs-default-bg-color);
     border-color:var(--bs-border-color-translucent-semi);
 }
 
@@ -61,7 +59,7 @@
 
 [data-bs-theme=default] .sidebar-wrapper .sidebar-bottom .dropdown-menu {
 
-    background-color: var(--bs-body-bg-semi-2);
+    background-color: var(--bs-default-bg-color-2);
     border-color:var(--bs-border-color-translucent);
 }
 
@@ -70,7 +68,7 @@
 }
 
 [data-bs-theme=default] .sidebar-wrapper .sidebar-bottom .dropdown-menu .dropdown-item:hover {
-    background-color: var(--bs-body-bg-semi);
+    background-color: var(--bs-default-bg-color);
 }
 
 
@@ -79,13 +77,13 @@
 }
 
 [data-bs-theme=default] .sidebar-wrapper .metismenu .mm-active>a {
-    color: var(--bs-default-bg-color);
+    color: var(--bs-default-active-bg-color);
     font-weight: 600;
 }
 
 [data-bs-theme=default] .sidebar-wrapper .metismenu a .parent-icon {
     color: var(--bs-body-color-semi);
-    background-color: var(--bs-body-bg-semi);
+    background-color: var(--bs-default-bg-color);
     border-color:var(--bs-border-color-translucent-semi)
 }
 
@@ -95,14 +93,14 @@
 [data-bs-theme=default] .sidebar-wrapper .metismenu a:active .parent-icon {
     color: #ffffff;
     text-decoration: none;
-    background: var(--bs-default-bg-color);
-    border-color: var(--bs-default-bg-color);
+    background: var(--bs-default-active-bg-color);
+    border-color: var(--bs-default-active-bg-color);
     transition: ease-out .3s;
 }
 
 
 [data-bs-theme=default] .sidebar-wrapper .metismenu ul {
-    background-color: var(--bs-body-bg-semi);
+    background-color: var(--bs-default-bg-color);
 }
 
 /*header*/
@@ -136,8 +134,8 @@
 }
 
 [data-bs-theme=default] .btn-primary {
-    background-color: var(--bs-default-bg-color);
-    border-color: var(--bs-default-bg-color);
+    background-color: var(--bs-default-active-bg-color);
+    border-color: var(--bs-default-active-bg-color);
     font-size: 14px;
     font-weight: normal;
     padding: 6px 12px;
@@ -171,7 +169,7 @@
 
 /* switch */
 [data-bs-theme=default] .bootstrap-switch .bootstrap-switch-handle-on.bootstrap-switch-primary,.bootstrap-switch .bootstrap-switch-handle-off.bootstrap-switch-primary {
-    background-color: var(--bs-default-bg-color);
+    background-color: var(--bs-default-active-bg-color);
 }
 
 [data-bs-theme=default] .bootstrap-switch-small {
@@ -222,7 +220,7 @@
     border-radius: 0;
     background: #fff;
     border-color: transparent;
-    border-top: 4px solid var(--bs-default-bg-color) !important;
+    border-top: 4px solid var(--bs-default-active-bg-color) !important;
     border-left: 1px solid rgba(0,0,0,0.175);
     border-right: 1px solid rgba(0,0,0,0.175);
 }
@@ -337,7 +335,7 @@
 }
 
 [data-bs-theme=default] .lp-usb-ctx.active {
-    background-color: var(--bs-default-bg-color) !important;
+    background-color: var(--bs-default-active-bg-color) !important;
 }
 
 [data-bs-theme=default] .lp-usb-ctx.active .lp-usb-drive .lp-usb-body {
@@ -392,12 +390,12 @@
     border-color: var(--bs-default-auth-border-color);
     --bs-form-switch-bg: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='-4 -4 8 8'%3e%3ccircle r='3' fill='rgba%28255, 255, 255, 0.25%29'/%3e%3c/svg%3e");
     outline: 0;
-    background-color: var(--bs-body-bg-semi);
+    background-color: var(--bs-default-bg-color);
 }
 
 [data-bs-theme=default] .login .form-check-primary .form-check-input:not(:checked):not(:focus) {
     --bs-form-switch-bg: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='-4 -4 8 8'%3e%3ccircle r='3' fill='rgba%2885, 85, 85, 1%29'/%3e%3c/svg%3e");
-    background-color: var(--bs-body-bg-semi);
+    background-color: var(--bs-default-bg-color);
     border-color: #495057;
 }
 
@@ -439,4 +437,8 @@
 
 [data-bs-theme=default] .sys .snTitle {
     color: #666666;
+}
+
+[data-bs-theme=default] .output .border-right {
+    border-right: 1px solid var(--bs-border-color-translucent);
 }

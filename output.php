@@ -8,7 +8,7 @@
 <body>
 <?php include ("./public/menu.inc") ?>
 <div data-simplebar>
-    <main class="page-content mix" id="app" v-cloak>
+    <main class="page-content output" id="app" v-cloak>
         <div v-if="Object.keys(hardwareConf).length > 0" :class="['row',{'lp-display-hide':!hardwareConf.function.videoOut}]">
             <div class="col-lg-12 mx-auto">
                 <div class="card">
@@ -35,7 +35,7 @@
                             </div>
                         </div>
                         <div class="row">
-                            <div class="col-lg-6">
+                            <div class="col-lg-6 border-right">
                                 <div class="row mt-4">
                                     <div class="col-lg-3 offset-lg-1 lp-align-center">
                                         <label>
@@ -125,7 +125,7 @@
                                     </div>
                                     <div class="col-lg-6">
                                         <select class="form-select" v-model="defaultConf[mixIndex].output.src">
-                                            <option v-for="(item,index) in handleEnableConf" :key="item.id" :value="item.id">{{item.name}}</option>
+                                            <option v-for="(item,index) in defaultConf" :key="item.id" :value="item.id">{{item.name}}</option>
                                         </select>
                                     </div>
                                 </div>
@@ -269,7 +269,7 @@
                                     </div>
                                     <div class="col-lg-6">
                                         <select class="form-select" v-model="defaultConf[mixIndex].output2.src">
-                                            <option v-for="(item,index) in handleEnableConf" :key="item.id" :value="item.id">{{item.name}}</option>
+                                            <option v-for="(item,index) in defaultConf" :key="item.id" :value="item.id">{{item.name}}</option>
                                         </select>
                                     </div>
                                 </div>
@@ -345,7 +345,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="row my-4">
+                        <div class="row my-5 mb-3">
                             <div class="col-lg-12 text-center">
                                 <button type="button" @click="updateDefaultConf" class="btn border-3 btn-primary px-5 text-center"><cn>保存</cn><en>Save</en></button>
                             </div>
@@ -392,13 +392,7 @@
                 }
             })
 
-            const handleEnableConf = computed(()=>{
-                return defaultConf.filter((item,index)=>{
-                    return !!(item.type !== "ndi" && item.type !== "colorKey") ;
-                })
-            })
-
-            return {...state,defaultConf,hardwareConf,updateDefaultConf,handleEnableConf}
+            return {...state,defaultConf,hardwareConf,updateDefaultConf}
         }
     });
     app.use(ignoreCustomElementPlugin);

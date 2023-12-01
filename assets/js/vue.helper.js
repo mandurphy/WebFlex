@@ -498,7 +498,7 @@ export const multipleInputComponent = {
 };
 
 export const nouiSliderComponent = {
-    template: `<div class="slider-wrap" ref="slider"></div>`,
+    template: `<div class="slider-wrap lp-cursor-pointer" ref="slider"></div>`,
     props: {
         modelValue: {
           type: [Number,String],
@@ -628,7 +628,13 @@ export const nouiSliderComponent = {
                 isSlide = true;
             });
 
-            slider.value.noUiSlider.on('end', (values, mark) => {
+            // slider.value.noUiSlider.on('end', (values, mark) => {
+            //     isSlide = false;
+            //     context.emit('update:modelValue', formatTooltipValue(values[mark]));
+            //     context.emit('slide-end', formatTooltipValue(values[mark]),props.index);
+            // });
+
+            slider.value.noUiSlider.on('change', (values, mark) => {
                 isSlide = false;
                 context.emit('update:modelValue', formatTooltipValue(values[mark]));
                 context.emit('slide-end', formatTooltipValue(values[mark]),props.index);

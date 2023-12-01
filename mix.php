@@ -147,19 +147,20 @@
             });
     
             const handleActiveVolume = index => {
-                return defaultConf[state.mixIndex.value].srcA.indexOf(defaultConf[state.mixIndex.value].srcV[index]) === -1;
+                defaultConf[state.mixIndex.value].srcA = defaultConf[state.mixIndex.value].srcA.map(item => Number(item));
+                return !defaultConf[state.mixIndex.value].srcA.includes(Number(defaultConf[state.mixIndex.value].srcV[index]));
             };
             
             const onUpdateActiveVolume = chnId => {
                 if(chnId === "-1")
                     return;
-                
+                chnId = Number(chnId);
+                defaultConf[state.mixIndex.value].srcA = defaultConf[state.mixIndex.value].srcA.map(item => Number(item));
                 let idx = defaultConf[state.mixIndex.value].srcA.indexOf(chnId);
                 if(idx === -1)
                     defaultConf[state.mixIndex.value].srcA.push(chnId);
                 else
                     defaultConf[state.mixIndex.value].srcA.splice(idx, 1);
-                
                 updateDefaultConf("noTip");
             };
     

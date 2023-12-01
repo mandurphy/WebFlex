@@ -1,21 +1,18 @@
 
 [data-bs-theme=dark] {
     --bs-body-color-semi: #adb5bd;
-    --bs-body-bg-semi: #212529;
-    /*--bs-body-bg-semi: #1a1e20;*/
     --bs-body-bg-semi-2:#191b1e;
     --bs-light-text-semi: #f8f9fa;
-    /*--bs-border-color-translucent-semi: rgba(255, 255, 255, 0.15);*/
     --bs-border-color: #dee2e6;
     --bs-body-bg-color: #f0f0f4;
-    /*card 背景颜色*/
-    /*--bs-body-bg: #ffffff;*/
+
     --bs-default-simplebar-color: #727477;
     --bs-default-auth-border-color:#495057;
     --bs-default-body-color:#555;
-    /*--bs-default-bg-color:#FFC107;*/
     --bs-default-primary-bg:#fb0;
-    --bs-default-bg-color:#ffbb00;
+    --bs-default-active-bg-color:#ffbb00;
+    --bs-default-body-bg-color:#1f2226;
+    --bs-default-bg-color:#212529;
     --bs-default-txt-color:#333;
     --bs-default-acitve-color:#eeaa00;
     --bs-default-hr-color:#585858;
@@ -29,10 +26,8 @@
 
 /* body */
 [data-bs-theme=dark] body {
-    background-color: var(--bs-body-bg-semi);
+    background-color:var(--bs-default-body-bg-color);
     color: var(--bs-body-color-semi);
-
-    /*background: #191b1e;*/
 }
 
 [data-bs-theme=dark] .simplebar-scrollbar:before {
@@ -44,7 +39,7 @@
 [data-bs-theme=dark] .sidebar-wrapper .sidebar-header,
 [data-bs-theme=dark] .sidebar-wrapper .sidebar-bottom,
 [data-bs-theme=dark] .sidebar-wrapper {
-    background-color: var(--bs-body-bg-semi);
+    background-color: var(--bs-default-bg-color);
     border-color:var(--bs-border-color-translucent);
 }
 
@@ -76,7 +71,7 @@
 }
 
 [data-bs-theme=dark] .sidebar-wrapper .sidebar-bottom .dropdown-menu .dropdown-item:hover {
-    background-color: var(--bs-body-bg-semi);
+    background-color: var(--bs-default-bg-color);
 }
 
 
@@ -85,13 +80,13 @@
 }
 
 [data-bs-theme=dark] .sidebar-wrapper .metismenu .mm-active>a {
-    color: var(--bs-default-bg-color);
+    color: var(--bs-default-active-bg-color);
     font-weight: 600;
 }
 
 [data-bs-theme=dark] .sidebar-wrapper .metismenu a .parent-icon {
     color: var(--bs-body-color-semi);
-    background-color: var(--bs-body-bg-semi);
+    background-color: var(--bs-default-bg-color);
     border-color:var(--bs-border-color-translucent)
 }
 
@@ -101,18 +96,18 @@
 [data-bs-theme=dark] .sidebar-wrapper .metismenu a:active .parent-icon {
     color: var(--bs-default-txt-color);
     text-decoration: none;
-    background: var(--bs-default-bg-color);
-    border-color: var(--bs-default-bg-color);
+    background: var(--bs-default-active-bg-color);
+    border-color: var(--bs-default-active-bg-color);
     transition: ease-out .3s;
 }
 
 [data-bs-theme=dark] .sidebar-wrapper .metismenu ul {
-    background-color: var(--bs-body-bg-semi);
+    background-color: var(--bs-default-bg-color);
 }
 
 /*header*/
 [data-bs-theme=dark] .top-header .navbar {
-    background-color: var(--bs-body-bg-semi);
+    background-color: var(--bs-default-bg-color);
     border-bottom: 1px solid var(--bs-border-color-translucent);
 }
 
@@ -142,8 +137,8 @@
 }
 
 [data-bs-theme=dark] .btn-primary {
-    background-color: var(--bs-default-bg-color);
-    border-color: var(--bs-default-bg-color);
+    background-color: var(--bs-default-active-bg-color);
+    border-color: var(--bs-default-active-bg-color);
     font-size: 14px;
     font-weight: normal;
     padding: 6px 12px;
@@ -182,13 +177,13 @@
 }
 
 [data-bs-theme=dark] .bootstrap-switch .bootstrap-switch-label {
-    /*background-color:  var(--bs-body-bg-semi);*/
+    /*background-color:  var(--bs-default-bg-color);*/
     background-color: #292e32;
     border-right: 1px solid var(--bs-border-color-translucent);
 }
 
 [data-bs-theme=dark] .bootstrap-switch .bootstrap-switch-handle-on.bootstrap-switch-primary{
-    background-color: var(--bs-default-bg-color);
+    background-color: var(--bs-default-active-bg-color);
     color: var(--bs-default-txt-color);
 }
 
@@ -246,19 +241,28 @@
     color: var(--bs-body-color-semi)!important;
     padding-top:8px!important;
     border-radius: 0;
-    background: var(--bs-body-bg-semi);
+    background: var(--bs-default-bg-color);
     border-color: transparent;
-    border-top: 4px solid var(--bs-default-bg-color) !important;
-    border-left: 1px solid var(--bs-border-color-translucent);
-    border-right: 1px solid var(--bs-border-color-translucent);
+    border-top: 4px solid var(--bs-default-active-bg-color) !important;
+    border-left: 1px solid var(--bs-border-color-translucent) !important;
+    border-right: 1px solid var(--bs-border-color-translucent) !important;
 }
 
 [data-bs-theme=dark] .nav-primary.nav-tabs .nav-link:hover {
     border-color: transparent;
 }
 
+[data-bs-theme=dark] .nav-primary.nav-tabs .nav-link:hover {
+    border-color: transparent;
+}
+
+[data-bs-theme=dark] .nav-primary.nav-tabs .nav-link.active:hover {
+    border-left-color: var(--bs-border-color-translucent) !important;
+    border-right-color: var(--bs-border-color-translucent) !important;
+}
+
 [data-bs-theme=dark] .tab-content {
-    background-color: var(--bs-body-bg-semi);
+    background-color: var(--bs-default-bg-color);
     color: var(--bs-body-color-semi);
     border-bottom-left-radius: 6px;
     border-bottom-right-radius: 6px;
@@ -370,7 +374,7 @@
 }
 
 [data-bs-theme=dark] .jconfirm .jconfirm-box {
-    background-color: var(--bs-body-bg-semi);
+    background-color: var(--bs-default-bg-color);
     color: var(--bs-body-color-semi);
 }
 
@@ -392,7 +396,7 @@
 }
 
 [data-bs-theme=dark] .lp-usb-ctx.active {
-    background-color: var(--bs-default-bg-color) !important;
+    background-color: var(--bs-default-active-bg-color) !important;
 }
 
 [data-bs-theme=dark] .lp-usb-ctx.active .lp-usb-drive .lp-usb-body {
@@ -421,7 +425,7 @@
 }
 
 [data-bs-theme=dark] .login  {
-    background-color: var(--bs-body-bg-semi);
+    background-color: var(--bs-default-bg-color);
     width: 100%;
     height: 100%;
 }
@@ -432,7 +436,7 @@
 
 [data-bs-theme=dark] .login .form-control {
     color: var(--bs-body-bg-color);
-    background-color: var(--bs-body-bg-semi);
+    background-color: var(--bs-default-bg-color);
     border: 3px solid var(--bs-default-auth-border-color);
 }
 
@@ -474,12 +478,12 @@
     border-color: var(--bs-default-auth-border-color);
     --bs-form-switch-bg: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='-4 -4 8 8'%3e%3ccircle r='3' fill='rgba%28255, 255, 255, 0.25%29'/%3e%3c/svg%3e");
     outline: 0;
-    background-color: var(--bs-body-bg-semi);
+    background-color: var(--bs-default-bg-color);
 }
 
 [data-bs-theme=dark] .login .form-check-primary .form-check-input:not(:checked):not(:focus) {
     --bs-form-switch-bg: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='-4 -4 8 8'%3e%3ccircle r='3' fill='rgba%2885, 85, 85, 1%29'/%3e%3c/svg%3e");
-    background-color: var(--bs-body-bg-semi);
+    background-color: var(--bs-default-bg-color);
     border-color: #495057;
 }
 
@@ -504,7 +508,7 @@
 }
 
 [data-bs-theme=dark] .dashboard .iface{
-    background: var(--bs-body-bg-semi);
+    background: var(--bs-default-bg-color);
     color: var(--bs-body-color-semi);
 }
 
@@ -513,7 +517,7 @@
 }
 
 [data-bs-theme=dark] .stream .play-url {
-    background-color: var(--bs-body-bg-semi);
+    background-color: var(--bs-default-bg-color);
     border-color: var(--bs-border-color-translucent);
 }
 
@@ -537,8 +541,8 @@
 }
 
 [data-bs-theme=dark] .dropdown-menu table td a:hover {
-    background-color: var(--bs-default-bg-color);
-    border-color: var(--bs-default-bg-color);
+    background-color: var(--bs-default-active-bg-color);
+    border-color: var(--bs-default-active-bg-color);
     color: var(--bs-default-txt-color);
 }
 
@@ -563,6 +567,10 @@
     border-color: var(--bs-border-color-translucent);
 }
 
+[data-bs-theme=dark] .output .border-right {
+    border-right: 1px solid var(--bs-border-color-translucent);
+}
+
 [data-bs-theme=dark] .sys .snInput {
     color: var(--bs-body-color-semi);
     background: transparent;
@@ -574,8 +582,8 @@
 }
 
 [data-bs-theme=dark] .mix .lp-aspect-ratio .aspect-ratio-content button.btn-default {
-    background-color: var(--bs-body-bg-semi);
-    border-color: var(--bs-body-bg-semi);
+    background-color: var(--bs-default-bg-color);
+    border-color: var(--bs-default-bg-color);
     color: var(--bs-body-color-semi);
 }
 

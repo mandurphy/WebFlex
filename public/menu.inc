@@ -247,7 +247,7 @@
     import { ignoreCustomElementPlugin,usbOptionComponent } from "../assets/js/vue.helper.js"
     import Metismenu from '../assets/plugins/metismenu/js/metisMenu.esm.js';
 
-    const { createApp,ref,watchEffect,onMounted } = vue;
+    const { createApp,ref,watchEffect,watch,nextTick,onMounted } = vue;
     const menu = createApp({
         components:{
             "usb-option": usbOptionComponent,
@@ -270,6 +270,29 @@
                            location.href = "/";
                    });
            }
+
+           const unwatch = watch(hardwareConf,()=>{
+               if(Object.keys(hardwareConf).length > 0) {
+                   nextTick(()=>{
+                       let as = document.querySelectorAll(".sidebar-wrapper .metismenu li a");
+                       for (let i = 0; i < as.length; i++) {
+                           if (as[i].href === window.location.href) {
+                               as[i].classList.add("active");
+                               let parent = as[i].parentElement;
+                               while (parent && parent.tagName === "LI") {
+                                   parent.classList.add("mm-active");
+                                   parent = parent.parentElement;
+                                   if (parent && parent.tagName === "UL")
+                                       parent.classList.add("mm-show");
+                                   parent = parent.parentElement;
+                               }
+                               break;
+                           }
+                       }
+                       unwatch();
+                   })
+               }
+           })
 
            watchEffect(()=>{
                const body = document.querySelector('body');
@@ -322,21 +345,6 @@
 
            onMounted(()=>{
                new Metismenu(state.metismenu.value);
-               let as = document.querySelectorAll(".sidebar-wrapper .metismenu li a");
-               for (let i = 0; i < as.length; i++) {
-                   if (as[i].href === window.location.href) {
-                       as[i].classList.add("active");
-                       let parent = as[i].parentElement;
-                       while (parent && parent.tagName === "LI") {
-                           parent.classList.add("mm-active");
-                           parent = parent.parentElement;
-                           if (parent && parent.tagName === "UL")
-                               parent.classList.add("mm-show");
-                           parent = parent.parentElement;
-                       }
-                       break;
-                   }
-               }
            });
 
            return {...state,hardwareConf,themeConf,updateThemeConf,onHrefDash,onLogout,onToggleMenu,
