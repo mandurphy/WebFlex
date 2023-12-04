@@ -134,7 +134,7 @@
                             </div>
                             <div class="row mt-4">
                                 <div class="col-lg-12 text-center">
-                                    <button type="button" class="btn border-3 btn-primary px-4" @click="updateNetManagerConf"><cn>保存</cn><en>Save</en></button>
+                                    <button type="button" class="btn border-3 btn-primary px-4" @click="updateDefNetwork(item.dev)"><cn>保存</cn><en>Save</en></button>
                                 </div>
                             </div>
                         </div>
@@ -1115,6 +1115,13 @@
                 })
             });
 
+            const updateDefNetwork = (dev) => {
+                updateNetManagerConf().then(()=>{
+                    if(dev === "eth0")
+                        setTimeout(() => window.location.href="http://"+netManagerConf["interface"]["eth0"]["ip"]+"/sys.php",1000)
+                })
+            }
+
             const enableWifi = state => {
                 updateNetManagerConf("noTip").then(()=>{
                     if(state)
@@ -1380,7 +1387,7 @@
             })
 
             return {...state,hardwareConf,netManagerConf,videoBufferConf,ntpConf,timezoneConf,portConf,versionConf,verLogsConf,
-                enableWifi,refreshWifi,connectWifi,updateNetManagerConf,handleSysScene, updateUserPasswd,updateVideoBufferConf,
+                enableWifi,refreshWifi,connectWifi,updateNetManagerConf,handleSysScene, updateUserPasswd,updateVideoBufferConf,updateDefNetwork,
                 updatePortConf,showBootstrapModal,formatNetSpeed, uploadSuccess,uploadError,rebootConfirm,resetConfirm, onTimeAreaChange,
                 syncTimeFromPc,saveSysConf,exportConf,importConf,startHelp,stopHelp, systemNetTest,checkUpdatePatch,searchUpdatePatch,searchPatchBySn}
         }
