@@ -918,9 +918,9 @@
                 </div>
             </div>
         </div>
-        <upload-modal modal-title="上传升级包&Upload" :modal-show="showUploadModal" modal-fade="true"
-                      upload-allow="['bin']" upload-action="/link/upd/uploadPatch.php" upload-count="1"
-                      upload-tip="请把升级包拖动到此处...&Please drag the upgrade package here..."
+        <upload-modal :modal-title="'上传升级包&Upload'" :modal-show="showUploadModal" :modal-fade="true"
+                      :upload-allow="['bin']" :upload-action="'/link/upd/uploadPatch.php'" :upload-count="1"
+                      :upload-tip="'请把升级包拖动到此处...&Please drag the upgrade package here...'"
                       @upload-success="uploadSuccess" @upload-error="uploadError">
         </upload-modal>
 
@@ -961,7 +961,7 @@
             </div>
         </search-modal>
 
-        <upgrade-modal v-model:check-upgrade="checkUpgrade" :patch-sn="patchSN" modal-fade="true"></upgrade-modal>
+        <upgrade-modal v-model:check-upgrade="checkUpgrade" :patch-sn="patchSN" :modal-fade="true"></upgrade-modal>
     </main>
 </div>
 <?php include ("./public/foot.inc") ?>

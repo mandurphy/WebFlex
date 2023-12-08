@@ -98,22 +98,29 @@ export const statusTemperatureComponent = {
                         </div>
                     </div>
                 </div>`,
-    props: ['value','color'],
+    props: {
+        modelValue: {
+            type: Number,
+            default: 0
+        },
+        activeColor: {
+            type: String,
+            default: "#fb0"
+        }
+    },
     setup(props, context) {
 
         const tmp_mask = ref(null);
         const tmp_text = ref(null);
 
-        const { value } = toRefs(props);
+        const { modelValue,activeColor } = toRefs(props);
 
-        watch(value,()=>{
-            tmp_mask.value.style.bottom = props.value + '%';
-            tmp_text.value.textContent = props.value + '℃';
+        watch(modelValue,()=>{
+            tmp_mask.value.style.bottom = modelValue.value + '%';
+            tmp_text.value.textContent = modelValue.value + '℃';
         })
 
-        onMounted(()=>{
-            tmp_mask.value.parentElement.style.background = props.color;
-        })
+        onMounted(() => tmp_mask.value.parentElement.style.background = activeColor.value);
 
         return { tmp_mask,tmp_text }
     }
@@ -883,7 +890,16 @@ export const vueColorPickerComponent = {
                   <div class="arrow" data-popper-arrow></div>
                 </div>
               </div>`,
-    props: ['modelValue','direct'],
+    props: {
+        modelValue: {
+            type: String,
+            default: ""
+        },
+        direct: {
+            type: String,
+            default: "bottom"
+        }
+    },
     components: {
         "sketch-picker": defineAsyncComponent(() => {
             return import('../plugins/vueColor/vue3.color.esm.js').then(module => {
@@ -993,10 +1009,39 @@ export const uploadModalComponent = {
                       </div>
                     </div>
                </div>`,
-    props:['modalTitle','modalShow','modalFade','uploadTip',"uploadAction",'uploadAllow','uploadCount'],
+    props:{
+        modalTitle: {
+            type: String,
+            default: ""
+        },
+        modalShow: {
+            type: Boolean,
+            default: false
+        },
+        modalFade: {
+            type: Boolean,
+            default: false
+        },
+        uploadTip: {
+            type: String,
+            default: ""
+        },
+        uploadAction: {
+            type: String,
+            default: ""
+        },
+        uploadAllow: {
+            type: Array,
+            default: ""
+        },
+        uploadCount: {
+            type: [Number,String],
+            default: 1
+        }
+    },
     setup(props,context) {
 
-        const { modalShow,modalFade } = toRefs(props);
+        const { modalShow,modalFade,uploadAllow } = toRefs(props);
 
         const state = {
             modal : ref(null),
@@ -1058,7 +1103,7 @@ export const uploadModalComponent = {
                 dropZoneTitle: state.uploadTip,
                 showClose: false,
                 browseClass:"btn btn-primary btn-df",
-                allowedFileExtensions: eval('('+props.uploadAllow+')'),
+                allowedFileExtensions: uploadAllow.value,
                 uploadUrl: props.uploadAction,
                 maxFileCount: isNaN(Number(props.uploadCount)) ? 1 : Number(props.uploadCount)
             });
@@ -1085,6 +1130,15 @@ export const uploadModalComponent = {
                 initBsModal();
                 initUploadFile();
             })
+            const observer = new mutationObserver(() => {
+                updateLangText();
+            });
+            const config = {
+                attributes: true,
+                attributeFilter: ["data-bs-language"],
+                subtree: false
+            };
+            observer.observe(html, config);
         })
 
         return { ...state,modalFade }
@@ -1203,7 +1257,24 @@ export const upgradeModalComponent = {
                     </div>
                 </div>
             </div>`,
-    props:['modalShow','modalFade','checkUpgrade','patchSn'],
+    props: {
+        modalShow: {
+            type: Boolean,
+            default: false
+        },
+        modalFade: {
+            type:Boolean,
+            default: true
+        },
+        checkUpgrade: {
+            type: Boolean,
+            default: false
+        },
+        patchSn: {
+            type: String,
+            default:""
+        }
+    },
     setup(props,context) {
 
         const { modalFade,checkUpgrade,patchSn } = toRefs(props);
@@ -1614,16 +1685,23 @@ export const loadingButtonComponent = {
                         <slot></slot>
                     </span>
                 </button>`,
-    props:['customClass','hadLoading'],
+    props: {
+        customClass: {
+            type: String,
+            default: ""
+        },
+        hadLoading: {
+            type: Boolean,
+            default: false
+        }
+    },
     setup(props,context) {
-
-        const { hadLoading } = toRefs(props);
 
         const onButtonClick = () => {
             context.emit("button-click","click")
         }
 
-        return { hadLoading,onButtonClick }
+        return { onButtonClick }
     }
 }
 

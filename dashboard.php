@@ -34,7 +34,7 @@
                                     </div>
                                 </div>
                                 <div class="col-lg-4 text-center">
-                                    <tmp-compt :value="tmp" :color="theme_color"></tmp-compt>
+                                    <tmp-compt v-model="tmp" :active-color="theme_color"></tmp-compt>
                                     <div>
                                         <cn>核心温度</cn>
                                         <en>Core temperature</en>

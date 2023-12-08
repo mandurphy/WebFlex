@@ -128,7 +128,7 @@ class Root extends Basic
             $ctx = 'location /link {rewrite ^(.*)/link/([a-zA-Z0-9\_]+)/([a-zA-Z0-9\_]+)$ $1/link/monitor.php?class=$2&func=$3&verify=false&login=true last;}';
         if($param == '3')
             $ctx = 'location /link {rewrite ^(.*)/link/([a-zA-Z0-9\_]+)/([a-zA-Z0-9\_]+)$ $1/link/monitor.php?class=$2&func=$3&verify=false&login=false last;}';
-        file_put_contents('/link/web/.htaccess',$ctx);
+        file_put_contents('/link/webflex/.htaccess',$ctx);
         exec('/usr/nginx/sbin/nginx -p /usr/nginx -s reload');
         return $this->handleRet($param, 'success', '保存成功', 'save successfully');
     }

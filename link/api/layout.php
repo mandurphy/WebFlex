@@ -46,7 +46,7 @@ class Layout extends Verify
                 $result['srcA'] = $item['srcA'];
                 foreach ($defLays as $defLay)
                 {
-                    $layList = [];
+                    $layList = [];$layList1=[];
                     $layouts = $defLay['layouts'];
                     foreach ($layouts as $layout)
                     {
@@ -54,15 +54,25 @@ class Layout extends Verify
                         //按顺序生成新对象，方便后面对比
                         $lay = array(
                             'a' => $pos['a'],
+                            'x' => $pos['x'],
+                            'y' => $pos ['y'],
+                            'w' => $pos['w'],
+                            'h' => $pos['h'],
+                            'index' => $pos['index']
+                        );
+                        array_push($layList,$lay);
+
+                        $lay1 = array(
+                            'a' => $pos['a'],
                             'h' => $pos['h'],
                             'index' => $pos['index'],
                             'w' => $pos['w'],
                             'x' => $pos['x'],
                             'y' => $pos ['y']
                         );
-                        array_push($layList,$lay);
+                        array_push($layList1,$lay1);
                     }
-                    if(json_encode($item['layout']) == json_encode($layList))
+                    if(json_encode($item['layout']) == json_encode($layList) || json_encode($item['layout']) == json_encode($layList1))
                     {
                         $result['curLayId'] = $defLay['layId'];
                         $result['curLayName'] = $defLay['layName'];

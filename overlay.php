@@ -305,7 +305,7 @@
                                             </label>
                                         </div>
                                         <div class="col-lg-6">
-                                            <picker-color v-model="handleEditData.color" direct="bottom"></picker-color>
+                                            <picker-color v-model="handleEditData.color" :direct="'bottom'"></picker-color>
                                         </div>
                                     </div>
                                     <div class="row mt-4" v-if="handleEditData.type === 'text' || handleEditData.type === 'time'">
@@ -316,7 +316,7 @@
                                             </label>
                                         </div>
                                         <div class="col-lg-6">
-                                            <picker-color v-model="handleEditData.bgColor" direct="bottom"></picker-color>
+                                            <picker-color v-model="handleEditData.bgColor" :direct="'bottom'"></picker-color>
                                         </div>
                                     </div>
                                     <div class="row mt-4" v-if="handleEditData.type === 'text' || handleEditData.type === 'time' || handleEditData.type === 'pic'">
@@ -390,9 +390,9 @@
                     </div>
                 </div>
             </div>
-            <upload-modal modal-title="上传资源&Upload" :modal-show="showModal" modal-fade="true"
-                          upload-allow="['png','ttf']" upload-action="/link/upd/uploadRes.php" upload-count="2"
-                          upload-tip="请把资源拖到此处，仅支持png图片，ttf格式字体...&Please drag the resourse here..."
+            <upload-modal :modal-title="'上传资源&Upload'" :modal-show="showModal" :modal-fade="true"
+                          :upload-allow="['png','ttf']" :upload-action="'/link/upd/uploadRes.php'" :upload-count="2"
+                          :upload-tip="'请把资源拖到此处，仅支持png图片，ttf格式字体...&Please drag the resourse here...'"
                           @upload-success="uploadSuccess" @upload-error="uploadError">
             </upload-modal>
         </main>

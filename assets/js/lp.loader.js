@@ -9,4 +9,3 @@ Promise.all([queryData("config/lang.json"),queryData("config/theme_standard.json
     document.body.style.display = "block";
     html.dispatchEvent(new Event("loaded"));
 });
-
