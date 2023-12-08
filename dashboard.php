@@ -113,7 +113,7 @@
 
   <script type="module">
       import { rpc } from "./assets/js/lp.utils.js";
-      import { useDefaultConf,useHardwareConf } from "./assets/js/vue.hooks.js";
+      import { useDefaultConf } from "./assets/js/vue.hooks.js";
       import { ignoreCustomElementPlugin,bootstrapSwitchComponent,statusPieChartComponent,statusTemperatureComponent,netFlotChartComponent } from "./assets/js/vue.helper.js"
       import vue from "./assets/js/vue.build.js";
       import mutationObserver from './assets/plugins/polyfill/mutationobserver.esm.js';
@@ -151,7 +151,6 @@
               }
 
               const { defaultConf } = useDefaultConf();
-              const { hardwareConf } = useHardwareConf();
 
               const getData1 = (d) => {
                   state.data1.shift();
