@@ -387,7 +387,9 @@
                                     dev.title = intercomConf.intercom.name;
                                     dev.talking = state.intercomState.talking;
                                 }
-                                const count = state.intercomState.tally.length;
+                                let count = 0;
+                                if(state.intercomState.tally)
+                                    count = state.intercomState.tally.length;
                                 if(idx < count)
                                     dev.state = state.intercomState.tally[idx];
                                 else
