@@ -173,7 +173,7 @@ export const useNetManagerConf = (tip = "tip") => {
 
         const [conf,mac, mac2] = await Promise.all([
             queryData("config/netManager.json"),
-            queryData("config/mac",{responseType: 'text'}),
+            await checkFileExists("config/mac") ? queryData("config/mac",{responseType: 'text'}) : Promise.resolve(""),
             await checkFileExists("config/mac2") ? queryData("config/mac2",{responseType: 'text'}) : Promise.resolve("")
         ]);
 
