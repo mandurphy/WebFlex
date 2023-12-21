@@ -759,7 +759,7 @@ input[type="password"]::-ms-reveal{
 }
 
 .lp-cursor-pointer {
-    cursor: pointer;
+    cursor: pointer !important;
 }
 
 .lp-display-hide {
@@ -880,9 +880,22 @@ input[type="password"]::-ms-reveal{
     background-clip: unset;
 }
 
+.login .input-group-text {
+    width: 46px;
+}
+
+.login .input-group-text i {
+    margin: 0 auto;
+}
+
 .login .input-group input {
-    line-height: 2.1rem;
-    font-size: 1.3rem;
+    line-height: 2.4rem;
+    font-size: 1.2rem;
+    border-left-width: 2px !important;
+}
+
+.login .form-check-input:focus {
+    box-shadow: none !important;
 }
 
 .dashboard .w_chart {

@@ -12,6 +12,7 @@
     --bs-default-auth-border-color:#495057;
     --bs-default-body-color:#555;
     --bs-default-bg-color:#212529;
+    --bs-default-txt-color:#555;
     --bs-default-active-bg-color:#ffbb00;
     --bs-default-acitve-color:#eeaa00;
     --bs-default-hr-color:#bbbbbb;
@@ -58,8 +59,7 @@
 }
 
 [data-bs-theme=default] .sidebar-wrapper .sidebar-bottom .dropdown-menu {
-
-    background-color: var(--bs-default-bg-color-2);
+    /*background-color: var(--bs-default-bg-color);*/
     border-color:var(--bs-border-color-translucent);
 }
 
@@ -373,8 +373,17 @@
 }
 
 [data-bs-theme=default] .login .input-group-text {
-    color: var(--bs-body-color-semi);
-    background-color: var(--bs-body-bg-color);
+    color: var(--bs-default-txt-color);
+    background-color: #eeeeee;
+}
+
+[data-bs-theme=default] .login .input-group-text:nth-child(3) {
+    color: var(--bs-default-txt-color);
+    background-color: #fff;
+}
+
+[data-bs-theme=default] .login .input-group input {
+    background: #fff !important;
 }
 
 [data-bs-theme=default] .login ::placeholder {

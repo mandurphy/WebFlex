@@ -6,7 +6,7 @@
 </head>
 <body>
 <div class="container-fluid login auth-cover lp-align-center" id="app">
-    <div class="card border-3" style="width: 430px">
+    <div class="card border-3" style="width: 400px">
         <div class="card-body p-4">
             <div class="row">
                 <div class="col-lg-12 text-center">
@@ -17,20 +17,20 @@
                 <form @submit.prevent="handleSubmit" class="row g-3" action="/link/action.php" method="post" ref="form" autocomplete="off">
                     <div class="col-12">
                         <div class="input-group">
-                            <div class="input-group-text border-0 lp-cursor-pointer input-group-title"><i class="fa-solid fa-user font-17"></i></div>
+                            <div class="input-group-text border-0 lp-cursor-pointer"><i class="fa-solid fa-user"></i></div>
                             <input v-model.trim.lazy="username" type="text" class="form-control border-0 border-start" name="username">
                         </div>
                     </div>
                     <div class="col-12">
                         <div class="input-group">
-                            <div class="input-group-text border-0 lp-cursor-pointer input-group-title"><i class="fa-solid fa-key font-17"></i></div>
+                            <div class="input-group-text border-0 lp-cursor-pointer"><i class="fa-solid fa-key"></i></div>
                             <input v-model.trim.lazy="password" :type="!showPasswd ? 'password' : 'text'" class="form-control border-0 border-start input-passwd" name="password">
                             <div class="input-group-text border-0 lp-cursor-pointer font-16" @click="showPasswd = !showPasswd"><i :class="['fa-regular',{'fa-eye-slash':showPasswd},{'fa-eye ':!showPasswd}]"></i></div>
                         </div>
                     </div>
                     <div class="col-6">
                         <div class="form-check form-switch form-check-primary border-0">
-                            <input class="form-check-input" type="checkbox" v-model="remember">
+                            <input class="form-check-input lp-cursor-pointer" type="checkbox" v-model="remember">
                             <label class="form-check-label"><cn>记住密码</cn><en>Remember Me</en></label>
                         </div>
                     </div>
@@ -98,7 +98,7 @@
                 let param = getUrlParam("u");
                 if(param === "e") {
                     alertMsg("<cn>账号或密码错误</cn><en>The account or password is incorrect</en>","error")
-                    //removeUrlParam();
+                    removeUrlParam();
                 }
             })
             return { ...state,handleSubmit }
