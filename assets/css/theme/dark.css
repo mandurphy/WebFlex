@@ -558,6 +558,10 @@
     border-color: transparent;
 }
 
+[data-bs-theme=dark] .mix .lay-border {
+    border: 1px solid #999;
+}
+
 [data-bs-theme=dark] .sys .input-group-text {
     color: var(--bs-body-color-semi);
     border: 2px solid var(--bs-border-color-translucent) !important;

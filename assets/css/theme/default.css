@@ -429,6 +429,10 @@
     color: #ddd;
 }
 
+[data-bs-theme=default] .mix .lay-border {
+    border: 1px solid #fff;
+}
+
 [data-bs-theme=default] .record .rec-file-title {
     background-color: #555;
     color: #fff;

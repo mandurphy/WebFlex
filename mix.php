@@ -62,7 +62,7 @@
                     <div class="card-body pb-4" >
                         <div class="lp-aspect-ratio">
                             <div class="aspect-ratio-content bg-black">
-                                <div v-for="(item,index) in handleActiveDefLayConf.layouts" :style="{position:'absolute',width:item.pos.w * 100+'%',height:item.pos.h*100+'%',left:item.pos.x*100+'%',top:item.pos.y*100+'%'}">
+                                <div class="lay-border" v-for="(item,index) in handleActiveDefLayConf.layouts" :style="{position:'absolute',width:item.pos.w * 100+'%',height:item.pos.h*100+'%',left:item.pos.x*100+'%',top:item.pos.y*100+'%'}">
                                     <div :style="{width:'100%',height:'100%',backgroundColor: handleLayBackColor(index)}">
                                         <div class="d-flex align-items-center gap-1 border-0 px-2 py-1">
                                             <div class="flex-grow-1">
@@ -147,8 +147,10 @@
             });
     
             const handleActiveVolume = index => {
-                const idx = defaultConf[state.mixIndex.value].srcV[index].toString();
-                return !defaultConf[state.mixIndex.value].srcA.includes(idx) && !defaultConf[state.mixIndex.value].srcA.includes(Number(idx));
+                if(index < defaultConf[state.mixIndex.value].srcV.length) {
+                    const idx = defaultConf[state.mixIndex.value].srcV[index].toString();
+                    return !defaultConf[state.mixIndex.value].srcA.includes(idx) && !defaultConf[state.mixIndex.value].srcA.includes(Number(idx));
+                }
             };
             
             const onUpdateActiveVolume = chnId => {
