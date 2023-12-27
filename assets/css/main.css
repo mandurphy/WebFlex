@@ -889,7 +889,7 @@ input[type="password"]::-ms-reveal{
 }
 
 .login .input-group input {
-    line-height: 2.4rem;
+    line-height: 2.5rem;
     font-size: 1.2rem;
     border-left-width: 2px !important;
 }

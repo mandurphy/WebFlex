@@ -59,10 +59,9 @@ foreach ($configFiles as $historyFile) {
         continue;
 
     if(!strpos($currentFile, ".json") || strpos($currentFile, "version.json") ||
-        strpos($currentFile, "net.json") || strpos($currentFile, "net2.json") || strpos($currentFile, "netEx.json"))
+        strpos($currentFile, "net.json") || strpos($currentFile, "net2.json") ||
+        strpos($currentFile, "netEx.json") || strpos($currentFile,"netManager.json"))
         continue;
-
-    echo $currentFile."\n";
 
     $historyCtx = json_decode(file_get_contents($historyFile));
     $currentCtx = json_decode(file_get_contents($currentFile));

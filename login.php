@@ -61,7 +61,7 @@
                 form: ref(null),
                 username: ref(""),
                 password: ref(""),
-                remember: ref(true),
+                remember: ref(false),
                 showPasswd:ref(false)
             }
 

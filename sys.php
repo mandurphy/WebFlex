@@ -377,7 +377,7 @@
                                                 <form>
                                                     <input class="form-control" :type="!showPasswd.oldpwd ? 'password' : 'text'" v-model.trim.lazy="userPasswd.oldpwd" autocomplete="off">
                                                 </form>
-                                                <span class="input-group-text input-group-addon lp-cursor-pointer" @click="showPasswd.oldpwd = !showPasswd.oldpwd"><i :class="['fa-regular',{'fa-eye-slash':!showPasswd.oldpwd},{'fa-eye':showPasswd.oldpwd}]"></i></span>
+                                                <span class="input-group-text input-group-addon lp-cursor-pointer" @click="showPasswd.oldpwd = !showPasswd.oldpwd"><i :class="['fa-regular',{'fa-eye-slash':showPasswd.oldpwd},{'fa-eye':!showPasswd.oldpwd}]"></i></span>
                                             </div>
                                         </div>
                                     </div>
@@ -395,7 +395,7 @@
                                                 <form>
                                                     <input class="form-control" :type="!showPasswd.newpwd ? 'password' : 'text'" v-model.trim.lazy="userPasswd.newpwd" autocomplete="off">
                                                 </form>
-                                                <span class="input-group-text input-group-addon lp-cursor-pointer" @click="showPasswd.newpwd = !showPasswd.newpwd"><i :class="['fa-regular',{'fa-eye-slash':!showPasswd.newpwd},{'fa-eye':showPasswd.newpwd}]"></i></span>
+                                                <span class="input-group-text input-group-addon lp-cursor-pointer" @click="showPasswd.newpwd = !showPasswd.newpwd"><i :class="['fa-regular',{'fa-eye-slash':showPasswd.newpwd},{'fa-eye':!showPasswd.newpwd}]"></i></span>
                                             </div>
                                         </div>
                                     </div>
@@ -411,7 +411,7 @@
                                                 <form>
                                                     <input class="form-control" :type="!showPasswd.confirm ? 'password' : 'text'" v-model.trim.lazy="userPasswd.confirm" autocomplete="off">
                                                 </form>
-                                                <span class="input-group-text input-group-addon lp-cursor-pointer" @click="showPasswd.confirm = !showPasswd.confirm"><i :class="['fa-regular',{'fa-eye-slash':!showPasswd.confirm},{'fa-eye':showPasswd.confirm}]"></i></span>
+                                                <span class="input-group-text input-group-addon lp-cursor-pointer" @click="showPasswd.confirm = !showPasswd.confirm"><i :class="['fa-regular',{'fa-eye-slash':showPasswd.confirm},{'fa-eye':!showPasswd.confirm}]"></i></span>
                                             </div>
                                         </div>
                                     </div>
