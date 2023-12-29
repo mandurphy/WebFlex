@@ -14,7 +14,7 @@
                 <ul class="nav nav-tabs nav-primary" role="tablist">
                     <li class="nav-item" role="presentation" v-if="Object.keys(netAdapter).length > 0 && Object.keys(netManagerConf).length > 0" v-for="(item,index) in Object.values(netAdapter)" :key="index">
                         <a v-if="netManagerConf.interface.hasOwnProperty(item.dev)" :class="['nav-link',{'active':index===0}]" data-bs-toggle="tab" :href="'#tab'+(index+1)" role="tab" aria-selected="true">
-                            <div v-if="item.type === 'lan'" class="d-flex align-items-center">
+                            <div v-if="item.type === 'lan' || item.type === 'other'" class="d-flex align-items-center">
                                 <div class="tab-icon"><i :class="['fa-solid me-1',{'fa-code-merge':index%2===1},{'fa-code-fork':index%2===0}]"></i></i></div>
                                 <div class="tab-title">
                                     <cn>网口</cn>
@@ -66,7 +66,7 @@
 
                 <div class="tab-content py-3 pe-2 ps-2">
                     <div v-if="Object.keys(netAdapter).length > 0 && Object.keys(netManagerConf).length > 0" v-for="(item,index) in Object.values(netAdapter)" :class="['tab-pane fade',{'show active':index===0}]" :key="index" :id="'tab'+(index+1)" role="tabpanel">
-                        <div v-if="netManagerConf.interface.hasOwnProperty(item.dev) && item.type === 'lan'">
+                        <div v-if="netManagerConf.interface.hasOwnProperty(item.dev) && (item.type === 'lan' || item.type === 'other')">
                             <div v-if="Object.keys(hardwareConf).length > 0 && hardwareConf.function.dhcp" class="row mt-3">
                                 <div class="col-lg-2 offset-lg-1 lp-align-center">
                                     <label>

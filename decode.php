@@ -162,6 +162,10 @@
                                 <cn>开关</cn>
                                 <en>enable</en>
                             </div>
+                            <div class="col text-center">
+                                <cn>HDMI</cn>
+                                <en>HDMI</en>
+                            </div>
                         </div>
                         <hr >
                         <div class="row mt-1" v-for="(item,index) in handleNetConf" :key="item.id">
@@ -202,6 +206,12 @@
                                     <div class="col lp-align-center">
                                         <bs-switch v-model="item.enable"></bs-switch>
                                     </div>
+                                    <div class="col lp-align-center">
+                                        <button type="button" class="btn btn-primary border-1 px-3" @click="onDisplayHdmi(item.id,item.enable)">
+                                            <cn>输出</cn>
+                                            <en>display</en>
+                                        </button>
+                                    </div>
                                 </div>
                                 <hr >
                             </div>
@@ -225,7 +235,11 @@
                                 <cn>开关</cn>
                                 <en>enable</en>
                             </div>
-                            <div class="col-7"></div>
+                            <div class="col text-center">
+                                <cn>HDMI</cn>
+                                <en>HDMI</en>
+                            </div>
+                            <div class="col-6"></div>
                         </div>
                         <hr >
                         <div class="row mt-1">
@@ -243,7 +257,13 @@
                                     <div class="col lp-align-center">
                                         <bs-switch v-model="handleVideoFileConf.enable"></bs-switch>
                                     </div>
-                                    <div class="col-7"></div>
+                                    <div class="col lp-align-center">
+                                        <button type="button" class="btn btn-primary border-1 px-3" @click="onDisplayHdmi(handleVideoFileConf.id,handleVideoFileConf.enable)">
+                                            <cn>输出</cn>
+                                            <en>display</en>
+                                        </button>
+                                    </div>
+                                    <div class="col-6"></div>
                                 </div>
                             </div>
                         </div>
@@ -331,7 +351,7 @@
 <?php include ("./public/foot.inc") ?>
 <script type="module">
     
-    import { rpc,extend,deepCopy,confirm,swap,clearReactiveArray,clearReactiveObject,formatTime } from "./assets/js/lp.utils.js";
+    import { rpc, extend, deepCopy, confirm, swap, clearReactiveArray, clearReactiveObject, formatTime, alertMsg } from "./assets/js/lp.utils.js";
     import { useDefaultConf,useUsbFilesConf,useHardwareConf } from "./assets/js/vue.hooks.js";
     import { ignoreCustomElementPlugin,bootstrapSwitchComponent,multipleSelectComponent,nouiSliderComponent,languageOptionDirective } from "./assets/js/vue.helper.js"
     import vue from "./assets/js/vue.build.js";
@@ -372,6 +392,17 @@
                     return item.type === 'net';
                 })
             })
+
+            const onDisplayHdmi = (chnId,chnEnable) => {
+                if(chnEnable) {
+                    const mix = defaultConf.find(item => item.type === "mix");
+                    mix.output.src = chnId;
+                    updateDefaultConf("noTip").then(()=>{
+                        alertMsg("<cn>输出至HDMI成功</cn><en>Display hdmi successfully!</en>","success");
+                    })
+                } else
+                    alertMsg("<cn>通道未开启</cn><en>Display hdmi successfully!</en>","error");
+            }
 
             const handleVideoFileConf = computed(()=>{
                 if(defaultConf.length > 0) {
@@ -501,7 +532,7 @@
             });
             
             return {...state,defaultConf,hardwareConf,handleVideoFileConf,handleUsbMp4File,onAddVideoFile, onVideoFileOption,formatTime,onTimelineSliderEnd,
-                onHandleFileDuration,onHandleFilePostion,handleNetConf,saveGlobalConfByLocal,saveDefaultConf}
+                onHandleFileDuration,onHandleFilePostion,onDisplayHdmi,handleNetConf,saveGlobalConfByLocal,saveDefaultConf}
         }
     });
     app.use(ignoreCustomElementPlugin);
