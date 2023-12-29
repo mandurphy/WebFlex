@@ -1215,19 +1215,21 @@ export const upgradeModalComponent = {
                                         </a>
                                     </td>
                                     <td>
-                                        <a class="lp-cursor-pointer" @click="handleUpdatePatch(index)">
+                                        <a v-if="item.allow" class="lp-cursor-pointer" @click="handleUpdatePatch(index)">
                                             <div v-if="upgradePatch.id === item.id && hadUpdate">{{updatePercent}}%</div>
                                             <div v-else>
                                                 <cn>更新</cn>
                                                 <en>Update</en>
                                             </div>
                                         </a>
+                                        <a v-else>/</a>
                                     </td>
                                     <td>
-                                        <a class="lp-cursor-pointer" @click="handleDownloadPatch(index)">
+                                        <a v-if="item.allow" class="lp-cursor-pointer" @click="handleDownloadPatch(index)">
                                             <cn>下载</cn>
                                             <en>Download</en>
                                         </a>
+                                        <a v-else>/</a>
                                     </td>
                                 </tr>
                                 </tbody>
@@ -1327,6 +1329,16 @@ export const upgradeModalComponent = {
                     }
                     state.systemPatchs.splice(0);
                     state.systemPatchs.push(...result.data);
+                    let hadImpact = false;
+                    for(let i=0;i<state.systemPatchs.length;i++) {
+                        state.systemPatchs[i].allow = true;
+                        if(!hadImpact) {
+                            const impact = state.systemPatchs[i].impact;
+                            hadImpact = impact === "1";
+                        } else {
+                            state.systemPatchs[i].allow = false;
+                        }
+                    }
 
                     result = await func("/upgrade/checkVersionMaster");
                     if (result.status === "error") {
@@ -1380,6 +1392,16 @@ export const upgradeModalComponent = {
                     }
                     state.systemPatchs.splice(0);
                     state.systemPatchs.push(...result.data);
+                    let hadImpact = false;
+                    for(let i=0;i<state.systemPatchs.length;i++) {
+                        state.systemPatchs[i].allow = true;
+                        if(!hadImpact) {
+                            const impact = state.systemPatchs[i].impact;
+                            hadImpact = impact === "1";
+                        } else {
+                            state.systemPatchs[i].allow = false;
+                        }
+                    }
                     state.bsModal.show();
                 }
             }
@@ -1468,25 +1490,6 @@ export const upgradeModalComponent = {
                 name = name.replace("_","_"+state.facAliase+"_");
                 type = "update";
             }
-
-            const params = {
-                action:"download", name:name,
-                chip:chip, type:type
-            }
-
-            // const fileName = name;
-            // axios_post('/link/upgrade.php',params, { responseType: 'arraybuffer' })
-            //     .then(data => {
-            //         const blob = new Blob([data], { type: 'application/octet-stream' });
-            //         const url = URL.createObjectURL(blob);
-            //         const a = document.createElement('a');
-            //         a.href = url;
-            //         a.download = fileName;
-            //         document.body.appendChild(a);
-            //         a.click();
-            //         document.body.removeChild(a);
-            //         URL.revokeObjectURL(url);
-            //     })
 
             const url = "http://help.linkpi.cn:5735/upgrade/"+chip+"/"+type+"/"+name;
             const downName = "";
