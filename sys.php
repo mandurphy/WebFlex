@@ -977,12 +977,13 @@
 <script type="module">
 
     import vue from "./assets/js/vue.build.js";
-    import JsZip from "./assets/plugins/jszip/jszip.esm.js"
-    import * as fileSave from "./assets/plugins/jszip/filesaver.esm.js";
     import { rpc2,alertMsg,func,queryData,popover,formatDate,rebootConfirm,resetConfirm,clearReactiveObject } from "./assets/js/lp.utils.js";
     import { useHardwareConf,useNetManagerConf,usePasswordConf,useVideoBufferConf,useNtpConf,useTimezoneConf,usePortConf,useVersionConf,useVerLogsConf,useWpaConf } from "./assets/js/vue.hooks.js";
     import { ignoreCustomElementPlugin,bootstrapSwitchComponent,languageOptionDirective,uploadModalComponent,upgradeModalComponent,customModalComponent,loadingButtonComponent } from "./assets/js/vue.helper.js"
     import { wifiFlagComponent,antenanFlagComponent } from "./assets/js/vue.flags.js";
+    import axios from './assets/plugins/axios/axios.esm.js';
+    import JsZip from "./assets/plugins/jszip/jszip.esm.js"
+    import * as fileSave from "./assets/plugins/jszip/filesaver.esm.js";
 
     const { createApp,ref,reactive,watch,watchEffect,computed,onMounted } = vue;
     const app = createApp({
@@ -1217,7 +1218,7 @@
                 }
 
                 const promiseArray = confs.map((conf) => {
-                    return queryData("config/" + conf, { responseType: 'blob' }).then(data => ({ name: conf, data }));
+                    return queryData("config/" + conf, { responseType: 'blob' }).then(data => ({ name: conf, data })).catch(error => "");
                 });
 
                 Promise.all(promiseArray)
@@ -1237,7 +1238,7 @@
                         saveAs(blob, 'configs.zip');
                     })
                     .catch(error => {
-                        console.error(error);
+                        console.error("下载全部失败");
                     });
             }
 
