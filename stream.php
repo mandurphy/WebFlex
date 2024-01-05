@@ -128,7 +128,7 @@
                      <a class="nav-link active" data-bs-toggle="tab" href="#tab1" role="tab" aria-selected="true">
                          <div class="d-flex align-items-center">
                              <div class="tab-icon"><i class="fa-solid fa-upload me-1"></i></div>
-                             <div class="tab-title"><cn>码流配置</cn><en>Encode config</en></div>
+                             <div class="tab-title"><cn>码流配置</cn><en>Stream config</en></div>
                          </div>
                      </a>
                  </li>
@@ -136,7 +136,7 @@
                      <a class="nav-link" data-bs-toggle="tab" href="#tab2" role="tab" aria-selected="false">
                          <div class="d-flex align-items-center">
                              <div class="tab-icon"><i class="fa-solid fa-gear me-1"></i></div>
-                             <div class="tab-title"><cn>TS设置</cn><en>Advanced Encode config</en></div>
+                             <div class="tab-title"><cn>TS设置</cn><en>TS config</en></div>
                          </div>
                      </a>
                  </li>
@@ -144,7 +144,7 @@
                      <a class="nav-link" data-bs-toggle="tab" href="#tab3" role="tab" aria-selected="false">
                          <div class="d-flex align-items-center">
                              <div class="tab-icon"><i class="fa-solid fa-gear me-1"></i></div>
-                             <div class="tab-title"><cn>HLS设置</cn><en>Video config</en></div>
+                             <div class="tab-title"><cn>HLS设置</cn><en>HLS config</en></div>
                          </div>
                      </a>
                  </li>
@@ -152,7 +152,7 @@
                      <a class="nav-link" data-bs-toggle="tab" href="#tab4" role="tab" aria-selected="false">
                          <div class="d-flex align-items-center">
                              <div class="tab-icon"><i class="fa-solid fa-gear me-1"></i></div>
-                             <div class="tab-title"><cn>RTSP设置</cn><en>Audio config</en></div>
+                             <div class="tab-title"><cn>RTSP设置</cn><en>RTSP config</en></div>
                          </div>
                      </a>
                  </li>
@@ -161,7 +161,7 @@
                      <a class="nav-link" data-bs-toggle="tab" href="#tab5" role="tab" aria-selected="false">
                          <div class="d-flex align-items-center">
                              <div class="tab-icon"><i class="fa-solid fa-gear me-1"></i></div>
-                             <div class="tab-title"><cn>SRT设置</cn><en>Audio config</en></div>
+                             <div class="tab-title"><cn>SRT设置</cn><en>SRT config</en></div>
                          </div>
                      </a>
                  </li>
@@ -169,7 +169,7 @@
                      <a class="nav-link" data-bs-toggle="tab" href="#tab6" role="tab" aria-selected="false">
                          <div class="d-flex align-items-center">
                              <div class="tab-icon"><i class="fa-solid fa-gear me-1"></i></div>
-                             <div class="tab-title"><cn>NDI设置</cn><en>Audio config</en></div>
+                             <div class="tab-title"><cn>NDI设置</cn><en>NDI config</en></div>
                          </div>
                      </a>
                  </li>
@@ -177,7 +177,7 @@
                      <a class="nav-link" data-bs-toggle="tab" href="#tab7" role="tab" aria-selected="false">
                          <div class="d-flex align-items-center">
                              <div class="tab-icon"><i class="fa-solid fa-podcast me-1"></i></div>
-                             <div class="tab-title"><cn>推流设置</cn><en>Audio config</en></div>
+                             <div class="tab-title"><cn>推流设置</cn><en>Push config</en></div>
                          </div>
                      </a>
                  </li>
@@ -185,7 +185,7 @@
                      <a class="nav-link" data-bs-toggle="tab" href="#tab8" role="tab" aria-selected="false">
                          <div class="d-flex align-items-center">
                              <div class="tab-icon"><i class="fa-regular fa-circle-play me-1"></i></div>
-                             <div class="tab-title"><cn>播放地址</cn><en>Audio config</en></div>
+                             <div class="tab-title"><cn>播放地址</cn><en>Play URL</en></div>
                          </div>
                      </a>
                  </li>

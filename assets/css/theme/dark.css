@@ -513,7 +513,8 @@
     color: var(--bs-body-color-semi);
 }
 
-[data-bs-theme=dark] .dashboard .hdmi, .sdi{
+[data-bs-theme=dark] .dashboard .hdmi,
+[data-bs-theme=dark] .dashboard .sdi{
     filter: brightness(70%);
 }
 

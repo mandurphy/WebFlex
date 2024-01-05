@@ -889,7 +889,7 @@ input[type="password"]::-ms-reveal{
 }
 
 .login .input-group input {
-    line-height: 2.5rem;
+    line-height: 2.39rem;
     font-size: 1.2rem;
     border-left-width: 2px !important;
 }
@@ -992,7 +992,8 @@ input[type="password"]::-ms-reveal{
     border-radius: 4px;
 }
 
-.dashboard .hdmi, .sdi{
+.dashboard .hdmi,
+.dashboard .sdi{
     width: 68px;
     display: inline-block;
 }
@@ -1000,20 +1001,18 @@ input[type="password"]::-ms-reveal{
 .dashboard .hdmi .icon {
     display: inline-block;
     background-image:url(../../assets/img/input.png);
-    /*margin:0 auto;*/
     width:68px;
-    height:26px;
-    /*margin-top: 14px;*/
-    /*margin-bottom: 14px;*/
-    background-position:0px -54px;
+    height:30px;
+    margin-top: 13px !important;
+    margin-bottom: 14px !important;
+    background-position:0px -50px;
 }
 
 .dashboard .sdi .icon {
     display: inline-block;
     background-image:url(../../assets/img/input.png);
-    /*margin:0 auto;*/
     width:45px;
-    height:54px;
+    height:50px;
     background-position:0px 0px;
 }
 
