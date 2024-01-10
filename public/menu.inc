@@ -24,7 +24,7 @@
                             <i v-else class="fa-regular fa-sun" @click="updateThemeConf('default')"></i>
                         </a>
                     </li>
-                    <li class="nav-item" v-if="Object.keys(hardwareConf).length > 0 && hardwareConf.fac !== 'REC1'">
+                    <li class="nav-item" v-if="Object.keys(hardwareConf).length > 0 && (hardwareConf.fac !== 'REC1' || hardwareConf.fac !== 'ENC8')">
                         <a class="nav-link" style="font-size: 19px;" @click="changeWeb">
                             <i class="fa-solid fa-arrow-right-arrow-left"></i>
                         </a>
