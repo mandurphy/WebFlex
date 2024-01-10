@@ -171,29 +171,33 @@
                                     <div class="col-1"></div>
                                     <div class="col-11">
                                         <div class="row">
-                                            <div class="col-2 text-center">
+                                            <div class="col text-center">
                                                 <cn>编码格式</cn>
                                                 <en>codec</en>
                                             </div>
-                                            <div class="col-2 text-center">
+                                            <div class="col text-center">
                                                 <cn>音源</cn>
                                                 <en>source</en>
                                             </div>
-                                            <div class="col-2 text-center">
+                                            <div class="col text-center">
                                                 <cn>增益</cn>
                                                 <en>gain</en>
                                             </div>
-                                            <div class="col-2 text-center">
+                                            <div class="col text-center">
                                                 <cn>采样率</cn>
                                                 <en>samplerate</en>
                                             </div>
-                                            <div class="col-2 text-center">
+                                            <div class="col text-center">
                                                 <cn>声道</cn>
                                                 <en>channels</en>
                                             </div>
-                                            <div class="col-2 text-center">
+                                            <div class="col text-center">
                                                 <cn>码率(kb/s)</cn>
                                                 <en>bitrate(kb/s)</en>
+                                            </div>
+                                            <div v-if="Object.keys(hardwareConf).length > 0 && hardwareConf.model==='ENC8'" class="col text-center">
+                                                <cn>音轨</cn>
+                                                <en>audio track</en>
                                             </div>
                                         </div>
                                     </div>
@@ -253,6 +257,12 @@
                                             <div class="col">
                                                 <input type="text" class="form-control" v-model.trim.lazy="globalConf.enca.bitrate">
                                             </div>
+                                            <div v-if="Object.keys(hardwareConf).length > 0 && hardwareConf.model==='ENC8'" class="col text-center">
+                                                <select class="form-select" v-model.number="globalConf.enca.audioTrack">
+                                                    <option cn="源-Line" en="source-line" value="1" v-language-option></option>
+                                                    <option cn="源-Hdmi" en="source-hdmi" value="2" v-language-option></option>
+                                                </select>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -261,7 +271,7 @@
                                     <div class="col-lg-12">
                                         <button type="button" class="btn  border-3 btn-primary me-2" @click="saveGlobalConfByLocal">
                                             <cn>应用到全部</cn>
-                                            <en>Apply to all/en>
+                                            <en>Apply to all</en>
                                         </button>
                                     </div>
                                 </div>
@@ -679,6 +689,10 @@
                                 <cn>码率(kb/s)</cn>
                                 <en>bitrate(kb/s)</en>
                             </div>
+                            <div v-if="Object.keys(hardwareConf).length > 0 && hardwareConf.model==='ENC8'" class="col text-center">
+                                <cn>音轨</cn>
+                                <en>audio track</en>
+                            </div>
                         </div>
                         <hr >
                         <div class="row mt-1" v-for="(item,index) in handleAdoConf" :key="item.id">
@@ -732,6 +746,12 @@
                                     </div>
                                     <div class="col">
                                         <input type="text" class="form-control" v-model.trim.lazy="item.enca.bitrate">
+                                    </div>
+                                    <div v-if="Object.keys(hardwareConf).length > 0 && hardwareConf.model==='ENC8'" class="col">
+                                        <select v-if="item.enca.audioTrack" class="form-select" v-model.number="item.enca.audioTrack">
+                                            <option cn="源-Line" en="source-line" value="1" v-language-option></option>
+                                            <option cn="源-Hdmi" en="source-hdmi" value="2" v-language-option></option>
+                                        </select>
                                     </div>
                                 </div>
                                 <hr >
@@ -918,6 +938,8 @@
                     extend(defaultConf[i].enca, deepCopy(globalConf.enca));
                     if(defaultConf[i].enca.audioSrc === "source")
                         defaultConf[i].enca.audioSrc = defaultConf[i].id;
+                    if(defaultConf[i].type !== "vi" && defaultConf[i].enca.hasOwnProperty("audioTrack"))
+                        delete defaultConf[i].enca.audioTrack;
                 }
                 saveDefaultConf();
             }

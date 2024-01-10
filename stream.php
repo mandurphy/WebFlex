@@ -110,7 +110,7 @@
                                  <div class="col-lg-12">
                                      <button type="button" class="btn  border-3 btn-primary me-2" @click="saveGlobalConfByLocal">
                                          <cn>应用到全部</cn>
-                                         <en>Apply to all/en>
+                                         <en>Apply to all</en>
                                      </button>
                                  </div>
                              </div>

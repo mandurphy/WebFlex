@@ -509,7 +509,7 @@
                             <div class="col-lg-12">
                                 <button type="button" class="btn  border-3 btn-primary me-2" @click="showSyncModal('enc')">
                                     <cn>应用到群组</cn>
-                                    <en>Apply to all/en>
+                                    <en>Apply to all</en>
                                 </button>
                             </div>
                         </div>
@@ -606,7 +606,7 @@
                                     <div class="col-lg-12">
                                         <button type="button" class="btn  border-3 btn-primary me-2" @click="showSyncModal('stream')">
                                             <cn>应用到群组</cn>
-                                            <en>Apply to all/en>
+                                            <en>Apply to all</en>
                                         </button>
                                     </div>
                                 </div>
