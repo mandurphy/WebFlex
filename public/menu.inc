@@ -83,7 +83,7 @@
                     <li>
                         <a href="push.php">
                             <div class="parent-icon"><i class="fa-solid fa-fan"></i></div>
-                            <div class="menu-title"><cn>直播推流</cn><en>Multiple Push</en></div>
+                            <div class="menu-title"><cn>直播推流</cn><en>Push</en></div>
                         </a>
                     </li>
                     <li v-if="Object.keys(hardwareConf).length > 0 && hardwareConf.function.videoOut">
