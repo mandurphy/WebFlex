@@ -10,7 +10,7 @@ require __DIR__ . '/autoload.php';
 $param = file_get_contents("php://input");
 if(is_null(json_decode($param)))
     $param = json_encode($_POST);
-$param = json_decode(urldecode($param),true);
+$param = json_decode($param,true);
 
 try
 {

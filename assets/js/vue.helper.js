@@ -1594,6 +1594,8 @@ export const customModalComponent = {
         }
 
         watch(modalShow,() => {
+            if(Object.keys(state.bsModal).length === 0)
+                return;
             state.show = !state.show;
             if(state.show)
                 state.bsModal.show();
@@ -1871,7 +1873,6 @@ export const ptzDirectComponent = {
         }
 
         watch(()=>props.zoomVal,(newValue,oldValue) => {
-            console.log(newValue);
             state.zoom.value = newValue;
         })
 

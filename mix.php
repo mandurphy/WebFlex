@@ -229,7 +229,9 @@
             const onChangeLayout = () => {
                 let layout = [];
                 let srcV = [];
-                let mark = false;
+                let srcA = [];
+                let markV = false;
+                let markA = false;
                 for(let i=0;i<defLaysConf.length;i++) {
                     if(state.curLayId.value === defLaysConf[i].layId) {
                         let las = defLaysConf[i].layouts;
@@ -239,20 +241,27 @@
                                 srcV.push("-1");
                             } else {
                                 srcV.push(las[j].id + "");
-                                mark = true;
+                                markV = true;
+                                if(las[j].ado) {
+                                    srcA.push(las[j].id + "")
+                                    markA = true;
+                                }
                             }
                         }
                     }
                 }
                 
-                if(!mark) {
+                if(!markV) {
                     if (srcV.length >= defaultConf[state.mixIndex.value].srcV.length)
                         srcV.splice(0, defaultConf[state.mixIndex.value].srcV.length, ...defaultConf[state.mixIndex.value].srcV);
                     else
                         srcV = defaultConf[state.mixIndex.value].srcV.slice(0, srcV.length);
                 }
+
                 defaultConf[state.mixIndex.value].srcV.splice(0, defaultConf[state.mixIndex.value].srcV.length, ...srcV);
                 defaultConf[state.mixIndex.value].layout.splice(0, defaultConf[state.mixIndex.value].layout.length, ...layout);
+                if(markA)
+                    defaultConf[state.mixIndex.value].srcA.splice(0, defaultConf[state.mixIndex.value].srcA.length, ...srcA);
                 updateDefaultConf("noTip");
                 const options = document.querySelectorAll(`option[cn]`);
                 options.forEach(option => {
