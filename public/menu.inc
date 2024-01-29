@@ -249,26 +249,28 @@
                         </div>
                     </div>
                     <div class="modal-body" style="height: 350px">
-                        <div v-if="searchRes.length > 0" class="search-list">
-                            <div class="mb-4" v-for="(item,index) in searchRes" :key="index">
-                                <div class="d-flex">
-                                    <div class="search-item-icon"><i :class="['font-14',item.icon]"></i></div>
-                                    <span class="mb-2 ms-2 font-16">{{item.name}}</span>
-                                </div>
-                                <div class="list-group">
-                                    <a v-for="(itm,idx) in item.filter" :key="idx" @click="onRedirect(item.url,itm)" class="list-group-item list-group-item-action align-items-center d-flex gap-2 lp-cursor-pointer search-item-option">{{itm}}</a>
+                        <div data-simplebar>
+                            <div v-if="searchRes.length > 0" class="search-list">
+                                <div class="mb-4" v-for="(item,index) in searchRes" :key="index">
+                                    <div class="d-flex">
+                                        <div class="search-item-icon"><i :class="['font-14',item.icon]"></i></div>
+                                        <span class="mb-2 ms-2 font-16">{{item.name}}</span>
+                                    </div>
+                                    <div class="list-group">
+                                        <a v-for="(itm,idx) in item.filter" :key="idx" @click="onRedirect(item.url,itm)" class="list-group-item list-group-item-action align-items-center d-flex gap-2 lp-cursor-pointer search-item-option">{{itm}}</a>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                        <div v-else class="h-100 lp-align-center">
-                            <div>
-                                <div class="row">
-                                    <empty-box></empty-box>
-                                </div>
-                                <div class="row mt-3">
-                                    <div class="text-center search-tip-text">
-                                        <cn>请输入要检索的标题关键字</cn>
-                                        <en>Please enter the keyword you want to search</en>
+                            <div v-else class="h-100 lp-align-center">
+                                <div>
+                                    <div class="row">
+                                        <empty-box></empty-box>
+                                    </div>
+                                    <div class="row mt-3">
+                                        <div class="text-center search-tip-text">
+                                            <cn>请输入要检索的标题关键字</cn>
+                                            <en>Please enter the keyword you want to search</en>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -280,14 +282,14 @@
         </div>
     </menu>
 </div>
-
+<script src="../assets/plugins/passive/passive.events.min.js"></script>
 <script type="module">
     import vue from "../assets/js/vue.build.js";
     import Metismenu from '../assets/plugins/metismenu/js/metisMenu.esm.js';
     import mutationObserver from "../assets/plugins/polyfill/mutationobserver.esm.js";
     import { func,updateSysLanguage,confirm,isEmpty,clearReactiveArray } from "../assets/js/lp.utils.js";
     import { useThemeConf,useHardwareConf } from "../assets/js/vue.hooks.js"
-    import { ignoreCustomElementPlugin,usbOptionComponent,searchSettingComponent } from "../assets/js/vue.helper.js"
+    import { ignoreCustomElementPlugin,usbOptionComponent } from "../assets/js/vue.helper.js"
     import { emptyBoxFlagComponent } from "../assets/js/vue.flags.js"
     import { md5 } from "../assets/plugins/md5/js.md5.esm.js";
 
@@ -296,7 +298,6 @@
     const menu = createApp({
         components:{
             "usb-option": usbOptionComponent,
-            "search-setting": searchSettingComponent,
             "empty-box": emptyBoxFlagComponent
         },
         setup() {

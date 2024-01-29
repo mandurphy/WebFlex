@@ -373,60 +373,52 @@
                             </div>
                             <div class="card-body">
                                 <div class="row">
-                                    <div class="row">
-                                        <div class="col-lg-2 offset-lg-1 lp-align-center">
-                                            <label>
-                                                <cn>旧密码</cn>
-                                                <en>Current</en>
-                                            </label>
-                                        </div>
-                                        <div class="col-lg-6">
-                                            <div class="input-group">
-                                                <form>
-                                                    <input class="form-control" :type="!showPasswd.oldpwd ? 'password' : 'text'" v-model.trim.lazy="userPasswd.oldpwd" autocomplete="off">
-                                                </form>
-                                                <span class="input-group-text input-group-addon lp-cursor-pointer" @click="showPasswd.oldpwd = !showPasswd.oldpwd"><i :class="['fa-regular',{'fa-eye-slash':showPasswd.oldpwd},{'fa-eye':!showPasswd.oldpwd}]"></i></span>
-                                            </div>
+                                    <div class="col-lg-2 offset-lg-1 lp-align-center">
+                                        <label>
+                                            <cn>旧密码</cn>
+                                            <en>Current</en>
+                                        </label>
+                                    </div>
+                                    <div class="col-lg-6">
+                                        <div class="input-group">
+                                            <input class="form-control" :type="!showPasswd.oldpwd ? 'password' : 'text'" v-model.trim.lazy="userPasswd.oldpwd" autocomplete="off">
+                                            <span class="input-group-text input-group-addon lp-cursor-pointer" @click="showPasswd.oldpwd = !showPasswd.oldpwd"><i :class="['fa-regular',{'fa-eye-slash':showPasswd.oldpwd},{'fa-eye':!showPasswd.oldpwd}]"></i></span>
                                         </div>
                                     </div>
-                                    <div class="row mt-3">
-                                        <div class="col-lg-2 offset-lg-1 lp-align-center">
+                                </div>
+                                <div class="row mt-3">
+                                    <div class="col-lg-2 offset-lg-1 lp-align-center">
+                                        <label>
                                             <label>
-                                                <label>
-                                                    <cn>新密码</cn>
-                                                    <en>New</en>
-                                                </label>
+                                                <cn>新密码</cn>
+                                                <en>New</en>
                                             </label>
-                                        </div>
-                                        <div class="col-lg-6">
-                                            <div class="input-group">
-                                                <form>
-                                                    <input class="form-control" :type="!showPasswd.newpwd ? 'password' : 'text'" v-model.trim.lazy="userPasswd.newpwd" autocomplete="off">
-                                                </form>
-                                                <span class="input-group-text input-group-addon lp-cursor-pointer" @click="showPasswd.newpwd = !showPasswd.newpwd"><i :class="['fa-regular',{'fa-eye-slash':showPasswd.newpwd},{'fa-eye':!showPasswd.newpwd}]"></i></span>
-                                            </div>
+                                        </label>
+                                    </div>
+                                    <div class="col-lg-6">
+                                        <div class="input-group">
+                                            <input class="form-control" :type="!showPasswd.newpwd ? 'password' : 'text'" v-model.trim.lazy="userPasswd.newpwd" autocomplete="off">
+                                            <span class="input-group-text input-group-addon lp-cursor-pointer" @click="showPasswd.newpwd = !showPasswd.newpwd"><i :class="['fa-regular',{'fa-eye-slash':showPasswd.newpwd},{'fa-eye':!showPasswd.newpwd}]"></i></span>
                                         </div>
                                     </div>
-                                    <div class="row mt-3">
-                                        <div class="col-lg-2 offset-lg-1 lp-align-center">
-                                            <label>
-                                                <cn>确认密码</cn>
-                                                <en>Confirm</en>
-                                            </label>
-                                        </div>
-                                        <div class="col-lg-6">
-                                            <div class="input-group">
-                                                <form>
-                                                    <input class="form-control" :type="!showPasswd.confirm ? 'password' : 'text'" v-model.trim.lazy="userPasswd.confirm" autocomplete="off">
-                                                </form>
-                                                <span class="input-group-text input-group-addon lp-cursor-pointer" @click="showPasswd.confirm = !showPasswd.confirm"><i :class="['fa-regular',{'fa-eye-slash':showPasswd.confirm},{'fa-eye':!showPasswd.confirm}]"></i></span>
-                                            </div>
+                                </div>
+                                <div class="row mt-3">
+                                    <div class="col-lg-2 offset-lg-1 lp-align-center">
+                                        <label>
+                                            <cn>确认密码</cn>
+                                            <en>Confirm</en>
+                                        </label>
+                                    </div>
+                                    <div class="col-lg-6">
+                                        <div class="input-group">
+                                            <input class="form-control" :type="!showPasswd.confirm ? 'password' : 'text'" v-model.trim.lazy="userPasswd.confirm" autocomplete="off">
+                                            <span class="input-group-text input-group-addon lp-cursor-pointer" @click="showPasswd.confirm = !showPasswd.confirm"><i :class="['fa-regular',{'fa-eye-slash':showPasswd.confirm},{'fa-eye':!showPasswd.confirm}]"></i></span>
                                         </div>
                                     </div>
-                                    <div class="row mt-3">
-                                        <div class="col-lg-12 text-center">
-                                            <button type="button" class="btn border-3 btn-primary px-4" @click="updateUserPasswd(userPasswd)"><cn>保存</cn><en>Save</en></button>
-                                        </div>
+                                </div>
+                                <div class="row mt-3">
+                                    <div class="col-lg-12 text-center">
+                                        <button type="button" class="btn border-3 btn-primary px-4" @click="updateUserPasswd(userPasswd)"><cn>保存</cn><en>Save</en></button>
                                     </div>
                                 </div>
                             </div>

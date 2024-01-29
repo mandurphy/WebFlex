@@ -871,6 +871,9 @@ input[type="password"]::-ms-reveal{
     left: 9px;
     border-radius: 50%;
 }
+.menu .simplebar-content {
+    height: 100% !important;
+}
 
 .menu .search-item-icon {
     font-size: 22px;
