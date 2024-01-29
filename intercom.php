@@ -341,7 +341,7 @@
 <script type="module">
     import { rpc,alertMsg,clearReactiveObject } from "./assets/js/lp.utils.js";
     import { useIntercomConf } from "./assets/js/vue.hooks.js";
-    import { ignoreCustomElementPlugin,bootstrapSwitchComponent,languageOptionDirective,customModalComponent } from "./assets/js/vue.helper.js"
+    import { ignoreCustomElementPlugin,filterKeywordPlugin,bootstrapSwitchComponent,languageOptionDirective,customModalComponent } from "./assets/js/vue.helper.js"
     import vue from "./assets/js/vue.build.js";
     const {createApp,ref,reactive,watch,watchEffect,computed,onMounted} = vue;
 
@@ -438,6 +438,7 @@
         }
     });
     app.use(ignoreCustomElementPlugin);
+    app.use(filterKeywordPlugin);
     app.mount('#app');
 </script>
 </body>

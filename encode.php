@@ -497,16 +497,20 @@
                                 <en>smart encode</en>
                             </div>
                             <div class="col text-center">
-                                minQP
+                                <cn>minQP</cn>
+                                <en>minQP</en>
                             </div>
                             <div class="col text-center">
-                                maxQP
+                                <cn>maxQP</cn>
+                                <en>maxQP</en>
                             </div>
                             <div class="col text-center">
-                                fixIQP
+                                <cn>fixIQP</cn>
+                                <en>fixIQP</en>
                             </div>
                             <div class="col text-center">
-                                fixPQP
+                                <cn>fixPQP</cn>
+                                <en>fixPQP</en>
                             </div>
                             <div class="col text-center">
                                 <cn>低延时编码</cn>
@@ -860,7 +864,7 @@
     
     import { extend,deepCopy,confirm } from "./assets/js/lp.utils.js";
     import { useDefaultConf,useHardwareConf } from "./assets/js/vue.hooks.js";
-    import { ignoreCustomElementPlugin,bootstrapSwitchComponent,multipleSelectComponent,languageOptionDirective } from "./assets/js/vue.helper.js"
+    import { ignoreCustomElementPlugin,filterKeywordPlugin,bootstrapSwitchComponent,multipleSelectComponent,languageOptionDirective } from "./assets/js/vue.helper.js"
     import vue from "./assets/js/vue.build.js";
     const {createApp,reactive,watch,toRefs,computed,onMounted} = vue;
 
@@ -982,6 +986,7 @@
         }
     });
     app.use(ignoreCustomElementPlugin);
+    app.use(filterKeywordPlugin);
     app.mount('#app');
 </script>
 </body>

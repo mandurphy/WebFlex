@@ -144,7 +144,7 @@
 
 <script type="module">
     import { useSyncConf } from "./assets/js/vue.hooks.js";
-    import {ignoreCustomElementPlugin, bootstrapSwitchComponent, nouiSliderComponent} from "./assets/js/vue.helper.js"
+    import {ignoreCustomElementPlugin,filterKeywordPlugin, bootstrapSwitchComponent, nouiSliderComponent} from "./assets/js/vue.helper.js"
     import vue from "./assets/js/vue.build.js";
 
     const {createApp,ref,reactive,watchEffect,computed,onMounted} = vue;
@@ -188,6 +188,7 @@
         }
     });
     app.use(ignoreCustomElementPlugin);
+    app.use(filterKeywordPlugin);
     app.mount('#app');
 </script>
 </body>

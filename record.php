@@ -50,19 +50,34 @@
                                     <div class="col-lg-12">
                                         <div class="row row-cols-5">
                                             <div class="col-lg ps-4">
-                                                <label>Mp4</label>
+                                                <label>
+                                                    <cn>MP4</cn>
+                                                    <en>MP4</en>
+                                                </label>
                                             </div>
                                             <div class="col-lg ps-4">
-                                                <label>TS</label>
+                                                <label>
+                                                    <cn>TS</cn>
+                                                    <en>TS</en>
+                                                </label>
                                             </div>
                                             <div class="col-lg ps-4">
-                                                <label>FLV</label>
+                                                <label>
+                                                    <cn>FLV</cn>
+                                                    <en>FLV</en>
+                                                </label>
                                             </div>
                                             <div class="col-lg ps-4">
-                                                <label>MKV</label>
+                                                <label>
+                                                    <cn>MKV</cn>
+                                                    <en>MKV</en>
+                                                </label>
                                             </div>
                                             <div class="col-lg ps-4">
-                                                <label>MOV</label>
+                                                <label>
+                                                    <cn>MOV</cn>
+                                                    <en>MOV</en>
+                                                </label>
                                             </div>
                                         </div>
                                     </div>
@@ -158,19 +173,24 @@
                                 <en>Channel name</en>
                             </div>
                             <div class="col text-center">
-                                MP4
+                                <cn>MP4</cn>
+                                <en>MP4</en>
                             </div>
                             <div class="col text-center">
-                                TS
+                                <cn>TS</cn>
+                                <en>TS</en>
                             </div>
                             <div class="col text-center">
-                                FLV
+                                <cn>FLV</cn>
+                                <en>FLV</en>
                             </div>
                             <div class="col text-center">
-                                MKV
+                                <cn>MKV</cn>
+                                <en>MKV</en>
                             </div>
                             <div class="col text-center">
-                                MOV
+                                <cn>MOV</cn>
+                                <en>MOV</en>
                             </div>
                             <div class="col text-center">
                                 <cn>暂停</cn>
@@ -304,7 +324,7 @@
 <script type="module">
     import {rpc, func, alertMsg, confirm} from "./assets/js/lp.utils.js";
     import { useDefaultConf,useRecordConf,useRecordFiles } from "./assets/js/vue.hooks.js";
-    import { ignoreCustomElementPlugin,bootstrapSwitchComponent,customModalComponent,videoPlayerComponent } from "./assets/js/vue.helper.js"
+    import { ignoreCustomElementPlugin,filterKeywordPlugin,bootstrapSwitchComponent,customModalComponent,videoPlayerComponent } from "./assets/js/vue.helper.js"
     import vue from "./assets/js/vue.build.js";
 
     const {createApp,ref,reactive,watchEffect,computed,onMounted} = vue;
@@ -563,6 +583,7 @@
         }
     });
     app.use(ignoreCustomElementPlugin);
+    app.use(filterKeywordPlugin);
     app.mount('#app');
 </script>
 </body>

@@ -1,51 +1,81 @@
-
 import vue from "./vue.build.js";
 import $ from '../plugins/jquery/jquery.esm.js';
 import '../plugins/switch/js/bootstrap-switch.min.js';
 import "../plugins/timepicker/js/bootstrap-timepicker.js";
 import * as noUiSlider from "../plugins/nouislider/js/nouislider.esm.js";
 import mutationObserver from '../plugins/polyfill/mutationobserver.esm.js'
-import { func, confirm, rebootConfirm, alertMsg, axios_post, isEmpty,formatTime } from './lp.utils.js'
+import { md5 } from "../plugins/md5/js.md5.esm.js";
+import { func, confirm, rebootConfirm, alertMsg, axios_post, isEmpty, formatTime, clearReactiveArray, getUrlParam } from './lp.utils.js'
 import { useDiskConf } from "./vue.hooks.js";
 
-const {ref,reactive,toRefs,watch,watchEffect,
-    computed,onMounted,nextTick,defineAsyncComponent} = vue;
+const { ref, reactive, toRefs, watch, watchEffect, computed, onMounted, nextTick, defineAsyncComponent } = vue;
 
-export const ignoreCustomElementPlugin =  {
+export const ignoreCustomElementPlugin = {
     install: (app) => {
         app.config.compilerOptions.isCustomElement = (tag) => tag === 'cn' || tag === 'en';
     }
 };
 
-export const highlightTextPlugin = {
-    install(app, options) {
-        //const urlParam = options.urlParam || 'highlight';
-        //const urlValue = new URLSearchParams(window.location.search).get(urlParam);
-        const urlValue = "预"
-        if (urlValue) {
-            nextTick(()=>{
-                const elements = document.querySelectorAll('main cn, main en');
-                elements.forEach((el) => {
-                    const textContent = el.textContent;
-                    const startIndex = textContent.indexOf(urlValue);
-                    if (startIndex !== -1) {
-                        const endIndex = startIndex + urlValue.length;
-                        const beforeText = textContent.slice(0, startIndex);
-                        const highlightedText = textContent.slice(startIndex, endIndex);
-                        const afterText = textContent.slice(endIndex);
-
-                        const highlightedElement = document.createElement('span');
-                        highlightedElement.style.fontWeight = '700';
-                        highlightedElement.style.color = 'red';
-                        highlightedElement.textContent = highlightedText;
-
-                        el.innerHTML = beforeText;
-                        el.appendChild(highlightedElement);
-                        el.innerHTML += afterText;
-                    }
-                })
-            })
-        }
+export const filterKeywordPlugin = {
+    install(app) {
+        const filter = getUrlParam("filter");
+        if(!filter)
+            return;
+        const param = {"url":location.pathname, "filter":filter}
+        func("/root/getFilterKeywords",param).then(result => {
+            const keyword = result.data;
+            if (keyword) {
+                // nextTick(() => {
+                    setTimeout(()=>{
+                        const elements = document.querySelectorAll('main cn, main en');
+                        elements.forEach((el) => {
+                            const textContent = el.textContent;
+                            const startIndex = textContent.indexOf(keyword);
+                            if (startIndex !== -1) {
+                                let currentElement = el.parentNode;
+                                while (currentElement) {
+                                    currentElement = currentElement.parentNode;
+                                    if(currentElement) {
+                                        let classList = currentElement.classList;
+                                        if(classList && classList.contains("tab-pane")) {
+                                            let tabId = currentElement.id;
+                                            let navLinks = document.querySelectorAll(".nav.nav-tabs > .nav-item > .nav-link");
+                                            navLinks.forEach(item => {
+                                                if (item.getAttribute('href') === '#'+tabId) {
+                                                    if(item.classList)
+                                                        item.classList.add("active");
+                                                } else {
+                                                    if(item.classList)
+                                                        item.classList.remove("active");
+                                                }
+                                            })
+                                            const siblings = Array.from(currentElement.parentElement.children);
+                                            siblings.forEach((sibling) => {
+                                                sibling.classList.remove('active');
+                                                sibling.classList.remove('show');
+                                            });
+                                            currentElement.classList.add('active');
+                                            currentElement.classList.add('show');
+                                        }
+                                    }
+                                }
+                                const endIndex = startIndex + keyword.length;
+                                const beforeText = textContent.slice(0, startIndex);
+                                const highlightedText = textContent.slice(startIndex, endIndex);
+                                const afterText = textContent.slice(endIndex);
+                                const highlightedElement = document.createElement('span');
+                                highlightedElement.style.fontWeight = '700';
+                                highlightedElement.style.color = 'red';
+                                highlightedElement.textContent = highlightedText;
+                                el.innerHTML = beforeText;
+                                el.appendChild(highlightedElement);
+                                el.innerHTML += afterText;
+                            }
+                        })
+                    },100);
+                // })
+            }
+        })
     }
 };
 
@@ -113,16 +143,16 @@ export const statusTemperatureComponent = {
         const tmp_mask = ref(null);
         const tmp_text = ref(null);
 
-        const { modelValue,activeColor } = toRefs(props);
+        const {modelValue, activeColor} = toRefs(props);
 
-        watch(modelValue,()=>{
+        watch(modelValue, () => {
             tmp_mask.value.style.bottom = modelValue.value + '%';
             tmp_text.value.textContent = modelValue.value + '℃';
         })
 
         onMounted(() => tmp_mask.value.parentElement.style.background = activeColor.value);
 
-        return { tmp_mask,tmp_text }
+        return {tmp_mask, tmp_text}
     }
 };
 
@@ -133,8 +163,8 @@ export const statusPieChartComponent = {
                </div>`,
     props: {
         modelValue: {
-          type:Number,
-          default: 0
+            type: Number,
+            default: 0
         },
         activeColor: {
             type: String,
@@ -150,14 +180,14 @@ export const statusPieChartComponent = {
         const pie_chart = ref(null);
         const pie_text = ref(null);
 
-        const { modelValue } = toRefs(props);
+        const {modelValue} = toRefs(props);
 
-        watch(modelValue,newValue => {
-            if($(pie_chart.value).data( 'easyPieChart' ))
-                $(pie_chart.value).data( 'easyPieChart' ).update( newValue);
+        watch(modelValue, newValue => {
+            if ($(pie_chart.value).data('easyPieChart'))
+                $(pie_chart.value).data('easyPieChart').update(newValue);
         })
 
-        onMounted(()=>{
+        onMounted(() => {
             pie_text.value.textContent = "0%";
             $(pie_chart.value).easyPieChart({
                 easing: 'easeOutElastic',
@@ -175,7 +205,7 @@ export const statusPieChartComponent = {
             });
         })
 
-        return { pie_chart,pie_text }
+        return {pie_chart, pie_text}
     }
 };
 
@@ -204,13 +234,13 @@ export const netFlotChartComponent = {
         },
         tickColor: {
             type: String,
-            default:"#eee"
+            default: "#eee"
         },
         borderColor: {
             type: String,
             default: "#ccc"
         },
-        tipBorderColor:{
+        tipBorderColor: {
             type: String,
             default: "#fb0"
         },
@@ -223,7 +253,7 @@ export const netFlotChartComponent = {
             default: "#555"
         }
     },
-    setup(props,context) {
+    setup(props, context) {
         const net_chart = ref(null);
         let plot = {};
 
@@ -237,7 +267,7 @@ export const netFlotChartComponent = {
                 padding: '3px',
                 'font-size': '9px',
                 'border-radius': '5px',
-                'color':props.tipTxtColor,
+                'color': props.tipTxtColor,
                 'background-color': props.tipBgColor,
                 'font-family': 'Verdana, Arial, Helvetica, Tahoma, sans-serif',
                 opacity: 0.9
@@ -245,7 +275,7 @@ export const netFlotChartComponent = {
         }
 
         const initPlot = () => {
-            if(Object.keys(plot).length === 0) {
+            if (Object.keys(plot).length === 0) {
                 let color = props.color;
                 let data1 = props.data1;
                 let data2 = props.data2;
@@ -275,16 +305,16 @@ export const netFlotChartComponent = {
                             min: 0,
                             max: 800,
                             tickSize: 160,
-                            tickFormatter: ( v, axis ) => {
-                                if ( axis.max < 1024 )
+                            tickFormatter: (v, axis) => {
+                                if (axis.max < 1024)
                                     return v + "Kb/s";
                                 else {
                                     v /= 1024;
 
-                                    if ( axis.max < 10240 )
-                                        return v.toFixed( 2 ) + "Mb/s";
+                                    if (axis.max < 10240)
+                                        return v.toFixed(2) + "Mb/s";
                                     else
-                                        return Math.floor( v ) + "Mb/s";
+                                        return Math.floor(v) + "Mb/s";
                                 }
                             }
                         },
@@ -298,7 +328,7 @@ export const netFlotChartComponent = {
                             borderWidth: 1,
                             borderColor: props.borderColor,
                         },
-                        colors: [ props.line1Color, props.line2Color ],
+                        colors: [props.line1Color, props.line2Color],
                         tooltip: false
                     });
 
@@ -316,8 +346,8 @@ export const netFlotChartComponent = {
                                 })
 
                                 let data = item.series.data[item.dataIndex][1];
-                                if(data > 1024)
-                                    data = parseInt(data/1024)+"Mb/s";
+                                if (data > 1024)
+                                    data = parseInt(data / 1024) + "Mb/s";
                                 else
                                     data += "kb/s";
 
@@ -326,8 +356,7 @@ export const netFlotChartComponent = {
                                 if (item.seriesIndex === 1)
                                     showTooltip(item.pageX + 100, item.pageY - 10, color, "<cn>下行</cn><en>downward</en>: " + data);
                             }
-                        }
-                        else {
+                        } else {
                             prePoint = null;
                             preLabel = null;
                             $(this).css({
@@ -342,24 +371,24 @@ export const netFlotChartComponent = {
         }
 
         const updatePlot = () => {
-            if(Object.keys(plot).length !== 0) {
+            if (Object.keys(plot).length !== 0) {
                 let maxy = props.maxy;
                 let data1 = props.data1;
                 let data2 = props.data2;
                 plot.setData([data1, data2]);
                 plot.draw();
-                plot.getOptions().yaxes[ 0 ].max = maxy;
-                plot.getOptions().yaxes[ 0 ].tickSize = Math.floor( maxy / 5 );
+                plot.getOptions().yaxes[0].max = maxy;
+                plot.getOptions().yaxes[0].tickSize = Math.floor(maxy / 5);
                 plot.setupGrid();
             }
         }
 
-        watch(props.data1,()=>{
+        watch(props.data1, () => {
             updatePlot();
-        },{deep: true})
+        }, {deep: true})
 
-        onMounted(()=>{
-            setTimeout(initPlot,100);
+        onMounted(() => {
+            setTimeout(initPlot, 100);
         })
 
         return {net_chart}
@@ -376,15 +405,15 @@ export const bootstrapSwitchComponent = {
         },
         size: {
             type: String,
-            default:"small" //normal
+            default: "small" //normal
         }
     },
     setup(props, context) {
 
-        const { modelValue,size } = toRefs(props);
+        const {modelValue, size} = toRefs(props);
         const bs_switch = ref(null);
 
-        watch(modelValue,()=>{
+        watch(modelValue, () => {
             $(bs_switch.value).bootstrapSwitch('state', modelValue.value, true);
         })
 
@@ -403,7 +432,7 @@ export const bootstrapSwitchComponent = {
                 }
             })
         })
-        return { bs_switch }
+        return {bs_switch}
     }
 };
 
@@ -414,11 +443,11 @@ export const multipleSelectComponent = {
                </select>`,
     props: {
         value1: {
-          type: [Number,String,Boolean],
-          default: 0
+            type: [Number, String, Boolean],
+            default: 0
         },
         value2: {
-            type: [Number,String,Boolean],
+            type: [Number, String, Boolean],
             default: 0
         },
         split: {
@@ -426,11 +455,11 @@ export const multipleSelectComponent = {
             default: 0
         }
     },
-    setup(props,context){
+    setup(props, context) {
 
         let selectValue = ref("");
 
-        watchEffect(()=>{
+        watchEffect(() => {
             selectValue.value = props.value1 + props.split + props.value2;
         })
 
@@ -441,17 +470,17 @@ export const multipleSelectComponent = {
             return isNaN(Number(value)) ? value : Number(value);
         };
 
-        const onSelectChange = () =>{
+        const onSelectChange = () => {
             let [value1, value2] = selectValue.value.split(props.split);
             context.emit('update:value1', parseValue(value1));
             context.emit('update:value2', parseValue(value2));
         }
 
-        onMounted(()=>{
+        onMounted(() => {
             selectValue.value = props.value1 + props.split + props.value2;
         })
 
-        return {selectValue,onSelectChange}
+        return {selectValue, onSelectChange}
     }
 };
 
@@ -460,11 +489,11 @@ export const multipleInputComponent = {
     template: `<input type="text" class="form-control" v-model="selectValue" @change="onInputChange">`,
     props: {
         value1: {
-            type: [Number,String],
+            type: [Number, String],
             default: 0
         },
         value2: {
-            type: [Number,String],
+            type: [Number, String],
             default: 0
         },
         split: {
@@ -472,24 +501,24 @@ export const multipleInputComponent = {
             default: 0
         }
     },
-    setup(props,context) {
+    setup(props, context) {
 
         let selectValue = ref("");
-        const { value1,value2 } = toRefs(props);
-        watchEffect(()=>{
+        const {value1, value2} = toRefs(props);
+        watchEffect(() => {
             const val1 = (typeof value1.value === "string") ? value1.value.trim() : value1.value;
             const val2 = (typeof value2.value === "string") ? value2.value.trim() : value2.value;
             selectValue.value = val1 + props.split + val2;
         })
 
-        const onInputChange = () =>{
-            let [val1,val2] = selectValue.value.split(props.split);
+        const onInputChange = () => {
+            let [val1, val2] = selectValue.value.split(props.split);
             val1 = isNaN(Number(val1)) ? val1 : Number(val1);
             val2 = isNaN(Number(val2)) ? val2 : Number(val2);
 
-            if(typeof val1 === "string")
+            if (typeof val1 === "string")
                 val1 = val1.trim();
-            if(typeof val2 === "string")
+            if (typeof val2 === "string")
                 val2 = val2.trim();
 
             context.emit('update:value1', val1);
@@ -498,7 +527,7 @@ export const multipleInputComponent = {
             selectValue.value = val1 + props.split + val2;
         }
 
-        return {selectValue,onInputChange}
+        return {selectValue, onInputChange}
     }
 };
 
@@ -506,8 +535,8 @@ export const nouiSliderComponent = {
     template: `<div class="slider-wrap lp-cursor-pointer" ref="slider"></div>`,
     props: {
         modelValue: {
-          type: [Number,String],
-          default: 0
+            type: [Number, String],
+            default: 0
         },
         min: {
             type: Number,
@@ -541,7 +570,7 @@ export const nouiSliderComponent = {
             default: 0
         }
     },
-    setup(props,context) {
+    setup(props, context) {
         const slider = ref(null);
         let handle = ref(null);
         let hover = false;
@@ -559,14 +588,14 @@ export const nouiSliderComponent = {
         }
 
         const formatTooltipValue = value => {
-            if(isEmpty(props.format)) {
-                if(props.fix === 0)
+            if (isEmpty(props.format)) {
+                if (props.fix === 0)
                     value = parseInt(value);
                 else
                     value = parseFloat(value).toFixed(props.fix);
             }
 
-            if(props.format === "time")
+            if (props.format === "time")
                 value = formatTime(value);
 
             return value;
@@ -578,7 +607,7 @@ export const nouiSliderComponent = {
                     start: newValue,
                     range: {'min': props.min, 'max': props.max},
                 });
-                if(!hover)
+                if (!hover)
                     hideTooltip();
             }
         });
@@ -589,7 +618,7 @@ export const nouiSliderComponent = {
                     start: newValue,
                     range: {'min': props.min, 'max': props.max},
                 });
-                if(!hover)
+                if (!hover)
                     hideTooltip();
             }
         });
@@ -599,7 +628,7 @@ export const nouiSliderComponent = {
                 slider.value.noUiSlider.updateOptions({
                     range: {'min': props.min, 'max': newValue},
                 });
-                if(!hover)
+                if (!hover)
                     hideTooltip();
             }
         });
@@ -615,7 +644,7 @@ export const nouiSliderComponent = {
                 step: props.step,
             });
 
-            if(props.disable)
+            if (props.disable)
                 slider.value.noUiSlider.disable();
 
             handle.value = slider.value.querySelector('.noUi-handle');
@@ -642,11 +671,11 @@ export const nouiSliderComponent = {
             slider.value.noUiSlider.on('change', (values, mark) => {
                 isSlide = false;
                 context.emit('update:modelValue', formatTooltipValue(values[mark]));
-                context.emit('slide-end', formatTooltipValue(values[mark]),props.index);
+                context.emit('slide-end', formatTooltipValue(values[mark]), props.index);
             });
         })
 
-        return { slider }
+        return {slider}
     }
 };
 
@@ -680,9 +709,9 @@ export const h5PlayerComponent = {
             default: true
         }
     },
-    setup(props,context) {
+    setup(props, context) {
 
-        const { url,codec,audio,buffer,canplay } = toRefs(props);
+        const {url, codec, audio, buffer, canplay} = toRefs(props);
         const state = {
             videoHandler: ref(null),
             jessHandler: ref(null),
@@ -692,31 +721,31 @@ export const h5PlayerComponent = {
             h5Player: {},
         }
 
-        watchEffect(()=>{
-            if(canplay.value) {
-                if(url.value !== "") {
-                    if(state.hadInitPlayer)
+        watchEffect(() => {
+            if (canplay.value) {
+                if (url.value !== "") {
+                    if (state.hadInitPlayer)
                         destroyPlayer();
-                    setTimeout(initPlayer,300);
+                    setTimeout(initPlayer, 300);
                 }
             } else {
-                if(state.hadInitPlayer)
+                if (state.hadInitPlayer)
                     destroyPlayer();
             }
         })
 
         const initPlayer = async () => {
-            if(props.url === "")
+            if (props.url === "")
                 return;
 
-            if(props.codec === "h265") {
+            if (props.codec === "h265") {
                 state.videoHandler.value.style.display = 'none';
                 state.jessHandler.value.style.display = 'block';
-                if(!window.Jessibuca)
+                if (!window.Jessibuca)
                     await import('../plugins/jessibuca/jessibuca.js');
-                state.h5Player =  new Jessibuca({
+                state.h5Player = new Jessibuca({
                     container: state.jessHandler.value,
-                    videoBuffer: buffer.value/1000,
+                    videoBuffer: buffer.value / 1000,
                     decoder: "assets/plugins/jessibuca/decoder.js",
                     isResize: false,
                     audio: JSON.parse(audio.value),
@@ -735,7 +764,7 @@ export const h5PlayerComponent = {
             } else {
                 state.videoHandler.value.style.display = 'block';
                 state.jessHandler.value.style.display = 'none';
-                if(!window.flvjs)
+                if (!window.flvjs)
                     await import('../plugins/flvjs/flv.js');
                 state.h5Player = flvjs.createPlayer({
                     type: 'flv',
@@ -746,15 +775,15 @@ export const h5PlayerComponent = {
                 state.h5Player.load();
                 state.h5Player.play();
 
-                state.videoHandler.value.addEventListener("canplay",() => {
+                state.videoHandler.value.addEventListener("canplay", () => {
                     state.cloudHandler.value.style.display = 'none'
                 });
             }
             state.hadInitPlayer = true;
         }
         const destroyPlayer = () => {
-            if(Object.keys(state.h5Player).length > 0) {
-                if(state.h5Player.hasOwnProperty("unload")) {
+            if (Object.keys(state.h5Player).length > 0) {
+                if (state.h5Player.hasOwnProperty("unload")) {
                     state.h5Player.unload();
                     state.h5Player.detachMediaElement();
                 }
@@ -762,7 +791,8 @@ export const h5PlayerComponent = {
                 state.h5Player = {};
             }
             state.cloudHandler.value.style.display = 'flex';
-            state.videoHandler.value.removeEventListener("canplay",()=>{});
+            state.videoHandler.value.removeEventListener("canplay", () => {
+            });
             state.hadInitPlayer = false;
         }
         const checkDelay = () => {
@@ -776,7 +806,7 @@ export const h5PlayerComponent = {
 
         onMounted(checkDelay);
 
-        return { ...state }
+        return {...state}
     }
 };
 
@@ -797,49 +827,50 @@ export const videoPlayerComponent = {
             default: true
         }
     },
-    setup(props,context) {
+    setup(props, context) {
 
-        const { url,canplay } = toRefs(props);
+        const {url, canplay} = toRefs(props);
         const state = {
             videoHandler: ref(null),
             cloudHandler: ref(null),
             hadInitPlayer: false,
         }
 
-        watchEffect(()=>{
-            if(canplay.value) {
-                if(url.value !== "") {
-                    if(state.hadInitPlayer)
+        watchEffect(() => {
+            if (canplay.value) {
+                if (url.value !== "") {
+                    if (state.hadInitPlayer)
                         destroyPlayer();
-                    setTimeout(initPlayer,300);
+                    setTimeout(initPlayer, 300);
                 }
             } else {
-                if(state.hadInitPlayer)
+                if (state.hadInitPlayer)
                     destroyPlayer();
             }
         })
 
         const initPlayer = () => {
-            if(url.value === "")
+            if (url.value === "")
                 return;
 
             state.videoHandler.value.style.display = 'block';
             state.videoHandler.value.src = url.value;
             state.videoHandler.value.play();
 
-            state.videoHandler.value.addEventListener("canplay",() => {
+            state.videoHandler.value.addEventListener("canplay", () => {
                 state.cloudHandler.value.style.display = 'none'
             });
             state.hadInitPlayer = true;
         }
-        
+
         const destroyPlayer = () => {
             state.cloudHandler.value.style.display = 'flex';
-            state.videoHandler.value.removeEventListener("canplay",()=>{});
+            state.videoHandler.value.removeEventListener("canplay", () => {
+            });
             state.hadInitPlayer = false;
         }
 
-        return { ...state }
+        return {...state}
     }
 };
 
@@ -854,11 +885,11 @@ export const timepickerComponent = {
             default: "00:00"
         }
     },
-    setup(props,context){
+    setup(props, context) {
         const timepicker = ref(null);
-        const { modelValue } = toRefs(props);
+        const {modelValue} = toRefs(props);
 
-        watch(modelValue,()=>{
+        watch(modelValue, () => {
             $(timepicker.value).timepicker('setTime', modelValue.value);
         })
 
@@ -903,7 +934,7 @@ export const vueColorPickerComponent = {
     components: {
         "sketch-picker": defineAsyncComponent(() => {
             return import('../plugins/vueColor/vue3.color.esm.js').then(module => {
-                const { Sketch } = module;
+                const {Sketch} = module;
                 return Sketch;
             })
         }),
@@ -911,7 +942,7 @@ export const vueColorPickerComponent = {
     directives: {
         "click-outside": clickOutsideDirective
     },
-    setup(props,context){
+    setup(props, context) {
 
         const state = {
             picker: ref(null),
@@ -922,8 +953,8 @@ export const vueColorPickerComponent = {
             popperOptions: reactive({}),
         }
 
-        watch(state.sketchColor,()=>{
-            if(state.sketchColor.value.hasOwnProperty("hex")) {
+        watch(state.sketchColor, () => {
+            if (state.sketchColor.value.hasOwnProperty("hex")) {
                 state.pickerColor.value = state.sketchColor.value.hex;
                 context.emit('update:modelValue', state.pickerColor.value);
             }
@@ -940,20 +971,20 @@ export const vueColorPickerComponent = {
                 ...options,
                 modifiers: [
                     ...options.modifiers,
-                    { name: 'eventListeners', enabled: true },
+                    {name: 'eventListeners', enabled: true},
                 ],
             }));
             state.partyPopper.update();
         }
 
         const hidePopper = () => {
-            if(Object.keys(state.partyPopper).length > 0) {
+            if (Object.keys(state.partyPopper).length > 0) {
                 state.popper.value.removeAttribute('data-show');
                 state.partyPopper.setOptions((options) => ({
                     ...options,
                     modifiers: [
                         ...options.modifiers,
-                        { name: 'eventListeners', enabled: false },
+                        {name: 'eventListeners', enabled: false},
                     ],
                 }));
             }
@@ -986,12 +1017,12 @@ export const vueColorPickerComponent = {
             state.picker.value.addEventListener("focus", showPopper);
         })
 
-        onMounted(()=>{
+        onMounted(() => {
             // state.pickerColor.value = props.modelValue;
-            state.sketchColor.value = {'hex':props.modelValue};
+            state.sketchColor.value = {'hex': props.modelValue};
         });
 
-        return {...state,clickOutside,pickerColorChange}
+        return {...state, clickOutside, pickerColorChange}
     }
 };
 
@@ -1009,7 +1040,7 @@ export const uploadModalComponent = {
                       </div>
                     </div>
                </div>`,
-    props:{
+    props: {
         modalTitle: {
             type: String,
             default: ""
@@ -1035,27 +1066,27 @@ export const uploadModalComponent = {
             default: ""
         },
         uploadCount: {
-            type: [Number,String],
+            type: [Number, String],
             default: 1
         }
     },
-    setup(props,context) {
+    setup(props, context) {
 
-        const { modalShow,modalFade,uploadAllow } = toRefs(props);
+        const {modalShow, modalFade, uploadAllow} = toRefs(props);
 
         const state = {
-            modal : ref(null),
-            modalTitle : ref(""),
+            modal: ref(null),
+            modalTitle: ref(""),
             uploadFile: ref(null),
             uploadTip: "",
-            show : false,
-            bsModal : {},
+            show: false,
+            bsModal: {},
             uploadLang: "zh"
         }
 
-        watch(modalShow,()=>{
+        watch(modalShow, () => {
             state.show = !state.show;
-            if(state.show)
+            if (state.show)
                 state.bsModal.show();
             else
                 state.bsModal.hide();
@@ -1063,14 +1094,14 @@ export const uploadModalComponent = {
 
         const initBsModal = () => {
             state.bsModal = new bootstrap.Modal(state.modal.value);
-            if(modalShow.value) {
+            if (modalShow.value) {
                 state.bsModal.show();
                 state.show = true;
             } else {
                 state.bsModal.hide();
                 state.show = false;
             }
-            state.modal.value.addEventListener('hide.bs.modal',() => {
+            state.modal.value.addEventListener('hide.bs.modal', () => {
                 state.show = false;
                 context.emit('update:modelShow', false);
             });
@@ -1079,20 +1110,20 @@ export const uploadModalComponent = {
         const updateLangText = () => {
             const html = document.querySelector('html');
             let lang = html.getAttribute('data-bs-language');
-            const [tip1,tip2] = props.uploadTip.split("&");
-            if(lang === "cn" || tip2 === undefined)
+            const [tip1, tip2] = props.uploadTip.split("&");
+            if (lang === "cn" || tip2 === undefined)
                 state.uploadTip = tip1;
             else
                 state.uploadTip = tip2;
 
-            const [title1,title2] = props.modalTitle.split("&");
-            if(lang === "cn" || title2 === undefined)
+            const [title1, title2] = props.modalTitle.split("&");
+            if (lang === "cn" || title2 === undefined)
                 state.modalTitle.value = title1;
             else
                 state.modalTitle.value = title2;
 
             state.uploadLang = lang;
-            if(lang === "cn")
+            if (lang === "cn")
                 state.uploadLang = "zh";
         }
 
@@ -1102,30 +1133,30 @@ export const uploadModalComponent = {
                 theme: "fa6",
                 dropZoneTitle: state.uploadTip,
                 showClose: false,
-                browseClass:"btn btn-primary btn-df",
+                browseClass: "btn btn-primary btn-df",
                 allowedFileExtensions: uploadAllow.value,
                 uploadUrl: props.uploadAction,
                 maxFileCount: isNaN(Number(props.uploadCount)) ? 1 : Number(props.uploadCount)
             });
 
-            $(state.uploadFile.value).on('fileuploaded', function(event, data) {
+            $(state.uploadFile.value).on('fileuploaded', function (event, data) {
                 state.bsModal.hide();
                 state.show = false;
                 $(state.uploadFile.value).fileinput('clear');
-                context.emit("upload-success",data)
+                context.emit("upload-success", data)
             });
 
-            $(state.uploadFile.value).on('fileuploaderror', function(event, data, msg) {
-                if(data.jqXHR.responseText) {
+            $(state.uploadFile.value).on('fileuploaderror', function (event, data, msg) {
+                if (data.jqXHR.responseText) {
                     var errMsg = eval(data.jqXHR.responseText);
-                    context.emit("upload-error",errMsg);
+                    context.emit("upload-error", errMsg);
                 }
             });
         }
 
-        onMounted(()=>{
+        onMounted(() => {
             const html = document.querySelector('html');
-            html.addEventListener("loaded",()=>{
+            html.addEventListener("loaded", () => {
                 updateLangText();
                 initBsModal();
                 initUploadFile();
@@ -1141,7 +1172,7 @@ export const uploadModalComponent = {
             observer.observe(html, config);
         })
 
-        return { ...state,modalFade }
+        return {...state, modalFade}
     }
 }
 
@@ -1265,7 +1296,7 @@ export const upgradeModalComponent = {
             default: false
         },
         modalFade: {
-            type:Boolean,
+            type: Boolean,
             default: true
         },
         checkUpgrade: {
@@ -1274,35 +1305,35 @@ export const upgradeModalComponent = {
         },
         patchSn: {
             type: String,
-            default:""
+            default: ""
         }
     },
-    setup(props,context) {
+    setup(props, context) {
 
-        const { modalFade,checkUpgrade,patchSn } = toRefs(props);
+        const {modalFade, checkUpgrade, patchSn} = toRefs(props);
 
         const state = {
             modal: ref(null),
             checkUpgrade: ref(false),
-            systemPatchs:reactive([]),
-            showLog:ref(false),
-            showLogPatch:ref({}),
-            hadUpdate:ref(false),
-            updatePercent:ref(0),
-            upgradePatch:ref({}),
-            facAliase:"",
+            systemPatchs: reactive([]),
+            showLog: ref(false),
+            showLogPatch: ref({}),
+            hadUpdate: ref(false),
+            updatePercent: ref(0),
+            upgradePatch: ref({}),
+            facAliase: "",
             bsModal: {},
         }
 
-        watchEffect(async ()=>{
-            if(checkUpgrade.value) {
+        watchEffect(async () => {
+            if (checkUpgrade.value) {
                 let result = await func("/upgrade/checkHelpNet");
                 if (result.status === "error") {
                     alertMsg(result.msg, "error");
                     return;
                 }
 
-                if(!patchSn.value) {
+                if (!patchSn.value) {
                     result = await func("/upgrade/getSystemAliase");
                     if (result.status === "error") {
                         alertMsg(result.msg, "error");
@@ -1330,9 +1361,9 @@ export const upgradeModalComponent = {
                     state.systemPatchs.splice(0);
                     state.systemPatchs.push(...result.data);
                     let hadImpact = false;
-                    for(let i=0;i<state.systemPatchs.length;i++) {
+                    for (let i = 0; i < state.systemPatchs.length; i++) {
                         state.systemPatchs[i].allow = true;
-                        if(!hadImpact) {
+                        if (!hadImpact) {
                             const impact = state.systemPatchs[i].impact;
                             hadImpact = impact === "1";
                         } else {
@@ -1361,7 +1392,7 @@ export const upgradeModalComponent = {
                                 },
                                 cancel: {
                                     text: "<cn>取消</cn><en>Cancel</en>",
-                                    action: ()=>{
+                                    action: () => {
                                         context.emit('update:checkUpgrade', false);
                                     }
                                 }
@@ -1384,7 +1415,7 @@ export const upgradeModalComponent = {
                     }
                     state.facAliase = result.data[0].aliase;
 
-                    result = await func("/upgrade/getSystemPatchBySn",{"sn": patchSn.value});
+                    result = await func("/upgrade/getSystemPatchBySn", {"sn": patchSn.value});
                     if (result.data.length === 0) {
                         alertMsg("<cn>无效固件编号</cn><en>Invalid upgrade sn</en>", "error");
                         context.emit('update:checkUpgrade', false);
@@ -1393,9 +1424,9 @@ export const upgradeModalComponent = {
                     state.systemPatchs.splice(0);
                     state.systemPatchs.push(...result.data);
                     let hadImpact = false;
-                    for(let i=0;i<state.systemPatchs.length;i++) {
+                    for (let i = 0; i < state.systemPatchs.length; i++) {
                         state.systemPatchs[i].allow = true;
-                        if(!hadImpact) {
+                        if (!hadImpact) {
                             const impact = state.systemPatchs[i].impact;
                             hadImpact = impact === "1";
                         } else {
@@ -1407,10 +1438,10 @@ export const upgradeModalComponent = {
             }
         })
 
-        const handleVersionLogs = computed(()=>{
+        const handleVersionLogs = computed(() => {
             const regex = /[\r\n\t]/g;
-            state.showLogPatch.value.description = state.showLogPatch.value.description.replace(regex,"");
-            return state.showLogPatch.value.description.split(";").filter((item)=>{
+            state.showLogPatch.value.description = state.showLogPatch.value.description.replace(regex, "");
+            return state.showLogPatch.value.description.split(";").filter((item) => {
                 return item !== "";
             })
         })
@@ -1434,7 +1465,7 @@ export const upgradeModalComponent = {
         };
 
         const handleUpdatePatch = idx => {
-            if(state.hadUpdate.value)
+            if (state.hadUpdate.value)
                 return;
 
             state.upgradePatch.value = state.systemPatchs[idx];
@@ -1442,17 +1473,17 @@ export const upgradeModalComponent = {
             const chip = patch.chip;
             let name = patch.name;
             let type = "update";
-            if(name.indexOf("_sn_") > 0) {
-                name = name.replace("_sn_","_"+state.facAliase+"_");
+            if (name.indexOf("_sn_") > 0) {
+                name = name.replace("_sn_", "_" + state.facAliase + "_");
                 type = "sn";
             } else {
-                name = name.replace("_","_"+state.facAliase+"_");
+                name = name.replace("_", "_" + state.facAliase + "_");
                 type = "update";
             }
 
             const params = {
-                action:"update", name:name,
-                chip:chip, type:type
+                action: "update", name: name,
+                chip: chip, type: type
             }
 
             axios_post('/link/upgrade.php', params)
@@ -1460,10 +1491,10 @@ export const upgradeModalComponent = {
                     const total = Number(data.size);
                     state.hadUpdate.value = true;
                     state.updatePercent.value = 0;
-                    if(total > 0) {
+                    if (total > 0) {
                         const timerId = setInterval(async function () {
                             const size = await getUpdateFileSize(name);
-                            state.updatePercent.value = parseInt(size/total * 100);
+                            state.updatePercent.value = parseInt(size / total * 100);
                             if (size >= total) {
                                 clearInterval(timerId);
                                 state.bsModal.hide();
@@ -1483,15 +1514,15 @@ export const upgradeModalComponent = {
             const chip = patch.chip;
             let name = patch.name;
             let type = "update";
-            if(name.indexOf("_sn_") > 0) {
-                name = name.replace("_sn_","_"+state.facAliase+"_");
+            if (name.indexOf("_sn_") > 0) {
+                name = name.replace("_sn_", "_" + state.facAliase + "_");
                 type = "sn";
             } else {
-                name = name.replace("_","_"+state.facAliase+"_");
+                name = name.replace("_", "_" + state.facAliase + "_");
                 type = "update";
             }
 
-            const url = "http://help.linkpi.cn:5735/upgrade/"+chip+"/"+type+"/"+name;
+            const url = "http://help.linkpi.cn:5735/upgrade/" + chip + "/" + type + "/" + name;
             const downName = "";
             const a = document.createElement('a');
             const e = document.createEvent('MouseEvents');
@@ -1501,14 +1532,22 @@ export const upgradeModalComponent = {
             a.dispatchEvent(e);
         }
 
-        onMounted(()=>{
+        onMounted(() => {
             state.bsModal = new bootstrap.Modal(state.modal.value);
-            state.modal.value.addEventListener('hide.bs.modal',() => {
+            state.modal.value.addEventListener('hide.bs.modal', () => {
                 context.emit('update:modelShow', false);
                 context.emit('update:checkUpgrade', false);
             });
         })
-        return { ...state,modalFade,handleVersionLogs,showPatchVersionLog,hidePatchVersionLog,handleUpdatePatch,handleDownloadPatch }
+        return {
+            ...state,
+            modalFade,
+            handleVersionLogs,
+            showPatchVersionLog,
+            hidePatchVersionLog,
+            handleUpdatePatch,
+            handleDownloadPatch
+        }
     }
 }
 
@@ -1533,8 +1572,8 @@ export const customModalComponent = {
                </div>`,
     props: {
         modalSize: {
-          type: String,
-          default: ""
+            type: String,
+            default: ""
         },
         hadHeader: {
             type: Boolean,
@@ -1545,7 +1584,7 @@ export const customModalComponent = {
             default: true
         },
         modalTitle: {
-            type:String,
+            type: String,
             default: "标题"
         },
         modalShow: {
@@ -1566,51 +1605,51 @@ export const customModalComponent = {
         },
         confirmBtnName: {
             type: String,
-            default:"确定"
+            default: "确定"
         },
         cancelBtnName: {
             type: String,
-            default:"取消"
+            default: "取消"
         },
         hadConfirmBtn: {
             type: Boolean,
             default: true
         },
-        cancelCloseModal:{
+        cancelCloseModal: {
             type: Boolean,
             default: true
         }
     },
-    setup(props,context) {
+    setup(props, context) {
 
-        const { modalShow,modalFade,modalTitle } = toRefs(props);
+        const {modalShow, modalFade, modalTitle} = toRefs(props);
         const state = {
             modal: ref(null),
             modalTitle: ref(""),
-            modalConfirmBtnName:ref("确定"),
-            modalCancelBtnName:ref("取消"),
+            modalConfirmBtnName: ref("确定"),
+            modalCancelBtnName: ref("取消"),
             show: false,
             bsModal: {},
         }
 
-        watch(modalShow,() => {
-            if(Object.keys(state.bsModal).length === 0)
+        watch(modalShow, () => {
+            if (Object.keys(state.bsModal).length === 0)
                 return;
             state.show = !state.show;
-            if(state.show)
+            if (state.show)
                 state.bsModal.show();
             else
                 state.bsModal.hide();
             context.emit('modal-visible', state.show);
         })
 
-        watch(modalTitle,() => {
+        watch(modalTitle, () => {
             updateLangText();
         })
 
         const initBsModal = () => {
             state.bsModal = new bootstrap.Modal(state.modal.value);
-            if(modalShow.value) {
+            if (modalShow.value) {
                 state.bsModal.show();
                 state.show = true;
             } else {
@@ -1618,7 +1657,7 @@ export const customModalComponent = {
                 state.show = false;
             }
             context.emit('modal-visible', state.show);
-            state.modal.value.addEventListener('hide.bs.modal',() => {
+            state.modal.value.addEventListener('hide.bs.modal', () => {
                 state.show = false;
                 context.emit('update:modelShow', state.show);
                 context.emit('modal-visible', state.show);
@@ -1636,34 +1675,34 @@ export const customModalComponent = {
         const updateLangText = () => {
             const html = document.querySelector('html');
             let lang = html.getAttribute('data-bs-language');
-            if(props.modalTitle !== undefined) {
-                const [title1,title2] = props.modalTitle.split("&");
-                if(lang === "cn" || title2 === undefined)
+            if (props.modalTitle !== undefined) {
+                const [title1, title2] = props.modalTitle.split("&");
+                if (lang === "cn" || title2 === undefined)
                     state.modalTitle.value = title1;
                 else
                     state.modalTitle.value = title2;
             }
 
-            if(props.confirmBtnName !== undefined) {
-                const [name1,name2] = props.confirmBtnName.split("&");
-                if(lang === "cn" || name2 === undefined)
+            if (props.confirmBtnName !== undefined) {
+                const [name1, name2] = props.confirmBtnName.split("&");
+                if (lang === "cn" || name2 === undefined)
                     state.modalConfirmBtnName.value = name1;
                 else
                     state.modalConfirmBtnName.value = name2;
             }
 
-            if(props.cancelBtnName !== undefined) {
-                const [name1,name2] = props.cancelBtnName.split("&");
-                if(lang === "cn" || name2 === undefined)
+            if (props.cancelBtnName !== undefined) {
+                const [name1, name2] = props.cancelBtnName.split("&");
+                if (lang === "cn" || name2 === undefined)
                     state.modalCancelBtnName.value = name1;
                 else
                     state.modalCancelBtnName.value = name2;
             }
         }
 
-        onMounted(()=>{
+        onMounted(() => {
             const html = document.querySelector('html');
-            html.addEventListener("loaded",()=>{
+            html.addEventListener("loaded", () => {
                 updateLangText();
                 initBsModal();
             })
@@ -1679,7 +1718,7 @@ export const customModalComponent = {
             observer.observe(html, config);
         })
 
-        return { ...state,modalFade,confirmBtnClick,cancelBtnClick }
+        return {...state, modalFade, confirmBtnClick, cancelBtnClick}
     }
 }
 
@@ -1700,13 +1739,13 @@ export const loadingButtonComponent = {
             default: false
         }
     },
-    setup(props,context) {
+    setup(props, context) {
 
         const onButtonClick = () => {
-            context.emit("button-click","click")
+            context.emit("button-click", "click")
         }
 
-        return { onButtonClick }
+        return {onButtonClick}
     }
 }
 
@@ -1839,7 +1878,7 @@ export const ptzDirectComponent = {
         },
         sticks: {
             type: Array,
-            default: ['left', 'left-up', 'up', 'right-up', 'right', 'right-down', 'down', 'left-down','home']
+            default: ['left', 'left-up', 'up', 'right-up', 'right', 'right-down', 'down', 'left-down', 'home']
         },
         zoomVal: {
             type: Number,
@@ -1862,22 +1901,22 @@ export const ptzDirectComponent = {
             default: 0
         }
     },
-    components:{
+    components: {
         "noui-slider": nouiSliderComponent
     },
-    setup(props,context) {
+    setup(props, context) {
 
         const state = {
             zoom: ref(0),
             presetVal: ref(0)
         }
 
-        watch(()=>props.zoomVal,(newValue,oldValue) => {
+        watch(() => props.zoomVal, (newValue, oldValue) => {
             state.zoom.value = newValue;
         })
 
         const handlePtzMove = type => {
-            context.emit("ptz-move",type)
+            context.emit("ptz-move", type)
         }
 
         const updatePreset = val => {
@@ -1889,19 +1928,19 @@ export const ptzDirectComponent = {
         }
 
         const handleCallPreset = () => {
-            context.emit('call-preset',state.presetVal.value);
+            context.emit('call-preset', state.presetVal.value);
         }
 
         const handleSetPreset = () => {
-            context.emit('set-preset',state.presetVal.value);
+            context.emit('set-preset', state.presetVal.value);
         }
 
-        return { ...state,handlePtzMove,onTouchSlideEnd,updatePreset,handleCallPreset,handleSetPreset }
+        return {...state, handlePtzMove, onTouchSlideEnd, updatePreset, handleCallPreset, handleSetPreset}
     }
 }
 
 export const usbOptionComponent = {
-    template:`<a :class="['nav-link lp-usb-ctx',{'active':hadMountDisk}]" data-bs-toggle="dropdown">
+    template: `<a :class="['nav-link lp-usb-ctx',{'active':hadMountDisk}]" data-bs-toggle="dropdown">
                     <div class="lp-usb-drive">
                         <div class="lp-usb-body"></div>
                         <div class="lp-usb-metal"></div>
@@ -1950,11 +1989,11 @@ export const usbOptionComponent = {
                         </li>
                     </ul>
                 </div>`,
-    setup(props,context) {
+    setup(props, context) {
 
         const hadMountInfo = reactive({});
         const hadMountDisk = ref(false);
-        const { diskConf,handleDiskConf,updateDiskConf } = useDiskConf();
+        const {diskConf, handleDiskConf, updateDiskConf} = useDiskConf();
 
         const unInstallDisk = () => {
             confirm({
@@ -1966,13 +2005,14 @@ export const usbOptionComponent = {
                         btnClass: 'btn-primary',
                         action: () => {
                             func("/system/umountDisk").then(res => {
-                                alertMsg(res.msg,res.status);
+                                alertMsg(res.msg, res.status);
                             })
                         }
                     },
                     cancel: {
                         text: "<cn>取消</cn><en>Cancel</en>",
-                        action: () => {}
+                        action: () => {
+                        }
                     }
                 }
             });
@@ -2024,34 +2064,35 @@ export const usbOptionComponent = {
                         btnClass: 'btn-primary',
                         action: () => {
                             const formatPasswd = document.querySelector("#formatPasswd").value;
-                            func("/system/formatReady",{"psd":formatPasswd}).then (res => {
-                                return new Promise((resolve,reject)=>{
-                                    if(res.status === "error") {
-                                        alertMsg(res.msg,res.status);
+                            func("/system/formatReady", {"psd": formatPasswd}).then(res => {
+                                return new Promise((resolve, reject) => {
+                                    if (res.status === "error") {
+                                        alertMsg(res.msg, res.status);
                                         reject();
                                         return;
                                     }
                                     resolve();
                                 })
-                            }).then(()=>{
+                            }).then(() => {
                                 const diskFormat = document.querySelector("#diskFormat").value;
-                                const notify = alertMsg("<cn>正在格式化，请勿关闭此页面</cn><en>Do not close this page while formatting</en>","success",99999999);
-                                func("/system/formatDisk",{"format":diskFormat});
-                                let interval = setInterval(()=>{
+                                const notify = alertMsg("<cn>正在格式化，请勿关闭此页面</cn><en>Do not close this page while formatting</en>", "success", 99999999);
+                                func("/system/formatDisk", {"format": diskFormat});
+                                let interval = setInterval(() => {
                                     func("/system/checkFormatProgress").then(res => {
-                                        if(res.data === 0) {
+                                        if (res.data === 0) {
                                             clearInterval(interval);
                                             notify.remove();
-                                            setTimeout(()=> alertMsg(res.msg,res.status),600);
+                                            setTimeout(() => alertMsg(res.msg, res.status), 600);
                                         }
                                     })
-                                },5000);
+                                }, 5000);
                             })
                         }
                     },
                     cancel: {
                         text: "<cn>取消</cn><en>Cancel</en>",
-                        action: () => {}
+                        action: () => {
+                        }
                     }
                 }
             });
@@ -2059,10 +2100,10 @@ export const usbOptionComponent = {
 
         const checkMountDisk = () => {
             func("/system/getMountDiskSpace").then(res => {
-                Object.assign(hadMountInfo,res.data);
+                Object.assign(hadMountInfo, res.data);
                 hadMountDisk.value = (res.status === "success");
             })
-            setTimeout(checkMountDisk,1000);
+            setTimeout(checkMountDisk, 1000);
         }
 
         const turnMountDisk = () => {
@@ -2172,45 +2213,46 @@ export const usbOptionComponent = {
                                 enable: true,
                                 used: document.querySelector('#mount_device').value,
                                 shared: {
-                                    ip:document.querySelector('#shared_ip').value,
+                                    ip: document.querySelector('#shared_ip').value,
                                     type: document.querySelector('#shared_protocol').value,
                                     path: document.querySelector('#shared_path').value,
-                                    auth : {
+                                    auth: {
                                         uname: document.querySelector('#shared_uname').value,
                                         passwd: document.querySelector('#shared_passwd').value,
                                     }
                                 },
                                 local: {
-                                    device:document.querySelector('#local_devices').value
+                                    device: document.querySelector('#local_devices').value
                                 }
-                            }).then(async ()=> {
+                            }).then(async () => {
                                 handleDiskConf();
-                                alertMsg("<cn>磁盘检测中，请稍后...</cn><en>Disk checking, please wait...</en>","success");
+                                alertMsg("<cn>磁盘检测中，请稍后...</cn><en>Disk checking, please wait...</en>", "success");
                                 const result = await func("/system/mountDisk");
-                                if(result.status === "success")
+                                if (result.status === "success")
                                     jc.close();
-                                setTimeout(() => alertMsg(result.msg,result.status),600);
+                                setTimeout(() => alertMsg(result.msg, result.status), 600);
                             });
                             return false;
                         }
                     },
                     cancel: {
                         text: "<cn>取消</cn><en>Cancel</en>",
-                        action: () => {}
+                        action: () => {
+                        }
                     }
                 },
-                onOpenBefore: ()=> {
-                    const display = (type,protocol) => {
+                onOpenBefore: () => {
+                    const display = (type, protocol) => {
                         const shareElements = document.querySelectorAll('.share-device');
                         const localElements = document.querySelectorAll('.local-device');
                         shareElements.forEach(element => element.style.display = 'none');
                         localElements.forEach(element => element.style.display = 'none');
-                        if(type === "shared") {
+                        if (type === "shared") {
                             shareElements.forEach(element => element.style.display = '');
                             const cifsAuthElements = document.querySelectorAll('.cifs-auth');
                             document.querySelector('#shared_protocol').value = protocol;
                             cifsAuthElements.forEach(element => element.style.display = 'none');
-                            if(protocol === 'cifs')
+                            if (protocol === 'cifs')
                                 cifsAuthElements.forEach(element => element.style.display = '');
                             return;
                         }
@@ -2223,13 +2265,13 @@ export const usbOptionComponent = {
                         result.data.forEach(item => {
                             const option = document.createElement('option');
                             option.value = item.name;
-                            if(item.name === "/dev/mmcblk0p6") {
-                                if(lang === "cn")
+                            if (item.name === "/dev/mmcblk0p6") {
+                                if (lang === "cn")
                                     item.name = "内部存储";
                                 else
                                     item.name = "device storage";
                             }
-                            option.text = item.name+"( "+item.size+" )";
+                            option.text = item.name + "( " + item.size + " )";
                             document.querySelector('#local_devices').add(option);
                         })
                     })
@@ -2241,20 +2283,113 @@ export const usbOptionComponent = {
                     document.querySelector('#shared_passwd').value = diskConf.shared.auth.passwd;
                     document.querySelector('#shared_ip').value = diskConf.shared.ip;
                     document.querySelector('#shared_path').value = diskConf.shared.path;
-                    display(diskConf.used,diskConf.shared.type);
+                    display(diskConf.used, diskConf.shared.type);
                     document.querySelector('#mount_device').addEventListener('change', () => {
                         const type = document.querySelector('#mount_device').value;
-                        display(type,"cifs");
+                        display(type, "cifs");
                     });
                     document.querySelector('#shared_protocol').addEventListener('change', () => {
                         const protocol = document.querySelector('#shared_protocol').value;
-                        display("shared",protocol);
+                        display("shared", protocol);
                     });
                 }
             });
         }
 
         onMounted(checkMountDisk);
-        return { hadMountInfo,hadMountDisk, diskConf,unInstallDisk,formatDisk,turnMountDisk }
+        return {hadMountInfo, hadMountDisk, diskConf, unInstallDisk, formatDisk, turnMountDisk}
     }
 }
+
+export const searchSettingComponent = {
+    template: `<div class="position-relative search-bar d-lg-block d-none" @click="onShowSearchModal">
+                    <input class="form-control form-control-sm rounded-5 px-5 lp-cursor-pointer" type="search" placeholder="search" readonly>
+                    <span class="position-absolute ms-3 translate-middle-y start-0 top-50">
+                        <i class="fa fa-search"></i>
+                    </span>
+               </div>
+               <div class="modal fade" tabindex="-1" aria-hidden="true" ref="modal">
+                    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-lg" style="z-index: 99999">
+                        <div class="modal-content">
+                            <div class="modal-header gap-2">
+                                <div class="position-relative popup-search w-100">
+                                    <input class="form-control form-control-lg ps-5 border border-2 lp-search-bar" type="text" v-model.trim="searchVal" placeholder="search">
+                                    <span class="position-absolute ms-3 translate-middle-y start-0 top-50">
+                                        <i class="fa fa-search"></i>
+                                    </span>
+                                </div>
+                            </div>
+                            <div class="modal-body" style="height: 350px">
+                                <div v-if="searchRes.length > 0" class="search-list">
+                                    <div class="mb-4" v-for="(item,index) in searchRes" :key="index">
+                                        <div class="d-flex">
+                                            <div class="lp-title-icon"><i :class="['font-14',item.icon]"></i></div>
+                                            <span class="mb-2 ms-2 font-16">{{item.name}}</span>
+                                        </div>
+                                        <div class="list-group">
+                                            <a v-for="(itm,idx) in item.filter" :key="idx" @click="onRedirect(item.url,itm)" class="list-group-item list-group-item-action align-items-center d-flex gap-2 lp-cursor-pointer">{{itm}}</a>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div v-else class="h-100 lp-align-center">
+                                    <div>
+                                        <div class="row">
+                                            
+                                        </div>
+                                        <div class="row mt-3">
+                                            <div class="text-center" style="color: #bbb">
+                                                <cn>请输入要检索的关键字</cn>
+                                                <en>Please enter the keyword you want to search</en>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-backdrop show" @click="onHideSearchModal"></div>
+               </div>`,
+    props: {},
+    setup(props, context) {
+        const state = {
+            modal: ref(null),
+            bsModal: ref(null),
+            searchVal: ref(""),
+            searchRes: reactive([]),
+            placeholder: ref("关键字")
+        }
+
+        watch(state.searchVal, () => {
+            if (isEmpty(state.searchVal.value)) {
+                clearReactiveArray(state.searchRes);
+                return;
+            }
+            const html = document.querySelector("html");
+            const lang = html.getAttribute('data-bs-language');
+            const param = {"lang": lang, "filter": state.searchVal.value};
+            func("/root/filterKeywords", param).then(result => {
+                clearReactiveArray(state.searchRes);
+                state.searchRes.push(...result.data);
+            });
+        });
+
+        const onShowSearchModal = () => {
+            state.bsModal.value.show();
+            const ele = document.querySelector("body > .modal-backdrop");
+            ele.remove();
+        }
+
+        const onHideSearchModal = () => {
+            state.bsModal.value.hide();
+        }
+
+        const onRedirect = (url,data) => {
+            location.href = url+"?filter="+md5(data);
+        }
+
+        onMounted(() => {
+            state.bsModal.value = new bootstrap.Modal(state.modal.value);
+        })
+        return {...state, onShowSearchModal, onHideSearchModal,onRedirect}
+    }
+};

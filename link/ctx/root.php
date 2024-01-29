@@ -2,6 +2,7 @@
 
 namespace Link\Ctx;
 
+use DOMDocument;
 use Link\Basic;
 class Root extends Basic
 {
@@ -131,5 +132,79 @@ class Root extends Basic
         file_put_contents('/link/webflex/.htaccess',$ctx);
         exec('/usr/nginx/sbin/nginx -p /usr/nginx -s reload');
         return $this->handleRet($param, 'success', '保存成功', 'save successfully');
+    }
+
+    function filterKeywords($param) {
+        $filter = $param["filter"];
+        $lang = $param["lang"];
+        $result = array();
+
+        $content = file_get_contents("/link/webflex/public/menu.inc");
+        $dom = new DOMDocument();
+        libxml_use_internal_errors(true);
+        $dom->loadHTML(mb_convert_encoding($content,"HTML-ENTITIES","UTF-8"));
+        libxml_clear_errors();
+        $aTags = $dom->getElementsByTagName('a');
+        $menus = array();
+        foreach ($aTags as $aTag) {
+            $href = $aTag->getAttribute('href');
+            if (!empty($href) && $href != "javascript:;") {
+                $iTag = $aTag->getElementsByTagName("i");
+                $iClass = $iTag[0]->getAttribute("class");
+                $cnTag = $aTag->getElementsByTagName($lang);
+                $menus[$href] = array(
+                    "icon" => $iClass,
+                    "name" => $cnTag[0]->nodeValue
+                );
+            }
+        }
+
+        $phpFiles = glob('/link/webflex' . '/*.php');
+        $ignoreFiles = ["fac.php","ndireg.php"];
+        foreach ($phpFiles as $phpFile) {
+            if (in_array(basename($phpFile), $ignoreFiles))
+                continue;
+            $content = file_get_contents($phpFile);
+            preg_match('/<main\b[^>]*>(.*?)<\/main>/s', $content, $matches);
+            if (isset($matches[1])) {
+                $main = $matches[1];
+                preg_match_all('/<'.$lang.'>(.*?)<\/'.$lang.'>/s', $main, $matches);
+                $lst = array();
+                foreach ($matches[1] as $ctx) {
+                    if(stripos($ctx,$filter) !== false)
+                        array_push($lst,strip_tags($ctx));
+                }
+                if(!empty($lst)) {
+                    $name = $menus[basename($phpFile)]["name"];
+                    $icon = $menus[basename($phpFile)]["icon"];
+                    $ary = array(
+                        "url" => basename($phpFile),
+                        "name" => $name,
+                        "icon" => $icon,
+                        "filter" => array_unique($lst)
+                    );
+                    array_push($result,$ary);
+                }
+            }
+        }
+        return $this->handleRet($result, 'success', '保存成功', 'save successfully');
+    }
+
+    function getFilterKeywords($param) {
+        $lang = self::load_conf("/link/config/lang.json");
+        $url = basename($param["url"]);
+        $filter = $param["filter"];
+        $content = file_get_contents("/link/webflex/".$url);
+        preg_match('/<main\b[^>]*>(.*?)<\/main>/s', $content, $matches);
+        $result = "";
+        if (isset($matches[1])) {
+            $main = $matches[1];
+            preg_match_all('/<'.$lang["lang"].'>(.*?)<\/'.$lang["lang"].'>/s', $main, $matches);
+            foreach ($matches[1] as $ctx) {
+                if(md5(strip_tags($ctx)) == $filter)
+                    $result = strip_tags($ctx);
+            }
+        }
+        return $this->handleRet($result, 'success', '保存成功', 'save successfully');
     }
 }

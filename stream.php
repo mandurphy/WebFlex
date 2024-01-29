@@ -23,16 +23,20 @@
                              <div class="row">
                                  <div class="col-2"></div>
                                  <div class="col text-center">
-                                     HTTP
+                                     <cn>HTTP</cn>
+                                     <en>HTTP</en>
                                  </div>
                                  <div v-if="Object.keys(hardwareConf).length > 0 && hardwareConf.function.hls" class="col text-center">
-                                     HLS
+                                     <cn>HLS</cn>
+                                     <en>HLS</en>
                                  </div>
                                  <div class="col text-center">
-                                     RTMP
+                                     <cn>RTMP</cn>
+                                     <en>RTMP</en>
                                  </div>
                                  <div class="col text-center">
-                                     RTSP
+                                     <cn>RTSP</cn>
+                                     <en>RTSP</en>
                                  </div>
                                  <div class="col text-center">
                                      <cn>组播</cn>
@@ -198,16 +202,20 @@
                              <en>Channel name</en>
                          </div>
                          <div class="col text-center">
-                             HTTP
+                             <cn>HTTP</cn>
+                             <en>HTTP</en>
                          </div>
                          <div v-if="Object.keys(hardwareConf).length > 0 && hardwareConf.function.hls" class="col text-center">
-                             HLS
+                             <cn>HLS</cn>
+                             <en>HLS</en>
                          </div>
                          <div class="col text-center">
-                             RTMP
+                             <cn>RTMP</cn>
+                             <en>RTMP</en>
                          </div>
                          <div class="col text-center">
-                             RTSP
+                             <cn>RTSP</cn>
+                             <en>RTSP</en>
                          </div>
                          <div class="col text-center">
                              <cn>组播</cn>
@@ -756,7 +764,7 @@
 
     import {rpc, extend, deepCopy, clearReactiveArray} from "./assets/js/lp.utils.js";
     import { useDefaultConf,useHardwareConf,usePortConf } from "./assets/js/vue.hooks.js";
-    import { ignoreCustomElementPlugin,bootstrapSwitchComponent,multipleInputComponent,languageOptionDirective } from "./assets/js/vue.helper.js"
+    import { ignoreCustomElementPlugin,filterKeywordPlugin,bootstrapSwitchComponent,multipleInputComponent,languageOptionDirective } from "./assets/js/vue.helper.js"
     import vue from "./assets/js/vue.build.js";
 
     const {createApp,ref,reactive,toRefs,watch,watchEffect,computed} = vue;
@@ -931,6 +939,7 @@
         }
     });
     app.use(ignoreCustomElementPlugin);
+    app.use(filterKeywordPlugin);
     app.mount('#app');
 </script>
 </body>

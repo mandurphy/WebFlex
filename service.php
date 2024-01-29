@@ -159,7 +159,7 @@
 <script type="module">
     import { alertMsg } from "./assets/js/lp.utils.js";
     import { useServiceConf,useSlsConf,useRtmpConf,useNdiConf,useFrpEnableConf,useFrpcConf } from "./assets/js/vue.hooks.js";
-    import { ignoreCustomElementPlugin,bootstrapSwitchComponent } from "./assets/js/vue.helper.js";
+    import { ignoreCustomElementPlugin,filterKeywordPlugin,bootstrapSwitchComponent } from "./assets/js/vue.helper.js";
     import vue from "./assets/js/vue.build.js";
 
     const {createApp,ref,reactive,watch,watchEffect,computed,onMounted} = vue;
@@ -206,6 +206,7 @@
         }
     });
     app.use(ignoreCustomElementPlugin);
+    app.use(filterKeywordPlugin);
     app.mount('#app');
 </script>
 </body>

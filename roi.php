@@ -100,7 +100,8 @@
                                     <div class="row">
                                         <div class="col-lg-3 offset-lg-1 lp-align-center">
                                             <label>
-                                                QP
+                                                <cn>QP</cn>
+                                                <en>QP</en>
                                             </label>
                                         </div>
                                         <div class="col-lg-6">
@@ -142,7 +143,7 @@
     import vueDragResize from "./assets/plugins/vueDragResize/js/vue3-drag-resize.esm.js";
     import { rpc,deepCopy } from "./assets/js/lp.utils.js";
     import { useDefaultConf,useRoiConf } from "./assets/js/vue.hooks.js";
-    import { ignoreCustomElementPlugin,bootstrapSwitchComponent,languageOptionDirective } from "./assets/js/vue.helper.js"
+    import { ignoreCustomElementPlugin,filterKeywordPlugin,bootstrapSwitchComponent,languageOptionDirective } from "./assets/js/vue.helper.js"
     const {createApp,ref,reactive,watchEffect,computed,nextTick,onMounted} = vue;
 
     const app = createApp({
@@ -233,6 +234,7 @@
         }
     });
     app.use(ignoreCustomElementPlugin);
+    app.use(filterKeywordPlugin);
     app.mount('#app');
 </script>
 </body>

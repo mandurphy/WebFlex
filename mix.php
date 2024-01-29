@@ -92,7 +92,7 @@
     
     import { rpc,confirm } from "./assets/js/lp.utils.js";
     import { useDefaultConf,useDefLaysConf,useHardwareConf } from "./assets/js/vue.hooks.js";
-    import { ignoreCustomElementPlugin,bootstrapSwitchComponent,nouiSliderComponent,languageOptionDirective } from "./assets/js/vue.helper.js"
+    import { ignoreCustomElementPlugin,filterKeywordPlugin,bootstrapSwitchComponent,nouiSliderComponent,languageOptionDirective } from "./assets/js/vue.helper.js"
     import mutationObserver from './assets/plugins/polyfill/mutationobserver.esm.js';
     import vue from "./assets/js/vue.build.js";
 
@@ -303,6 +303,7 @@
         }
     });
     app.use(ignoreCustomElementPlugin);
+    app.use(filterKeywordPlugin);
     app.mount('#app');
 </script>
 </body>

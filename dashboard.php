@@ -64,7 +64,7 @@
             <div class="row">
                 <div class="col-lg-12">
                     <div class="card">
-                        <div class="card-body iface py-3 ms-2">
+                        <div class="card-body iface py-3">
                             <div v-for="(item,index) in input" :key="index" :class="[{'ms-5':index > 0},{'hdmi':item.protocol==='HDMI'},{'sdi':item.protocol==='SDI' || item.protocol==='AHD'},{'disable':!item.avalible}]">
                                 <span class="info">{{item.info}}</span>
                                 <div class="icon my-1"></div>
@@ -114,7 +114,7 @@
   <script type="module">
       import { rpc } from "./assets/js/lp.utils.js";
       import { useDefaultConf } from "./assets/js/vue.hooks.js";
-      import { ignoreCustomElementPlugin,bootstrapSwitchComponent,statusPieChartComponent,statusTemperatureComponent,netFlotChartComponent } from "./assets/js/vue.helper.js"
+      import { ignoreCustomElementPlugin,filterKeywordPlugin,bootstrapSwitchComponent,statusPieChartComponent,statusTemperatureComponent,netFlotChartComponent } from "./assets/js/vue.helper.js"
       import vue from "./assets/js/vue.build.js";
       import mutationObserver from './assets/plugins/polyfill/mutationobserver.esm.js';
 
@@ -300,6 +300,7 @@
           }
       })
       app.use(ignoreCustomElementPlugin);
+      app.use(filterKeywordPlugin);
       app.mount('#app')
   </script>
   </body>

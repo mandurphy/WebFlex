@@ -70,7 +70,8 @@
                             <div v-if="Object.keys(hardwareConf).length > 0 && hardwareConf.function.dhcp" class="row mt-3">
                                 <div class="col-lg-2 offset-lg-1 lp-align-center">
                                     <label>
-                                        DHCP
+                                        <cn>DHCP</cn>
+                                        <en>DHCP</en>
                                     </label>
                                 </div>
                                 <div class="col-lg-5">
@@ -80,7 +81,8 @@
                             <div class="row mt-3">
                                 <div class="col-lg-2 offset-lg-1 lp-align-center">
                                     <label>
-                                        IP
+                                        <cn>IP</cn>
+                                        <en>IP</en>
                                     </label>
                                 </div>
                                 <div class="col-lg-6">
@@ -112,7 +114,8 @@
                             <div class="row mt-3">
                                 <div class="col-lg-2 offset-lg-1 lp-align-center">
                                     <label>
-                                        DNS
+                                        <cn>DNS</cn>
+                                        <en>DNS</en>
                                     </label>
                                 </div>
                                 <div class="col-lg-6">
@@ -122,7 +125,8 @@
                             <div class="row mt-3">
                                 <div class="col-lg-2 offset-lg-1 lp-align-center">
                                     <label>
-                                        MAC
+                                        <cn>MAC</cn>
+                                        <en>MAC</en>
                                     </label>
                                 </div>
                                 <div class="col-lg-6">
@@ -214,7 +218,8 @@
                                     <div class="row mt-4">
                                         <div class="col-lg-3 lp-align-center">
                                             <label>
-                                                DHCP
+                                                <cn>DHCP</cn>
+                                                <en>DHCP</en>
                                             </label>
                                         </div>
                                         <div class="col-lg-8">
@@ -224,7 +229,8 @@
                                     <div class="row mt-3">
                                         <div class="col-lg-3 lp-align-center">
                                             <label>
-                                                IP
+                                                <cn>IP</cn>
+                                                <en>IP</en>
                                             </label>
                                         </div>
                                         <div class="col-lg-8">
@@ -256,7 +262,8 @@
                                     <div class="row mt-3">
                                         <div class="col-lg-3 lp-align-center">
                                             <label>
-                                                DNS
+                                                <cn>DNS</cn>
+                                                <en>DNS</en>
                                             </label>
                                         </div>
                                         <div class="col-lg-8">
@@ -320,7 +327,8 @@
                             <div class="row mt-3">
                                 <div class="col-lg-2 offset-lg-1 lp-align-center">
                                     <label>
-                                        IP
+                                        <cn>IP</cn>
+                                        <en>IP</en>
                                     </label>
                                 </div>
                                 <div class="col-lg-6">
@@ -979,7 +987,7 @@
     import vue from "./assets/js/vue.build.js";
     import { rpc2,alertMsg,func,queryData,popover,formatDate,rebootConfirm,resetConfirm,clearReactiveObject } from "./assets/js/lp.utils.js";
     import { useHardwareConf,useNetManagerConf,usePasswordConf,useVideoBufferConf,useNtpConf,useTimezoneConf,usePortConf,useVersionConf,useVerLogsConf,useWpaConf } from "./assets/js/vue.hooks.js";
-    import { ignoreCustomElementPlugin,bootstrapSwitchComponent,languageOptionDirective,uploadModalComponent,upgradeModalComponent,customModalComponent,loadingButtonComponent } from "./assets/js/vue.helper.js"
+    import { ignoreCustomElementPlugin,filterKeywordPlugin,bootstrapSwitchComponent,languageOptionDirective,uploadModalComponent,upgradeModalComponent,customModalComponent,loadingButtonComponent } from "./assets/js/vue.helper.js"
     import { wifiFlagComponent,antenanFlagComponent } from "./assets/js/vue.flags.js";
     import axios from './assets/plugins/axios/axios.esm.js';
     import JsZip from "./assets/plugins/jszip/jszip.esm.js"
@@ -1389,6 +1397,7 @@
         }
     });
     app.use(ignoreCustomElementPlugin);
+    app.use(filterKeywordPlugin);
     app.mount('#app');
 </script>
 </body>

@@ -236,7 +236,7 @@
     import vue from "./assets/js/vue.build.js";
     import { rpc } from "./assets/js/lp.utils.js";
     import { useDefaultConf,useGb28181Conf } from "./assets/js/vue.hooks.js";
-    import { ignoreCustomElementPlugin,bootstrapSwitchComponent } from "./assets/js/vue.helper.js"
+    import { ignoreCustomElementPlugin,filterKeywordPlugin,bootstrapSwitchComponent } from "./assets/js/vue.helper.js"
 
     const {createApp,ref,reactive,watchEffect,computed,onMounted,nextTick} = vue;
     const app = createApp({
@@ -296,6 +296,7 @@
         }
     });
     app.use(ignoreCustomElementPlugin);
+    app.use(filterKeywordPlugin);
     app.mount('#app');
 </script>
 </body>

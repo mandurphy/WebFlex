@@ -473,7 +473,7 @@
     import vue from "./assets/js/vue.build.js";
     import { alertMsg,rpc5,clearReactiveArray,isEmpty } from "./assets/js/lp.utils.js";
     import {useDefaultConf, usePtzConf} from "./assets/js/vue.hooks.js";
-    import { ignoreCustomElementPlugin,h5PlayerComponent,bootstrapSwitchComponent,nouiSliderComponent,ptzDirectComponent,languageOptionDirective,loadingButtonComponent,customModalComponent } from "./assets/js/vue.helper.js"
+    import { ignoreCustomElementPlugin,filterKeywordPlugin,h5PlayerComponent,bootstrapSwitchComponent,nouiSliderComponent,ptzDirectComponent,languageOptionDirective,loadingButtonComponent,customModalComponent } from "./assets/js/vue.helper.js"
 
     const {createApp,ref,reactive,watchEffect,computed,onMounted} = vue;
     const app = createApp({
@@ -877,6 +877,7 @@
         }
     });
     app.use(ignoreCustomElementPlugin);
+    app.use(filterKeywordPlugin);
     app.mount('#app');
 </script>
 </body>

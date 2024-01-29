@@ -622,7 +622,7 @@
 <script type="module">
     import {rpc, alertMsg, splitArray, confirm, clearReactiveArray, isEmpty, deepCopy} from "./assets/js/lp.utils.js";
     import { useDefaultConf,useGroupConf,useHardwareConf } from "./assets/js/vue.hooks.js";
-    import { ignoreCustomElementPlugin,multipleSelectComponent,multipleInputComponent,
+    import { ignoreCustomElementPlugin,filterKeywordPlugin,multipleSelectComponent,multipleInputComponent,
         languageOptionDirective,bootstrapSwitchComponent,customModalComponent } from "./assets/js/vue.helper.js"
     import vue from "./assets/js/vue.build.js";
 
@@ -914,6 +914,7 @@
         }
     });
     app.use(ignoreCustomElementPlugin);
+    app.use(filterKeywordPlugin);
     app.mount('#app');
 </script>
 </body>

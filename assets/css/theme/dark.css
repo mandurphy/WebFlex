@@ -424,6 +424,31 @@
     border-color: var(--bs-border-color-translucent);
 }
 
+[data-bs-theme=dark] .menu .search-input {
+    border-color: var(--bs-border-color-translucent) !important;
+}
+
+[data-bs-theme=dark] .menu .search-input::placeholder {
+    color: var(--bs-body-color-semi) !important;
+}
+
+[data-bs-theme=dark] .menu .search-bar-icon {
+    color: #666 !important;
+}
+
+[data-bs-theme=dark] .menu .search-item-icon {
+    background-color: var(--bs-default-bg-color);
+    border: 1px solid var(--bs-border-color-translucent);
+}
+
+[data-bs-theme=dark] .menu .search-item-option {
+    border-color: var(--bs-border-color-translucent) !important;
+}
+
+[data-bs-theme=dark] .menu .search-tip-text {
+    color: #888 !important;
+}
+
 [data-bs-theme=dark] .login  {
     /*background-color: #202122;*/
     background-color: var(--bs-default-body-bg-color);

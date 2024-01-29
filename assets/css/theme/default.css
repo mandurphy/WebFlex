@@ -350,6 +350,11 @@
     background-color: #fff;
 }
 
+[data-bs-theme=default] .menu .search-item-icon {
+    background-color: #ffffff;
+    border: 1px solid #d8d8d8;
+}
+
 [data-bs-theme=default] .login  {
     background-color: var(--bs-body-bg-color);
     width: 100%;
