@@ -58,9 +58,8 @@ foreach ($configFiles as $historyFile) {
     if(md5_file($historyFile) == md5_file($currentFile))
         continue;
 
-    if(!strpos($currentFile, ".json") || strpos($currentFile, "version.json") ||
-        strpos($currentFile, "net.json") || strpos($currentFile, "net2.json") ||
-        strpos($currentFile, "netEx.json") || strpos($currentFile,"netManager.json"))
+    $ignoreFiles = ['version.json', 'net.json', 'net2.json', 'netEx.json', 'netManager.json', 'verLogs.json'];
+    if (!strpos($currentFile, ".json") || !in_array(basename($currentFile), $ignoreFiles))
         continue;
 
     $historyCtx = json_decode(file_get_contents($historyFile));
