@@ -55,11 +55,11 @@ function copyUserSettings(&$historyConfig, &$currentConfig,&$level=0) {
 $configFiles = getConfFiles('/tmp/history_config');
 foreach ($configFiles as $historyFile) {
     $currentFile = str_replace("/tmp/history_config/","/link/config/",$historyFile);
-    if(md5_file($historyFile) == md5_file($currentFile))
+    if(!strpos($currentFile, ".json") || md5_file($historyFile) == md5_file($currentFile))
         continue;
 
     $ignoreFiles = ['version.json', 'net.json', 'net2.json', 'netEx.json', 'netManager.json', 'verLogs.json'];
-    if (!strpos($currentFile, ".json") || !in_array(basename($currentFile), $ignoreFiles))
+    if (in_array(basename($currentFile), $ignoreFiles))
         continue;
 
     $historyCtx = json_decode(file_get_contents($historyFile));
