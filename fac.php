@@ -20,7 +20,7 @@
                                     </div>
                                 </div>
                                 <div class="card-body" >
-                                    <div class="row mt-3">
+                                    <div class="row mt-2">
                                         <div class="col-lg-4 d-flex lp-align-center">
                                             <cn>机型</cn>
                                             <en>Model</en>
@@ -31,7 +31,16 @@
                                             </select>
                                         </div>
                                     </div>
-                                    <div class="row my-3">
+                                    <div class="row mt-3">
+                                        <div class="col-lg-4 d-flex lp-align-center">
+                                            <cn>类型</cn>
+                                            <en>Chip</en>
+                                        </div>
+                                        <div class="col-lg-8">
+                                            <input class="form-control" type="text" v-model.trim.lazy="chip" readonly disabled>
+                                        </div>
+                                    </div>
+                                    <div class="row mt-3">
                                         <div class="col-lg-12 text-center">
                                             <button type="button" class="btn btn-primary border-2 px-3" @click="updateFacConf">
                                                 <cn>保存</cn>
@@ -53,7 +62,7 @@
                                     </div>
                                 </div>
                                 <div class="card-body" >
-                                    <div class="row mt-3">
+                                    <div class="row">
                                         <div class="col-lg-4 d-flex lp-align-center">
                                             <cn>认证模式</cn>
                                             <en>Auth</en>
@@ -67,7 +76,7 @@
                                             </select>
                                         </div>
                                     </div>
-                                    <div class="row my-3">
+                                    <div class="row mt-3">
                                         <div class="col-lg-12 text-center">
                                             <button type="button" class="btn btn-primary border-2 px-3" @click="updateLphConf">
                                                 <cn>保存</cn>
@@ -215,6 +224,7 @@
 <?php include ("./public/foot.inc") ?>
 
 <script type="module">
+    import { rpc } from "./assets/js/lp.utils.js"
     import { useHardwareConf,useFacConf,useLphConf,useColorModeConf,useEdidConf,useMcuConf } from "./assets/js/vue.hooks.js";
     import { ignoreCustomElementPlugin,bootstrapSwitchComponent,languageOptionDirective } from "./assets/js/vue.helper.js"
     import vue from "./assets/js/vue.build.js";
@@ -237,6 +247,7 @@
             const { mcuConf } = useMcuConf();
 
             const showMcuVersion = ref(false);
+            const chip = ref("");
 
             watchEffect(()=>{
                 if(Object.keys(hardwareConf).length > 0)
@@ -245,8 +256,10 @@
                     showMcuVersion.value = true;
             })
 
-            return {hardwareConf,updateHardwareConf,curFac,facConf,updateFacConf, colorModeConf,
-                updateColorModeConf,edidConf,updateEdidConf,lphConf,updateLphConf,mcuConf,showMcuVersion}
+            onMounted(()=>rpc("enc.getChip").then(data => chip.value = data));
+
+            return {hardwareConf,updateHardwareConf,curFac,facConf,updateFacConf, colorModeConf, updateColorModeConf,
+                edidConf,updateEdidConf,lphConf,updateLphConf,mcuConf,showMcuVersion,chip}
         }
     });
     app.use(ignoreCustomElementPlugin);

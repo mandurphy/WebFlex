@@ -37,12 +37,14 @@ class User extends Verify
             if($index == -1 || $passwd != $passes[$index]['passwd'])
                 return $this->handleRet('','error','用户名密码错误','the user name or password is incorrect');
 
+            session_start();
             $data = array(
                 'L-HASH' => $this->get_hash(),
                 'P-HASH' => $this->get_hash(),
-                'H-HASH' => $this->get_hash()
+                'H-HASH' => $this->get_hash(),
+                'Cookie' => 'PHPSESSID='.session_id()
             );
-            session_start();
+
             foreach ($data as $key => $value)
                 $_SESSION[$key] = $value;
 
