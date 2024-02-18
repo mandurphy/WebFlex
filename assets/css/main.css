@@ -85,10 +85,6 @@ a {
     background-color: #ffffff;
 }
 
-.search-bar .material-symbols-outlined {
-    font-size: 22px;
-}
-
 .dropdown-toggle-nocaret:after {
 	display: none
 }

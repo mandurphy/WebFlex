@@ -7,7 +7,7 @@
 </head>
 <body>
 <?php include ("./public/menu.inc") ?>
-<div data-simplebar style="padding: 0;">
+<div data-simplebar class="p-0">
     <main class="page-content mix" id="app" v-cloak>
         <div class="row">
             <div class="col-lg-6 mx-auto">

@@ -4,9 +4,9 @@ import '../plugins/switch/js/bootstrap-switch.min.js';
 import "../plugins/timepicker/js/bootstrap-timepicker.js";
 import * as noUiSlider from "../plugins/nouislider/js/nouislider.esm.js";
 import mutationObserver from '../plugins/polyfill/mutationobserver.esm.js'
-import { md5 } from "../plugins/md5/js.md5.esm.js";
-import { func, confirm, rebootConfirm, alertMsg, axios_post, isEmpty, formatTime, clearReactiveArray, getUrlParam } from './lp.utils.js'
-import { useDiskConf } from "./vue.hooks.js";
+import {md5} from "../plugins/md5/js.md5.esm.js";
+import {alertMsg, axios_post, clearReactiveArray, confirm, formatTime, func, getUrlParam, isEmpty, rebootConfirm} from './lp.utils.js'
+import {useDiskConf} from "./vue.hooks.js";
 
 const { ref, reactive, toRefs, watch, watchEffect, computed, onMounted, nextTick, defineAsyncComponent } = vue;
 
@@ -2300,3 +2300,91 @@ export const usbOptionComponent = {
         return {hadMountInfo, hadMountDisk, diskConf, unInstallDisk, formatDisk, turnMountDisk}
     }
 }
+
+export const searchSettingComponent = {
+    template: `<div class="position-relative search-bar d-lg-block d-none" v-click-outside="onClickOutside">
+                    <div>
+                        <input class="form-control form-control-sm rounded-5 px-5 lp-cursor-pointer" type="text" :placeholder="placeholderVal" v-model.trim="searchVal" @focus="onFilterKeywordCtx">
+                        <span class="position-absolute ms-3 translate-middle-y start-0 top-50">
+                            <i class="fa fa-search"></i>
+                        </span>
+                    </div>
+                    <ul :class="['dropdown-menu w-100 mt-2',{'show' : searchRes.length > 0}]">
+                        <div data-simplebar style="max-height: 600px">
+                            <div v-if="searchRes.length > 0" class="px-3 py-2">
+                                <div class="mb-3" v-for="(item,index) in searchRes" :key="index">
+                                    <div class="d-flex">
+                                        <div class="search-item-icon"><i :class="['font-14',item.icon]"></i></div>
+                                        <span class="mb-2 ms-2 font-16">{{item.name}}</span>
+                                    </div>
+                                    <div class="list-group">
+                                        <a v-for="(itm,idx) in item.filter" :key="idx" @click="onRedirect(item.url,itm)" class="list-group-item list-group-item-action align-items-center d-flex gap-2 lp-cursor-pointer search-item-option">
+                                            <span v-html="highlightSubstring(itm)"></span>
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </ul>
+                </div>`,
+    directives: {
+        "click-outside": clickOutsideDirective
+    },
+    setup(props, context) {
+        const state = {
+            searchVal: ref(""),
+            searchRes: reactive([]),
+            placeholderVal: ref("")
+        }
+
+        watch(state.searchVal, () => onFilterKeywordCtx());
+
+        const onRedirect = (url,data) => {
+            location.href = url+"?filter="+md5(data);
+        }
+
+        const onClickOutside = () => {
+            clearReactiveArray(state.searchRes);
+        }
+
+        const highlightSubstring = str => {
+            const regex = new RegExp('(' + state.searchVal.value + ')', 'gi');
+            return str.replace(regex, '<span style="color: red;font-weight: 700;">$1</span>');
+        }
+
+        const onFilterKeywordCtx = () => {
+            if (isEmpty(state.searchVal.value)) {
+                clearReactiveArray(state.searchRes);
+                return;
+            }
+            const html = document.querySelector("html");
+            const lang = html.getAttribute('data-bs-language');
+            const param = {"lang": lang, "filter": state.searchVal.value};
+            func("/root/filterKeywords", param).then(result => {
+                clearReactiveArray(state.searchRes);
+                state.searchRes.push(...result.data);
+            });
+        }
+
+        onMounted(()=>{
+            const update = () => {
+                const lang = html.getAttribute('data-bs-language');
+                if(lang === "cn")
+                    state.placeholderVal.value = "关键字";
+                else
+                    state.placeholderVal.value = "Search";
+            }
+
+            const html = document.querySelector('html');
+            update();
+            const observer = new mutationObserver(() => update());
+            const config = {
+                attributes: true,
+                attributeFilter: ["data-bs-language"],
+                subtree: false
+            };
+            observer.observe(html, config);
+        })
+        return {...state,onRedirect,onClickOutside,highlightSubstring,onFilterKeywordCtx}
+    }
+};

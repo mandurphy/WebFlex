@@ -424,16 +424,9 @@
     border-color: var(--bs-border-color-translucent);
 }
 
-[data-bs-theme=dark] .menu .search-input {
-    border-color: var(--bs-border-color-translucent) !important;
-}
-
-[data-bs-theme=dark] .menu .search-input::placeholder {
-    color: var(--bs-body-color-semi) !important;
-}
-
-[data-bs-theme=dark] .menu .search-bar-icon {
-    color: #666 !important;
+[data-bs-theme=dark] .search-bar input:focus{
+    border-color: transparent;
+    box-shadow: 0 0 0 0.2rem rgba(251, 187, 0, 0.15);
 }
 
 [data-bs-theme=dark] .menu .search-item-icon {

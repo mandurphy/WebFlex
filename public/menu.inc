@@ -5,12 +5,7 @@
                 <div class="btn-toggle-menu" @click="onToggleMenu">
                     <i class="fa-solid fa-bars"></i>
                 </div>
-                <div class="position-relative search-bar d-lg-block d-none" @click="onShowSearchModal">
-                    <input class="form-control form-control-sm rounded-5 px-5 lp-cursor-pointer" type="search" :placeholder="placeholderVal" readonly>
-                    <span class="position-absolute ms-3 translate-middle-y start-0 top-50">
-                        <i class="fa fa-search"></i>
-                    </span>
-                </div>
+                <search-setting></search-setting>
                 <ul class="navbar-nav top-right-menu gap-2">
                     <li class="nav-item">
                         <a class="nav-link" style="font-size: 20px;">
@@ -237,68 +232,20 @@
                 </div>
             </div>
         </aside>
-        <div class="modal fade" tabindex="-1" aria-hidden="true" ref="modal">
-            <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-lg" style="z-index: 99999">
-                <div class="modal-content">
-                    <div class="modal-header gap-2">
-                        <div class="position-relative popup-search w-100">
-                            <input class="form-control form-control-lg ps-5 border border-2 search-input" type="text" v-model.trim="searchVal">
-                            <span class="position-absolute ms-3 translate-middle-y start-0 top-50">
-                                <i class="fa fa-search search-bar-icon"></i>
-                            </span>
-                        </div>
-                    </div>
-                    <div class="modal-body" style="height: 350px">
-                        <div data-simplebar>
-                            <div v-if="searchRes.length > 0" class="search-list">
-                                <div class="mb-4" v-for="(item,index) in searchRes" :key="index">
-                                    <div class="d-flex">
-                                        <div class="search-item-icon"><i :class="['font-14',item.icon]"></i></div>
-                                        <span class="mb-2 ms-2 font-16">{{item.name}}</span>
-                                    </div>
-                                    <div class="list-group">
-                                        <a v-for="(itm,idx) in item.filter" :key="idx" @click="onRedirect(item.url,itm)" class="list-group-item list-group-item-action align-items-center d-flex gap-2 lp-cursor-pointer search-item-option">{{itm}}</a>
-                                    </div>
-                                </div>
-                            </div>
-                            <div v-else class="h-100 lp-align-center">
-                                <div>
-                                    <div class="row">
-                                        <empty-box></empty-box>
-                                    </div>
-                                    <div class="row mt-3">
-                                        <div class="text-center search-tip-text">
-                                            <cn>请输入要检索的标题关键字</cn>
-                                            <en>Please enter the keyword you want to search</en>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="modal-backdrop show" @click="onHideSearchModal"></div>
-        </div>
     </menu>
 </div>
-<script src="../assets/plugins/passive/passive.events.min.js"></script>
 <script type="module">
     import vue from "../assets/js/vue.build.js";
     import Metismenu from '../assets/plugins/metismenu/js/metisMenu.esm.js';
-    import mutationObserver from "../assets/plugins/polyfill/mutationobserver.esm.js";
-    import { func,updateSysLanguage,confirm,isEmpty,clearReactiveArray } from "../assets/js/lp.utils.js";
+    import { func,updateSysLanguage,confirm } from "../assets/js/lp.utils.js";
     import { useThemeConf,useHardwareConf } from "../assets/js/vue.hooks.js"
-    import { ignoreCustomElementPlugin,usbOptionComponent } from "../assets/js/vue.helper.js"
-    import { emptyBoxFlagComponent } from "../assets/js/vue.flags.js"
-    import { md5 } from "../assets/plugins/md5/js.md5.esm.js";
-
+    import { ignoreCustomElementPlugin,usbOptionComponent,searchSettingComponent } from "../assets/js/vue.helper.js"
 
     const { createApp,ref,reactive,watchEffect,watch,nextTick,onMounted } = vue;
     const menu = createApp({
         components:{
             "usb-option": usbOptionComponent,
-            "empty-box": emptyBoxFlagComponent
+            "search-setting": searchSettingComponent
         },
         setup() {
            const { themeConf,updateThemeConf } = useThemeConf();
@@ -307,13 +254,7 @@
            const state = {
                metismenu: ref(null),
                isMenuToggled : ref(false),
-               isSidebarHovered: ref(false),
-               showFormatModal: ref(false),
-               modal: ref(null),
-               bsModal: ref(null),
-               searchVal: ref(""),
-               searchRes: reactive([]),
-               placeholderVal: ref("关键字")
+               isSidebarHovered: ref(false)
            }
 
            const onLogout = () => {
@@ -346,20 +287,6 @@
                    })
                }
            })
-
-            watch(state.searchVal, () => {
-                if (isEmpty(state.searchVal.value)) {
-                    clearReactiveArray(state.searchRes);
-                    return;
-                }
-                const html = document.querySelector("html");
-                const lang = html.getAttribute('data-bs-language');
-                const param = {"lang": lang, "filter": state.searchVal.value};
-                func("/root/filterKeywords", param).then(result => {
-                    clearReactiveArray(state.searchRes);
-                    state.searchRes.push(...result.data);
-                });
-            });
 
            watch(state.isMenuToggled,() => {
                const body = document.querySelector('body');
@@ -410,48 +337,9 @@
                });
            }
 
-            const onShowSearchModal = () => {
-                state.bsModal.value.show();
-                const ele = document.querySelector("body > .modal-backdrop");
-                ele.remove();
-            }
-
-            const onHideSearchModal = () => {
-                state.bsModal.value.hide();
-            }
-
-            const onRedirect = (url,data) => {
-                location.href = url+"?filter="+md5(data);
-            }
-
-           onMounted(()=>{
-               new Metismenu(state.metismenu.value);
-               state.bsModal.value = new bootstrap.Modal(state.modal.value);
-
-               const update = () => {
-                   const lang = html.getAttribute('data-bs-language');
-                   if(lang === "cn")
-                       state.placeholderVal.value = "关键字";
-                   else
-                       state.placeholderVal.value = "Search";
-               }
-
-               const html = document.querySelector('html');
-               update();
-               const observer = new mutationObserver(() => {
-                   update();
-               });
-               const config = {
-                   attributes: true,
-                   attributeFilter: ["data-bs-language"],
-                   subtree: false
-               };
-               observer.observe(html, config);
-           });
-
+           onMounted(() => new Metismenu(state.metismenu.value));
            return {...state,hardwareConf,themeConf,updateThemeConf,onHrefDash,onLogout,onToggleMenu,
-               onMouseEnter,onMouseLeave,onCloseSidebar,updateSysLanguage,changeWeb,onShowSearchModal,
-               onHideSearchModal,onRedirect}
+               onMouseEnter,onMouseLeave,onCloseSidebar,updateSysLanguage,changeWeb}
        }
     });
     menu.use(ignoreCustomElementPlugin);
