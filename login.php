@@ -6,7 +6,7 @@
 </head>
 <body>
 <div class="container-fluid login auth-cover lp-align-center" id="app">
-    <div class="card border-3" style="width: 400px">
+    <div class="card border-3" style="width: 380px">
         <div class="card-body p-4">
             <div class="row">
                 <div class="col-lg-12 text-center">

@@ -293,7 +293,7 @@
                             </div>
                         </a>
                     </li>
-                    <li class="nav-item" role="presentation">
+                    <li class="nav-item" role="presentation" v-if="Object.keys(hardwareConf).length > 0 && hardwareConf.chip !== 'SS626V100'">
                         <a class="nav-link" data-bs-toggle="tab" href="#tab2" role="tab" aria-selected="false">
                             <div class="d-flex align-items-center">
                                 <div class="tab-icon"><i class="fa-regular fa-file-video me-1"></i></div>
@@ -301,7 +301,7 @@
                             </div>
                         </a>
                     </li>
-                    <li class="nav-item" role="presentation" v-if="Object.keys(hardwareConf).length > 0 && hardwareConf.chip !== '3559A' && hardwareConf.chip !== '3516E'">
+                    <li class="nav-item" role="presentation" v-if="Object.keys(hardwareConf).length > 0 && hardwareConf.chip !== '3559A' && hardwareConf.chip !== '3516E' && hardwareConf.chip !== 'SS626V100'">
                         <a class="nav-link" data-bs-toggle="tab" href="#tab3" role="tab" aria-selected="false">
                             <div class="d-flex align-items-center">
                                 <div class="tab-icon"><i class="fa-regular fa-image me-1"></i></div>
@@ -314,14 +314,6 @@
                             <div class="d-flex align-items-center">
                                 <div class="tab-icon"><i class="fa-regular fa-file-audio me-1"></i></div>
                                 <div class="tab-title"><cn>音频参数</cn><en>Audio config</en></div>
-                            </div>
-                        </a>
-                    </li>
-                    <li class="nav-item" role="presentation">
-                        <a class="nav-link" data-bs-toggle="tab" href="#tab5" role="tab" aria-selected="false">
-                            <div class="d-flex align-items-center">
-                                <div class="tab-icon"><i class="fa-brands fa-internet-explorer me-1"></i></div>
-                                <div class="tab-title"><cn>网络输入</cn><en>Network stream</en></div>
                             </div>
                         </a>
                     </li>
@@ -762,89 +754,6 @@
                             </div>
                         </div>
                     </div>
-                    <div class="tab-pane fade" id="tab5" role="tabpanel">
-                        <div class="row">
-                            <div class="col-2 text-center">
-                                <cn>频道名称</cn>
-                                <en>channel name</en>
-                            </div>
-                            <div class="col-3 text-center">
-                                <cn>流地址</cn>
-                                <en>stream url</en>
-                            </div>
-                            <div class="col text-center">
-                                <cn>帧率</cn>
-                                <en>framerate</en>
-                            </div>
-                            <div class="col text-center">
-                                <cn>缓冲模式</cn>
-                                <en>buffer mode</en>
-                            </div>
-                            <div class="col text-center">
-                                <cn>缓冲时间</cn>
-                                <en>buffer time</en>
-                            </div>
-                            <div class="col text-center">
-                                <cn>协议</cn>
-                                <en>protocol</en>
-                            </div>
-                            <div class="col text-center">
-                                <cn>视频解码</cn>
-                                <en>video decode</en>
-                            </div>
-                            <div class="col text-center">
-                                <cn>音频解码</cn>
-                                <en>audio decode</en>
-                            </div>
-                            <div class="col text-center">
-                                <cn>开关</cn>
-                                <en>enable</en>
-                            </div>
-                        </div>
-                        <hr >
-                        <div class="row mt-1" v-for="(item,index) in handleNetConf" :key="item.id">
-                            <div class="col-lg-12">
-                                <div class="row">
-                                    <div class="col-2 text-center">
-                                        <input type="text" class="form-control" v-model.trim.lazy="item.name">
-                                    </div>
-                                    <div class="col-3">
-                                        <input type="text" class="form-control" v-model.trim.lazy="item.net.path">
-                                    </div>
-                                    <div class="col">
-                                        <input type="text" class="form-control" v-model.trim.lazy="item.net.framerate">
-                                    </div>
-                                    <div class="col">
-                                        <select class="form-select" v-model="item.net.bufferMode">
-                                            <option value="0" cn="一般" en="Normal" v-language-option></option>
-                                            <option value="1" cn="实时" en="NoBuffer" v-language-option></option>
-                                            <option value="2" cn="缓冲" en="Buffer" v-language-option></option>
-                                            <option value="3" cn="帧同步" en="Sync" v-language-option></option>
-                                        </select>
-                                    </div>
-                                    <div class="col">
-                                        <input type="text" class="form-control" v-model.trim.lazy="item.net.minDelay">
-                                    </div>
-                                    <div class="col">
-                                        <select class="form-select" v-model="item.net.protocol">
-                                            <option value="udp">UDP</option>
-                                            <option value="tcp">TCP</option>
-                                        </select>
-                                    </div>
-                                    <div class="col lp-align-center">
-                                        <bs-switch v-model="item.net.decodeV"></bs-switch>
-                                    </div>
-                                    <div class="col lp-align-center">
-                                        <bs-switch v-model="item.net.decodeA"></bs-switch>
-                                    </div>
-                                    <div class="col lp-align-center">
-                                        <bs-switch v-model="item.enable"></bs-switch>
-                                    </div>
-                                </div>
-                                <hr >
-                            </div>
-                        </div>
-                    </div>
                     
                     <div class="row mt-3">
                         <div class="col-lg-12 text-center">
@@ -905,6 +814,8 @@
             
             const handleEncConf = computed(()=>{
                 return defaultConf.filter((item,index)=>{
+                    if(hardwareConf.chip === 'SS626V100')
+                        return !!(item.type !== 'net' && item.encv !== undefined);
                     return !!((item.type === 'net' && item.net.decodeV) || (item.type !== 'net' && item.encv !== undefined));
                 })
             })
@@ -982,7 +893,7 @@
             
             return {globalConf,defaultConf,hardwareConf,
                 handleEncConf, handleAdvConf,handleVdoConf,handleAdoConf,
-                handleNetConf,saveGlobalConfByLocal,saveDefaultConf}
+                saveGlobalConfByLocal,saveDefaultConf}
         }
     });
     app.use(ignoreCustomElementPlugin);

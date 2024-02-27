@@ -61,7 +61,7 @@
                     </div>
                 </div>
             </div>
-            <div class="row">
+            <div class="row" v-if="Object.keys(hardwareConf).length > 0 && hardwareConf.fac !== 'DEC32'">
                 <div class="col-lg-12">
                     <div class="card">
                         <div class="card-body iface py-3">
@@ -113,7 +113,7 @@
 
   <script type="module">
       import { rpc } from "./assets/js/lp.utils.js";
-      import { useDefaultConf } from "./assets/js/vue.hooks.js";
+      import { useDefaultConf,useHardwareConf } from "./assets/js/vue.hooks.js";
       import { ignoreCustomElementPlugin,filterKeywordPlugin,bootstrapSwitchComponent,statusPieChartComponent,statusTemperatureComponent,netFlotChartComponent } from "./assets/js/vue.helper.js"
       import vue from "./assets/js/vue.build.js";
       import mutationObserver from './assets/plugins/polyfill/mutationobserver.esm.js';
@@ -151,6 +151,7 @@
               }
 
               const { defaultConf } = useDefaultConf();
+              const { hardwareConf } = useHardwareConf();
 
               const getData1 = (d) => {
                   state.data1.shift();
@@ -296,7 +297,7 @@
                 }
               )
 
-              return {...state, makeImgUrl,handleChnVolume}
+              return {...state, hardwareConf,makeImgUrl,handleChnVolume}
           }
       })
       app.use(ignoreCustomElementPlugin);

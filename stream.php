@@ -762,7 +762,7 @@
 
 <script type="module">
 
-    import {rpc, extend, deepCopy, clearReactiveArray} from "./assets/js/lp.utils.js";
+    import {rpc, extend, deepCopy, clearReactiveArray, clearReactiveObject} from "./assets/js/lp.utils.js";
     import { useDefaultConf,useHardwareConf,usePortConf } from "./assets/js/vue.hooks.js";
     import { ignoreCustomElementPlugin,filterKeywordPlugin,bootstrapSwitchComponent,multipleInputComponent,languageOptionDirective } from "./assets/js/vue.helper.js"
     import vue from "./assets/js/vue.build.js";
@@ -858,7 +858,7 @@
             }
 
             const unwatch = watchEffect(()=>{
-                if(defaultConf.length > 0 && Object.keys(portConf).length >0) {
+                if(defaultConf.length > 0 && Object.keys(portConf).length >0 && Object.keys(hardwareConf).length > 0) {
                     for (let i = 0; i < defaultConf.length; i++) {
                         if(defaultConf[i].hasOwnProperty("stream")) {
                             let rtsp = defaultConf[i].stream.rtsp;
@@ -891,7 +891,12 @@
                         }
                     }
 
-                    Object.assign(state.globalConf, deepCopy(defaultConf[0]));
+                    Object.assign(state.globalConf, deepCopy(defaultConf[0]))
+                    if(hardwareConf.chip === 'SS626V100') {
+                        clearReactiveObject(state.globalConf);
+                        Object.assign(state.globalConf, deepCopy(defaultConf[defaultConf.length-1]));
+                    }
+
                     state.globalConf.stream.udp.port += "+";
                     state.globalConf.stream2.udp.port += "+";
                     updatePlayUrl();
@@ -904,7 +909,13 @@
                 return state.pushSpeed[index];
             }
 
-            const handleEnableConf = computed(() => defaultConf.filter(item => !!(item.enable || item.enable2)));
+            const handleEnableConf = computed(()=> {
+                return defaultConf.filter(item => {
+                    if(hardwareConf.chip === 'SS626V100')
+                        return item.type !== 'net'
+                    return !!(item.enable || item.enable2);
+                })
+            })
 
             const handlePlayUrl = (index,type)=>{
                 if(state.playUrls.length > index)
