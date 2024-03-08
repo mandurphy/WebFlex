@@ -25,7 +25,11 @@
                                     </div>
                                     <div class="row">
                                         <div class="col-lg-12 mt-2">
-                                            <img :src="chnImgUrl" class="card-img" alt="...">
+                                            <div class="card-img-content">
+                                                <div class="card-img-background"></div>
+                                                <img :src="chnImgUrl" class="card-img" :style="handleAutoStyle()">
+                                                <img :src="chnImgUrl" class="card-img" style="visibility: hidden">
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -422,7 +426,7 @@
             const { resConf,handleResConf } = useResConf();
 
             const state = {
-                chnIndex : ref(0),
+                chnIndex : ref(-1),
                 chnImgUrl : ref(""),
                 handleEditData: reactive({}),
                 layIndex : ref(0),
@@ -483,7 +487,24 @@
                     unwatch();
                 }
             })
-            
+
+
+            const handleAutoStyle = () => {
+                if(state.chnIndex.value < 0)
+                    return "";
+                const encv = defaultConf[state.chnIndex.value].encv;
+                let { width, height} = encv;
+                width = Number(width) > 0 ? Number(width) : 1920;
+                height = Number(height) > 0 ? Number(height) : 1080;
+                let ww = "100%";
+                let hh = (16 * height) / (width * 9) * 100 + "%";
+                if (width < height) {
+                    hh = "100%";
+                    ww = (9 * width) / (height * 16) * 100 + "%";
+                }
+                return `position: absolute;width: ${ww};height: ${hh};`;
+            };
+
             const editOverlay = (idx) => {
                 state.layIndex.value = idx;
             }
@@ -567,8 +588,8 @@
                 alertMsg(errMsg, 'error');
             }
 
-            return {...state,handleEnableConf,handleOverlayConf,handleEditData,handlePngConf,handleFontConf,resConf,
-                editOverlay,delOverlay,addOverlay,delCurrentRes,uploadRes,uploadSuccess,uploadError,updateOverlayConf}
+            return {...state,defaultConf,handleEnableConf,handleOverlayConf,handleEditData,handlePngConf,handleFontConf,resConf,
+                handleAutoStyle,editOverlay,delOverlay,addOverlay,delCurrentRes,uploadRes,uploadSuccess,uploadError,updateOverlayConf}
         }
     });
     app.use(ignoreCustomElementPlugin);

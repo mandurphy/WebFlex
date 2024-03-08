@@ -439,6 +439,22 @@
     color: #ddd;
 }
 
+[data-bs-theme=default] .dashboard .card-img-content .card-img-background {
+    background: var(--bs-body-bg-color);
+}
+
+[data-bs-theme=default] .overlay .card-img-content .card-img-background {
+    background: var(--bs-body-bg-color);
+}
+
+[data-bs-theme=default] .mix .card-img-content .card-img-background {
+    background: var(--bs-body-bg-color);
+}
+
+[data-bs-theme=default] .mix .layout-bg {
+    background: var(--bs-body-bg-color);
+}
+
 [data-bs-theme=default] .mix .lay-border {
     border: 1px solid #fff;
 }

@@ -10,8 +10,8 @@
 <div data-simplebar class="p-0">
     <main class="page-content mix" id="app" v-cloak>
         <div class="row">
-            <div class="col-lg-6 mx-auto">
-                <div class="card">
+            <div class="col-lg-6 mx-auto lp-equal-height-container">
+                <div class="card lp-equal-height-item">
                     <div class="card-body">
                         <div class="row">
                             <div class="d-flex align-items-center gap-3 px-2 py-1">
@@ -44,37 +44,47 @@
                         </div>
                         <div class="row">
                             <div class="col-lg-12 mt-2 mb-2">
-                                <img :src="chnImgUrl" class="card-img" alt="...">
+                                <div class="card-img-content">
+                                    <div class="card-img-background"></div>
+                                    <img :src="chnImgUrl" class="card-img" :style="handleAutoStyle()">
+                                    <img :src="chnImgUrl" class="card-img" :style="['visibility: hidden;position: relative;height:0',{'paddingTop':imgRatio+'%'}]">
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
     
-            <div class="col-lg-6 mx-auto">
-                <div class="card">
-                    <div class="card-header bg-transparent">
-                        <div class="p-2 mb-0 d-flex align-items-end">
-                            <cn>布局设定</cn>
-                            <en>Layout config</en>
+            <div class="col-lg-6 mx-auto lp-equal-height-container">
+                <div class="card lp-equal-height-item">
+                    <div class="card-body pb-4 d-flex flex-column">
+                        <div class="row flex-grow-0">
+                            <div class="d-flex align-items-center gap-3 px-2 py-1">
+                                <div class="p-2 mb-0 align-items-end">
+                                    <cn>布局设定</cn>
+                                    <en>Layout config</en>
+                                </div>
+                            </div>
                         </div>
-                    </div>
-                    <div class="card-body pb-4" >
-                        <div class="lp-aspect-ratio">
-                            <div class="aspect-ratio-content bg-black">
-                                <div class="lay-border" v-for="(item,index) in handleActiveDefLayConf.layouts" :style="{position:'absolute',width:item.pos.w * 100+'%',height:item.pos.h*100+'%',left:item.pos.x*100+'%',top:item.pos.y*100+'%'}">
-                                    <div :style="{width:'100%',height:'100%',backgroundColor: handleLayBackColor(index)}">
-                                        <div class="d-flex align-items-center gap-1 border-0 px-2 py-1">
-                                            <div class="flex-grow-1">
-                                                <select class="form-select" v-model="defaultConf[mixIndex].srcV[index]" @change="updateDefaultConf('noTip')">
-                                                    <option value="-1" cn="空" en="none" v-language-option></option>
-                                                    <option v-for="(it,index) in handleLayoutChnSelect(defaultConf[mixIndex].srcV[index])" :value="it.id">{{it.name}}</option>
-                                                </select>
-                                            </div>
-                                            <div class="flex-grow-0">
-                                                <button :class="['btn',{'btn-default':handleActiveVolume(index)},{'px-2 btn-primary':!handleActiveVolume(index)}]" @click="onUpdateActiveVolume(defaultConf[mixIndex].srcV[index])">
-                                                    <i :class="['fa-solid',{'fa-volume-off':handleActiveVolume(index)},{'fa-volume-high':!handleActiveVolume(index)}]"></i>
-                                                </button>
+                        <div class="row flex-grow-1">
+                            <div class="col-lg-12 mt-2 mb-2">
+                                <div class="layout-bg card-img-content pb-0" style="height: 100%">
+                                    <div class="bg-black" :style="handleAutoStyle()">
+                                        <div class="lay-border" v-for="(item,index) in handleActiveDefLayConf.layouts" :style="{position:'absolute',width:item.pos.w * 100+'%',height:item.pos.h*100+'%',left:item.pos.x*100+'%',top:item.pos.y*100+'%'}">
+                                            <div :style="{width:'100%',height:'100%',backgroundColor: handleLayBackColor(index)}">
+                                                <div class="d-flex align-items-center gap-1 border-0 px-2 py-1">
+                                                    <div class="flex-grow-1">
+                                                        <select class="form-select" v-model="defaultConf[mixIndex].srcV[index]" @change="updateDefaultConf('noTip')">
+                                                            <option value="-1" cn="空" en="none" v-language-option></option>
+                                                            <option v-for="(it,index) in handleLayoutChnSelect(defaultConf[mixIndex].srcV[index])" :value="it.id">{{it.name}}</option>
+                                                        </select>
+                                                    </div>
+                                                    <div class="flex-grow-0">
+                                                        <button :class="['btn',{'btn-default':handleActiveVolume(index)},{'px-2 btn-primary':!handleActiveVolume(index)}]" @click="onUpdateActiveVolume(defaultConf[mixIndex].srcV[index])">
+                                                            <i :class="['fa-solid',{'fa-volume-off':handleActiveVolume(index)},{'fa-volume-high':!handleActiveVolume(index)}]"></i>
+                                                        </button>
+                                                    </div>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
@@ -115,7 +125,8 @@
                 chnImgUrl: ref(""),
                 curLayId: ref(-1),
                 mixIndex: ref(-1),
-                curTheme: ref("default")
+                curTheme: ref("default"),
+                imgRatio: ref("56.25")
             }
             
             const updateChnImage = () => {
@@ -200,12 +211,35 @@
                                 break;
                             }
                         }
+
+                        let { width, height} = mixChn.encv;
+                        width = Number(width) > 0 ? Number(width) : 1920;
+                        height = Number(height) > 0 ? Number(height) : 1080;
+
+                        if(width < height)
+                            state.imgRatio.value = "85";
                         state.mixIndex.value = i;
                     }
                     updateChnImage();
                     unwatch();
                 }
             })
+
+            const handleAutoStyle = () => {
+                if(state.mixIndex.value < 0)
+                    return "";
+                const encv = defaultConf[state.mixIndex.value].encv;
+                let { width, height} = encv;
+                width = Number(width) > 0 ? Number(width) : 1920;
+                height = Number(height) > 0 ? Number(height) : 1080;
+                let ww = "100%";
+                let hh = height / (width * state.imgRatio.value/100) * 100 + "%";
+                if (width < height) {
+                    hh = "100%";
+                    ww = (state.imgRatio.value/100 * width) / height * 100 + "%";
+                }
+                return `position: absolute;margin:0 auto;width: ${ww};height: ${hh};`;
+            };
 
             const hrefDefLayout = () => {
                 confirm({
@@ -299,7 +333,7 @@
 
             return {...state,defaultConf,defLaysConf,hardwareConf,handleEnableConf,handleActiveDefLayConf,
                 hrefDefLayout,onChangeLayout,handleLayBackColor,handleActiveVolume,onUpdateActiveVolume,
-                handleLayoutChnSelect,updateDefaultConf}
+                handleAutoStyle,handleLayoutChnSelect,updateDefaultConf}
         }
     });
     app.use(ignoreCustomElementPlugin);

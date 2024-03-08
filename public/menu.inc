@@ -137,6 +137,12 @@
                                     <div class="menu-title"><cn>集成通信</cn><en>Intercom</en></div>
                                 </a>
                             </li>
+                            <li v-if="Object.keys(hardwareConf).length > 0 && (hardwareConf.function.remote)">
+                                <a href="remote.php">
+                                    <i class="fa-brands fa-cloudsmith"></i>
+                                    <div class="menu-title"><cn>红外遥控</cn><en>Remote</en></div>
+                                </a>
+                            </li>
                             <li v-if="Object.keys(hardwareConf).length > 0 && (hardwareConf.function.serialport || hardwareConf.function.button)">
                                 <a href="uart.php">
                                     <i class="fa-solid fa-link"></i>

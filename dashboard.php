@@ -67,7 +67,7 @@
                         <div class="card-body iface py-3">
                             <div v-for="(item,index) in input" :key="index" :class="[{'ms-5':index > 0},{'hdmi':item.protocol==='HDMI'},{'sdi':item.protocol==='SDI' || item.protocol==='AHD'},{'disable':!item.avalible}]">
                                 <span class="info">{{item.info}}</span>
-                                <div class="icon my-1"></div>
+                                <div :class="['icon']"></div>
                                 <span class="name">{{item.name}}</span>
                             </div>
                         </div>
@@ -91,7 +91,11 @@
                             <div class="row row-cols-2 row-cols-lg-4 g-3">
                                 <div v-for="(item,index) in preview" :key="index" class="col">
                                     <div class="card">
-                                        <img :src="makeImgUrl(item.id)" class="card-img-top">
+                                        <div class="card-img-content">
+                                            <div class="card-img-background"></div>
+                                            <img :src="makeImgUrl(item.id)" class="card-img-top" :style="handleImgStyle(item.encv.width,item.encv.height)">
+                                            <img :src="makeImgUrl(item.id)" class="card-img-top" style="visibility: hidden">
+                                        </div>
                                         <div class="chn-volume" :style="{'width':handleChnVolume(item.id,'L')}"></div>
                                         <div class="chn-volume" :style="{'width':handleChnVolume(item.id,'R')}"></div>
                                         <div class="card-body">
@@ -206,10 +210,23 @@
                   return "snap/snap" + id + ".jpg?rnd=" + Math.random();
               }
 
+              const handleImgStyle = (width, height) => {
+                  width = Number(width) > 0 ? Number(width) : 1920;
+                  height = Number(height) > 0 ? Number(height) : 1080;
+                  let ww = "100%";
+                  let hh = (16 * height) / (width * 9) * 100 + "%";
+                  if (width < height) {
+                      hh = "100%";
+                      ww = (9 * width) / (height * 16) * 100 + "%";
+                  }
+                  return `position: absolute;width: ${ww};height: ${hh};`;
+              };
+
+
               const updatePreview = () => {
                   if(state.preview.length === 0) {
                       for(let i=0;i<defaultConf.length;i++) {
-                          if (!defaultConf[i].enable  || ( defaultConf[i].type === "net" && !defaultConf[i].net.decodeV))
+                          if (!defaultConf[i].enable  || ( (defaultConf[i].type === "net" || defaultConf[i].type === "file") && !defaultConf[i].net.decodeV))
                               continue;
                           state.preview.push(defaultConf[i]);
                       }
@@ -297,7 +314,7 @@
                 }
               )
 
-              return {...state, hardwareConf,makeImgUrl,handleChnVolume}
+              return {...state, hardwareConf,makeImgUrl,handleImgStyle,handleChnVolume}
           }
       })
       app.use(ignoreCustomElementPlugin);
