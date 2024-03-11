@@ -523,7 +523,7 @@
                                         <input type="text" class="form-control" v-model.trim.lazy="item.encv.height">
                                     </div>
                                     <div class="col-2">
-                                        <select class="form-control" v-model="item.encv.gopmode">
+                                        <select class="form-select" v-model="item.encv.gopmode">
                                             <option value="0">Normal</option>
                                             <option value="1">SmartP</option>
                                             <option value="2">DualP</option>
@@ -555,7 +555,7 @@
                                         <input type="text" class="form-control" v-model.trim.lazy="item.encv2.height">
                                     </div>
                                     <div class="col-2">
-                                        <select class="form-control" v-model="item.encv2.gopmode">
+                                        <select class="form-select" v-model="item.encv2.gopmode">
                                             <option value="0">Normal</option>
                                             <option value="1">SmartP</option>
                                             <option value="2">DualP</option>
@@ -813,7 +813,7 @@
             });
             
             const handleEncConf = computed(()=>{
-                return defaultConf.filter((item,index)=>{
+                return defaultConf.filter(item => {
                     if(hardwareConf.chip === 'SS626V100')
                         return !!(item.type !== 'net' && item.encv !== undefined);
                     return !!((item.type === 'net' && item.net.decodeV) || (item.type !== 'net' && item.encv !== undefined));
@@ -821,7 +821,7 @@
             })
             
             const handleAdvConf = computed(()=>{
-                return defaultConf.filter((item,index)=>{
+                return defaultConf.filter(item => {
                     return !!(item.enable && item.type !== "ndi");
                 })
             })
@@ -833,14 +833,8 @@
             })
             
             const handleAdoConf = computed(()=>{
-                return defaultConf.filter((item,index)=>{
+                return defaultConf.filter(item => {
                     return !!((item.type === 'net' && item.net.decodeA) || (item.type !== 'net' && item.enca !== undefined));
-                })
-            })
-
-            const handleNetConf = computed(()=>{
-                return defaultConf.filter((item,index)=>{
-                    return item.type === 'net';
                 })
             })
 

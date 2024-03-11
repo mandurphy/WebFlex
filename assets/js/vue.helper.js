@@ -438,7 +438,7 @@ export const bootstrapSwitchComponent = {
 
 
 export const multipleSelectComponent = {
-    template: `<select class="form-select" v-model="selectValue" @change="onSelectChange">
+    template: `<select class="form-select" v-model="selectValue" @change="onSelectChange" ref="selectEle">
                     <slot></slot>
                </select>`,
     props: {
@@ -458,9 +458,29 @@ export const multipleSelectComponent = {
     setup(props, context) {
 
         let selectValue = ref("");
+        let selectEle = ref(null);
+        let customVal = "";
 
         watchEffect(() => {
             selectValue.value = props.value1 + props.split + props.value2;
+            if (selectEle.value) {
+                let valueExists = false;
+                for (let i = 0; i < selectEle.value.options.length; i++) {
+                    if (selectValue.value === selectEle.value.options[i].value) {
+                        valueExists = true;
+                    }
+                    if (customVal === selectEle.value.options[i].value) {
+                        selectEle.value.remove(i);
+                    }
+                }
+
+                if (!valueExists) {
+                    const opt = new Option(selectValue.value, selectValue.value);
+                    opt.selected = true;
+                    selectEle.value.add(opt);
+                    customVal = selectValue.value;
+                }
+            }
         })
 
         const parseValue = (value) => {
@@ -480,7 +500,7 @@ export const multipleSelectComponent = {
             selectValue.value = props.value1 + props.split + props.value2;
         })
 
-        return {selectValue, onSelectChange}
+        return {selectValue, onSelectChange,selectEle}
     }
 };
 
