@@ -1304,11 +1304,6 @@ input[type="password"]::-ms-reveal{
     outline: none;
 }
 
-.push .lp-aspect-ratio {
-    position: relative;
-    padding-top: 69.1%;
-}
-
 .push .hr-container {
     position: relative;
     display: inline-block;

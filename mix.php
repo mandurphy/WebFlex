@@ -56,19 +56,17 @@
             </div>
     
             <div class="col-lg-6 mx-auto lp-equal-height-container">
-                <div class="card lp-equal-height-item">
-                    <div class="card-body pb-4 d-flex flex-column">
-                        <div class="row flex-grow-0">
-                            <div class="d-flex align-items-center gap-3 px-2 py-1">
-                                <div class="p-2 mb-0 align-items-end">
-                                    <cn>布局设定</cn>
-                                    <en>Layout config</en>
-                                </div>
-                            </div>
+                <div class="card lp-equal-height-item d-flex flex-column">
+                    <div class="card-header bg-transparent flex-grow-0">
+                        <div class="p-2 mb-0 d-flex align-items-end">
+                            <cn>布局设定</cn>
+                            <en>Layout config</en>
                         </div>
-                        <div class="row flex-grow-1">
+                    </div>
+                    <div class="card-body pb-4 flex-grow-1">
+                        <div class="row flex-grow-1 h-100">
                             <div class="col-lg-12 mt-2 mb-2">
-                                <div class="layout-bg card-img-content pb-0" style="height: 100%">
+                                <div class="layout-bg card-img-content pb-0 h-100">
                                     <div class="bg-black" :style="handleAutoStyle()">
                                         <div class="lay-border" v-for="(item,index) in handleActiveDefLayConf.layouts" :style="{position:'absolute',width:item.pos.w * 100+'%',height:item.pos.h*100+'%',left:item.pos.x*100+'%',top:item.pos.y*100+'%'}">
                                             <div :style="{width:'100%',height:'100%',backgroundColor: handleLayBackColor(index)}">
