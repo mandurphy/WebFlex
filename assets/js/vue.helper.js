@@ -459,28 +459,9 @@ export const multipleSelectComponent = {
 
         let selectValue = ref("");
         let selectEle = ref(null);
-        let customVal = "";
 
         watchEffect(() => {
             selectValue.value = props.value1 + props.split + props.value2;
-            if (selectEle.value) {
-                let valueExists = false;
-                for (let i = 0; i < selectEle.value.options.length; i++) {
-                    if (selectValue.value === selectEle.value.options[i].value) {
-                        valueExists = true;
-                    }
-                    if (customVal === selectEle.value.options[i].value) {
-                        selectEle.value.remove(i);
-                    }
-                }
-
-                if (!valueExists) {
-                    const opt = new Option(selectValue.value, selectValue.value);
-                    opt.selected = true;
-                    selectEle.value.add(opt);
-                    customVal = selectValue.value;
-                }
-            }
         })
 
         const parseValue = (value) => {
@@ -498,6 +479,18 @@ export const multipleSelectComponent = {
 
         onMounted(() => {
             selectValue.value = props.value1 + props.split + props.value2;
+            if (selectEle.value) {
+                let valueExists = false;
+                for (let i = 0; i < selectEle.value.options.length; i++) {
+                    if (selectValue.value === selectEle.value.options[i].value)
+                        valueExists = true;
+                }
+                if (!valueExists) {
+                    const opt = new Option(selectValue.value, selectValue.value);
+                    opt.selected = true;
+                    selectEle.value.add(opt);
+                }
+            }
         })
 
         return {selectValue, onSelectChange,selectEle}
