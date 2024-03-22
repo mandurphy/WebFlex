@@ -2383,7 +2383,7 @@ export const searchSettingComponent = {
             const update = () => {
                 const lang = html.getAttribute('data-bs-language');
                 if(lang === "cn")
-                    state.placeholderVal.value = "关键字";
+                    state.placeholderVal.value = "标题";
                 else
                     state.placeholderVal.value = "Search";
             }

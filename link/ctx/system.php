@@ -227,7 +227,7 @@ class System extends Basic
     }
 
     function changeWebVersion($param) {
-        if($param === "classic")
+        if($param["web"] === "classic" && $param["turn"])
         {
             $netManager = json_decode(file_get_contents("/link/config/netManager.json"),true);
             $net = $netManager["interface"]["eth0"];
@@ -242,8 +242,14 @@ class System extends Basic
 
             file_put_contents("/link/config/net.json",json_encode($net,JSON_UNESCAPED_SLASHES|JSON_UNESCAPED_UNICODE|JSON_PRETTY_PRINT));
             file_put_contents("/link/config/wifi.json",json_encode($wifi,JSON_UNESCAPED_SLASHES|JSON_UNESCAPED_UNICODE|JSON_PRETTY_PRINT));
-            file_put_contents("/link/config/auto/webVer.json",json_encode(array("web"=>"classic")));
+            unset($param["turn"]);
+            file_put_contents("/link/config/auto/webVer.json",json_encode($param));
             exec("sync && reboot");
+        }
+        else
+        {
+            unset($param["turn"]);
+            file_put_contents("/link/config/auto/webVer.json",json_encode($param));
         }
         return $this->handleRet($param,'success','切换成功','switch successfully');
     }

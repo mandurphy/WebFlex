@@ -898,7 +898,6 @@ export const useRttyConf = () => {
 }
 
 export const useFacConf = () => {
-    const curFac = ref("");
     const facConf = reactive([]);
     const handleFacConf = () => {
         func("/root/scanFacDir").then(data => {
@@ -909,9 +908,9 @@ export const useFacConf = () => {
         })
     }
 
-    const updateFacConf = (tip = "tip") => {
+    const updateFacConf = (curFac,tip = "tip") => {
         return new Promise((resolve,reject) => {
-            func("/root/changeFacType",curFac.value).then(data => {
+            func("/root/changeFacType",curFac).then(data => {
                 if ( data.status !== "success" ) {
                     reject(data);
                     if(tip !== "noTip")
@@ -925,7 +924,7 @@ export const useFacConf = () => {
         })
     }
     onMounted(handleFacConf);
-    return { curFac,facConf,updateFacConf }
+    return { facConf,updateFacConf }
 }
 
 export const useColorModeConf = () => {
@@ -1039,6 +1038,48 @@ export const useMcuConf = () => {
 
     onMounted(handleMcuConf);
     return { mcuConf }
+}
+
+export const useWebVerConf = () => {
+    const webVerConf =reactive({});
+    const handleWebVerConf = () => {
+        queryData("config/auto/webVer.json").then((conf)=>{
+            Object.assign(webVerConf,conf)
+        });
+    }
+
+    const updateWebVerConf = (turn = true,tip = "noTip") => {
+        return new Promise((resolve,reject) => {
+            webVerConf.turn = turn;
+            func("/system/changeWebVersion",webVerConf).then(data => {
+                if ( data.status !== "success" ) {
+                    reject();
+                    if(tip !== "noTip")
+                        alertMsg('<cn>保存设置失败</cn><en>Save config failed!</en>', 'error');
+                } else {
+                    resolve();
+                    if(tip !== "noTip")
+                        alertMsg('<cn>保存设置成功</cn><en>Save config successfully!</en>', 'success');
+                }
+            })
+        })
+    }
+
+    onMounted(handleWebVerConf);
+    return { webVerConf,updateWebVerConf }
+}
+
+
+export const useRemoteConf = () => {
+    const remoteConf =reactive({});
+    const handleRemoteConf = () => {
+        queryData("config/misc/remote/remote_standard.json").then((conf)=>{
+            Object.assign(remoteConf,conf)
+        });
+    }
+
+    onMounted(handleRemoteConf);
+    return { remoteConf }
 }
 
 

@@ -19,7 +19,7 @@
                             <i v-else class="fa-regular fa-sun" @click="updateThemeConf('default')"></i>
                         </a>
                     </li>
-                    <li class="nav-item" v-if="Object.keys(hardwareConf).length > 0 && (hardwareConf.fac !== 'REC1' && hardwareConf.fac !== 'ENC8' && hardwareConf.fac !== 'DEC32')">
+                    <li class="nav-item" v-if="Object.keys(webVerConf).length > 0 && webVerConf.switch">
                         <a class="nav-link" style="font-size: 19px;" @click="changeWeb">
                             <i class="fa-solid fa-arrow-right-arrow-left"></i>
                         </a>
@@ -244,7 +244,7 @@
     import vue from "../assets/js/vue.build.js";
     import Metismenu from '../assets/plugins/metismenu/js/metisMenu.esm.js';
     import { func,updateSysLanguage,confirm } from "../assets/js/lp.utils.js";
-    import { useThemeConf,useHardwareConf } from "../assets/js/vue.hooks.js"
+    import { useThemeConf,useHardwareConf,useWebVerConf } from "../assets/js/vue.hooks.js"
     import { ignoreCustomElementPlugin,usbOptionComponent,searchSettingComponent } from "../assets/js/vue.helper.js"
 
     const { createApp,ref,reactive,watchEffect,watch,nextTick,onMounted } = vue;
@@ -255,7 +255,8 @@
         },
         setup() {
            const { themeConf,updateThemeConf } = useThemeConf();
-            const { hardwareConf } = useHardwareConf();
+           const { webVerConf,updateWebVerConf } = useWebVerConf();
+           const { hardwareConf } = useHardwareConf();
 
            const state = {
                metismenu: ref(null),
@@ -333,7 +334,10 @@
                            text: "<cn>切换</cn><en>Switch</en>",
                            btnClass: 'btn-primary',
                            keys: ['enter'],
-                           action: () => func("/system/changeWebVersion","classic")
+                           action: () => {
+                               webVerConf.web = "classic";
+                               updateWebVerConf();
+                           }
                        },
                        cancel: {
                            text: "<cn>取消</cn><en>Cancel</en>"
@@ -344,8 +348,8 @@
            }
 
            onMounted(() => new Metismenu(state.metismenu.value));
-           return {...state,hardwareConf,themeConf,updateThemeConf,onHrefDash,onLogout,onToggleMenu,
-               onMouseEnter,onMouseLeave,onCloseSidebar,updateSysLanguage,changeWeb}
+           return {...state,hardwareConf,themeConf,webVerConf,updateThemeConf,onHrefDash,onLogout,
+               onToggleMenu,onMouseEnter,onMouseLeave,onCloseSidebar,updateSysLanguage,changeWeb}
        }
     });
     menu.use(ignoreCustomElementPlugin);

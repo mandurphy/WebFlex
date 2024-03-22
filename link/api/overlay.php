@@ -53,11 +53,12 @@ class Overlay extends Verify
 
             if($mark)
             {
-                $overlayConf = [];
+                $overlayConf = $this->load_conf('/link/config/auto/overlay.json');
                 for($i=0;$i<count($params);$i++)
                 {
                     $param = $params[$i];
-                    $overlayConf[] = $param['overlay'];
+                    $idx = $param['id'];
+                    $overlayConf[$idx] = $param['overlay'];
                 }
                 $client = new RpcClient();
                 $client->update_overlay($overlayConf);
