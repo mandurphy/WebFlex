@@ -608,7 +608,7 @@
 }
 
 [data-bs-theme=dark] .output .border-right {
-    border-right: 1px solid var(--bs-border-color-translucent);
+    border-right: 1px solid rgb(50,50,50);
 }
 
 [data-bs-theme=dark] .sys .snInput {

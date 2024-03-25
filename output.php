@@ -10,7 +10,7 @@
 <div data-simplebar>
     <main class="page-content output" id="app" v-cloak>
         <div v-if="Object.keys(hardwareConf).length > 0" :class="['row',{'lp-display-hide':!hardwareConf.function.videoOut}]">
-            <div class="col-lg-12 mx-auto">
+            <div class="col-lg-6 mx-auto">
                 <div class="card">
                     <div class="card-header bg-transparent">
                         <div class="p-2 mb-0 d-flex align-items-end">
@@ -35,7 +35,7 @@
                             </div>
                         </div>
                         <div class="row">
-                            <div class="col-lg-6 border-right">
+                            <div class="col-lg-12">
                                 <div class="row mt-4">
                                     <div class="col-lg-3 offset-lg-1 lp-align-center">
                                         <label>
@@ -200,8 +200,26 @@
                                     </div>
                                 </div>
                             </div>
-
-                            <div class="col-lg-6">
+                        </div>
+                        <div class="row my-5 mb-3">
+                            <div class="col-lg-12 text-center">
+                                <button type="button" @click="updateDefaultConf" class="btn border-3 btn-primary px-5 text-center"><cn>保存</cn><en>Save</en></button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-6 mx-auto">
+                <div class="card">
+                    <div class="card-header bg-transparent">
+                        <div class="p-2 mb-0 d-flex align-items-end">
+                            <cn>接口输出</cn>
+                            <en>Output Config</en>
+                        </div>
+                    </div>
+                    <div class="card-body" v-if="defaultConf.length > 0 && mixIndex > -1">
+                        <div class="row">
+                            <div class="col-lg-12">
                                 <div class="row mt-4">
                                     <div class="col-lg-3 offset-lg-1 lp-align-center">
                                         <label v-if="Object.keys(hardwareConf).length > 0">
@@ -223,6 +241,9 @@
                                     </div>
                                     <div class="col-lg-6">
                                         <select class="form-select" v-model="defaultConf[mixIndex].output2.output">
+                                            <option v-if="Object.keys(hardwareConf).length > 0 && hardwareConf.fac === 'DEC32'" value="3840x2160_60">4K60</option>
+                                            <option v-if="Object.keys(hardwareConf).length > 0 && hardwareConf.fac === 'DEC32'" value="3840x2160_50">4K50</option>
+                                            <option v-if="Object.keys(hardwareConf).length > 0 && hardwareConf.fac === 'DEC32'" value="3840x2160_30">4K30</option>
                                             <option value="1080P60">1080P60</option>
                                             <option value="1080I60">1080I60</option>
                                             <option value="1080P50">1080P50</option>

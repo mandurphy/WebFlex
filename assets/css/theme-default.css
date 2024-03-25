@@ -479,5 +479,5 @@
 }
 
 [data-bs-theme=default] .output .border-right {
-    border-right: 1px solid var(--bs-border-color-translucent);
+    border-right: 1px solid rgb(231,231,231);
 }
