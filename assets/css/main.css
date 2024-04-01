@@ -1493,3 +1493,7 @@ input[type="password"]::-ms-reveal{
     background-color: #777;
     border-radius: 5px;
 }
+
+.remote .tips {
+    color: gray;
+}

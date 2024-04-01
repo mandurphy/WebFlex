@@ -1,5 +1,5 @@
 
-import {queryData, checkFileExists, func, alertMsg, rpc, rpc2, rpc3, rpc4, deepCopy, clearReactiveObject, clearReactiveArray, request, isEmpty} from "./lp.utils.js";
+import {queryData, checkFileExists, func, alertMsg, rpc, rpc2, rpc3, rpc4, rpc6, deepCopy, clearReactiveObject, clearReactiveArray, isEmpty} from "./lp.utils.js";
 import vue from "./vue.build.js";
 const { ref,reactive,onMounted } = vue;
 
@@ -1073,13 +1073,42 @@ export const useWebVerConf = () => {
 export const useRemoteConf = () => {
     const remoteConf =reactive({});
     const handleRemoteConf = () => {
-        queryData("config/misc/remote/remote_standard.json").then((conf)=>{
+        queryData("config/misc/remote_std/remote.json").then((conf)=>{
             Object.assign(remoteConf,conf)
         });
     }
 
+    const updateRemoteConf = (tip = 'tip') => {
+        return new Promise((resolve,reject) => {
+            func("/conf/updateRemoteConf",remoteConf).then(data => {
+                if ( data.status !== "success" ) {
+                    reject();
+                    if(tip !== "noTip")
+                        alertMsg('<cn>保存设置失败</cn><en>Save config failed!</en>', 'error');
+                } else {
+                    resolve();
+                    if(tip !== "noTip")
+                        alertMsg('<cn>保存设置成功</cn><en>Save config successfully!</en>', 'success');
+                }
+            })
+        })
+    }
+
     onMounted(handleRemoteConf);
-    return { remoteConf }
+    return { remoteConf,updateRemoteConf }
+}
+
+export const useDirectsConf = () => {
+    const directsConf =reactive([]);
+    const handleDirectsConf = () => {
+        queryData("config/misc/remote_std/directs.json").then((conf)=>{
+            clearReactiveArray(directsConf);
+            directsConf.push(...conf);
+        });
+    }
+
+    onMounted(handleDirectsConf);
+    return { directsConf }
 }
 
 

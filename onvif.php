@@ -530,7 +530,7 @@
 
                             const keys = Object.keys(ptzConf.script);
                             for(var k=0;k<keys.length;k++) {
-                                if(keys[k] === "current")
+                                if(keys[k] === "current" || keys[k] === "enable")
                                     continue;
 
                                 const plan = ptzConf.script[keys[k]];
@@ -672,7 +672,7 @@
                         else if(type === "left-down")
                             params.push(-hspeed,-vspeed,0,uname,passwd)
                         else if(type === "down")
-                            params.push(0,-hspeed,0,uname,passwd)
+                            params.push(0,-vspeed,0,uname,passwd)
                         else if(type === "right-down")
                             params.push(hspeed,-vspeed,0,uname,passwd)
                         else if(type === "move-stop")
@@ -791,21 +791,26 @@
                     return;
                 }
                 const url = state.onvifDevStreams[state.onvifDevStreamIndex.value].url;
-                const hadAudio = state.onvifDevStreams[state.onvifDevStreamIndex.value].hasAudio;
+                //const hadAudio = state.onvifDevStreams[state.onvifDevStreamIndex.value].hasAudio;
                 for(let i=0;i<defaultConf.length;i++) {
                     if(defaultConf[i].id !== state.onvifSelectNetChnId.value)
                         continue;
                     defaultConf[i].enable = true;
                     defaultConf[i].net.path = url;
-                    defaultConf[i].net.decodeV = true;
+                    //defaultConf[i].net.decodeV = true;
                     defaultConf[i].stream.rtmp = true;
-                    if(hadAudio) {
-                        defaultConf[i].enca.codec = "aac";
-                        defaultConf[i].net.decodeA = true;
-                    } else {
-                        defaultConf[i].enca.codec = "close";
-                        defaultConf[i].net.decodeA = false;
+
+                    if(defaultConf[i].encv.codec === "close") {
+                        defaultConf[i].encv.codec = "h264";
+                        defaultConf[i].encv.profile = "high";
                     }
+                    // if(hadAudio) {
+                    //     defaultConf[i].enca.codec = "aac";
+                    //     defaultConf[i].net.decodeA = true;
+                    // } else {
+                    //     defaultConf[i].enca.codec = "close";
+                    //     defaultConf[i].net.decodeA = false;
+                    // }
                     updateDefaultConf();
                 }
             }
@@ -820,6 +825,7 @@
             }
 
             const onStartPatrolPlan = () => {
+                ptzConf.script.enable = true;
                 updatePtzConf("noTip").then(()=>{
                     rpc5("ptz.script").then(ret => {
                         if(ret.code === 0)
@@ -829,10 +835,7 @@
             }
 
             const onStopPatrolPlan = () => {
-                for(let i=0;i<ptzConf.script[ptzConf.script.current].length;i++) {
-                    const item = ptzConf.script[ptzConf.script.current][i];
-                    item.enable = false;
-                }
+                ptzConf.script.enable = false;
                 updatePtzConf("noTip").then(()=>{
                     rpc5("ptz.script").then(ret => {
                         if(ret.code === 0)
