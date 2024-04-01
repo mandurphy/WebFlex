@@ -791,7 +791,7 @@
                     return;
                 }
                 const url = state.onvifDevStreams[state.onvifDevStreamIndex.value].url;
-                //const hadAudio = state.onvifDevStreams[state.onvifDevStreamIndex.value].hasAudio;
+                const hadAudio = state.onvifDevStreams[state.onvifDevStreamIndex.value].hasAudio;
                 for(let i=0;i<defaultConf.length;i++) {
                     if(defaultConf[i].id !== state.onvifSelectNetChnId.value)
                         continue;
@@ -804,13 +804,10 @@
                         defaultConf[i].encv.codec = "h264";
                         defaultConf[i].encv.profile = "high";
                     }
-                    // if(hadAudio) {
-                    //     defaultConf[i].enca.codec = "aac";
-                    //     defaultConf[i].net.decodeA = true;
-                    // } else {
-                    //     defaultConf[i].enca.codec = "close";
-                    //     defaultConf[i].net.decodeA = false;
-                    // }
+                    if(hadAudio && defaultConf[i].enca.codec === "close") {
+                        defaultConf[i].enca.codec = "aac";
+                        //defaultConf[i].net.decodeA = true;
+                    }
                     updateDefaultConf();
                 }
             }
