@@ -1043,7 +1043,7 @@ export const useMcuConf = () => {
 export const useWebVerConf = () => {
     const webVerConf =reactive({});
     const handleWebVerConf = () => {
-        queryData("config/auto/webVer.json").then((conf)=>{
+        queryData("config/misc/webVer.json").then((conf)=>{
             Object.assign(webVerConf,conf)
         });
     }

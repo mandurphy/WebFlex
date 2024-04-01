@@ -243,13 +243,13 @@ class System extends Basic
             file_put_contents("/link/config/net.json",json_encode($net,JSON_UNESCAPED_SLASHES|JSON_UNESCAPED_UNICODE|JSON_PRETTY_PRINT));
             file_put_contents("/link/config/wifi.json",json_encode($wifi,JSON_UNESCAPED_SLASHES|JSON_UNESCAPED_UNICODE|JSON_PRETTY_PRINT));
             unset($param["turn"]);
-            file_put_contents("/link/config/auto/webVer.json",json_encode($param));
+            file_put_contents("/link/config/misc/webVer.json",json_encode($param));
             exec("sync && reboot");
         }
         else
         {
             unset($param["turn"]);
-            file_put_contents("/link/config/auto/webVer.json",json_encode($param));
+            file_put_contents("/link/config/misc/webVer.json",json_encode($param));
         }
         return $this->handleRet($param,'success','切换成功','switch successfully');
     }
