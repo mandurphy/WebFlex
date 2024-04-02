@@ -1,4 +1,4 @@
-
+@import url("theme-active.css");
 [data-bs-theme=dark] {
     --bs-body-color-semi: #adb5bd;
     --bs-body-bg-semi-2:#191b1e;
@@ -8,20 +8,19 @@
 
     --bs-default-simplebar-color: #727477;
     --bs-default-auth-border-color:#495057;
-    --bs-default-body-color:#555;
-    --bs-default-primary-bg:#fb0;
-    --bs-default-active-bg-color:#ffbb00;
+    --bs-default-body-color:var(--dark-bs-body-color);
+    --bs-default-active-bg-color:var(--bs-active-bg-color);
+    --bs-default-acitve-color:var(--bs-acitve-color);
     --bs-default-body-bg-color:#1f2226;
     --bs-default-bg-color:#212529;
     --bs-default-txt-color:#333;
-    --bs-default-acitve-color:#eeaa00;
     --bs-default-hr-color:#585858;
     --bs-default-nav-color:#999999;
     --bs-default-nav-active-color:#333;
-    --bs-default-slider-color:#fb0;
-    --bs-default-slider-bg-color:#ffbb00;
-    --bs-default-form-border-color:#434343;
-    --bs-default-form-color:#adb5bd;
+    --bs-default-slider-color:var(--bs-slider-color);
+    --bs-default-slider-bg-color:var(--dark-bs-slider-bg-color);
+    --bs-default-form-border-color:var(--dark-bs-form-border-color);
+    --bs-default-form-color:var(--dark-bs-form-color);
 }
 
 /* body */

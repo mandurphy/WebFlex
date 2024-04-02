@@ -1,4 +1,4 @@
-
+@import url("theme-active.css");
 [data-bs-theme=default] {
 	--bs-body-color-semi: #adb5bd;
     --bs-body-bg-semi-2:#191b1e;
@@ -10,16 +10,18 @@
 
     --bs-default-simplebar-color: #727477;
     --bs-default-auth-border-color:#495057;
-    --bs-default-body-color:#555;
+    --bs-default-body-color:var(--default-bs-body-color);
     --bs-default-bg-color:#212529;
     --bs-default-txt-color:#555;
-    --bs-default-active-bg-color:#ffbb00;
-    --bs-default-acitve-color:#eeaa00;
+    --bs-default-active-bg-color:var(--bs-active-bg-color);
+    --bs-default-acitve-color:var(--bs-acitve-color);
     --bs-default-hr-color:#bbbbbb;
     --bs-default-nav-color:#999999;
     --bs-default-nav-active-color:#333;
-    --bs-default-slider-color:#fb0;
-    --bs-default-slider-bg-color:#fd5;
+    --bs-default-slider-color:var(--bs-slider-color);
+    --bs-default-slider-bg-color:var(--default-bs-slider-bg-color);
+    --bs-default-form-border-color:var(--default-bs-form-border-color);
+    --bs-default-form-color:var(--default-bs-form-color);
 }
 
 /* body */
@@ -248,8 +250,8 @@
 /* input slect */
 [data-bs-theme=default] .form-select,
 [data-bs-theme=default] .form-control {
-    border-color: #dee2e6;
-    color: #555;
+    border-color: var(--bs-default-form-border-color);
+    color: var(--bs-default-form-color);
     font-size: 14px;
 }
 
