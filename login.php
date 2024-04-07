@@ -6,7 +6,7 @@
 </head>
 <body>
 <div class="container-fluid login auth-cover lp-align-center" id="app">
-    <div class="card border-3" style="width: 380px">
+    <div class="card border-3" style="width: 380px" @keydown.tab="handleTabKeyDown">
         <div class="card-body p-4">
             <div class="row">
                 <div class="col-lg-12 text-center">
@@ -30,7 +30,7 @@
                     </div>
                     <div class="col-6">
                         <div class="form-check form-switch form-check-primary border-0">
-                            <input class="form-check-input lp-cursor-pointer" type="checkbox" v-model="remember">
+                            <input class="form-check-input lp-cursor-pointer remember" type="checkbox" v-model="remember">
                             <label class="form-check-label"><cn>记住密码</cn><en>Remember Me</en></label>
                         </div>
                     </div>
@@ -53,7 +53,7 @@
     import { ignoreCustomElementPlugin } from "./assets/js/vue.helper.js";
     import vue from "./assets/js/vue.build.js";
 
-    const { createApp,ref,onMounted } = vue;
+    const { createApp,ref,watch,onMounted } = vue;
     const app = createApp({
         setup(props,context) {
 
@@ -64,6 +64,13 @@
                 remember: ref(false),
                 showPasswd:ref(false)
             }
+
+            watch(state.remember,()=>{
+                if(!state.remember.value) {
+                    localStorage.removeItem("username");
+                    localStorage.removeItem("password");
+                }
+            })
 
             const removeUrlParam = () => {
                 const urlWithoutParams = window.location.href.split('?')[0];
@@ -79,11 +86,16 @@
                 if(state.remember.value) {
                     localStorage.setItem("username",state.username.value);
                     localStorage.setItem("password",state.password.value);
-                } else {
-                    localStorage.removeItem("username");
-                    localStorage.removeItem("password");
                 }
+
                 state.form.value.submit();
+            }
+
+            const handleTabKeyDown = event => {
+                if(event.target.classList.contains('input-passwd'))
+                    document.querySelector(".remember").classList.add("tab");
+                else
+                    document.querySelector(".remember").classList.remove("tab");
             }
 
             onMounted(()=>{
@@ -101,7 +113,7 @@
                     removeUrlParam();
                 }
             })
-            return { ...state,handleSubmit }
+            return { ...state,handleTabKeyDown,handleSubmit }
         },
     });
     app.use(ignoreCustomElementPlugin);

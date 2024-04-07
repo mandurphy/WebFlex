@@ -903,7 +903,7 @@ input[type="password"]::-ms-reveal{
 }
 
 .login .input-group input {
-    line-height: 2.22rem;
+    line-height: 2.35rem;
     font-size: 1.2rem;
     border-left-width: 2px !important;
 }

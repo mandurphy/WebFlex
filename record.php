@@ -352,8 +352,8 @@
             }
 
             const handleEnableConf = computed(() => {
-                return defaultConf.filter((item, index) => {
-                    return item.enable && item.type !== "ndi" && item.type !== "file";
+                return defaultConf.filter(item => {
+                    return item.enable && item.type !== "file";
                 })
             });
 
