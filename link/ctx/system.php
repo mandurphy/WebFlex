@@ -50,6 +50,17 @@ class System extends Basic
         exec( '/link/shell/reset.sh' );
     }
 
+    public function getHelpCode()
+    {
+        $output = shell_exec("ps -ef | grep ngrokc | grep -v grep");
+        preg_match('/Sdname:(\d+)/', $output, $matches);
+        $helpCode="";
+        if (isset($matches[1]))
+            $helpCode = $matches[1];
+
+        return $this->handleRet($helpCode,'success','获取成功','get help code successfully');
+    }
+
     public function startHelp($param)
     {
         $hardware = json_decode(file_get_contents("/link/config/hardware.json"),true);

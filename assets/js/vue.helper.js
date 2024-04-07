@@ -1098,6 +1098,11 @@ export const uploadModalComponent = {
         }
 
         watch(modalShow, () => {
+            if(Object.keys(state.bsModal).length === 0) {
+                updateLangText();
+                initBsModal();
+                initUploadFile();
+            }
             state.show = !state.show;
             if (state.show)
                 state.bsModal.show();
@@ -1646,8 +1651,10 @@ export const customModalComponent = {
         }
 
         watch(modalShow, () => {
-            if (Object.keys(state.bsModal).length === 0)
-                return;
+            if (Object.keys(state.bsModal).length === 0) {
+                updateLangText();
+                initBsModal();
+            }
             state.show = !state.show;
             if (state.show)
                 state.bsModal.show();

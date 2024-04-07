@@ -978,7 +978,7 @@
 
     import vue from "./assets/js/vue.build.js";
     import { rpc2,alertMsg,func,queryData,popover,formatDate,rebootConfirm,resetConfirm,clearReactiveObject } from "./assets/js/lp.utils.js";
-    import { useHardwareConf,useNetManagerConf,usePasswordConf,useVideoBufferConf,useNtpConf,useTimezoneConf,usePortConf,useVersionConf,useVerLogsConf,useWpaConf } from "./assets/js/vue.hooks.js";
+    import { useHardwareConf,useNetManagerConf,usePasswordConf,useVideoBufferConf,useNtpConf,useTimezoneConf,usePortConf,useVersionConf,useVerLogsConf,useWpaConf,useHelpCodeConf } from "./assets/js/vue.hooks.js";
     import { ignoreCustomElementPlugin,filterKeywordPlugin,bootstrapSwitchComponent,languageOptionDirective,uploadModalComponent,upgradeModalComponent,customModalComponent,loadingButtonComponent } from "./assets/js/vue.helper.js"
     import { wifiFlagComponent,antenanFlagComponent } from "./assets/js/vue.flags.js";
     import axios from './assets/plugins/axios/axios.esm.js';
@@ -1010,6 +1010,7 @@
             const { ntpConf } = useNtpConf();
             const { timezoneConf } = useTimezoneConf();
             const { portConf,updatePortConf } = usePortConf();
+            const { helpCode } = useHelpCodeConf();
             const { versionConf } = useVersionConf();
             const { verLogsConf } = useVerLogsConf();
             const { saveAs } = fileSave;
@@ -1029,7 +1030,6 @@
                 cronDay: ref("never"),
                 cronTime: ref("0"),
                 importHandle:ref(null),
-                helpCode:ref(""),
                 userPasswd:reactive({}),
                 showPasswd:reactive({}),
                 exportConfigs:reactive({}),
@@ -1270,8 +1270,8 @@
             }
 
             const startHelp = () => {
-                state.helpCode.value = Math.floor(Math.random()*1000);
-                func("/system/startHelp",{helpCode: state.helpCode.value}).then((data)=>{
+                helpCode.value = Math.floor(Math.random()*1000);
+                func("/system/startHelp",{helpCode: helpCode.value}).then((data)=>{
                     if(data.status === "success")
                         alertMsg('<cn>连接成功，请向客服提供授权码以便控制您的编码器。</cn><en>Connect success, please provide auth code to customer service to control your encoder!</en>', 'success');
                 })
@@ -1280,7 +1280,7 @@
             const stopHelp = () => {
                 func("/system/stopHelp").then((data)=>{
                     if(data.status === "success") {
-                        state.helpCode.value = "";
+                        helpCode.value = "";
                         alertMsg('<cn>已断开连接</cn><en>Disconnect success</en>', 'success');
                     }
                 })
@@ -1382,7 +1382,7 @@
                 refreshWifi("noLoading",false);
             })
 
-            return {...state,hardwareConf,netManagerConf,videoBufferConf,ntpConf,timezoneConf,portConf,versionConf,verLogsConf,
+            return {...state,hardwareConf,netManagerConf,videoBufferConf,ntpConf,timezoneConf,portConf,helpCode,versionConf,verLogsConf,
                 enableWifi,refreshWifi,connectWifi,updateNetManagerConf,handleSysScene, updateUserPasswd,updateVideoBufferConf,updateDefNetwork,
                 updatePortConf,showBootstrapModal,formatNetSpeed, uploadSuccess,uploadError,rebootConfirm,resetConfirm, onTimeAreaChange,
                 syncTimeFromPc,saveSysConf,exportConf,importConf,startHelp,stopHelp, systemNetTest,checkUpdatePatch,searchUpdatePatch,searchPatchBySn}

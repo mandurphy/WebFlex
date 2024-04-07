@@ -20,21 +20,21 @@
                         <div class="card-body" >
                             <div class="row row-cols-3 text-center">
                                 <div class="col-lg-4 ">
-                                    <pie-chart v-model="cpu" :active-color="theme_color"></pie-chart>
+                                    <pie-chart v-if="theme_color" v-model="cpu" :active-color="theme_color"></pie-chart>
                                     <div>
                                         <cn>CPU使用率</cn>
                                         <en>CPU usage</en>
                                     </div>
                                 </div>
                                 <div class="col-lg-4 text-center">
-                                    <pie-chart v-model="mem" :active-color="theme_color"></pie-chart>
+                                    <pie-chart v-if="theme_color" v-model="mem" :active-color="theme_color"></pie-chart>
                                     <div>
                                         <cn>内存使用率</cn>
                                         <en>Memory usage</en>
                                     </div>
                                 </div>
                                 <div class="col-lg-4 text-center">
-                                    <tmp-compt v-model="tmp" :active-color="theme_color"></tmp-compt>
+                                    <tmp-compt v-if="theme_color" v-model="tmp" :active-color="theme_color"></tmp-compt>
                                     <div>
                                         <cn>核心温度</cn>
                                         <en>Core temperature</en>
@@ -54,7 +54,7 @@
                             </div>
                         </div>
                         <div class="card-body">
-                            <net-chart v-if="tx.length > 0" :maxy="maxy" :data1="tx" :data2="rx" :key="netFlotKey"
+                            <net-chart v-if="theme_color && tx.length > 0" :maxy="maxy" :data1="tx" :data2="rx" :key="netFlotKey"
                                        :line1-color="theme_color" :line2-color="line2_color" :tick-color="tickColor" :border-color="borderColor"
                                        :tip-border-color="tipBorderColor" :tip-bg-color="tipBgColor" :tip-txt-color="tipTxtColor"></net-chart>
                         </div>
@@ -116,13 +116,13 @@
   <script src="assets/plugins/flotChart/jquery.flot.resize.js" type="module"></script>
 
   <script type="module">
-      import { rpc } from "./assets/js/lp.utils.js";
-      import { useDefaultConf,useHardwareConf } from "./assets/js/vue.hooks.js";
+      import { rpc,isEmpty } from "./assets/js/lp.utils.js";
+      import { useDefaultConf,useHardwareConf,useThemeActiveConf } from "./assets/js/vue.hooks.js";
       import { ignoreCustomElementPlugin,filterKeywordPlugin,bootstrapSwitchComponent,statusPieChartComponent,statusTemperatureComponent,netFlotChartComponent } from "./assets/js/vue.helper.js"
       import vue from "./assets/js/vue.build.js";
       import mutationObserver from './assets/plugins/polyfill/mutationobserver.esm.js';
 
-      const { createApp,ref,reactive,onMounted } = vue;
+      const { createApp,ref,reactive,watchEffect,onMounted } = vue;
       const app  = createApp({
           components:{
               "bs-switch":bootstrapSwitchComponent,
@@ -133,15 +133,13 @@
           setup(prop,context){
 
               const state = {
-                  cpu: ref(0),
-                  tmp: ref(0),
-                  mem: ref(0),
-                  maxy: ref(0),
+                  cpu: ref(0), tmp: ref(0),
+                  mem: ref(0), maxy: ref(0),
                   tx : reactive([]),
                   rx : reactive([]),
                   data1:reactive([]),
                   data2:reactive([]),
-                  theme_color:ref("#ffbb00"),
+                  theme_color:ref(""),
                   line2_color:ref("#555555"),
                   tipBorderColor:ref("#ffbb00"),
                   tipBgColor:ref("#ffffff"),
@@ -151,11 +149,23 @@
                   netFlotKey:ref(0),
                   preview : reactive([]),
                   input : reactive([]),
-                  volume: reactive([])
+                  volume: reactive([]),
+                  useTheme: ref("")
               }
 
               const { defaultConf } = useDefaultConf();
               const { hardwareConf } = useHardwareConf();
+              const { themeActiveConf,updateThemeActiveConf } = useThemeActiveConf();
+
+              watchEffect(()=>{
+                  if(!isEmpty(themeActiveConf) && state.useTheme.value) {
+                      state.theme_color.value = themeActiveConf["bs-active-bg-color"];
+                      if(state.useTheme.value === "default")
+                        state.tipBorderColor.value = themeActiveConf["bs-active-bg-color"];
+                      else
+                        state.tipBorderColor.value = "#aaa";
+                  }
+              })
 
               const getData1 = (d) => {
                   state.data1.shift();
@@ -206,9 +216,7 @@
                   });
               }
 
-              const makeImgUrl = (id) => {
-                  return "snap/snap" + id + ".jpg?rnd=" + Math.random();
-              }
+              const makeImgUrl = (id) => "snap/snap" + id + ".jpg?rnd=" + Math.floor(Date.now() / 500);
 
               const handleImgStyle = (width, height) => {
                   width = Number(width) > 0 ? Number(width) : 1920;
@@ -276,11 +284,11 @@
                       mutations.forEach(mutation => {
                           if (mutation.type === 'attributes' && mutation.attributeName === "data-bs-theme") {
                               const theme = mutation.target.getAttribute("data-bs-theme");
+                              state.useTheme.value = theme;
                               if(theme === "default") {
                                   state.tickColor.value = '#eee';
                                   state.borderColor.value = '#ccc';
                                   state.tipBgColor.value = '#fff';
-                                  state.tipBorderColor.value = '#fb0';
                                   state.tipTxtColor.value = '#555';
                                   state.line2_color.value = '#555';
                               }
@@ -288,7 +296,6 @@
                                   state.tickColor.value = '#555';
                                   state.borderColor.value = '#555';
                                   state.tipBgColor.value = '#333';
-                                  state.tipBorderColor.value = '#aaa';
                                   state.tipTxtColor.value = '#adb5bd';
                                   state.line2_color.value = '#999';
                               }

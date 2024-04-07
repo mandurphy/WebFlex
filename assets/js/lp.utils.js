@@ -300,8 +300,20 @@ export const splitArray = (array,count) => {
     );
 }
 
-export const isEmpty = str => {
-    return (!str || str.trim() === "");
+export const isEmpty = value => {
+    if (value === null || value === undefined) {
+        return true;
+    }
+    if (Array.isArray(value)) {
+        return value.length === 0;
+    }
+    if (typeof value === 'object') {
+        return Object.keys(value).length === 0;
+    }
+    if (typeof value === 'number' || typeof value === 'boolean') {
+        return false;
+    }
+    return !value.trim();
 }
 
 export const swap = (array, index1, index2) => {

@@ -1111,6 +1111,43 @@ export const useDirectsConf = () => {
     return { directsConf }
 }
 
+export const useThemeActiveConf = () => {
+    const themeActiveConf = reactive({});
+    const handleThemeActiveConf = () => {
+        queryData("assets/css/theme-active.css").then((conf)=>{
+            const regex = /--([\w-]+)\s*:\s*([^;]+)/g;
+            let match;
+            while ((match = regex.exec(conf)) !== null) {
+                const [,name, value] = match;
+                themeActiveConf[name.trim()] = value.trim();
+            }
+        });
+    }
+
+    const updateThemeActiveConf = () => {
+        let css = ":root {\n";
+        for (const [key, value] of Object.entries(themeActiveConf)) {
+            css += `    --${key}:${value};\n`;
+        }
+        css += "}\n";
+        console.log(css);
+    }
+
+    onMounted(handleThemeActiveConf);
+    return { themeActiveConf,updateThemeActiveConf }
+}
+
+export const useHelpCodeConf = () => {
+    const helpCode =ref("");
+    const handleHelpCodeConf = () => {
+        func("/system/getHelpCode").then(ret => {
+            helpCode.value = ret.data;
+        })
+    }
+    onMounted(handleHelpCodeConf);
+    return { helpCode }
+}
+
 
 
 
