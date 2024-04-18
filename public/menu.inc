@@ -208,15 +208,15 @@
                                 </a>
                             </li>
                             <li>
-                                <a href="sync.php">
-                                    <i class="fa-solid fa-bars-staggered"></i>
-                                    <div class="menu-title"><cn>同步调节</cn><en>Synchronization</en></div>
-                                </a>
-                            </li>
-                            <li>
                                 <a href="colorKey.php">
                                     <i class="fa fa-cut"></i>
                                     <div class="menu-title"><cn>抠像</cn><en>ColorKey</en></div>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="sync.php">
+                                    <i class="fa-solid fa-bars-staggered"></i>
+                                    <div class="menu-title"><cn>同步调节</cn><en>Synchronization</en></div>
                                 </a>
                             </li>
                         </ul>

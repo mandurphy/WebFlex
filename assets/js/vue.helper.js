@@ -2172,6 +2172,17 @@ export const usbOptionComponent = {
                                             </select>
                                         </div>
                                     </div>
+                                    <div class="row mt-3 share-device">
+                                        <div class="col-lg-3 offset-lg-1 lp-align-center">
+                                            <label>
+                                                <cn>IP地址</cn>
+                                                <en>IP Address</en>
+                                            </label>
+                                        </div>
+                                        <div class="col-lg-7">
+                                            <input class="form-control" id="shared_ip">
+                                        </div>
+                                    </div>
                                     <div class="row mt-3 cifs-auth share-device">
                                         <div class="col-lg-3 offset-lg-1 lp-align-center">
                                             <label>
@@ -2191,18 +2202,7 @@ export const usbOptionComponent = {
                                             </label>
                                         </div>
                                         <div class="col-lg-7">
-                                            <input class="form-control" id="shared_passwd">
-                                        </div>
-                                    </div>
-                                    <div class="row mt-3 share-device">
-                                        <div class="col-lg-3 offset-lg-1 lp-align-center">
-                                            <label>
-                                                <cn>IP地址</cn>
-                                                <en>IP Address</en>
-                                            </label>
-                                        </div>
-                                        <div class="col-lg-7">
-                                            <input class="form-control" id="shared_ip">
+                                            <input class="form-control" id="shared_passwd" type="password">
                                         </div>
                                     </div>
                                     <div class="row mt-3 share-device">

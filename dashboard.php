@@ -234,7 +234,7 @@
               const updatePreview = () => {
                   if(state.preview.length === 0) {
                       for(let i=0;i<defaultConf.length;i++) {
-                          if (!defaultConf[i].enable || defaultConf[i].type === "ndi" || ( (defaultConf[i].type === "net" || defaultConf[i].type === "file") && !defaultConf[i].net.decodeV))
+                          if (!defaultConf[i].enable || defaultConf[i].type === "ndi" || (defaultConf[i].type === "net" && !defaultConf[i].net.decodeV))
                               continue;
                           state.preview.push(defaultConf[i]);
                       }

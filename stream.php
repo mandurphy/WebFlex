@@ -558,6 +558,34 @@
                                      <bs-switch v-model="item.stream.srt.enable"></bs-switch>
                                  </div>
                              </div>
+                             <div class="row mt-1">
+                                 <div class="col-2 text-center"></div>
+                                 <div class="col">
+                                     <select class="form-select" v-model="item.stream2.srt.mode">
+                                         <option value="caller">caller</option>
+                                         <option value="listener">listener</option>
+                                         <option value="rendezvous">rendezvous</option>
+                                     </select>
+                                 </div>
+                                 <div class="col">
+                                     <input type="text" class="form-control" v-model.trim.lazy="item.stream2.srt.ip">
+                                 </div>
+                                 <div class="col">
+                                     <input type="text" class="form-control" v-model.trim.lazy="item.stream2.srt.streamid">
+                                 </div>
+                                 <div class="col">
+                                     <input type="text" class="form-control" v-model.trim.lazy="item.stream2.srt.port">
+                                 </div>
+                                 <div class="col">
+                                     <input type="text" class="form-control" v-model.trim.lazy="item.stream2.srt.latency">
+                                 </div>
+                                 <div class="col">
+                                     <input type="text" class="form-control" v-model.trim.lazy="item.stream2.srt.passwd">
+                                 </div>
+                                 <div class="col lp-align-center">
+                                     <bs-switch v-model="item.stream2.srt.enable"></bs-switch>
+                                 </div>
+                             </div>
                              <hr >
                          </div>
                      </div>

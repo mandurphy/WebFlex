@@ -199,7 +199,7 @@
 <script src="assets/plugins/fileinput/js/locales/zh.js" type="module"></script>
 <script src="assets/plugins/fileinput/themes/fa6/theme.min.js" type="module"></script>
 <script type="module">
-    import { rpc,confirm,func,checkFileExists,clearReactiveArray } from "./assets/js/lp.utils.js";
+    import { rpc,confirm,func,checkFileExists,clearReactiveArray,alertMsg } from "./assets/js/lp.utils.js";
     import { useDefaultConf,useResConf } from "./assets/js/vue.hooks.js";
     import {ignoreCustomElementPlugin,filterKeywordPlugin,bootstrapSwitchComponent,nouiSliderComponent,uploadModalComponent,languageOptionDirective} from "./assets/js/vue.helper.js"
     import vue from "./assets/js/vue.build.js";
@@ -274,18 +274,24 @@
             }
 
             const onStartPickColor = () => {
-                clearReactiveArray(defaultConf[state.chnIndex.value].colorKey.point);
-                state.hadPick.value = true;
+                rpc("enc.pauseColorKey",[true]).then(()=>{
+                    clearReactiveArray(defaultConf[state.chnIndex.value].colorKey.point);
+                    state.hadPick.value = true;
+                });
             }
 
             const onStopPickColor = () => {
-                if(state.hadPick.value)
-                    updateDefaultConf();
-                state.hadPick.value = false;
+                rpc("enc.pauseColorKey",[false]).then(()=>{
+                    if(state.hadPick.value)
+                        updateDefaultConf();
+                    state.hadPick.value = false;
+                });
             }
 
             const onUpdatePickColor = () => {
-                rpc("enc.updateColorKey");
+                rpc("enc.updateColorKey").then(()=>{
+                    alertMsg('<cn>保存设置成功</cn><en>Save config success!</en>', 'success');
+                });
             }
 
             const onSaveDefaultConf = () => {

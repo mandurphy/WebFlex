@@ -811,15 +811,21 @@
                 globalConf.enca.audioSrc = "source";
                 unwatch();
             });
-            
-            const handleEncConf = computed(()=>{
+
+            const handleEncConf = computed(() => {
                 return defaultConf.filter(item => {
-                    if(hardwareConf.chip === 'SS626V100')
-                        return !!(item.type !== 'net' && item.encv !== undefined);
-                    return !!((item.type === 'net' && item.net.decodeV) || (item.type !== 'net' && item.encv !== undefined));
-                })
-            })
-            
+                    if (hardwareConf.chip === 'SS626V100') {
+                        return item.encv !== undefined && item.type !== 'net';
+                    }
+                    return item.encv && (
+                            (item.type === 'vi' || item.type === 'usb' || item.type === 'mix') ||
+                            (item.type === 'net' && !!item.net.decodeV) ||
+                            (item.type === 'file' && !!item.decodeV) ||
+                            !!item.enable
+                    );
+                });
+            });
+
             const handleAdvConf = computed(()=>{
                 return defaultConf.filter(item => {
                     return !!(item.enable && item.type !== "ndi");
