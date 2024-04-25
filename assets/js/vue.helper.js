@@ -1979,7 +1979,7 @@ export const usbOptionComponent = {
                             </a>
                         </li>
                         <li v-if="hadMountDisk"><hr></li>
-                        <li v-if="hadMountDisk && Object.keys(diskConf).length > 0 && diskConf.used==='local' && diskConf.local.device!=='/dev/mmcblk0p6'">
+                        <li v-if="Object.keys(diskConf).length > 0 && diskConf.used==='local'">
                             <a class="dropdown-item" href="javascript:;" @click="formatDisk">
                                 <span class="material-symbols-outlined me-2">
                                     <i class="fa-solid fa-circle-nodes me-2"></i>
@@ -1988,6 +1988,7 @@ export const usbOptionComponent = {
                                 </span>
                             </a>
                         </li>
+                        <li v-if="Object.keys(diskConf).length > 0 && diskConf.used==='local'"><hr></li>
                         <li v-if="hadMountDisk && Object.keys(diskConf).length > 0 && diskConf.used==='local' && diskConf.local.device!=='/dev/mmcblk0p6'"><hr></li>
                         <li>
                             <a class="dropdown-item" href="javascript:;" @click="turnMountDisk">
@@ -2043,6 +2044,17 @@ export const usbOptionComponent = {
                 title: '<cn>格式化磁盘</cn><en>Formatted Disk</en>',
                 content: `<div class="row">
                             <div class="col-lg-11">
+                            <div class="row mt-2">
+                                    <div class="col-lg-3 lp-align-center">
+                                        <label>
+                                            <cn>目标磁盘</cn>
+                                            <en>Disk</en>
+                                        </label>
+                                    </div>
+                                    <div class="col-lg-9">
+                                        <select class="form-select" id="targetDisk"></select>
+                                    </div>
+                                </div>
                                 <div class="row mt-2">
                                     <div class="col-lg-3 lp-align-center">
                                         <label>
@@ -2094,9 +2106,10 @@ export const usbOptionComponent = {
                                     resolve();
                                 })
                             }).then(() => {
+                                const targetDisk = document.querySelector("#targetDisk").value;
                                 const diskFormat = document.querySelector("#diskFormat").value;
                                 const notify = alertMsg("<cn>正在格式化，请勿关闭此页面</cn><en>Do not close this page while formatting</en>", "success", 99999999);
-                                func("/system/formatDisk", {"format": diskFormat});
+                                func("/system/formatDisk", {"disk": targetDisk , "format": diskFormat});
                                 let interval = setInterval(() => {
                                     func("/system/checkFormatProgress").then(res => {
                                         if (res.data === 0) {
@@ -2114,6 +2127,24 @@ export const usbOptionComponent = {
                         action: () => {
                         }
                     }
+                },
+                onOpenBefore: ()=>{
+                    func("/system/getLocalDisk").then(result => {
+                        const html = document.querySelector("html");
+                        const lang = html.getAttribute("data-bs-language");
+                        result.data.forEach(item => {
+                            const option = document.createElement('option');
+                            option.value = item.name;
+                            if (item.name === "/dev/mmcblk0p6") {
+                                if (lang === "cn")
+                                    item.name = "内部存储";
+                                else
+                                    item.name = "device storage";
+                            }
+                            option.text = item.name + "( " + item.size + " )";
+                            document.querySelector('#targetDisk').add(option);
+                        })
+                    })
                 }
             });
         }

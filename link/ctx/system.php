@@ -184,7 +184,8 @@ class System extends Basic
 
     function formatDisk($param)
     {
-        exec("/link/shell/fusb.sh ".$param["format"]);
+        exec("/link/shell/fusb.sh ".$param["disk"]." ".$param["format"]);
+        var_dump("/link/shell/fusb.sh ".$param["disk"]." ".$param["format"]);
         return $this->handleRet("",'success','格式化完成','Formatting completed');
     }
 
