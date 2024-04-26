@@ -247,7 +247,7 @@
                                 <select v-if="Object.keys(hardwareConf).length > 0 && Object.keys(boardConf).length > 0" class="form-select" v-model="defaultConf[mixIndex].output2.output">
                                     <option v-if="hardwareConf.chip=== 'SS626V100' && ('HDMI-OUT2' in boardConf.interfaceA)" value="3840x2160_60">4K60</option>
                                     <option v-if="hardwareConf.chip=== 'SS626V100' && ('HDMI-OUT2' in boardConf.interfaceA)" value="3840x2160_50">4K50</option>
-                                    <option v-if="'HDMI-OUT2' in boardConf.interfaceA" value="3840x2160_30">4K30</option>
+                                    <option v-if="defaultConf[mixIndex].output2.type === 'bt1120' && ('HDMI-OUT2' in boardConf.interfaceA)" value="3840x2160_30">4K30</option>
                                     <option value="1080P60">1080P60</option>
                                     <option value="1080I60">1080I60</option>
                                     <option value="1080P50">1080P50</option>
