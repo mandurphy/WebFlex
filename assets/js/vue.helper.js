@@ -1989,7 +1989,6 @@ export const usbOptionComponent = {
                             </a>
                         </li>
                         <li v-if="Object.keys(diskConf).length > 0 && diskConf.used==='local'"><hr></li>
-                        <li v-if="hadMountDisk && Object.keys(diskConf).length > 0 && diskConf.used==='local' && diskConf.local.device!=='/dev/mmcblk0p6'"><hr></li>
                         <li>
                             <a class="dropdown-item" href="javascript:;" @click="turnMountDisk">
                                 <span class="material-symbols-outlined me-2">
