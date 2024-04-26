@@ -55,6 +55,17 @@ export const useHardwareConf = () => {
     return { hardwareConf,updateHardwareConf }
 }
 
+export const useBoardConf = () => {
+    const boardConf = reactive({});
+    const handleBoardConf = () => {
+        queryData("config/board.json").then((conf)=>{
+            Object.assign(boardConf, conf);
+        })
+    }
+    onMounted(handleBoardConf);
+    return { boardConf }
+}
+
 export const usePortConf = () => {
     const portConf = reactive({});
     const handlePortConf = () => {
@@ -637,6 +648,8 @@ export const useWpaConf = () => {
                         const networkObj = {};
                         for (const line of lines) {
                             let [key, value] = line.split("=");
+                            if(value === undefined)
+                                continue;
                             value = value.trim();
                             value = value.replace(/^"(.*)"$/, '$1');
                             networkObj[key.trim()] = value;

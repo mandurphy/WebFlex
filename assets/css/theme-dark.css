@@ -674,3 +674,15 @@
     background-color: #33cc33 !important;
     color: #ffffff !important;
 }
+
+[data-bs-theme=dark] .onvif .patrol-ctx {
+    border: solid 1px var(--bs-body-color-semi);
+}
+
+[data-bs-theme=dark] .onvif .patrol-ctx .patrol-chn {
+    border-right: solid 1px var(--bs-body-color-semi);
+}
+
+[data-bs-theme=dark] .onvif .patrol-ctx .patrol-chn .patrol-chn-item {
+    border-bottom: solid 1px var(--bs-body-color-semi);
+}

@@ -61,7 +61,7 @@
                     </div>
                 </div>
             </div>
-            <div class="row" v-if="Object.keys(hardwareConf).length > 0 && hardwareConf.fac !== 'DEC32'">
+            <div class="row" v-if="Object.keys(hardwareConf).length > 0 && hardwareConf.chip !== 'SS626V100'">
                 <div class="col-lg-12">
                     <div class="card">
                         <div class="card-body iface py-3">
