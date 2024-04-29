@@ -36,6 +36,21 @@
     display: none
 }
 
+.btn-default.fileinput-remove-button,
+.btn-default.fileinput-upload-button
+{
+    height: 33px;
+    padding-top: 9px;
+}
+
+[data-bs-theme=default] .btn-default.fileinput-remove-button,
+[data-bs-theme=default] .btn-default.fileinput-upload-button
+{
+    border:1px solid rgba(0, 0, 0, 0.175) !important;
+}
+
+
+
 .file-caption .input-group {
     align-items: center
 }
@@ -153,10 +168,14 @@
     background-color: transparent
 }
 
+.file-caption-name.kv-fileinput-caption {
+    background: transparent;
+}
+
 .file-caption-name.file-processing {
     font-style: italic;
     border-color: #bbb;
-    opacity: .5
+    opacity: .5;
 }
 
 .file-caption-icon {
@@ -200,7 +219,7 @@
     margin-bottom: 5px
 }
 [data-bs-theme=dark] .file-preview {
-    border-color: gray;
+    border-color: rgba(0, 0, 0, 0.175);
 }
 
 .file-preview .btn-xs {
@@ -433,6 +452,10 @@
     vertical-align: middle;
     margin: 12px 15px 12px 12px;
     padding: 5px
+}
+
+[data-bs-theme=dark] .file-drop-zone {
+    border-color: var(--bs-border-color-translucent);
 }
 
 .file-drop-zone.clickable:hover {
