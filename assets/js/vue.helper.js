@@ -1655,7 +1655,7 @@ export const customModalComponent = {
                 updateLangText();
                 initBsModal();
             }
-            state.show = !state.show;
+            state.show = modalShow.value;
             if (state.show)
                 state.bsModal.show();
             else
