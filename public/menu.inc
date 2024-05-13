@@ -277,7 +277,7 @@
                    nextTick(()=>{
                        let as = document.querySelectorAll(".sidebar-wrapper .metismenu li a");
                        for (let i = 0; i < as.length; i++) {
-                           if (as[i].href === window.location.href) {
+                           if (as[i].href === window.location.protocol+"//"+window.location.host+""+window.location.pathname) {
                                as[i].classList.add("active");
                                let parent = as[i].parentElement;
                                while (parent && parent.tagName === "LI") {
