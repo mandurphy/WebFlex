@@ -592,7 +592,7 @@
                                 <cn>旋转</cn>
                                 <en>rotate</en>
                             </div>
-                            <div class="col-2 text-center">
+                            <div class="col text-center">
                                 <cn>左裁剪</cn>
                                 <en>left crop</en>
                             </div>
@@ -607,6 +607,10 @@
                             <div class="col text-center">
                                 <cn>下裁剪</cn>
                                 <en>bottom crop</en>
+                            </div>
+                            <div class="col text-center">
+                                <cn>对比度(0-63)</cn>
+                                <en>contrast(0-63)</en>
                             </div>
                             <div class="col text-center">
                                 <cn>全帧率去隔行</cn>
@@ -632,7 +636,7 @@
                                             <option value="270">270</option>
                                         </select>
                                     </div>
-                                    <div class="col-2">
+                                    <div class="col">
                                         <input type="text" class="form-control" v-model.trim.lazy="item.cap.crop.L">
                                     </div>
                                     <div class="col">
@@ -643,6 +647,9 @@
                                     </div>
                                     <div class="col">
                                         <input type="text" class="form-control" v-model.trim.lazy="item.cap.crop.B">
+                                    </div>
+                                    <div class="col text-center">
+                                        <input type="text" class="form-control" v-if="item.type==='vi'" v-model.trim.lazy="item.cap.contrast">
                                     </div>
                                     <div class="col lp-align-center">
                                         <bs-switch v-model="item.cap.deinterlace" v-if="item.type==='vi'"></bs-switch>
@@ -796,6 +803,7 @@
                     if (defaultConf[i].type === "net" ) {
                         if(!defaultConf[i].hasOwnProperty("cap")) {
                             defaultConf[i].cap = {
+                                contrast: 0,
                                 rotate: 0,
                                 crop: {
                                     B: 0,
