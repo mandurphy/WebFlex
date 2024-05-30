@@ -1161,6 +1161,33 @@ export const useHelpCodeConf = () => {
     return { helpCode }
 }
 
+export const useRXPushConf = () => {
+    const rxPushConf = reactive([]);
+    const handleRstreamConf = () => {
+        queryData("config/misc/rxPush.json").then((conf) => {
+            rxPushConf.splice(0, rxPushConf.length, ...conf);
+        });
+    }
+    const updateRXPushConf = (tip= "tip") => {
+        return new Promise((resolve,reject)=>{
+            func("/conf/updateRXPushConf",rxPushConf).then(data => {
+                if ( data.status !== "success" ) {
+                    reject();
+                    if(tip !== "noTip")
+                        alertMsg('<cn>保存设置失败</cn><en>Save config failed!</en>', 'error');
+                } else {
+                    resolve();
+                    if(tip !== "noTip")
+                        alertMsg('<cn>保存设置成功</cn><en>Save config successfully!</en>', 'success');
+                }
+            })
+        })
+    }
+    onMounted(handleRstreamConf);
+    return {rxPushConf,updateRXPushConf}
+
+}
+
 
 
 

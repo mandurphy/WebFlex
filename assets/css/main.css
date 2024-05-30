@@ -1073,7 +1073,12 @@ input[type="password"]::-ms-reveal{
     height:5px;
 }
 
-.encoder.page-content {
+.decode .tips {
+    color: gray;
+}
+
+.encode.page-content,
+.decode.page-content{
     margin-bottom: 2.5rem;
 }
 

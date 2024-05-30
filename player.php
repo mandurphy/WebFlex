@@ -1,4 +1,3 @@
-<?php include ("./link/session.php") ?>
 <!doctype html>
 <html lang="uft-8">
 <head>
@@ -50,7 +49,7 @@
                                     <en>1. To use H5 player, enable the RTMP protocol for the corresponding video channel</en>
                                 </div>
                                 <div class="col-lg-12 tips">
-                                    <cn>2、播放h265编码的视频流对电脑配置要求较高,如果遇到音视频卡顿问题,请更换性能更好的电脑播放</cn>
+                                    <cn>2、播放h265编码的视频流对电脑配置要求较高，如果遇到音视频卡顿问题，请更换性能更好的电脑播放</cn>
                                     <en>2. Playing H265 encoded video stream has high requirements for computer configuration. If you encounter audio and video delay problem, please replace the device with better performance</en>
                                 </div>
                             </div>

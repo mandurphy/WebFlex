@@ -356,7 +356,7 @@
                                          <div class="col">
                                              <input type="text" class="form-control" v-model.trim.lazy="item.stream.udp.ttl">
                                          </div>
-                                         <div class="col">
+                                         <div class="col lp-align-center">
                                              <bs-switch v-model="item.stream.udp.flowCtrl"></bs-switch>
                                          </div>
                                          <div class="col">
@@ -481,7 +481,7 @@
                                  <div class="col-2">
                                      <input type="text" class="form-control" v-model.trim.lazy="item.stream.rtsp.passwd">
                                  </div>
-                                 <div class="col-1">
+                                 <div class="col-1 lp-align-center">
                                      <bs-switch v-model="item.stream.rtsp.auth"></bs-switch>
                                  </div>
                                  <div class="col-1 lp-align-center">

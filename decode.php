@@ -8,7 +8,7 @@
 <body>
 <?php include ("./public/menu.inc") ?>
 <div data-simplebar>
-    <main class="page-content encoder" id="app" v-cloak>
+    <main class="page-content decode" id="app" v-cloak>
         <div class="row">
             <div class="col-lg-12 mx-auto">
                 <div class="card">
@@ -119,6 +119,14 @@
                             <div class="d-flex align-items-center">
                                 <div class="tab-icon"><i class="fa-regular fa-file-audio me-1"></i></div>
                                 <div class="tab-title"><cn>文件轮播</cn><en>File carousel</en></div>
+                            </div>
+                        </a>
+                    </li>
+                    <li class="nav-item" role="presentation" @click="tabType = 'push'">
+                        <a class="nav-link" data-bs-toggle="tab" href="#tab3" role="tab" aria-selected="false">
+                            <div class="d-flex align-items-center">
+                                <div class="tab-icon"><i class="fa-solid fa-arrow-down-short-wide me-1"></i></div>
+                                <div class="tab-title"><cn>接收推流</cn><en>Receive stream</en></div>
                             </div>
                         </a>
                     </li>
@@ -331,13 +339,113 @@
                             </div>
                         </div>
                     </div>
+                    <div class="tab-pane fade" id="tab3" role="tabpanel">
+                        <div class="row">
+                            <div class="col-2 text-center">
+                                <cn>描述</cn>
+                                <en>description</en>
+                            </div>
+                            <div class="col-5 text-center">
+                                <cn>推流地址</cn>
+                                <en>stream url</en>
+                            </div>
+                            <div class="col text-center">
+                                <cn>解码通道</cn>
+                                <en>decode channel</en>
+                            </div>
+                            <div class="col text-center">
+                                <cn>用户名</cn>
+                                <en>username</en>
+                            </div>
+                            <div class="col text-center">
+                                <cn>密码</cn>
+                                <en>password</en>
+                            </div>
+                            <div class="col text-center">
+                                <cn>启用认证</cn>
+                                <en>auth</en>
+                            </div>
+                            <div class="col text-center">
+                                <cn>操作</cn>
+                                <en>option</en>
+                            </div>
+                        </div>
+                        <hr >
+                        <div class="row mt-1" v-for="(item,index) in handleRXPushConf" :key="item.id">
+                            <div class="col-lg-12">
+                                <div class="row">
+                                    <div class="col-2 text-center">
+                                        <input type="text" class="form-control" v-model.trim.lazy="item.desc">
+                                    </div>
+                                    <div class="col-5">
+                                        <div class="input-group">
+                                            <button class="btn btn-primary input-group-text input-group-addon lp-cursor-pointer" @click="onResetRXPushChnUrl(index)">
+                                                <i class="fa-solid fa-repeat"></i>
+                                            </button>
+                                            <input class="form-control" v-model.trim.lazy="item.url" disabled readonly>
+                                            <button class="btn btn-primary input-group-text input-group-addon lp-cursor-pointer" @click="onCopyRXPushChnUrl(index)">
+                                                <i class="fa-regular fa-copy"></i>
+                                            </button>
+                                        </div>
+                                    </div>
+                                    <div class="col">
+                                        <select class="form-select" v-model="item.bind">
+                                            <option v-if="handleNetConf.length > 0" v-for="(it,index) in handleNetConf" :key="index" :value="it.id">{{it.name}}</option>
+                                            <option value="-1" cn="关闭" en="Close" v-language-option></option>
+                                        </select>
+                                    </div>
+                                    <div class="col">
+                                        <input type="text" class="form-control" v-model.trim.lazy="item.uname">
+                                    </div>
+                                    <div class="col">
+                                        <input type="text" class="form-control" v-model.trim.lazy="item.passwd">
+                                    </div>
+                                    <div class="col lp-align-center">
+                                        <bs-switch v-model="item.auth"></bs-switch>
+                                    </div>
+
+                                    <div class="col lp-align-center">
+                                        <button type="button" class="btn btn-primary border-1 px-3" @click="onDelRXPushChn(index)">
+                                            <cn>删除</cn>
+                                            <en>delete</en>
+                                        </button>
+                                    </div>
+                                </div>
+                                <hr >
+                            </div>
+                        </div>
+                        <div class="row mt-3">
+                            <div class="col-lg-12 tips">
+                                <cn>1、设备作为流媒体服务器使用，可以接收其他设备推送的RTMP流。</cn>
+                                <en>1. After the decoding channel is set, the stream address of the corresponding channel is automatically replaced with the current decoding address when saving.</en>
+                            </div>
+                            <div class="col-lg-12 tips">
+                                <cn>2、需要绑定解码通道时，请确定要绑定的通道没有正在使用。</cn>
+                                <en>2. Make sure that the binding channel is not in use</en>
+                            </div>
+                            <div class="col-lg-12 tips">
+                                <cn>3、设置解码通道后，保存时，会自动把该通道的流地址替换为当前的解码地址。</cn>
+                                <en>3. After the decoding channel is set, the stream address of the corresponding channel is automatically replaced with the current decoding address when saving.</en>
+                            </div>
+                        </div>
+                    </div>
                     <div class="row mt-3">
-                        <div class="col-lg-12 text-center">
+                        <div class="col-lg-12 text-center" v-if="tabType!=='push'">
                             <button type="button" class="btn btn-primary border-3 px-5 me-2" v-if="tabType==='file'" @click="onAddVideoFile">
                                 <cn>添加</cn>
                                 <en>Add</en>
                             </button>
                             <button type="button" class="btn btn-primary border-3 px-5" @click="saveDefaultConf">
+                                <cn>保存</cn>
+                                <en>Save</en>
+                            </button>
+                        </div>
+                        <div class="col-lg-12 text-center" v-if="tabType==='push'">
+                            <button type="button" class="btn btn-primary border-3 px-5 me-2" @click="onAddRXPushChn">
+                                <cn>添加</cn>
+                                <en>Add</en>
+                            </button>
+                            <button type="button" class="btn btn-primary border-3 px-5" @click="saveRXPushConf">
                                 <cn>保存</cn>
                                 <en>Save</en>
                             </button>
@@ -351,9 +459,10 @@
 <?php include ("./public/foot.inc") ?>
 <script type="module">
     
-    import { rpc, extend, deepCopy, confirm, swap, clearReactiveArray, clearReactiveObject, formatTime, alertMsg } from "./assets/js/lp.utils.js";
-    import { useDefaultConf,useUsbFilesConf,useHardwareConf } from "./assets/js/vue.hooks.js";
+    import { rpc, extend, deepCopy, confirm, swap, clearReactiveArray, clearReactiveObject, formatTime, alertMsg, isEmpty } from "./assets/js/lp.utils.js";
+    import { useDefaultConf,useUsbFilesConf,useHardwareConf,useRXPushConf } from "./assets/js/vue.hooks.js";
     import { ignoreCustomElementPlugin,filterKeywordPlugin,bootstrapSwitchComponent,multipleSelectComponent,nouiSliderComponent,languageOptionDirective } from "./assets/js/vue.helper.js"
+    import { md5 } from "./assets/plugins/md5/js.md5.esm.js";
     import vue from "./assets/js/vue.build.js";
     const {createApp,ref,reactive,watch,toRefs,computed,onMounted} = vue;
 
@@ -370,6 +479,7 @@
             
             const { defaultConf,updateDefaultConf } = useDefaultConf();
             const { hardwareConf } = useHardwareConf();
+            const { rxPushConf,updateRXPushConf } = useRXPushConf();
             const { usbFiles } = useUsbFilesConf();
 
             const state = {
@@ -422,6 +532,34 @@
                     return !!(item.type === 'file' && (item.name.endsWith(".mp4") || item.name.endsWith(".flv") || item.name.endsWith(".ts")))
                 })
             })
+
+            const handleRXPushConf = computed(() => {
+                if(rxPushConf.length > 0) {
+                     rxPushConf.map(item => {
+                        item.url = item.url.replace(/rtmp:\/\/[^\/]+\/(.*?)(\?.*)?$/, `rtmp://${window.location.hostname}/$1`);
+                        let auth = md5(`uname=${item.uname}&passwd=${item.passwd}`).toUpperCase();
+                        auth = auth.length > 16 ? auth.substring(0,16) : auth;
+                        if (item.auth)
+                            item.url += '?Auth='+auth;
+                        return item;
+                    })
+                }
+
+
+
+                return rxPushConf.length > 0
+                        ? rxPushConf.map(item => {
+                            if(isEmpty(item.url)) item.url = updatePushUrl();
+                            let url = new URL(item.url);
+                            url.search = '';
+                            item.url = url.toString();
+                            let auth = md5(`uname=${item.uname}&passwd=${item.passwd}`).toUpperCase();
+                            auth = auth.length > 16 ? auth.substring(0,16) : auth;
+                            if (item.auth)
+                                item.url += '?Auth='+auth;
+                            return item;
+                        }) : [];
+            });
 
             const saveGlobalConfByLocal = () => {
                 for ( let i = 0; i < defaultConf.length; i++ ) {
@@ -541,13 +679,72 @@
                 updateDefaultConf().then(onGetPlayList);
             }
 
+            const updatePushUrl = (length=12) => {
+                const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+                let key = '';
+                for (let i = 0; i < length; i++) {
+                    key += characters.charAt(Math.floor(Math.random() * characters.length));
+                }
+                return "rtmp://"+window.location.hostname+"/live/"+key;
+            }
+
+            const onResetRXPushChnUrl = index => {
+                rxPushConf[index].url = updatePushUrl();
+            }
+
+            const onCopyRXPushChnUrl = index => {
+                const textarea = document.createElement("textarea");
+                textarea.value = rxPushConf[index].url;
+                textarea.style.display = 'none';
+                document.body.appendChild(textarea);
+                textarea.select();
+                let success = document.execCommand("copy");
+                document.body.removeChild(textarea);
+                if (!success) {
+                    alertMsg('<cn>复制失败，请手动复制</cn><en>Copy failed, please copy manually</en>', 'error');
+                    return;
+                }
+                alertMsg('<cn>已复制</cn><en>Have copied</en>', 'success');
+            }
+
+            const onAddRXPushChn = () => {
+                rxPushConf.push({
+                    "desc":"New Recive",
+                    "bind":-1,
+                    "auth":false,
+                    "uname":"admin",
+                    "passwd":"admin",
+                    "url":updatePushUrl()
+                })
+            }
+            const onDelRXPushChn = index => {
+                rxPushConf.splice(index, 1);
+            }
+
+            const saveRXPushConf = () => {
+                let hadBind = false;
+                rxPushConf.forEach(item => {
+                    if(item.bind !== "-1") {
+                        defaultConf.forEach(conf => {
+                            if(conf.id === item.bind && conf.type === 'net') {
+                                hadBind = true;
+                                conf.net.path = item.url.replace(/rtmp:\/\/[^\/]+\/(.*?)(\?.*)?$/, 'rtmp://127.0.0.1/$1');
+                            }
+                        })
+                    }
+                })
+                if(hadBind) updateDefaultConf('noTip');
+                updateRXPushConf();
+            }
+
             onMounted(()=>{
                 onGetPlayList();
                 onGetPlayPosition();
             });
             
-            return {...state,defaultConf,hardwareConf,handleVideoFileConf,handleUsbMp4File,onAddVideoFile, onVideoFileOption,formatTime,onTimelineSliderEnd,
-                onHandleFileDuration,onHandleFilePostion,onDisplayHdmi,handleNetConf,saveGlobalConfByLocal,saveDefaultConf}
+            return {...state,defaultConf,hardwareConf,handleVideoFileConf,handleUsbMp4File,onAddVideoFile, onVideoFileOption, formatTime,onTimelineSliderEnd,
+                onHandleFileDuration,onHandleFilePostion, onDisplayHdmi,handleNetConf, saveGlobalConfByLocal,saveDefaultConf,
+                handleRXPushConf,onResetRXPushChnUrl, onCopyRXPushChnUrl,onAddRXPushChn,onDelRXPushChn,saveRXPushConf}
         }
     });
     app.use(ignoreCustomElementPlugin);

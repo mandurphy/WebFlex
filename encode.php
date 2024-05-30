@@ -7,7 +7,7 @@
 <body>
 <?php include ("./public/menu.inc") ?>
 <div data-simplebar>
-    <main class="page-content encoder" id="app" v-cloak>
+    <main class="page-content encode" id="app" v-cloak>
         <div class="row">
             <div class="col-lg-12 mx-auto">
                 <div class="card">
@@ -510,7 +510,7 @@
                             </div>
                         </div>
                         <hr >
-                        <div class="row mt-1" v-for="(item,index) in handleAdvConf" :key="item.id">
+                        <div class="row mt-1" v-for="(item,index) in handleEncConf" :key="item.id">
                             <div class="col-lg-12">
                                 <div class="row">
                                     <div class="col-2 text-center">
@@ -826,19 +826,13 @@
                         return item.encv !== undefined && item.type !== 'net';
                     }
                     return item.encv && (
-                            (item.type === 'vi' || item.type === 'usb' || item.type === 'mix') ||
-                            (item.type === 'net' && !!item.net.decodeV) ||
-                            (item.type === 'file' && !!item.decodeV) ||
-                            !!item.enable
+                            ['vi', 'usb', 'mix'].includes(item.type) ||
+                            (item.type === 'net' && item.net.decodeV) ||
+                            (item.type === 'file' && item.decodeV) ||
+                            (item.enable && !['net', 'file', 'ndi'].includes(item.type))
                     );
                 });
             });
-
-            const handleAdvConf = computed(()=>{
-                return defaultConf.filter(item => {
-                    return !!(item.enable && item.type !== "ndi");
-                })
-            })
             
             const handleVdoConf = computed(()=>{
                 return defaultConf.filter((item,index)=>{
@@ -848,8 +842,14 @@
             
             const handleAdoConf = computed(()=>{
                 return defaultConf.filter(item => {
-                    return !!((item.type === 'net' && item.net.decodeA) || (item.type !== 'net' && item.enca !== undefined));
+                    return item.encv && (
+                            ['vi', 'usb', 'mix'].includes(item.type) ||
+                            (item.type === 'net' && item.net.decodeA) ||
+                            (item.type === 'file' && item.decodeA) ||
+                            (item.enable && !['net', 'file', 'ndi'].includes(item.type))
+                    );
                 })
+
             })
 
             const saveGlobalConfByLocal = () => {
@@ -899,9 +899,8 @@
                 updateDefaultConf();
             }
             
-            return {globalConf,defaultConf,hardwareConf,
-                handleEncConf, handleAdvConf,handleVdoConf,handleAdoConf,
-                saveGlobalConfByLocal,saveDefaultConf}
+            return {globalConf,defaultConf,hardwareConf, handleEncConf,handleVdoConf,
+                handleAdoConf, saveGlobalConfByLocal,saveDefaultConf}
         }
     });
     app.use(ignoreCustomElementPlugin);

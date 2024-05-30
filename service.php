@@ -196,7 +196,7 @@
                 ]).then((results) => {
                     const [data1, data2] = results;
                     if(data1.status==="success" && data2.status==="success")
-                        alertMsg('<cn>保存设置成功</cn><en>Save config successfully!</en>', 'success');
+                        alertMsg('<cn>保存设置成功,重启设备生效</cn><en>Save config successfully，please restart the device!</en>', 'success');
                     else
                         alertMsg('<cn>保存设置失败</cn><en>Save config failed!</en>', 'error');
                 });
