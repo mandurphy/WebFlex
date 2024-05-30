@@ -535,7 +535,7 @@
 
             const handleRXPushConf = computed(() => {
                 if(rxPushConf.length > 0) {
-                     rxPushConf.map(item => {
+                     rxPushConf.forEach(item => {
                         item.url = item.url.replace(/rtmp:\/\/[^\/]+\/(.*?)(\?.*)?$/, `rtmp://${window.location.hostname}/$1`);
                         let auth = md5(`uname=${item.uname}&passwd=${item.passwd}`).toUpperCase();
                         auth = auth.length > 16 ? auth.substring(0,16) : auth;
@@ -543,22 +543,9 @@
                             item.url += '?Auth='+auth;
                         return item;
                     })
+                    return rxPushConf;
                 }
-
-
-
-                return rxPushConf.length > 0
-                        ? rxPushConf.map(item => {
-                            if(isEmpty(item.url)) item.url = updatePushUrl();
-                            let url = new URL(item.url);
-                            url.search = '';
-                            item.url = url.toString();
-                            let auth = md5(`uname=${item.uname}&passwd=${item.passwd}`).toUpperCase();
-                            auth = auth.length > 16 ? auth.substring(0,16) : auth;
-                            if (item.auth)
-                                item.url += '?Auth='+auth;
-                            return item;
-                        }) : [];
+                return [];
             });
 
             const saveGlobalConfByLocal = () => {

@@ -9,7 +9,7 @@
 <div data-simplebar>
     <main class="page-content rproxy" id="app" v-cloak>
         <div class="row">
-            <div class="col-lg-6 mqtt lp-equal-height-container">
+            <div class="col-lg-6 mqtt lp-equal-height-container" v-if="handleDocumentTitle==='LinkPi'">
                 <div class="card lp-equal-height-item">
                     <div class="card-header bg-transparent">
                         <div class="p-2 mb-0 d-flex align-items-end">
@@ -177,7 +177,10 @@
                 showMqttModal: ref(false),
                 timeoutId: ref(-1)
             }
-            
+
+            const handleDocumentTitle = computed(()=>{
+                return document.title;
+            })
             const handleMqttState = () => {
                 rpc4("mqtt.getMqttState").then(data => {
                     if(data.connected)
@@ -222,7 +225,7 @@
             }
             
             onMounted(handleMqttState);
-            return {...state,mqttConf,rttyConf,updateMqttConf,saveRttyConf,bindMqtt,onModalVisible}
+            return {...state,mqttConf,rttyConf,handleDocumentTitle,updateMqttConf,saveRttyConf,bindMqtt,onModalVisible}
         }
     });
     app.use(ignoreCustomElementPlugin);
