@@ -682,7 +682,6 @@
             const onCopyRXPushChnUrl = index => {
                 const textarea = document.createElement("textarea");
                 textarea.value = rxPushConf[index].url;
-                textarea.style.display = 'none';
                 document.body.appendChild(textarea);
                 textarea.select();
                 let success = document.execCommand("copy");
