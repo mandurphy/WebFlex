@@ -45,7 +45,7 @@
                             </div>
                             <div class="row mt-2">
                                 <div class="col-lg-12 tips">
-                                    <cn>1、使用h5播放器，需要在输出设置页面开启对应视频通道的rtmp输出协议</cn>
+                                    <cn>1、使用h5播放器，需要在串流输出页面开启对应视频通道的rtmp输出协议</cn>
                                     <en>1. To use H5 player, enable the RTMP protocol for the corresponding video channel</en>
                                 </div>
                                 <div class="col-lg-12 tips">

@@ -1,4 +1,3 @@
-@import url("theme-active.css");
 [data-bs-theme=default] {
 	--bs-body-color-semi: #adb5bd;
     --bs-body-bg-semi-2:#191b1e;
@@ -12,7 +11,7 @@
     --bs-default-auth-border-color:#495057;
     --bs-default-body-color:var(--default-bs-body-color);
     --bs-default-bg-color:#212529;
-    --bs-default-txt-color:#555;
+    --bs-default-txt-color:var(--default-bs-default-txt-color);
     --bs-default-active-bg-color:var(--bs-active-bg-color);
     --bs-default-acitve-color:var(--bs-acitve-color);
     --bs-default-hr-color:#bbbbbb;
@@ -93,7 +92,7 @@
 [data-bs-theme=default] .sidebar-wrapper .metismenu a:hover .parent-icon,
 [data-bs-theme=default] .sidebar-wrapper .metismenu a:focus .parent-icon,
 [data-bs-theme=default] .sidebar-wrapper .metismenu a:active .parent-icon {
-    color: #ffffff;
+    color: var(--bs-default-txt-color);
     text-decoration: none;
     background: var(--bs-default-active-bg-color);
     border-color: var(--bs-default-active-bg-color);
@@ -144,10 +143,11 @@
     white-space: nowrap;
     border-radius: 4px;
     line-height: 1.2;
+    color: var(--bs-default-txt-color);
 }
 
 [data-bs-theme=default] .btn-primary:focus {
-    box-shadow: 0 0 0 0.25rem rgba(251, 187, 0, 0.3);
+    box-shadow: 0 0 0 0.25rem var(--default-bs-default-focus);
 }
 
 [data-bs-theme=default] .btn-primary.btn-sm {
@@ -176,6 +176,7 @@
 /* switch */
 [data-bs-theme=default] .bootstrap-switch .bootstrap-switch-handle-on.bootstrap-switch-primary,.bootstrap-switch .bootstrap-switch-handle-off.bootstrap-switch-primary {
     background-color: var(--bs-default-active-bg-color);
+    color: var(--bs-default-txt-color);
 }
 
 [data-bs-theme=default] .bootstrap-switch-small {
@@ -345,20 +346,20 @@
 }
 
 [data-bs-theme=default] .lp-usb-ctx.active .lp-usb-drive .lp-usb-body {
-    border-color: #fff;
+    border-color: var(--bs-default-txt-color);
 }
 
 [data-bs-theme=default] .lp-usb-ctx.active .lp-usb-drive .lp-usb-metal {
-    border-color: #fff;
+    border-color: var(--bs-default-txt-color);
 }
 
 [data-bs-theme=default] .lp-usb-ctx.active .lp-usb-drive .lp-usb-hole {
-    background-color: #fff;
+    border-color: var(--bs-default-txt-color);
 }
 
 [data-bs-theme=default] .search-bar input:focus{
     border-color: transparent;
-    box-shadow: 0 0 0 0.25rem rgba(251, 187, 0, 0.3);
+    box-shadow: 0 0 0 0.25rem var(--default-bs-default-focus);
 }
 
 [data-bs-theme=default] .menu .search-item-icon {
@@ -389,12 +390,12 @@
 }
 
 [data-bs-theme=default] .login .input-group-text {
-    color: var(--bs-default-txt-color);
+    color: #555;
     background-color: #eeeeee;
 }
 
 [data-bs-theme=default] .login .input-group-text:nth-child(3) {
-    color: var(--bs-default-txt-color);
+    color: #555;
     background-color: #fff;
 }
 
@@ -423,11 +424,11 @@
     --bs-form-switch-bg: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='-4 -4 8 8'%3e%3ccircle r='3' fill='%23ffbb00'/%3e%3c/svg%3e ");
     outline: 0;
     background-color: var(--bs-default-bg-color);
-    box-shadow: 0 0 0 0.25rem rgba(251, 187, 0, 0.3) !important;
+    box-shadow: 0 0 0 0.25rem var(--default-bs-default-focus) !important;
 }
 
 [data-bs-theme=default] .login .form-check-primary .tab.form-check-input:checked:focus {
-    box-shadow: 0 0 0 0.25rem rgba(251, 187, 0, 0.3) !important;
+    box-shadow: 0 0 0 0.25rem var(--default-bs-default-focus) !important;
 }
 
 [data-bs-theme=default] .login .form-check-primary .form-check-input:not(:checked):not(:focus) {

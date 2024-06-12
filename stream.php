@@ -321,6 +321,9 @@
                                      <en>Bandwidth</en>
                                  </div>
                                  <div class="col text-center">
+                                     RTP Head
+                                 </div>
+                                 <div class="col text-center">
                                      PMT PID
                                  </div>
                                  <div class="col text-center">
@@ -334,9 +337,6 @@
                                  </div>
                                  <div class="col-2 text-center">
                                      PacketSize
-                                 </div>
-                                 <div class="col text-center">
-                                     RTP Head
                                  </div>
                              </div>
                          </div>
@@ -361,6 +361,9 @@
                                          </div>
                                          <div class="col">
                                              <input type="text" class="form-control" v-model.trim.lazy="item.stream.udp.bandwidth">
+                                         </div>
+                                         <div class="col lp-align-center">
+                                             <bs-switch v-model="item.stream.udp.rtp"></bs-switch>
                                          </div>
                                          <div class="col">
                                              <input type="text" class="form-control" v-model.trim.lazy="item.ts.mpegts_pmt_start_pid">
@@ -387,9 +390,6 @@
                                                  <option value="1692">1692</option>
                                                  <option value="1880">1880</option>
                                              </select>
-                                         </div>
-                                         <div class="col lp-align-center">
-                                             <bs-switch v-model="item.stream.udp.rtp"></bs-switch>
                                          </div>
                                      </div>
                                  </div>
@@ -960,7 +960,7 @@
                         delete state.globalConf[key].suffix;
                         extend(defaultConf[i][key], deepCopy(state.globalConf[key]));
                         let port = defaultConf[i][key].udp.port;
-                        if(port.indexOf("+") > 0) {
+                        if(typeof port === "string" && port.indexOf("+") > 0) {
                             port = port.replace(/[+\s]/g, '');
                             port = isNaN(Number(port)) ? (3000+i) : (Number(port)+i);
                             defaultConf[i][key].udp.port = port;

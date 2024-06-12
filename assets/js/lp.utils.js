@@ -338,6 +338,18 @@ export const formatTime = (msec, format="hh:mm:ss") => {
     return formattedTime;
 }
 
+export const loadCSS = (href) => {
+    return new Promise((resolve, reject) => {
+        const link = document.createElement('link');
+        link.rel = 'stylesheet';
+        link.type = 'text/css';
+        link.href = href;
+        link.onload = () => resolve(link);
+        link.onerror = () => reject(new Error(`Failed to load ${href}`));
+        document.head.appendChild(link);
+    });
+}
+
 
 
 
