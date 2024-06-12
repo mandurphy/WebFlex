@@ -1,5 +1,5 @@
 
-import {queryData, checkFileExists, func, alertMsg, rpc, rpc2, rpc3, rpc4, rpc6, deepCopy, clearReactiveObject, clearReactiveArray, isEmpty} from "./lp.utils.js";
+import {queryData, checkFileExists, func, alertMsg, rpc, rpc2, rpc3, rpc4, rpc6, deepCopy, clearReactiveObject, clearReactiveArray, isEmpty,getCssFromLink} from "./lp.utils.js";
 import vue from "./vue.build.js";
 const { ref,reactive,onMounted } = vue;
 
@@ -1126,15 +1126,17 @@ export const useDirectsConf = () => {
 
 export const useThemeActiveConf = () => {
     const themeActiveConf = reactive({});
-    const handleThemeActiveConf = () => {
-        queryData("assets/css/theme-active.css").then((conf)=>{
-            const regex = /--([\w-]+)\s*:\s*([^;]+)/g;
-            let match;
-            while ((match = regex.exec(conf)) !== null) {
-                const [,name, value] = match;
-                themeActiveConf[name.trim()] = value.trim();
-            }
-        });
+
+    const handleThemeActiveConf = async () => {
+        const themeConf = await queryData("config/theme_standard.json");
+        const themeActive = themeConf.active;
+        const conf = await queryData(`assets/css/theme-active-${themeActive}.css`);
+        const regex = /--([\w-]+)\s*:\s*([^;]+)/g;
+        let match;
+        while ((match = regex.exec(conf)) !== null) {
+            const [,name, value] = match;
+            themeActiveConf[name.trim()] = value.trim();
+        }
     }
 
     const updateThemeActiveConf = () => {
@@ -1143,7 +1145,6 @@ export const useThemeActiveConf = () => {
             css += `    --${key}:${value};\n`;
         }
         css += "}\n";
-        console.log(css);
     }
 
     onMounted(handleThemeActiveConf);

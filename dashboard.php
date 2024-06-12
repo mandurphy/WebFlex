@@ -122,7 +122,7 @@
       import vue from "./assets/js/vue.build.js";
       import mutationObserver from './assets/plugins/polyfill/mutationobserver.esm.js';
 
-      const { createApp,ref,reactive,watchEffect,onMounted } = vue;
+      const { createApp,ref,reactive,watchEffect,nextTick,onMounted } = vue;
       const app  = createApp({
           components:{
               "bs-switch":bootstrapSwitchComponent,
@@ -155,7 +155,7 @@
 
               const { defaultConf } = useDefaultConf();
               const { hardwareConf } = useHardwareConf();
-              const { themeActiveConf,updateThemeActiveConf } = useThemeActiveConf();
+              const { themeActiveConf } = useThemeActiveConf();
 
               watchEffect(()=>{
                   if(!isEmpty(themeActiveConf) && state.useTheme.value) {
@@ -208,12 +208,14 @@
               }
 
               const updateSysState = () => {
-                  rpc("enc.getSysState").then(data => {
-                      state.cpu.value = data.cpu;
-                      state.mem.value = data.mem;
-                      state.tmp.value = data.temperature;
-                      setTimeout(updateSysState, 2000);
-                  });
+                  setTimeout(()=>{
+                      rpc("enc.getSysState").then(data => {
+                          state.cpu.value = data.cpu;
+                          state.mem.value = data.mem;
+                          state.tmp.value = data.temperature;
+                          setTimeout(updateSysState, 2000);
+                      });
+                  },50);
               }
 
               const makeImgUrl = (id) => "snap/snap" + id + ".jpg?rnd=" + Math.floor(Date.now() / 500);
