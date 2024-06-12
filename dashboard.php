@@ -208,14 +208,16 @@
               }
 
               const updateSysState = () => {
-                  setTimeout(()=>{
+                  const getSysState = () => {
                       rpc("enc.getSysState").then(data => {
                           state.cpu.value = data.cpu;
                           state.mem.value = data.mem;
                           state.tmp.value = data.temperature;
-                          setTimeout(updateSysState, 2000);
+                      }).finally(() => {
+                          setTimeout(getSysState, 2000);
                       });
-                  },50);
+                  };
+                  setTimeout(getSysState,50);
               }
 
               const makeImgUrl = (id) => "snap/snap" + id + ".jpg?rnd=" + Math.floor(Date.now() / 500);

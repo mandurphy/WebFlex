@@ -1,5 +1,5 @@
 
-import {queryData, checkFileExists, func, alertMsg, rpc, rpc2, rpc3, rpc4, rpc6, deepCopy, clearReactiveObject, clearReactiveArray, isEmpty,getCssFromLink} from "./lp.utils.js";
+import {queryData, checkFileExists, func, alertMsg, rpc, rpc2, rpc3, rpc4, rpc6, deepCopy, clearReactiveObject, clearReactiveArray, isEmpty} from "./lp.utils.js";
 import vue from "./vue.build.js";
 const { ref,reactive,onMounted } = vue;
 
