@@ -355,6 +355,7 @@
 
 [data-bs-theme=default] .lp-usb-ctx.active .lp-usb-drive .lp-usb-hole {
     border-color: var(--bs-default-txt-color);
+    background-color:var(--bs-default-txt-color);
 }
 
 [data-bs-theme=default] .search-bar input:focus{
