@@ -81,24 +81,39 @@ class Root extends Basic
         $edidMd5 = md5_file("/link/config/edid/edid.bin");
         $folders = scandir("/link/config/edid/");
         $curEdidFile = "";
+        $edidFiles = [];
         foreach ($folders as $file)
         {
             if (!in_array($file,array(".","..")))
             {
-                if(md5_file("/link/config/edid/".$file) == $edidMd5)
+                if($file != "edid.bin" && $file != "@edid.bin")
                 {
-                    $curEdidFile = $file;
-                    break;
+                    array_push($edidFiles,$file);
+                    if(md5_file("/link/config/edid/".$file) == $edidMd5)
+                        $curEdidFile = $file;
                 }
             }
         }
-        return $this->handleRet($curEdidFile, 'success', '获取成功', 'get lph config successfully');
+        $result = array(
+            "curEdidFile" => $curEdidFile,
+            "edidFiles" => $edidFiles
+        );
+        return $this->handleRet($result, 'success', '获取成功', 'get lph config successfully');
     }
 
     function setEdidConf($param) {
         exec( 'cp /link/config/edid/'.$param.'.bin /link/config/edid/edid.bin' );
         exec( 'echo '.$_POST[ 'edid' ].' > /link/config/curEDID' );
         return $this->handleRet($param, 'success', '保存成功', 'save successfully');
+    }
+
+    function delCustomEdid() {
+        exec("rm -f /link/config/edid/@edid.bin");
+    }
+
+    function addCustomEdid($param) {
+        $filename = $param["edid"];
+        exec("mv /link/config/edid/@edid.bin /link/config/edid/".$filename.".bin");
     }
 
     function getLphAuth() {

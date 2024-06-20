@@ -181,7 +181,7 @@
                      <a class="nav-link" data-bs-toggle="tab" href="#tab7" role="tab" aria-selected="false">
                          <div class="d-flex align-items-center">
                              <div class="tab-icon"><i class="fa-solid fa-podcast me-1"></i></div>
-                             <div class="tab-title"><cn>推流设置</cn><en>Push config</en></div>
+                             <div class="tab-title"><cn>推流设置</ cn><en>Push config</en></div>
                          </div>
                      </a>
                  </li>
@@ -307,9 +307,6 @@
                          <div class="col-10">
                              <div class="row">
                                  <div class="col text-center">
-                                     PID
-                                 </div>
-                                 <div class="col text-center">
                                      TTL
                                  </div>
                                  <div class="col text-center">
@@ -322,6 +319,9 @@
                                  </div>
                                  <div class="col text-center">
                                      RTP Head
+                                 </div>
+                                 <div class="col text-center">
+                                     PID
                                  </div>
                                  <div class="col text-center">
                                      PMT PID
@@ -351,9 +351,6 @@
                                  <div class="col-10">
                                      <div class="row">
                                          <div class="col">
-                                             <input type="text" class="form-control" v-model.trim.lazy="item.ts.mpegts_start_pid">
-                                         </div>
-                                         <div class="col">
                                              <input type="text" class="form-control" v-model.trim.lazy="item.stream.udp.ttl">
                                          </div>
                                          <div class="col lp-align-center">
@@ -364,6 +361,9 @@
                                          </div>
                                          <div class="col lp-align-center">
                                              <bs-switch v-model="item.stream.udp.rtp"></bs-switch>
+                                         </div>
+                                         <div class="col">
+                                             <input type="text" class="form-control" v-model.trim.lazy="item.ts.mpegts_start_pid">
                                          </div>
                                          <div class="col">
                                              <input type="text" class="form-control" v-model.trim.lazy="item.ts.mpegts_pmt_start_pid">
@@ -486,6 +486,21 @@
                                  </div>
                                  <div class="col-1 lp-align-center">
                                      <bs-switch v-model="item.stream.rtsp.enable"></bs-switch>
+                                 </div>
+                             </div>
+                             <div class="row mt-1">
+                                 <div class="col-2 text-center"></div>
+                                 <div class="col-2">
+                                     <input type="text" class="form-control" v-model.trim.lazy="item.stream2.rtsp.name">
+                                 </div>
+                                 <div class="col-2">
+                                     <input type="text" class="form-control" v-model.trim.lazy="item.stream2.rtsp.passwd">
+                                 </div>
+                                 <div class="col-1 lp-align-center">
+                                     <bs-switch v-model="item.stream2.rtsp.auth"></bs-switch>
+                                 </div>
+                                 <div class="col-1 lp-align-center">
+                                     <bs-switch v-model="item.stream2.rtsp.enable"></bs-switch>
                                  </div>
                              </div>
                              <hr >

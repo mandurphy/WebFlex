@@ -146,7 +146,7 @@
                             </div>
                         </div>
                         <div class="card-body" >
-                            <div class="row">
+                            <div class="row mt-2">
                                 <div class="col-lg-4 d-flex lp-align-center">
                                     <cn>认证模式</cn>
                                     <en>Auth</en>
@@ -187,10 +187,7 @@
                                 </div>
                                 <div class="col-lg-8">
                                     <select class="form-select" v-model="edidConf">
-                                        <option value="1080">1080</option>
-                                        <option value="4k">4k</option>
-                                        <option value="RGB">RGB</option>
-                                        <option value="ITE">ITE</option>
+                                        <option v-for="(item,index) in edidFiles" :value="item">{{item}}</option>
                                     </select>
                                 </div>
                             </div>
@@ -200,6 +197,10 @@
                                         <cn>保存</cn>
                                         <en>Save</en>
                                     </button>
+                                    <loading-button custom-class="btn btn-primary border-2 px-3 ms-1" @button-click="identifyEdid" :had-loading="checkLoading">
+                                        <cn>识别</cn>
+                                        <en>Identify</en>
+                                    </loading-button>
                                 </div>
                             </div>
                         </div>
@@ -269,7 +270,8 @@
 
 <script type="module">
     import { useHardwareConf,useFacConf,useLphConf,useColorModeConf,useEdidConf,useMcuConf,useWebVerConf } from "./assets/js/vue.hooks.js";
-    import { ignoreCustomElementPlugin,bootstrapSwitchComponent,languageOptionDirective } from "./assets/js/vue.helper.js"
+    import { ignoreCustomElementPlugin,bootstrapSwitchComponent,languageOptionDirective,loadingButtonComponent } from "./assets/js/vue.helper.js"
+    import {alertMsg, confirm, func, isEmpty} from "./assets/js/lp.utils.js";
     import vue from "./assets/js/vue.build.js";
 
     const {createApp,ref,reactive,watchEffect,onMounted,nextTick} = vue;
@@ -278,7 +280,8 @@
             "language-option":languageOptionDirective
         },
         components: {
-            "bs-switch" : bootstrapSwitchComponent
+            "bs-switch" : bootstrapSwitchComponent,
+            "loading-button": loadingButtonComponent
         },
         setup(props,context) {
             
@@ -286,12 +289,76 @@
             const { facConf,updateFacConf } = useFacConf();
             const { lphConf,updateLphConf } = useLphConf();
             const { colorModeConf,updateColorModeConf } = useColorModeConf();
-            const { edidConf,updateEdidConf } = useEdidConf();
+            const { edidConf,edidFiles,handleEdidConf,updateEdidConf,addEdidConf } = useEdidConf();
             const { mcuConf } = useMcuConf();
             const { webVerConf,updateWebVerConf } = useWebVerConf();
 
-            return {hardwareConf,updateHardwareConf,facConf,updateFacConf, colorModeConf, updateColorModeConf,
-                edidConf,updateEdidConf,lphConf,updateLphConf,mcuConf,webVerConf,updateWebVerConf}
+            const checkLoading = ref(false);
+
+            const identifyEdid = type => {
+                checkLoading.value = true;
+                addEdidConf().then(hadFile => {
+                    if(!hadFile) {
+                        alertMsg('<cn>Edid识别失败</cn><en>Identify Edid failed!</en>', 'error');
+                        alertMsg('<cn>请检查HDMI输出是否插入Edid有效源</cn><en>Check that the HDMI output is plugged into a valid Edid source!</en>', 'error');
+                        return;
+                    }
+                    setTimeout(()=>{
+                        checkLoading.value = false;
+                        confirm({
+                            title: '<cn>生成EDID</cn><en>Make EDID</en>',
+                            content: `<div class="row">
+                                        <div class="col-lg-11">
+                                            <div class="row mt-2">
+                                                <div class="col-lg-3 lp-align-center">
+                                                    <label>
+                                                        <cn>文件名</cn>
+                                                        <en>Edid name</en>
+                                                    </label>
+                                                </div>
+                                                <div class="col-lg-9">
+                                                    <input class="form-control" type="text" id="custom_edid" autocomplete="off">
+                                                </div>
+                                            </div>
+                                        </div>
+                                      </div>`,
+                            buttons: {
+                                ok: {
+                                    text: "<cn>生成</cn><en>Make</en>",
+                                    btnClass: 'btn-primary',
+                                    action: () => {
+                                        const ele = document.querySelector("#custom_edid");
+                                        let value = ele.value;
+                                        if(!isEmpty(value)) {
+                                            const validValues = ['4K', '1080', 'ITE', 'RGB', 'YUV', 'COLORMODE'];
+                                            if(validValues.includes(value.toUpperCase())) {
+                                                alertMsg('<cn>不能覆盖默认Edid文件</cn><en>Default Edid file cannot be overwritten!</en>', 'error');
+                                                return;
+                                            }
+                                            value = value.replace(".bin","");
+                                            func("/root/addCustomEdid",{"edid":value}).then(ret=>{
+                                                handleEdidConf();
+                                                alertMsg('<cn>Edid文件已生成</cn><en>Edid file has been generated!</en>', 'success');
+                                                alertMsg('<cn>注意，若插拔Edid源，需要重启设备才能正常识别</cn><en>Note If the Edid source is inserted or removed, you need to restart the device for normal identification!</en>', 'success',8000);
+                                            })
+                                            return;
+                                        }
+                                        alertMsg('<cn>文件名不能为空</cn><en>The file name cannot be empty!</en>', 'error');
+                                    }
+                                },
+                                cancel: {
+                                    text: "<cn>取消</cn><en>Cancel</en>",
+                                    action: () => {
+                                    }
+                                }
+                            }
+                        });
+                    },1000);
+                })
+            }
+
+            return {hardwareConf,updateHardwareConf,facConf,updateFacConf, colorModeConf, updateColorModeConf, edidConf,edidFiles,
+                updateEdidConf, addEdidConf,lphConf,updateLphConf,mcuConf,webVerConf,updateWebVerConf,checkLoading,identifyEdid}
         }
     });
     app.use(ignoreCustomElementPlugin);

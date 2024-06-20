@@ -1,5 +1,5 @@
 
-import {queryData, checkFileExists, func, alertMsg, rpc, rpc2, rpc3, rpc4, rpc6, deepCopy, clearReactiveObject, clearReactiveArray, isEmpty} from "./lp.utils.js";
+import {queryData,checkFileExists,func,alertMsg,rpc,rpc2,rpc3,rpc4,rpc6,deepCopy,clearReactiveObject,clearReactiveArray,isEmpty} from "./lp.utils.js";
 import vue from "./vue.build.js";
 const { ref,reactive,onMounted } = vue;
 
@@ -1000,11 +1000,17 @@ export const useLphConf = () => {
 
 export const useEdidConf = () => {
     const edidConf = ref("");
+    const edidFiles = reactive([]);
     const handleEdidConf = () => {
         func("/root/getEdidConf").then(data => {
             if(data.status === "success") {
-                const [edid,] = data.data.split(".");
+                const curEdid = data.data.curEdidFile;
+                const [edid,] = curEdid.split(".");
                 edidConf.value = edid;
+
+                const edidFileList = data.data.edidFiles.map(filename => filename.replace(/\.bin$/, ''));
+                clearReactiveArray(edidFiles);
+                edidFiles.push(...edidFileList);
             }
         })
     }
@@ -1024,8 +1030,20 @@ export const useEdidConf = () => {
             })
         })
     }
+
+    const addEdidConf = () => {
+        return new Promise(resolve => {
+            func("/root/delCustomEdid").then(()=>{
+                rpc("enc.addEdid").then(ret => {
+                    checkFileExists("/config/edid/@edid.bin").then(res => {
+                        resolve(res);
+                    })
+                })
+            })
+        })
+    }
     onMounted(handleEdidConf);
-    return { edidConf,updateEdidConf }
+    return { edidConf,edidFiles,handleEdidConf,updateEdidConf,addEdidConf }
 }
 
 export const useSnConf = () => {
