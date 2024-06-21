@@ -217,7 +217,7 @@
                           setTimeout(getSysState, 2000);
                       });
                   };
-                  setTimeout(getSysState,50);
+                  setTimeout(getSysState,80);
               }
 
               const makeImgUrl = (id) => "snap/snap" + id + ".jpg?rnd=" + Math.floor(Date.now() / 500);
