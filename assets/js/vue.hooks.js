@@ -5,7 +5,7 @@ const { ref,reactive,onMounted } = vue;
 
 export const useDefaultConf = () => {
     const defaultConf = reactive([]);
-    const handleDefaultConf = () => {
+    const handleDefaultConf = async () => {
         queryData("config/config.json").then((conf)=>{
             defaultConf.splice(0, defaultConf.length, ...conf);
         });
@@ -1147,6 +1147,8 @@ export const useThemeActiveConf = () => {
 
     const handleThemeActiveConf = async () => {
         const themeConf = await queryData("config/theme_standard.json");
+        if(!themeConf.hasOwnProperty("active"))
+            themeConf.active = "default";
         const themeActive = themeConf.active;
         const conf = await queryData(`assets/css/theme-active-${themeActive}.css`);
         const regex = /--([\w-]+)\s*:\s*([^;]+)/g;

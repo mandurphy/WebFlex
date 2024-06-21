@@ -23,14 +23,14 @@
                                 </div>
                             </div>
                             <div v-if="item.type === 'wifi'" class="d-flex align-items-center">
-                                <wifi-flag :icon="'wifi-'+(item.rssi > 3 ? 4 : (item.rssi < 3 ? (item.rssi === 0 ? 1 : 2) : 3))" :width="20" :height="20" :stroke="'#cccccc'" :color="'#777777'" :stroke-width="2.3"></wifi-flag>
+                                <wifi-flag :icon="'wifi-'+(item.rssi > 3 ? 4 : (item.rssi < 3 ? (item.rssi === 0 ? 1 : 2) : 3))" :width="20" :height="20" :stroke="flagStroke" :color="flagColor" :stroke-width="2.3"></wifi-flag>
                                 <div class="tab-title">
                                     <cn>无线网</cn>
                                     <en>WIFI</en>
                                 </div>
                             </div>
                             <div v-if="item.type === 'dongle'" class="d-flex align-items-center">
-                                <antenan-flag :icon="'antenan-'+(item.rssi > 3 ? 4 : (item.rssi < 3 ? (item.rssi === 0 ? 0 : 2) : 3))" :width="20" :height="20" :stroke="'#cccccc'" :color="'#777777'" :stroke-width="2.3"></antenan-flag>
+                                <antenan-flag :icon="'antenan-'+(item.rssi > 3 ? 4 : (item.rssi < 3 ? (item.rssi === 0 ? 0 : 2) : 3))" :width="20" :height="20" :stroke="flagStroke" :color="flagColor" :stroke-width="2.3"></antenan-flag>
                                 <div class="tab-title">
                                     <cn>移动网络</cn>
                                     <en>Cellular network</en>
@@ -984,6 +984,7 @@
     import axios from './assets/plugins/axios/axios.esm.js';
     import JsZip from "./assets/plugins/jszip/jszip.esm.js"
     import * as fileSave from "./assets/plugins/jszip/filesaver.esm.js";
+    import mutationObserver from './assets/plugins/polyfill/mutationobserver.esm.js';
 
     const { createApp,ref,reactive,watch,watchEffect,computed,onMounted } = vue;
     const app = createApp({
@@ -1021,6 +1022,8 @@
                 wifiPopover: {},
                 antenanHandler:ref(null),
                 antenanPopover: {},
+                flagStroke:ref("#cccccc"),
+                flagColor:ref("#777777"),
                 wifiRefresh: ref(false),
                 wifiList:reactive([]),
                 wifiPassword:ref(""),
@@ -1375,11 +1378,40 @@
                 });
             }
 
+            const onListenThemeChange = () => {
+                const html = document.querySelector('html');
+                const updateFlagColor = () => {
+                    const theme = html.getAttribute("data-bs-theme");
+                    if(theme === 'default') {
+                        state.flagStroke.value = "#cccccc";
+                        state.flagColor.value = "#777777";
+                    } else {
+                        state.flagStroke.value = "#777777";
+                        state.flagColor.value = "#cccccc";
+                    }
+                }
+                updateFlagColor();
+                const observer = new mutationObserver(mutations => {
+                    mutations.forEach(mutation => {
+                        if (mutation.type === 'attributes' && mutation.attributeName === "data-bs-theme") {
+                            updateFlagColor();
+                        }
+                    });
+                });
+                const config = {
+                    attributes: true,
+                    attributeFilter: ["data-bs-theme"],
+                    subtree: false
+                };
+                observer.observe(html, config);
+            }
+
             onMounted(()=>{
                 updateRenderData();
                 getSysAbortTime();
                 getAdapterNetState();
                 refreshWifi("noLoading",false);
+                onListenThemeChange();
             })
 
             return {...state,hardwareConf,netManagerConf,videoBufferConf,ntpConf,timezoneConf,portConf,helpCode,versionConf,verLogsConf,

@@ -6,6 +6,8 @@ Promise.all([queryData("config/lang.json"),queryData("config/theme_standard.json
     const html = document.querySelector('html');
     html.setAttribute("data-bs-language", languageConf.lang);
     html.setAttribute("data-bs-theme", themeConf.used);
+    if(!themeConf.hasOwnProperty('active'))
+        themeConf.active = 'default';
     loadCSS(`assets/css/theme-active-${themeConf.active}.css`).then(link => {
         document.body.style.display = "block";
         html.dispatchEvent(new Event("loaded"));
