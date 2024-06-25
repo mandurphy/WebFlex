@@ -57,7 +57,7 @@
                         </a>
                     </li>
                     <li class="menu-label"><cn>基本设置</cn><en>Basic</en></li>
-                    <li>
+                    <li v-if="Object.keys(hardwareConf).length > 0 && hardwareConf.chip !== 'HI3516CV610'">
                         <a href="decode.php">
                             <div class="parent-icon"><i class="fa fa-image"></i></div>
                             <div class="menu-title"><cn>解码设置</cn><en>Decode</en></div>
@@ -177,7 +177,7 @@
                             </li>
                         </ul>
                     </li>
-                    <li>
+                    <li v-if="Object.keys(hardwareConf).length > 0 && hardwareConf.chip !== 'HI3516CV610'">
                         <a href="javascript:;" class="has-arrow">
                             <div class="parent-icon"><i class="fa-solid fa-flask"></i></div>
                             <div class="menu-title"><cn>实验功能</cn><en>Laboratory</en></div>

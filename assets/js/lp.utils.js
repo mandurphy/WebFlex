@@ -289,7 +289,6 @@ export const resetConfirm = () => {
                     console.log( 'the user clicked cancel' );
                 }
             }
-
         }
     } );
 }
@@ -348,6 +347,14 @@ export const loadCSS = (href) => {
         link.onerror = () => reject(new Error(`Failed to load ${href}`));
         document.head.appendChild(link);
     });
+}
+
+export const extractAryEle = (originalArray, elementsToInclude) => {
+    return originalArray.filter(element => elementsToInclude.includes(element));
+}
+
+export const removeAryEle = (originalArray, elementsToRemove) => {
+    return originalArray.filter(element => !elementsToRemove.includes(element));
 }
 
 

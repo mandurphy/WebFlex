@@ -999,14 +999,19 @@ export const useLphConf = () => {
 }
 
 export const useEdidConf = () => {
-    const edidConf = ref("");
+    const inputEdidConf = ref("");
+    const outputEdidConf = ref("");
     const edidFiles = reactive([]);
     const handleEdidConf = () => {
         func("/root/getEdidConf").then(data => {
             if(data.status === "success") {
-                const curEdid = data.data.curEdidFile;
-                const [edid,] = curEdid.split(".");
-                edidConf.value = edid;
+                const inputEdid = data.data.inputEdidFile;
+                const [inEdid,] = inputEdid.split(".");
+                inputEdidConf.value = inEdid;
+
+                const outputEdid = data.data.outputEdidFile;
+                const [outEdid,] = outputEdid.split(".");
+                outputEdidConf.value = outEdid;
 
                 const edidFileList = data.data.edidFiles.map(filename => filename.replace(/\.bin$/, ''));
                 clearReactiveArray(edidFiles);
@@ -1015,9 +1020,9 @@ export const useEdidConf = () => {
         })
     }
 
-    const updateEdidConf = (tip = "tip") => {
+    const updateInputEdidConf = (tip = "tip") => {
         return new Promise((resolve,reject) => {
-            func("/root/setEdidConf",edidConf.value).then(data => {
+            func("/root/setInputEdidConf",inputEdidConf.value).then(data => {
                 if ( data.status !== "success" ) {
                     reject(data);
                     if(tip !== "noTip")
@@ -1031,19 +1036,44 @@ export const useEdidConf = () => {
         })
     }
 
-    const addEdidConf = () => {
+    const updateOutputEdidConf = (tip = "tip") => {
+        return new Promise((resolve,reject) => {
+            func("/root/setOutputEdidConf",outputEdidConf.value).then(data => {
+                if ( data.status !== "success" ) {
+                    reject(data);
+                    if(tip !== "noTip")
+                        alertMsg('<cn>保存设置失败</cn><en>Save config failed!</en>', 'error');
+                } else {
+                    resolve(data);
+                    if(tip !== "noTip")
+                        alertMsg('<cn>保存设置成功,断电重启设备生效</cn><en>The settings are saved successfully and will take effect after powering off and restarting the device</en>', 'success');
+                }
+            })
+        })
+    }
+
+    const addOutputEdidConf = () => {
         return new Promise(resolve => {
-            func("/root/delCustomEdid").then(()=>{
-                rpc("enc.addEdid").then(ret => {
-                    checkFileExists("/config/edid/@edid.bin").then(res => {
+            delCustomEdidFile("@it6630.bin").then(()=>{
+                rpc("enc.addOutputEdid",["@it6630.bin"]).then(ret => {
+                    checkFileExists("/config/edid/@it6630.bin").then(res => {
                         resolve(res);
                     })
                 })
             })
         })
     }
+
+    const delCustomEdidFile = edid => {
+        return new Promise(resolve => {
+            func("/root/delCustomEdid",{"edid":edid}).then(()=>{
+               resolve();
+            })
+        })
+    }
+
     onMounted(handleEdidConf);
-    return { edidConf,edidFiles,handleEdidConf,updateEdidConf,addEdidConf }
+    return { inputEdidConf,outputEdidConf,edidFiles,handleEdidConf,updateInputEdidConf,updateOutputEdidConf,addOutputEdidConf,delCustomEdidFile }
 }
 
 export const useSnConf = () => {

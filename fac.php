@@ -175,8 +175,8 @@
                     <div class="card">
                         <div class="card-header bg-transparent">
                             <div class="p-2 mb-0 d-flex align-items-end">
-                                <cn>EDID</cn>
-                                <en>EDID</en>
+                                <cn>输入EDID</cn>
+                                <en>Input Edid</en>
                             </div>
                         </div>
                         <div class="card-body" >
@@ -186,18 +186,53 @@
                                     <en>EDID</en>
                                 </div>
                                 <div class="col-lg-8">
-                                    <select class="form-select" v-model="edidConf">
-                                        <option v-for="(item,index) in edidFiles" :value="item">{{item}}</option>
+                                    <select class="form-select" v-model="inputEdidConf">
+                                        <option v-for="(item,index) in handInputEdidFiles" :value="item">{{item}}</option>
                                     </select>
                                 </div>
                             </div>
                             <div class="row mt-3">
                                 <div class="col-lg-12 text-center">
-                                    <button type="button" class="btn btn-primary border-2 px-3" @click="updateEdidConf">
+                                    <button type="button" class="btn btn-primary border-2 px-3" @click="updateInputEdidConf">
                                         <cn>保存</cn>
                                         <en>Save</en>
                                     </button>
-                                    <loading-button custom-class="btn btn-primary border-2 px-3 ms-1" @button-click="identifyEdid" :had-loading="checkLoading">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-4" v-if="Object.keys(hardwareConf).length > 0 && hardwareConf.fac === 'REC1'">
+                    <div class="card">
+                        <div class="card-header bg-transparent">
+                            <div class="p-2 mb-0 d-flex align-items-end">
+                                <cn>输出EDID</cn>
+                                <en>Output edid</en>
+                            </div>
+                        </div>
+                        <div class="card-body" >
+                            <div class="row mt-2">
+                                <div class="col-lg-3 d-flex lp-align-center">
+                                    <cn>EDID</cn>
+                                    <en>EDID</en>
+                                </div>
+                                <div class="col-lg-8">
+                                    <select class="form-select" v-model="outputEdidConf">
+                                        <option v-for="(item,index) in handOutputEdidFiles" :value="item">{{item}}</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="row mt-3">
+                                <div class="col-lg-12 text-center">
+                                    <button type="button" class="btn btn-primary border-2 px-3" @click="updateOutputEdidConf">
+                                        <cn>保存</cn>
+                                        <en>Save</en>
+                                    </button>
+                                    <button type="button" class="btn btn-primary border-2 px-3 ms-1" @click="deleteCustomEdidFile">
+                                        <cn>删除</cn>
+                                        <en>Delete</en>
+                                    </button>
+                                    <loading-button custom-class="btn btn-primary border-2 px-3 ms-1 checkEdid" @button-click="identifyEdid" :had-loading="checkLoading">
                                         <cn>识别</cn>
                                         <en>Identify</en>
                                     </loading-button>
@@ -271,10 +306,10 @@
 <script type="module">
     import { useHardwareConf,useFacConf,useLphConf,useColorModeConf,useEdidConf,useMcuConf,useWebVerConf } from "./assets/js/vue.hooks.js";
     import { ignoreCustomElementPlugin,bootstrapSwitchComponent,languageOptionDirective,loadingButtonComponent } from "./assets/js/vue.helper.js"
-    import {alertMsg, confirm, func, isEmpty} from "./assets/js/lp.utils.js";
+    import {alertMsg, confirm, func, isEmpty, extractAryEle, removeAryEle} from "./assets/js/lp.utils.js";
     import vue from "./assets/js/vue.build.js";
 
-    const {createApp,ref,reactive,watchEffect,onMounted,nextTick} = vue;
+    const {createApp,ref,reactive,watchEffect,computed,onMounted,nextTick} = vue;
     const app = createApp({
         directives: {
             "language-option":languageOptionDirective
@@ -289,15 +324,60 @@
             const { facConf,updateFacConf } = useFacConf();
             const { lphConf,updateLphConf } = useLphConf();
             const { colorModeConf,updateColorModeConf } = useColorModeConf();
-            const { edidConf,edidFiles,handleEdidConf,updateEdidConf,addEdidConf } = useEdidConf();
+            const { inputEdidConf,outputEdidConf,edidFiles,
+                handleEdidConf,updateInputEdidConf, updateOutputEdidConf,
+                addOutputEdidConf,delCustomEdidFile } = useEdidConf();
             const { mcuConf } = useMcuConf();
             const { webVerConf,updateWebVerConf } = useWebVerConf();
 
             const checkLoading = ref(false);
 
+            const handInputEdidFiles = computed(() => {
+                const inputEdidAry = ['1080','4k','ITE','RGB','YUV','colorMode'];
+                if(edidFiles.length === 0)
+                    return [];
+                return extractAryEle(edidFiles,inputEdidAry);
+            });
+
+            const deleteCustomEdidFile = () => {
+                if(outputEdidConf.value === "default") {
+                    alertMsg('<cn>默认EDID文件禁止删除</cn><en>Deletion of EDID files is prohibited by default</en>', 'error');
+                    return;
+                }
+
+                confirm({
+                    title: '<cn>删除</cn><en>Delete</en>',
+                    content: '<cn>是否删除EDID文件: '+outputEdidConf.value+'？</cn><en>Whether to delete Edid file: '+outputEdidConf.value+'?</en>',
+                    buttons: {
+                        ok: {
+                            text: "<cn>删除</cn><en>Delete</en>",
+                            btnClass: 'btn-primary',
+                            keys: ['enter'],
+                            action: () => {
+                                delCustomEdidFile(outputEdidConf.value+".bin").then(()=>{
+                                    handleEdidConf();
+                                    alertMsg('<cn>删除成功</cn><en>Edid file has been delete!</en>', 'success');
+                                })
+                            }
+                        },
+                        cancel: {
+                            text: "<cn>取消</cn><en>Cancel</en>",
+                            action: () => {}
+                        }
+                    }
+                });
+            }
+
+            const handOutputEdidFiles = computed(() => {
+                const outputEdidAry = ['1080','4k','ITE','RGB','YUV','colorMode'];
+                if(edidFiles.length === 0)
+                    return [];
+                return removeAryEle(edidFiles,outputEdidAry);
+            });
+
             const identifyEdid = type => {
                 checkLoading.value = true;
-                addEdidConf().then(hadFile => {
+                addOutputEdidConf().then(hadFile => {
                     if(!hadFile) {
                         alertMsg('<cn>Edid识别失败</cn><en>Identify Edid failed!</en>', 'error');
                         alertMsg('<cn>请检查HDMI输出是否插入Edid有效源</cn><en>Check that the HDMI output is plugged into a valid Edid source!</en>', 'error');
@@ -317,7 +397,7 @@
                                                     </label>
                                                 </div>
                                                 <div class="col-lg-9">
-                                                    <input class="form-control" type="text" id="custom_edid" autocomplete="off">
+                                                    <input class="form-control" type="text" id="custom_edid" style="box-shadow: none" autocomplete="off">
                                                 </div>
                                             </div>
                                         </div>
@@ -357,8 +437,9 @@
                 })
             }
 
-            return {hardwareConf,updateHardwareConf,facConf,updateFacConf, colorModeConf, updateColorModeConf, edidConf,edidFiles,
-                updateEdidConf, addEdidConf,lphConf,updateLphConf,mcuConf,webVerConf,updateWebVerConf,checkLoading,identifyEdid}
+            return {hardwareConf,updateHardwareConf,facConf,updateFacConf, colorModeConf, updateColorModeConf,
+                inputEdidConf,outputEdidConf,handInputEdidFiles,handOutputEdidFiles, updateInputEdidConf,updateOutputEdidConf,
+                addOutputEdidConf,deleteCustomEdidFile,lphConf,updateLphConf,mcuConf,webVerConf,updateWebVerConf,checkLoading,identifyEdid}
         }
     });
     app.use(ignoreCustomElementPlugin);
