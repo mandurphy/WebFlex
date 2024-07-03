@@ -48,8 +48,8 @@
                     <i class="fa-solid fa-xmark"></i>
                 </div>
             </div>
-            <div class="sidebar-nav" ref="simplebar">
-                <ul class="metismenu" ref="metismenu">
+            <div class="sidebar-nav" ref="simplebarEle">
+                <ul class="metismenu" ref="metismenuEle">
                     <li>
                         <a href="dashboard.php">
                             <div class="parent-icon"><i class="fa fa-tachometer"></i></div>
@@ -260,8 +260,9 @@
            const { hardwareConf } = useHardwareConf();
 
            const state = {
-               simplebar: ref(null),
-               metismenu: ref(null),
+               simplebarEle: ref(null),
+               simplebar: reactive(null),
+               metismenuEle: ref(null),
                isMenuToggled : ref(false),
                isSidebarHovered: ref(false)
            }
@@ -274,8 +275,6 @@
                    });
            }
 
-           let metismenu = null;
-           let simplebar = null;
            const unwatch = watch(hardwareConf,()=>{
                if(Object.keys(hardwareConf).length > 0) {
                    nextTick(()=>{
@@ -294,9 +293,9 @@
                                break;
                            }
                        }
-                       metismenu = new Metismenu(state.metismenu.value);
-                       simplebar = new SimpleBar(state.simplebar.value);
-                       observeMenuChanges(state.metismenu.value);
+                       new Metismenu(state.metismenuEle.value);
+                       state.simplebar = new SimpleBar(state.simplebarEle.value);
+                       observeMenuChanges(state.metismenuEle.value);
                        unwatch();
                    })
                }
@@ -316,7 +315,7 @@
                         if (mutation.type === 'attributes' && mutation.attributeName === 'class') {
                             const target = mutation.target;
                             if (target.classList.contains('mm-active'))
-                                setTimeout(()=> simplebar.recalculate(),230);
+                                setTimeout(()=> state.simplebar .recalculate(),230);
                         }
                     });
                 });
