@@ -94,4 +94,28 @@ class RpcClient
         $client->query('enc.updateOverlay',[json_encode($param,JSON_UNESCAPED_UNICODE|JSON_PRETTY_PRINT)]);
         $client->send();
     }
+
+    public function isRecordState()
+    {
+        $client = new Client(self::enc_url);
+        $client->query('rec.isRecordState',[],$ret);
+        $client->send();
+        return $ret;
+    }
+
+    public function getNDIList()
+    {
+        $client = new Client(self::enc_url);
+        $client->query('enc.getNDIList',[],$ret);
+        $client->send();
+        return $ret;
+    }
+
+    public function get_disk_space()
+    {
+        $client = new Client(self::enc_url);
+        $client->query('rec.getState',[],$ret);
+        $client->send();
+        return $ret;
+    }
 }

@@ -181,6 +181,12 @@ class Conf extends Basic
         return $this->handleRet("",'success','保存成功','save successfully');
     }
 
+    function updateSrtPushConf($param)
+    {
+        file_put_contents( '/link/config/misc/srtPush.json', json_encode($param,JSON_UNESCAPED_SLASHES|JSON_UNESCAPED_UNICODE|JSON_PRETTY_PRINT));
+        return $this->handleRet("",'success','保存成功','save successfully');
+    }
+
     function saveConfigFile($param) {
         file_put_contents( "/link/".$param["path"], $param['data'] );
         return json_encode(array("result" => "OK"),JSON_UNESCAPED_SLASHES|JSON_UNESCAPED_UNICODE|JSON_PRETTY_PRINT);

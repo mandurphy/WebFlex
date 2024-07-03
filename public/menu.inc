@@ -48,7 +48,7 @@
                     <i class="fa-solid fa-xmark"></i>
                 </div>
             </div>
-            <div class="sidebar-nav" data-simplebar>
+            <div class="sidebar-nav" ref="simplebar">
                 <ul class="metismenu" ref="metismenu">
                     <li>
                         <a href="dashboard.php">
@@ -246,6 +246,7 @@
     import { func,updateSysLanguage,confirm } from "../assets/js/lp.utils.js";
     import { useThemeConf,useHardwareConf,useWebVerConf } from "../assets/js/vue.hooks.js"
     import { ignoreCustomElementPlugin,usbOptionComponent,searchSettingComponent } from "../assets/js/vue.helper.js"
+    import mutationObserver from './assets/plugins/polyfill/mutationobserver.esm.js';
 
     const { createApp,ref,reactive,watchEffect,watch,nextTick,onMounted } = vue;
     const menu = createApp({
@@ -259,6 +260,7 @@
            const { hardwareConf } = useHardwareConf();
 
            const state = {
+               simplebar: ref(null),
                metismenu: ref(null),
                isMenuToggled : ref(false),
                isSidebarHovered: ref(false)
@@ -272,6 +274,8 @@
                    });
            }
 
+           let metismenu = null;
+           let simplebar = null;
            const unwatch = watch(hardwareConf,()=>{
                if(Object.keys(hardwareConf).length > 0) {
                    nextTick(()=>{
@@ -290,6 +294,9 @@
                                break;
                            }
                        }
+                       metismenu = new Metismenu(state.metismenu.value);
+                       simplebar = new SimpleBar(state.simplebar.value);
+                       observeMenuChanges(state.metismenu.value);
                        unwatch();
                    })
                }
@@ -302,6 +309,24 @@
                else
                    body.classList.remove('toggled');
            })
+
+            const observeMenuChanges = element => {
+                const observer = new mutationObserver((mutations) => {
+                    mutations.forEach((mutation) => {
+                        if (mutation.type === 'attributes' && mutation.attributeName === 'class') {
+                            const target = mutation.target;
+                            if (target.classList.contains('mm-active'))
+                                setTimeout(()=> simplebar.recalculate(),230);
+                        }
+                    });
+                });
+
+                observer.observe(element, {
+                    attributes: true,
+                    subtree: true,
+                    attributeFilter: ['class'],
+                });
+            }
 
            const onHrefDash = () => {
                 location.href="/dashboard.php";
@@ -347,7 +372,6 @@
                });
            }
 
-           onMounted(() => new Metismenu(state.metismenu.value));
            return {...state,hardwareConf,themeConf,webVerConf,updateThemeConf,onHrefDash,onLogout,
                onToggleMenu,onMouseEnter,onMouseLeave,onCloseSidebar,updateSysLanguage,changeWeb}
        }

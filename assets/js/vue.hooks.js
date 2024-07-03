@@ -1221,6 +1221,12 @@ export const useRXPushConf = () => {
     }
     const updateRXPushConf = (tip= "tip") => {
         return new Promise((resolve,reject)=>{
+            rxPushConf.forEach(item => {
+                if(item.hasOwnProperty("server"))
+                    delete item.server;
+                if(item.hasOwnProperty("key"))
+                    delete item.key;
+            })
             func("/conf/updateRXPushConf",rxPushConf).then(data => {
                 if ( data.status !== "success" ) {
                     reject();
@@ -1236,7 +1242,32 @@ export const useRXPushConf = () => {
     }
     onMounted(handleRstreamConf);
     return {rxPushConf,updateRXPushConf}
+}
 
+export const useSrtPushConf = () => {
+    const srtPushConf = reactive([]);
+    const handleSrtPushConf = () => {
+        queryData("config/misc/srtPush.json").then((conf) => {
+            srtPushConf.splice(0, srtPushConf.length, ...conf);
+        });
+    }
+    const updateSrtPushConf = (tip= "tip") => {
+        return new Promise((resolve,reject)=>{
+            func("/conf/updateSrtPushConf",srtPushConf).then(data => {
+                if ( data.status !== "success" ) {
+                    reject();
+                    if(tip !== "noTip")
+                        alertMsg('<cn>保存设置失败</cn><en>Save config failed!</en>', 'error');
+                } else {
+                    resolve();
+                    if(tip !== "noTip")
+                        alertMsg('<cn>保存设置成功</cn><en>Save config successfully!</en>', 'success');
+                }
+            })
+        })
+    }
+    onMounted(handleSrtPushConf);
+    return {srtPushConf,updateSrtPushConf}
 }
 
 

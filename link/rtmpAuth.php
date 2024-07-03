@@ -11,8 +11,11 @@ function load_conf($path,$type = true): array
     return $json;
 }
 
+$call = $_POST["call"];
 $name = $_POST["name"];
+
 $rxPushConf = load_conf("/link/config/misc/rxPush.json");
+
 foreach ($rxPushConf as $item)
 {
     $parsedUrl = parse_url($item['url']);
@@ -22,16 +25,33 @@ foreach ($rxPushConf as $item)
     {
         if($item['auth'])
         {
-            $hash = md5('uname='.$item['uname'].'&passwd='.$item['passwd']);
-            $auth = substr($hash, 0, 16);
-            $auth = strtoupper($auth);
-            //file_put_contents('/link/log.txt', print_r($auth, true) . "\n", FILE_APPEND);
-            if($_POST['Auth'] != $auth)
+            if($call == "publish")
             {
-                http_response_code(403);
-                return;
+                $hash = md5('uname='.$item['uname'].'&passwd='.$item['passwd']);
+                $auth = substr($hash, 0, 16);
+                $auth = strtoupper($auth);
+                //file_put_contents('/link/log.txt', print_r($auth, true) . "\n", FILE_APPEND);
+                if($_POST['Auth'] != $auth)
+                {
+                    http_response_code(403);
+                    return;
+                }
+            }
+            if($call == "play")
+            {
+                $uname = $_POST["uname"];
+                $passwd = $_POST["passwd"];
+                if($item['uname'] != $uname || $item['passwd'] != $passwd)
+                {
+                    http_response_code(403);
+                    return;
+                }
             }
         }
     }
 }
+
+
+
+
 
