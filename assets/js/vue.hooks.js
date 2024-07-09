@@ -1270,6 +1270,33 @@ export const useSrtPushConf = () => {
     return {srtPushConf,updateSrtPushConf}
 }
 
+export const useLedConf = () => {
+    const ledConf = reactive({});
+    const handleLedConf = () => {
+        queryData("config/led/config.json").then((conf) => {
+            clearReactiveObject(ledConf);
+            Object.assign(ledConf,conf);
+        });
+    }
+    const updateLedConf = (tip= "tip") => {
+        return new Promise((resolve,reject)=>{
+            func("/conf/updateLedConf",ledConf).then(data => {
+                if ( data.status !== "success" ) {
+                    reject();
+                    if(tip !== "noTip")
+                        alertMsg('<cn>保存设置失败</cn><en>Save config failed!</en>', 'error');
+                } else {
+                    resolve();
+                    if(tip !== "noTip")
+                        alertMsg('<cn>保存设置成功,重启设备生效</cn><en>Save config successfully,and restart takes effect!</en>', 'success');
+                }
+            })
+        })
+    }
+    onMounted(handleLedConf);
+    return {ledConf,updateLedConf}
+}
+
 
 
 

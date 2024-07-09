@@ -25,6 +25,9 @@
                         </a>
                     </li>
                     <li class="nav-item">
+                        <led-option></led-option>
+                    </li>
+                    <li class="nav-item">
                         <usb-option></usb-option>
                     </li>
 <!--                    <li class="nav-item">-->
@@ -245,13 +248,14 @@
     import Metismenu from '../assets/plugins/metismenu/js/metisMenu.esm.js';
     import { func,updateSysLanguage,confirm } from "../assets/js/lp.utils.js";
     import { useThemeConf,useHardwareConf,useWebVerConf } from "../assets/js/vue.hooks.js"
-    import { ignoreCustomElementPlugin,usbOptionComponent,searchSettingComponent } from "../assets/js/vue.helper.js"
-    import mutationObserver from './assets/plugins/polyfill/mutationobserver.esm.js';
+    import { ignoreCustomElementPlugin,usbOptionComponent,searchSettingComponent,ledOptionComponent } from "../assets/js/vue.helper.js"
+    import mutationObserver from '../assets/plugins/polyfill/mutationobserver.esm.js';
 
     const { createApp,ref,reactive,watchEffect,watch,nextTick,onMounted } = vue;
     const menu = createApp({
         components:{
             "usb-option": usbOptionComponent,
+            "led-option": ledOptionComponent,
             "search-setting": searchSettingComponent
         },
         setup() {

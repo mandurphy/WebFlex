@@ -6,7 +6,7 @@ import * as noUiSlider from "../plugins/nouislider/js/nouislider.esm.js";
 import mutationObserver from '../plugins/polyfill/mutationobserver.esm.js'
 import {md5} from "../plugins/md5/js.md5.esm.js";
 import {alertMsg, axios_post, clearReactiveArray, confirm, formatTime, func, getUrlParam, isEmpty, rebootConfirm} from './lp.utils.js'
-import {useDiskConf} from "./vue.hooks.js";
+import {useDiskConf,useLedConf} from "./vue.hooks.js";
 
 const { ref, reactive, toRefs, watch, watchEffect, computed, onMounted, nextTick, defineAsyncComponent } = vue;
 
@@ -2438,3 +2438,132 @@ export const searchSettingComponent = {
         return {...state,onRedirect,onClickOutside,highlightSubstring,onFilterKeywordCtx}
     }
 };
+
+export const ledOptionComponent = {
+    template: `<a class="nav-link" @click="onClickLedBtn">
+                    <i class="fa-solid fa-toggle-off"></i>
+                </a>`,
+    setup(props, context) {
+
+        const {ledConf,updateLedConf} = useLedConf();
+
+        const modeTitle = {
+            signal: {
+                cn: '开机提示',
+                en: 'signal'
+            },
+            record: {
+                cn: '录制提示',
+                en: 'record'
+            },
+            push: {
+                cn: '推流提示',
+                en: 'record'
+            },
+            tally: {
+                cn: 'tally模式',
+                en: 'tally'
+            }
+        }
+
+        const onClickLedBtn = () => {
+            confirm({
+                title: '<cn>LED设置</cn><en>LED Config</en>',
+                content: `<div class="row">
+                            <div class="col-lg-11">
+                                <div class="row mt-2">
+                                        <div class="col-lg-3 lp-align-center">
+                                            <label>
+                                                <cn>启用</cn>
+                                                <en>Enable</en>
+                                            </label>
+                                        </div>
+                                        <div class="col-lg-9">
+                                            <select class="form-select" id="targetEnable"></select>
+                                        </div>
+                                </div>
+                                <div class="row mt-2">
+                                        <div class="col-lg-3 lp-align-center">
+                                            <label>
+                                                <cn>模式</cn>
+                                                <en>Mode</en>
+                                            </label>
+                                        </div>
+                                        <div class="col-lg-9">
+                                            <select class="form-select" id="targetMode"></select>
+                                        </div>
+                                </div>
+                                <div class="row mt-2">
+                                    <div class="col-lg-3 lp-align-center">
+                                        <label>
+                                            <cn>亮度</cn>
+                                            <en>Brightness</en>
+                                        </label>
+                                    </div>
+                                    <div class="col-lg-9">
+                                        <select class="form-select" id="targetBright">
+                                            <option value="0.1">0.1</option>
+                                            <option value="0.2">0.2</option>
+                                            <option value="0.3">0.3</option>
+                                            <option value="0.4">0.4</option>
+                                            <option value="0.5">0.5</option>
+                                            <option value="0.6">0.6</option>
+                                            <option value="0.7">0.7</option>
+                                            <option value="0.8">0.8</option>
+                                            <option value="0.9">0.9</option>
+                                            <option value="1.0">1.0</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                          </div>`,
+                buttons: {
+                    ok: {
+                        text: "<cn>保存</cn><en>Save</en>",
+                        btnClass: 'btn-primary',
+                        action: () => {
+                            ledConf.enable = Boolean(document.querySelector('#targetEnable').value);
+                            ledConf.func = document.querySelector('#targetMode').value;
+                            ledConf.brightness = document.querySelector("#targetBright").value;
+                            updateLedConf().then(r => {});
+                        }
+                    },
+                    cancel: {
+                        text: "<cn>取消</cn><en>Cancel</en>",
+                        action: () => {
+                        }
+                    }
+                },
+                onOpenBefore: ()=>{
+                    const html = document.querySelector("html");
+                    const lang = html.getAttribute("data-bs-language");
+
+                    if(lang === 'cn') {
+                        document.querySelector('#targetEnable').add(new Option('开启','true'));
+                        document.querySelector('#targetEnable').add(new Option('关闭','false'));
+                    } else {
+                        document.querySelector('#targetEnable').add(new Option('ON','true'));
+                        document.querySelector('#targetEnable').add(new Option('OFF','false'));
+                    }
+
+                    const funcList = ledConf.funcList;
+                    Object.keys(funcList).forEach(key => {
+                        const option = document.createElement('option');
+                        option.value = key;
+                        option.text = modeTitle[key][lang];
+                        document.querySelector('#targetMode').add(option);
+                    })
+                    const targetEnable = document.querySelector("#targetEnable");
+                    targetEnable.value = ledConf.enable;
+                    const targetMode = document.querySelector("#targetMode");
+                    targetMode.value = ledConf.func;
+                    const targetBright = document.querySelector("#targetBright");
+                    targetBright.value = ledConf.brightness;
+                }
+            });
+        }
+
+
+        return {onClickLedBtn}
+    }
+}
