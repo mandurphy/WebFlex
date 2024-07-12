@@ -2441,7 +2441,7 @@ export const searchSettingComponent = {
 
 export const ledOptionComponent = {
     template: `<a class="nav-link" @click="onClickLedBtn">
-                    <i class="fa-solid fa-toggle-off"></i>
+                    <i class="fa-regular fa-futbol"></i>
                 </a>`,
     setup(props, context) {
 
@@ -2449,26 +2449,28 @@ export const ledOptionComponent = {
 
         const modeTitle = {
             signal: {
-                cn: '开机提示',
+                cn: '信号插入提示',
                 en: 'signal'
             },
             record: {
-                cn: '录制提示',
+                cn: '开始录制提示',
                 en: 'record'
             },
             push: {
-                cn: '推流提示',
-                en: 'record'
+                cn: '开始推流提示',
+                en: 'push'
             },
             tally: {
-                cn: 'tally模式',
+                cn: 'tally灯模式',
                 en: 'tally'
             }
         }
 
         const onClickLedBtn = () => {
             confirm({
-                title: '<cn>LED设置</cn><en>LED Config</en>',
+                title: '<cn>状态灯设置</cn><en>LED Config</en>',
+                boxWidth: '500px',
+                useBootstrap: false,
                 content: `<div class="row">
                             <div class="col-lg-11">
                                 <div class="row mt-2">
@@ -2497,7 +2499,7 @@ export const ledOptionComponent = {
                                     <div class="col-lg-3 lp-align-center">
                                         <label>
                                             <cn>亮度</cn>
-                                            <en>Brightness</en>
+                                            <en>Bright</en>
                                         </label>
                                     </div>
                                     <div class="col-lg-9">
@@ -2515,14 +2517,23 @@ export const ledOptionComponent = {
                                         </select>
                                     </div>
                                 </div>
-                            </div>
+                                <div class="row mt-4">
+                                    <div class="col-lg-12 tips" style="padding-left: 40px">
+                                        <cn>1、该功能可以使用设备两侧的LED灯提示设备的当前状态。</cn>
+                                        <en>1. This function uses side LEDs to show device status.</en>
+                                    </div>
+                                    <div class="col-lg-12 tips" style="padding-left: 40px">
+                                        <cn>2、选择不同的模式来匹配不同的应用场景。</cn>
+                                        <en>2. Choose modes for different scenarios.</en>
+                                    </div>
+                                </div>
                           </div>`,
                 buttons: {
                     ok: {
                         text: "<cn>保存</cn><en>Save</en>",
                         btnClass: 'btn-primary',
                         action: () => {
-                            ledConf.enable = Boolean(document.querySelector('#targetEnable').value);
+                            ledConf.enable = JSON.parse(document.querySelector('#targetEnable').value);
                             ledConf.func = document.querySelector('#targetMode').value;
                             ledConf.brightness = document.querySelector("#targetBright").value;
                             updateLedConf().then(r => {});
@@ -2542,8 +2553,8 @@ export const ledOptionComponent = {
                         document.querySelector('#targetEnable').add(new Option('开启','true'));
                         document.querySelector('#targetEnable').add(new Option('关闭','false'));
                     } else {
-                        document.querySelector('#targetEnable').add(new Option('ON','true'));
-                        document.querySelector('#targetEnable').add(new Option('OFF','false'));
+                        document.querySelector('#targetEnable').add(new Option('on','true'));
+                        document.querySelector('#targetEnable').add(new Option('off','false'));
                     }
 
                     const funcList = ledConf.funcList;

@@ -185,7 +185,6 @@ class System extends Basic
     function formatDisk($param)
     {
         exec("/link/shell/fusb.sh ".$param["disk"]." ".$param["format"]);
-        var_dump("/link/shell/fusb.sh ".$param["disk"]." ".$param["format"]);
         return $this->handleRet("",'success','格式化完成','Formatting completed');
     }
 
@@ -211,12 +210,15 @@ class System extends Basic
 
     function getLocalDisk()
     {
-        $output = shell_exec("ls /dev/sd*");
-        $arys = explode("\n",$output);
-
         $hardware = json_decode(file_get_contents("/link/config/hardware.json"));
         $chip = $hardware->chip;
-        if($chip == "SS524V100" || $chip == "SS528V100")
+        if($chip == "HI3516CV610")
+            $output = shell_exec("ls /dev/mmcblk*");
+        else
+            $output = shell_exec("ls /dev/sd*");
+        $arys = explode("\n",$output);
+
+        if($chip == "SS524V100" || $chip == "SS528V100" || $chip == "HI3531DV200" || $chip == "SS626V100")
             $arys[] = "/dev/mmcblk0p6";
 
         $retList = array();

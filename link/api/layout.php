@@ -116,12 +116,26 @@ class Layout extends Verify
 
                             $layList = [];
                             $layouts = $defLay['layouts'];
+                            $srcV = [];
+                            $srcA = [];
                             foreach ($layouts as $layout)
                             {
+                                $chnId = $layout['id'];
                                 $pos = $layout['pos'];
                                 array_push($layList,$pos);
+                                if($chnId > -1)
+                                    array_push($srcV,$chnId.'');
+                                if(isset($layout['ado']))
+                                {
+                                    if($layout['ado'])
+                                        array_push($srcA,$chnId.'');
+                                }
                             }
                             $item['layout'] = $layList;
+                            if(count($srcV) > 0)
+                                $item['srcV'] = $srcV;
+                            if(count($srcA) > 0)
+                                $item['srcA'] = $srcA;
                         }
                     }
                     if($key == 'srcV' || $key == 'srcA')

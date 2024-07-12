@@ -24,7 +24,7 @@
                             <i class="fa-solid fa-arrow-right-arrow-left"></i>
                         </a>
                     </li>
-                    <li class="nav-item">
+                    <li class="nav-item" v-if="Object.keys(hardwareConf).length > 0 && (hardwareConf.fac === 'ENCS1'|| hardwareConf.fac === 'MINI')">
                         <led-option></led-option>
                     </li>
                     <li class="nav-item">
@@ -154,7 +154,7 @@
                             </li>
                         </ul>
                     </li>
-                    <li>
+                    <li v-if="Object.keys(hardwareConf).length > 0 && hardwareConf.chip !== 'HI3516CV610'">
                         <a href="javascript:;" class="has-arrow">
                             <div class="parent-icon"><i class="fa-solid fa-gears"></i></div>
                             <div class="menu-title"><cn>高级设置</cn><en>Options</en></div>
