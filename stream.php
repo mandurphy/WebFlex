@@ -809,7 +809,19 @@
                                              <input type="text" class="form-control" v-model.trim.lazy="item.stream.suffix">
                                          </div>
                                          <div class="col">
-                                             <div class="play-url" v-html="handlePlayUrl(index,'main')"></div>
+                                             <div class="play-url">
+                                                 <div class="row">
+                                                     <div class="col-lg-12 mt-1" v-for="(item,urlIdx) in handlePlayUrl(index,'main')">
+                                                         <div class="input-group">
+                                                             <input class="form-control" v-model.trim.lazy="item" disabled readonly>
+                                                             <button class="btn btn-primary input-group-text input-group-addon lp-cursor-pointer"
+                                                                     @click="onCopyPlayerUrl(index,urlIdx,'main')">
+                                                                 <i class="fa-regular fa-copy"></i>
+                                                             </button>
+                                                         </div>
+                                                     </div>
+                                                 </div>
+                                             </div>
                                          </div>
                                      </div>
                                  </div>
@@ -819,7 +831,19 @@
                                              <input type="text" class="form-control" v-model.trim.lazy="item.stream2.suffix">
                                          </div>
                                          <div class="col">
-                                             <div class="play-url" v-html="handlePlayUrl(index,'sub')"></div>
+                                             <div class="play-url">
+                                                 <div class="row">
+                                                     <div class="col-lg-12 mt-1" v-for="(item,urlIdx) in handlePlayUrl(index,'sub')">
+                                                         <div class="input-group">
+                                                             <input class="form-control" v-model.trim.lazy="item" disabled readonly>
+                                                             <button class="btn btn-primary input-group-text input-group-addon lp-cursor-pointer"
+                                                                     @click="onCopyPlayerUrl(index,urlIdx,'sub')">
+                                                                 <i class="fa-regular fa-copy"></i>
+                                                             </button>
+                                                         </div>
+                                                     </div>
+                                                 </div>
+                                             </div>
                                          </div>
                                      </div>
                                  </div>
@@ -845,7 +869,7 @@
 
 <script type="module">
 
-    import {rpc, extend, deepCopy, clearReactiveArray, clearReactiveObject} from "./assets/js/lp.utils.js";
+    import {alertMsg,rpc, extend, deepCopy, clearReactiveObject, isEmpty} from "./assets/js/lp.utils.js";
     import { useDefaultConf,useHardwareConf,usePortConf } from "./assets/js/vue.hooks.js";
     import { ignoreCustomElementPlugin,filterKeywordPlugin,bootstrapSwitchComponent,multipleInputComponent,languageOptionDirective } from "./assets/js/vue.helper.js"
     import vue from "./assets/js/vue.build.js";
@@ -871,66 +895,85 @@
                 pushSpeed: reactive([])
             }
             
-            const getport = (list,type) => {
+            const getport = (type) => {
+                const list =portConf[type];
                 if(list[2] !== list[0])
-                    return ":"+list[2];
+                    return list[2];
                 else if(list[1] !== list[0])
-                    return ":"+list[1];
+                    return list[1];
                 else if((type === "http" && list[0] === 80) || (type === "rtsp" && list[0] === 554) ||
                         (type === "rtmp" && list[0] === 1935) || (type === "httpts" && list[0] === 8090))
                     return "";
                 else
-                    return ":"+list[0];
+                    return list[0];
             }
 
-            const transURL = (str) => {
-                let ret = "";
-                let ip = window.location.hostname;
-                let list = str.split("|");
-                for(let i = 0;i < list.length;i++){
-                    let url = list[i];
-                    if(url.indexOf("http") === 0){
-                        if(url.indexOf("///live") > 0 ){
-                            let port=getport(portConf.http,"http");
-                            let port2=getport(portConf.httpts,"httpts");
-                            if(port !== "" || port2 !== ""){
-                                if(port !== "" && port2 === "")
-                                    port2 = ":" + portConf.httpts[0];
-                                url = url.replace("///live","//"+ip+port2);
-                            } else {
-                                url = url.replace("///","//"+ip+"/");
-                            }
-                        } else {
-                            let port = getport(portConf.http,"http");
-                            url = url.replace("///","//"+ip+port+"/");
-                        }
-                    } else if(url.indexOf("rtmp") === 0) {
-                        let port = getport(portConf.rtmp,"rtmp");
-                        url = url.replace("///","//"+ip+port+"/");
-                    } else if(url.indexOf("rtsp") === 0) {
-                        let port = getport(portConf.rtsp,"rtsp");
-                        if(url.indexOf("@/") > 0)
-                            url = url.replace("@/","@"+ip+port+"/");
-                        else
-                            url = url.replace("///","//"+ip+port+"/");
-                    } else if(url.indexOf("srt") === 0) {
-                        url=url.replace("//:","//"+ip+":");
-                    }
-                    ret+=url+"<br>";
+            const transURL = stream => {
+                const urls = [];
+                if (stream.http) {
+                    const port = getport("httpts");
+                    const portPart = port ? `:${port}` : '';
+                    urls.push(`http://${window.location.hostname}${portPart}/live/${stream.suffix}`);
                 }
-                return ret;
-            }
+                if (stream.hls)
+                    urls.push(`http://${window.location.host}/hls/${stream.suffix}.m3u8`);
+                if (stream.rtmp) {
+                    const port = getport("rtmp");
+                    const portPart = port ? `:${port}` : '';
+                    urls.push(`rtmp://${window.location.hostname}${portPart}/live/${stream.suffix}`);
+                    let flvUrl = `http://${window.location.host}/flv?app=live&stream=${stream.suffix}`;
+                    if(port)
+                        flvUrl += `&port=${port}`;
+                    urls.push(flvUrl);
+                }
+                if (stream.rtsp.enable) {
+                    const port = getport("rtsp");
+                    const portPart = port ? `:${port}` : '';
+                    urls.push(`rtsp://${window.location.host}${portPart}/live/${stream.suffix}`);
+                }
+
+                if (stream.srt.enable) {
+                    const mode = stream.srt.mode === "listener" ? "caller" : "listener";
+                    const ip = stream.srt.ip === "127.0.0.1" ? window.location.hostname : stream.srt.ip;
+                    let url = `srt://${ip}:${stream.srt.port}?mode=${mode}`
+                    if(!isEmpty(stream.srt.latency))
+                        url += `&latency=${stream.srt.latency}`;
+                    if(!isEmpty(stream.srt.passwd))
+                        url += `&passphrase=${stream.srt.passwd}`;
+                    if(!isEmpty(stream.srt.streamid))
+                        url += `&streamid=${stream.srt.streamid}`;
+                    urls.push(url);
+                }
+                if (stream.webrtc)
+                    urls.push(`http://${window.location.host}/webrtc?app=live&stream=${stream.suffix}`);
+                return urls;
+            };
 
             const updatePlayUrl = () => {
-                rpc("enc.getEPG").then(data => {
-                    clearReactiveArray(state.playUrls);
-                    for(let i=0;i<data.length;i++){
-                        state.playUrls.push({
-                            "main": transURL(data[i].url),
-                            "sub": transURL(data[i].url2)
-                        })
-                    }
+                defaultConf.forEach(item => {
+                    if (!item.enable && !item.enable2) return;
+                    state.playUrls.push({
+                        main: item.enable ? transURL(item.stream) : [],
+                        sub: item.enable2 ? transURL(item.stream2) : []
+                    });
                 });
+            }
+
+            const onCopyPlayerUrl = (chnIndex,urlIndex,type) => {
+                const chnUrl = state.playUrls[chnIndex];
+                const urls = chnUrl[type];
+                const url = urls[urlIndex];
+                const textarea = document.createElement("textarea");
+                textarea.value = url;
+                document.body.appendChild(textarea);
+                textarea.select();
+                let success = document.execCommand("copy");
+                document.body.removeChild(textarea);
+                if (!success) {
+                    alertMsg('<cn>复制失败，请手动复制</cn><en>Copy failed, please copy manually</en>', 'error');
+                    return;
+                }
+                alertMsg('<cn>已复制</cn><en>Have copied</en>', 'success');
             }
 
             const getPushSpeed = () => {
@@ -1029,7 +1072,7 @@
                 updateDefaultConf().then(updatePlayUrl);
             }
         
-            return {...state,defaultConf,hardwareConf,handleEnableConf,handlePlayUrl,handlePushSpeed,saveGlobalConfByLocal,saveDefaultConf}
+            return {...state,defaultConf,hardwareConf,handleEnableConf,handlePlayUrl,handlePushSpeed,saveGlobalConfByLocal,saveDefaultConf,onCopyPlayerUrl}
         }
     });
     app.use(ignoreCustomElementPlugin);
