@@ -43,7 +43,7 @@
                 <div class="card">
                     <div class="card-header bg-transparent">
                         <div class="p-2 mb-0 d-flex align-items-end">
-                            NDI
+                            WebRTC
                         </div>
                     </div>
                     <div class="card-body pb-4 gpio-btn">
@@ -55,12 +55,12 @@
                                 </label>
                             </div>
                             <div class="col-lg-8">
-                                <textarea  class="form-control" name="config" v-model="ndiConf"></textarea>
+                                <textarea  class="form-control" name="config" v-model="webrtcConf"></textarea>
                             </div>
                         </div>
                         <div class="row mt-4">
                             <div class="col-lg-12 text-center">
-                                <button type="button" class="btn border-3 btn-primary px-4" @click="updateNdiConf">
+                                <button type="button" class="btn border-3 btn-primary px-4" @click="updateWebRTCConf">
                                     <cn>保存</cn>
                                     <en>Save</en>
                                 </button>
@@ -151,6 +151,36 @@
                     </div>
                 </div>
             </div>
+            <div class="col-lg-6">
+                <div class="card">
+                    <div class="card-header bg-transparent">
+                        <div class="p-2 mb-0 d-flex align-items-end">
+                            NDI
+                        </div>
+                    </div>
+                    <div class="card-body pb-4 gpio-btn">
+                        <div class="row mt-3">
+                            <div class="col-lg-2 offset-lg-1 d-flex justify-content-center">
+                                <label>
+                                    <cn>配置</cn>
+                                    <en>Config</en>
+                                </label>
+                            </div>
+                            <div class="col-lg-8">
+                                <textarea  class="form-control" name="config" v-model="ndiConf"></textarea>
+                            </div>
+                        </div>
+                        <div class="row mt-4">
+                            <div class="col-lg-12 text-center">
+                                <button type="button" class="btn border-3 btn-primary px-4" @click="updateNdiConf">
+                                    <cn>保存</cn>
+                                    <en>Save</en>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     </main>
 </div>
@@ -158,7 +188,7 @@
 
 <script type="module">
     import { alertMsg } from "./assets/js/lp.utils.js";
-    import { useServiceConf,useSlsConf,useRtmpConf,useNdiConf,useFrpEnableConf,useFrpcConf } from "./assets/js/vue.hooks.js";
+    import { useServiceConf,useSlsConf,useRtmpConf,useNdiConf,useFrpEnableConf,useFrpcConf,useWebRTCConf } from "./assets/js/vue.hooks.js";
     import { ignoreCustomElementPlugin,filterKeywordPlugin,bootstrapSwitchComponent } from "./assets/js/vue.helper.js";
     import vue from "./assets/js/vue.build.js";
 
@@ -175,6 +205,7 @@
             const { ndiConf,updateNdiConf } = useNdiConf();
             const { frpEnableConf,updateFrpEnableConf } = useFrpEnableConf();
             const { frpcConf,updateFrpcConf } = useFrpcConf();
+            const { webrtcConf,updateWebRTCConf } = useWebRTCConf();
 
             const saveSrtConf = () => {
                 Promise.all([
@@ -202,7 +233,8 @@
                 });
             }
             
-            return {serviceConf,slsConf,rtmpConf,updateRtmpConf,ndiConf,updateNdiConf,frpEnableConf,frpcConf,saveSrtConf,saveFrpConf}
+            return {serviceConf,slsConf,rtmpConf,updateRtmpConf,ndiConf,updateNdiConf,
+                frpEnableConf,frpcConf,saveSrtConf,saveFrpConf,webrtcConf,updateWebRTCConf}
         }
     });
     app.use(ignoreCustomElementPlugin);

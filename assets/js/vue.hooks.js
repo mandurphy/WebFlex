@@ -1297,6 +1297,32 @@ export const useLedConf = () => {
     return {ledConf,updateLedConf}
 }
 
+export const useWebRTCConf = () => {
+    const webrtcConf = ref("");
+    const handleLedConf = () => {
+        queryData("config/rproxy/webrtc.json").then((conf) => {
+            webrtcConf.value = JSON.stringify(conf,null,4);
+        });
+    }
+    const updateWebRTCConf = (tip= "tip") => {
+        return new Promise((resolve,reject)=>{
+            func("/conf/updateWebRTCConf",webrtcConf.value).then(data => {
+                if ( data.status !== "success" ) {
+                    reject();
+                    if(tip !== "noTip")
+                        alertMsg('<cn>保存设置失败</cn><en>Save config failed!</en>', 'error');
+                } else {
+                    resolve();
+                    if(tip !== "noTip")
+                        alertMsg('<cn>保存设置成功,重启设备生效</cn><en>Save config successfully,and restart takes effect!</en>', 'success');
+                }
+            })
+        })
+    }
+    onMounted(handleLedConf);
+    return {webrtcConf,updateWebRTCConf}
+}
+
 
 
 

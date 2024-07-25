@@ -21,7 +21,7 @@
                                     </div>
                                     <div class="flex-grow-0">
                                         <select class="form-select" v-model="activeChnId" @change="onChangePlayerChn">
-                                            <option v-for="(item,index) in handleActivePlayerConf" :value="item.id" :data-attr-codec="item.encv.codec" :data-attr-suffix="item.stream.suffix" :data-attr-audio="item.enca.codec !== 'close'">{{item.name}}</option>
+                                            <option v-for="(item,index) in handleActivePlayerConf" :value="item.id" :data-attr-codec="item.encv.codec" :data-attr-suffix="item.stream.suffix" :data-attr-audio="item.enca.codec !== 'close'" :data-attr-protocol="item.stream.rtmp?'rtmp':'webrtc'">{{item.name}}</option>
                                         </select>
                                     </div>
                                     <div class="flex-grow-0" v-if="playerCodec === 'h265'">
@@ -40,13 +40,13 @@
                             </div>
                             <div class="row">
                                 <div class="col-lg-12 mt-2 mb-2">
-                                    <h5-player :url="playerUrl" :codec="playerCodec" :audio="playerAudio" :buffer="bufferTime"></h5-player>
+                                    <h5-player :url="playerUrl" :codec="playerCodec" :audio="playerAudio" :protocol="playerProtocol" :buffer="bufferTime"></h5-player>
                                 </div>
                             </div>
                             <div class="row mt-2">
                                 <div class="col-lg-12 tips">
-                                    <cn>1、使用h5播放器，需要在串流输出页面开启对应视频通道的rtmp输出协议</cn>
-                                    <en>1. To use H5 player, enable the RTMP protocol for the corresponding video channel</en>
+                                    <cn>1、使用h5播放器，需要在串流输出页面开启对应视频通道的rtmp或webrtc输出协议</cn>
+                                    <en>1. To use H5 player, enable the RTMP or WebRTC protocol for the corresponding video channel</en>
                                 </div>
                                 <div class="col-lg-12 tips">
                                     <cn>2、播放h265编码的视频流对电脑配置要求较高，如果遇到音视频卡顿问题，请更换性能更好的电脑播放</cn>
@@ -79,17 +79,23 @@
                 playerUrl: ref(""),
                 playerCodec: ref(""),
                 playerAudio: ref(false),
+                playerProtocol:ref(""),
                 bufferTime:ref(200)
             }
             
             const unwatch = watch(defaultConf,(value)=>{
                 for(let i=0;i<defaultConf.length;i++) {
                     let item = defaultConf[i];
-                    if (item.enable && item.stream.rtmp) {
+                    if (item.enable && (item.stream.rtmp || item.stream.webrtc)) {
+                        const protocol = item.stream.rtmp ? "rtmp" : "webrtc";
                         state.activeChnId.value = item.id;
-                        state.playerUrl.value = 'http://'+window.location.host+'/flv?app=live&stream='+item.stream.suffix;
+                        if(protocol === 'webrtc')
+                            state.playerUrl.value = `http://${window.location.host}/webrtc?app=live&stream=${item.stream.suffix}`;
+                        else
+                            state.playerUrl.value = `http://${window.location.host}/flv?app=live&stream=${item.stream.suffix}`;
                         state.playerCodec.value = item.encv.codec;
                         state.playerAudio.value = item.enca.codec !== "close";
+                        state.playerProtocol.value = protocol
                         break;
                     }
                 }
@@ -98,7 +104,7 @@
             
             const handleActivePlayerConf = computed(()=>{
                 return defaultConf.filter((item,index)=>{
-                    return !!(item.enable && item.type !=="ndi" && item.stream.rtmp);
+                    return !!(item.enable && item.type !=="ndi" && (item.stream.rtmp || item.stream.webrtc));
                 })
             })
             
@@ -109,9 +115,15 @@
             const onChangePlayerChn = (event) => {
                 const selectElement = event.target;
                 const selectedOption = selectElement.options[selectElement.selectedIndex];
-                state.playerUrl.value = 'http://'+window.location.host+'/flv?app=live&stream='+selectedOption.getAttribute('data-attr-suffix');
+                const protocol = selectedOption.getAttribute('data-attr-protocol');
+                const suffix = selectedOption.getAttribute('data-attr-suffix');
+                if(protocol === 'webrtc')
+                    state.playerUrl.value = `http://${window.location.host}/webrtc?app=live&stream=${suffix}`;
+                else
+                    state.playerUrl.value = `http://${window.location.host}/flv?app=live&stream=${suffix}`;
                 state.playerCodec.value = selectedOption.getAttribute('data-attr-codec');
                 state.playerAudio.value = selectedOption.getAttribute('data-attr-audio');
+                state.playerProtocol.value = protocol;
             }
             
             onMounted(()=>{

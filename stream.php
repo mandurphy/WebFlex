@@ -38,6 +38,14 @@
                                      <cn>RTSP</cn>
                                      <en>RTSP</en>
                                  </div>
+                                 <div class="col text-center" v-if="Object.keys(hardwareConf).length > 0 && hardwareConf.chip !== 'HI3520DV400' && hardwareConf.chip !== 'HI3521DV100' && hardwareConf.chip !== 'HI3531DV100'">
+                                     <cn>WebRTC</cn>
+                                     <en>WebRTC</en>
+                                 </div>
+                                 <div class="col text-center">
+                                     <cn>SRT</cn>
+                                     <en>SRT</en>
+                                 </div>
                                  <div class="col text-center">
                                      <cn>组播</cn>
                                      <en>multicast</en>
@@ -69,6 +77,12 @@
                                  <div class="col lp-align-center">
                                      <bs-switch v-model="globalConf.stream.rtsp.enable" ></bs-switch>
                                  </div>
+                                 <div class="col lp-align-center" v-if="Object.keys(hardwareConf).length > 0 && hardwareConf.chip !== 'HI3520DV400' && hardwareConf.chip !== 'HI3521DV100' && hardwareConf.chip !== 'HI3531DV100'">
+                                     <bs-switch v-model="globalConf.stream.webrtc" ></bs-switch>
+                                 </div>
+                                 <div class="col lp-align-center">
+                                     <bs-switch v-model="globalConf.stream.srt.enable" ></bs-switch>
+                                 </div>
                                  <div class="col lp-align-center">
                                      <bs-switch v-model="globalConf.stream.udp.enable" ></bs-switch>
                                  </div>
@@ -97,6 +111,12 @@
                                  </div>
                                  <div class="col lp-align-center">
                                      <bs-switch v-model="globalConf.stream2.rtsp.enable" ></bs-switch>
+                                 </div>
+                                 <div class="col lp-align-center">
+                                     <bs-switch v-model="globalConf.stream2.webrtc" ></bs-switch>
+                                 </div>
+                                 <div class="col lp-align-center">
+                                     <bs-switch v-model="globalConf.stream2.srt.enable" ></bs-switch>
                                  </div>
                                  <div class="col lp-align-center">
                                      <bs-switch v-model="globalConf.stream2.udp.enable" ></bs-switch>
@@ -217,6 +237,14 @@
                              <cn>RTSP</cn>
                              <en>RTSP</en>
                          </div>
+                         <div class="col text-center" v-if="Object.keys(hardwareConf).length > 0 && hardwareConf.chip !== 'HI3520DV400' && hardwareConf.chip !== 'HI3521DV100' && hardwareConf.chip !== 'HI3531DV100'">
+                             <cn>WebRTC</cn>
+                             <en>WebRTC</en>
+                         </div>
+                         <div class="col text-center">
+                             <cn>SRT</cn>
+                             <en>SRT</en>
+                         </div>
                          <div class="col text-center">
                              <cn>组播</cn>
                              <en>multicast</en>
@@ -253,6 +281,12 @@
                                  <div class="col lp-align-center">
                                      <bs-switch v-model="item.stream.rtsp.enable" ></bs-switch>
                                  </div>
+                                 <div class="col lp-align-center" v-if="Object.keys(hardwareConf).length > 0 && hardwareConf.chip !== 'HI3520DV400' && hardwareConf.chip !== 'HI3521DV100' && hardwareConf.chip !== 'HI3531DV100'">
+                                     <bs-switch v-model="item.stream.webrtc" ></bs-switch>
+                                 </div>
+                                 <div class="col lp-align-center">
+                                     <bs-switch v-model="item.stream.srt.enable" ></bs-switch>
+                                 </div>
                                  <div class="col lp-align-center">
                                      <bs-switch v-model="item.stream.udp.enable" ></bs-switch>
                                  </div>
@@ -279,6 +313,12 @@
                                  </div>
                                  <div class="col lp-align-center">
                                      <bs-switch v-model="item.stream2.rtsp.enable" ></bs-switch>
+                                 </div>
+                                 <div class="col lp-align-center" v-if="Object.keys(hardwareConf).length > 0 && hardwareConf.chip !== 'HI3520DV400' && hardwareConf.chip !== 'HI3521DV100' && hardwareConf.chip !== 'HI3531DV100'">
+                                     <bs-switch v-model="item.stream2.webrtc" ></bs-switch>
+                                 </div>
+                                 <div class="col lp-align-center">
+                                     <bs-switch v-model="item.stream2.srt.enable" ></bs-switch>
                                  </div>
                                  <div class="col lp-align-center">
                                      <bs-switch v-model="item.stream2.udp.enable" ></bs-switch>

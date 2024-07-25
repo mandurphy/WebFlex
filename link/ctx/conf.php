@@ -197,6 +197,14 @@ class Conf extends Basic
         return $this->handleRet('','success','保存成功','save successfully');
     }
 
+    function updateWebRTCConf($param)
+    {
+        if(is_null(json_decode($param)))
+            return $this->handleRet("",'error','保存失败,格式错误','Failed to save, format error');
+        file_put_contents( '/link/config/rproxy/webrtc.json', $param);
+        return $this->handleRet("",'success','保存成功','save successfully');
+    }
+
     function saveConfigFile($param) {
         file_put_contents( "/link/".$param["path"], $param['data'] );
         return json_encode(array("result" => "OK"),JSON_UNESCAPED_SLASHES|JSON_UNESCAPED_UNICODE|JSON_PRETTY_PRINT);
