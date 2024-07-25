@@ -953,8 +953,8 @@
                 defaultConf.forEach(item => {
                     if (!item.enable && !item.enable2) return;
                     state.playUrls.push({
-                        main: item.enable ? transURL(item.stream) : [],
-                        sub: item.enable2 ? transURL(item.stream2) : []
+                        main: transURL(item.stream),
+                        sub: transURL(item.stream2)
                     });
                 });
             }

@@ -719,22 +719,22 @@
                                         <en>Static port</en>
                                     </div>
                                     <div class="col">
-                                        <input type="text" class="form-control text-center" v-model.trim.lazy="portConf.http[0]" readonly disabled>
+                                        <input type="number" class="form-control text-center" v-model.trim.lazy="portConf.http[0]" readonly disabled>
                                     </div>
                                     <div class="col">
-                                        <input type="text" class="form-control text-center" v-model.trim.lazy="portConf.rtsp[0]" readonly disabled>
+                                        <input type="number" class="form-control text-center" v-model.trim.lazy="portConf.rtsp[0]" readonly disabled>
                                     </div>
                                     <div class="col">
-                                        <input type="text" class="form-control text-center" v-model.trim.lazy="portConf.rtmp[0]" readonly disabled>
+                                        <input type="number" class="form-control text-center" v-model.trim.lazy="portConf.rtmp[0]" readonly disabled>
                                     </div>
                                     <div class="col">
-                                        <input type="text" class="form-control text-center" v-model.trim.lazy="portConf.httpts[0]" readonly disabled>
+                                        <input type="number" class="form-control text-center" v-model.trim.lazy="portConf.httpts[0]" readonly disabled>
                                     </div>
                                     <div class="col">
-                                        <input type="text" class="form-control text-center" v-model.trim.lazy="portConf.telnet[0]" readonly disabled>
+                                        <input type="number" class="form-control text-center" v-model.trim.lazy="portConf.telnet[0]" readonly disabled>
                                     </div>
                                     <div class="col">
-                                        <input type="text" class="form-control text-center" v-model.trim.lazy="portConf.ssh[0]" readonly disabled>
+                                        <input type="number" class="form-control text-center" v-model.trim.lazy="portConf.ssh[0]" readonly disabled>
                                     </div>
                                 </div>
                                 <div class="row mt-3">
@@ -743,22 +743,22 @@
                                         <en>Reserve port</en>
                                     </div>
                                     <div class="col">
-                                        <input type="text" class="form-control text-center" v-model.trim.lazy="portConf.http[1]">
+                                        <input type="number" class="form-control text-center" v-model.trim.lazy="portConf.http[1]">
                                     </div>
                                     <div class="col">
-                                        <input type="text" class="form-control text-center" v-model.trim.lazy="portConf.rtsp[1]">
+                                        <input type="number" class="form-control text-center" v-model.trim.lazy="portConf.rtsp[1]">
                                     </div>
                                     <div class="col">
-                                        <input type="text" class="form-control text-center" v-model.trim.lazy="portConf.rtmp[1]">
+                                        <input type="number" class="form-control text-center" v-model.trim.lazy="portConf.rtmp[1]">
                                     </div>
                                     <div class="col">
-                                        <input type="text" class="form-control text-center" v-model.trim.lazy="portConf.httpts[1]">
+                                        <input type="number" class="form-control text-center" v-model.trim.lazy.number="portConf.httpts[1]">
                                     </div>
                                     <div class="col">
-                                        <input type="text" class="form-control text-center" v-model.trim.lazy="portConf.telnet[1]">
+                                        <input type="number" class="form-control text-center" v-model.trim.lazy="portConf.telnet[1]">
                                     </div>
                                     <div class="col">
-                                        <input type="text" class="form-control text-center" v-model.trim.lazy="portConf.ssh[1]">
+                                        <input type="number" class="form-control text-center" v-model.trim.lazy="portConf.ssh[1]">
                                     </div>
                                 </div>
                                 <div class="row mt-3">
@@ -767,22 +767,22 @@
                                         <en>NAT port</en>
                                     </div>
                                     <div class="col">
-                                        <input type="text" class="form-control text-center" v-model.trim.lazy="portConf.http[2]">
+                                        <input type="number" class="form-control text-center" v-model.trim.lazy="portConf.http[2]">
                                     </div>
                                     <div class="col">
-                                        <input type="text" class="form-control text-center" v-model.trim.lazy="portConf.rtsp[2]">
+                                        <input type="number" class="form-control text-center" v-model.trim.lazy="portConf.rtsp[2]">
                                     </div>
                                     <div class="col">
-                                        <input type="text" class="form-control text-center" v-model.trim.lazy="portConf.rtmp[2]">
+                                        <input type="number" class="form-control text-center" v-model.trim.lazy="portConf.rtmp[2]">
                                     </div>
                                     <div class="col">
-                                        <input type="text" class="form-control text-center" v-model.trim.lazy="portConf.httpts[2]">
+                                        <input type="number" class="form-control text-center" v-model.trim.lazy="portConf.httpts[2]">
                                     </div>
                                     <div class="col">
-                                        <input type="text" class="form-control text-center" v-model.trim.lazy="portConf.telnet[2]">
+                                        <input type="number" class="form-control text-center" v-model.trim.lazy="portConf.telnet[2]">
                                     </div>
                                     <div class="col">
-                                        <input type="text" class="form-control text-center" v-model.trim.lazy="portConf.ssh[2]">
+                                        <input type="number" class="form-control text-center" v-model.trim.lazy="portConf.ssh[2]">
                                     </div>
                                 </div>
                             </div>
