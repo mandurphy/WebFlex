@@ -710,7 +710,7 @@
                                             <option value="pcma">PCMA</option>
                                             <option value="mp2">MPEG2</option>
                                             <option value="mp3">MP3</option>
-                                            <option v-if="Object.keys(hardwareConf).length > 0 && hardwareConf.chip === 'SS524V100'" value="opus">OPUS</option>
+                                            <option value="opus">OPUS</option>
                                             <option value="close" cn="关闭" en="close" v-language-option></option>
                                         </select>
                                     </div>
