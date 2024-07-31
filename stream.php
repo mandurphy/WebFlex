@@ -276,13 +276,13 @@
                                      <bs-switch v-model="item.stream.hls" ></bs-switch>
                                  </div>
                                  <div class="col lp-align-center">
-                                     <bs-switch v-model="item.stream.rtmp" ></bs-switch>
+                                     <bs-switch v-model="item.stream.rtmp" @switch-change="state => onProtocolSwitchChange(state,item.enca.codec,item.encv.codec,'rtmp')"></bs-switch>
                                  </div>
                                  <div class="col lp-align-center">
                                      <bs-switch v-model="item.stream.rtsp.enable" ></bs-switch>
                                  </div>
                                  <div class="col lp-align-center" v-if="Object.keys(hardwareConf).length > 0 && hardwareConf.chip !== 'HI3520DV400' && hardwareConf.chip !== 'HI3521DV100' && hardwareConf.chip !== 'HI3531DV100'">
-                                     <bs-switch v-model="item.stream.webrtc" ></bs-switch>
+                                     <bs-switch v-model="item.stream.webrtc" @switch-change="state => onProtocolSwitchChange(state,item.enca.codec,item.encv.codec,'webrtc')"></bs-switch>
                                  </div>
                                  <div class="col lp-align-center">
                                      <bs-switch v-model="item.stream.srt.enable" ></bs-switch>
@@ -309,13 +309,13 @@
                                      <bs-switch v-model="item.stream2.hls" ></bs-switch>
                                  </div>
                                  <div class="col lp-align-center">
-                                     <bs-switch v-model="item.stream2.rtmp" ></bs-switch>
+                                     <bs-switch v-model="item.stream2.rtmp" @switch-change="state => onProtocolSwitchChange(state,item.enca.codec,item.encv2.codec,'rtmp')"></bs-switch>
                                  </div>
                                  <div class="col lp-align-center">
                                      <bs-switch v-model="item.stream2.rtsp.enable" ></bs-switch>
                                  </div>
                                  <div class="col lp-align-center" v-if="Object.keys(hardwareConf).length > 0 && hardwareConf.chip !== 'HI3520DV400' && hardwareConf.chip !== 'HI3521DV100' && hardwareConf.chip !== 'HI3531DV100'">
-                                     <bs-switch v-model="item.stream2.webrtc" ></bs-switch>
+                                     <bs-switch v-model="item.stream2.webrtc" @switch-change="state => onProtocolSwitchChange(state,item.enca.codec,item.encv2.codec,'webrtc')"></bs-switch>
                                  </div>
                                  <div class="col lp-align-center">
                                      <bs-switch v-model="item.stream2.srt.enable" ></bs-switch>
@@ -869,7 +869,7 @@
 
 <script type="module">
 
-    import {alertMsg,rpc, extend, deepCopy, clearReactiveObject, isEmpty} from "./assets/js/lp.utils.js";
+    import {alertMsg, rpc, extend, deepCopy, clearReactiveObject, isEmpty, clearReactiveArray,confirm} from "./assets/js/lp.utils.js";
     import { useDefaultConf,useHardwareConf,usePortConf } from "./assets/js/vue.hooks.js";
     import { ignoreCustomElementPlugin,filterKeywordPlugin,bootstrapSwitchComponent,multipleInputComponent,languageOptionDirective } from "./assets/js/vue.helper.js"
     import vue from "./assets/js/vue.build.js";
@@ -950,6 +950,7 @@
             };
 
             const updatePlayUrl = () => {
+                clearReactiveArray(state.playUrls);
                 defaultConf.forEach(item => {
                     if (!item.enable && !item.enable2) return;
                     state.playUrls.push({
@@ -1049,6 +1050,41 @@
                 return "";
             }
 
+            const onProtocolSwitchChange = (state,codecA,codecV,type) => {
+                if(state) {
+                    if(type === "rtmp" && codecA === "opus") {
+                        alertMsg("<cn>当前该通道音频编码格式为OPUS,RTMP协议流不支持该格式,请调整音频编码参数后在重试</cn><en>OPUS audio is unsupported by RTMP, please change the audio codec settings and retry.</en>", "warning",8000);
+                        setTimeout(()=>{
+                            defaultConf.forEach(item => {
+                                if(item.hasOwnProperty("enca")) {
+                                    if(item.enca.codec === "opus") {
+                                        item.stream.rtmp = false;
+                                        item.stream2.rtmp = false;
+                                    }
+                                }
+                            })
+                        },800);
+                    }
+
+                    if(type === "webrtc") {
+                        if(codecA !== "opus")
+                            alertMsg("<cn>WebRTC协议流仅支持OPUS音频编码格式,请调整音频编码参数后在重试</cn><en>WebRTC only supports OPUS audio, please change the audio codec settings and retry.</en>", "warning",8000);
+                        if(codecV !== "h264")
+                            alertMsg("<cn>WebRTC协议流仅支持H264视频编码格式,请调整视频编码参数后在重试</cn><en>WebRTC only supports H264 video, please change the video codec settings and retry.</en>", "warning",8000);
+                        setTimeout(()=>{
+                            defaultConf.forEach(item => {
+                                if(item.hasOwnProperty("enca")) {
+                                    if(item.enca.codec !== "opus" || item.encv.codec !== "h264")
+                                        item.stream.webrtc = false;
+                                    if(item.enca.codec !== "opus" || item.encv2.codec !== "h264")
+                                        item.stream2.webrtc = false;
+                                }
+                            })
+                        },600);
+                    }
+                }
+            }
+
             const saveGlobalConfByLocal = () => {
                 for ( let i = 0; i < defaultConf.length; i++ ) {
                     if (defaultConf[i].stream === undefined )
@@ -1072,7 +1108,8 @@
                 updateDefaultConf().then(updatePlayUrl);
             }
         
-            return {...state,defaultConf,hardwareConf,handleEnableConf,handlePlayUrl,handlePushSpeed,saveGlobalConfByLocal,saveDefaultConf,onCopyPlayerUrl}
+            return {...state,defaultConf,hardwareConf,handleEnableConf,handlePlayUrl,handlePushSpeed,
+                onProtocolSwitchChange,saveGlobalConfByLocal,saveDefaultConf,onCopyPlayerUrl}
         }
     });
     app.use(ignoreCustomElementPlugin);

@@ -475,6 +475,7 @@ export const multipleSelectComponent = {
             let [value1, value2] = selectValue.value.split(props.split);
             context.emit('update:value1', parseValue(value1));
             context.emit('update:value2', parseValue(value2));
+            context.emit('select-change', parseValue(value1),parseValue(value2));
         }
 
         onMounted(() => {

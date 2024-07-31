@@ -216,6 +216,7 @@
                                                     <option value="pcma">PCMA</option>
                                                     <option value="mp2">MPEG2</option>
                                                     <option value="mp3">MP3</option>
+                                                    <option value="opus">OPUS</option>
                                                     <option value="close" cn="关闭" en="close" v-language-option></option>
                                                 </select>
                                             </div>
@@ -378,7 +379,7 @@
                                         </multiple-select>
                                     </div>
                                     <div class="col-2">
-                                        <multiple-select v-model:value1="item.encv.codec" v-model:value2="item.encv.profile" split=",">
+                                        <multiple-select v-model:value1="item.encv.codec" v-model:value2="item.encv.profile" split="," @select-change="()=>{onCodecChange(item)}">
                                             <option value="h264,base">H.264 Base</option>
                                             <option value="h264,main">H.264 Main</option>
                                             <option value="h264,high">H.264 High</option>
@@ -429,7 +430,7 @@
                                         </multiple-select>
                                     </div>
                                     <div class="col-2">
-                                        <multiple-select v-model:value1="item.encv2.codec" v-model:value2="item.encv2.profile" split=",">
+                                        <multiple-select v-model:value1="item.encv2.codec" v-model:value2="item.encv2.profile" split="," @select-change="()=>{onCodecChange(item)}">
                                             <option value="h264,base">H.264 Base</option>
                                             <option value="h264,main">H.264 Main</option>
                                             <option value="h264,high">H.264 High</option>
@@ -705,7 +706,7 @@
                                         <input type="text" class="form-control" v-model.trim.lazy="item.name">
                                     </div>
                                     <div class="col">
-                                        <select class="form-select" v-model="item.enca.codec">
+                                        <select class="form-select" v-model="item.enca.codec" @change="()=>{onCodecChange(item)}">
                                             <option value="aac">AAC</option>
                                             <option value="pcma">PCMA</option>
                                             <option value="mp2">MPEG2</option>
@@ -779,7 +780,7 @@
 <?php include ("./public/foot.inc") ?>
 <script type="module">
     
-    import { extend,deepCopy,confirm } from "./assets/js/lp.utils.js";
+    import { extend,deepCopy,confirm,alertMsg } from "./assets/js/lp.utils.js";
     import { useDefaultConf,useHardwareConf } from "./assets/js/vue.hooks.js";
     import { ignoreCustomElementPlugin,filterKeywordPlugin,bootstrapSwitchComponent,multipleSelectComponent,languageOptionDirective } from "./assets/js/vue.helper.js"
     import vue from "./assets/js/vue.build.js";
@@ -795,7 +796,7 @@
         },
         setup(props,context) {
             
-            const { defaultConf,updateDefaultConf } = useDefaultConf();
+            const { defaultConf,handleDefaultConf,updateDefaultConf } = useDefaultConf();
             const { hardwareConf } = useHardwareConf();
             let globalConf = reactive({});
 
@@ -853,6 +854,27 @@
 
             })
 
+            const onCodecChange = (conf) => {
+                let hadReset = false;
+                if(conf.enca.codec === "opus" && (conf.stream.rtmp || conf.stream2.rtmp)) {
+                    alertMsg("<cn>RTMP协议流不支持OPUS音频编码格式,请先关闭RTMP协议流后在重试</cn><en>The RTMP protocol does not support OPUS audio encoding, please disable the RTMP stream and try again.</en>", "warning",8000);
+                    hadReset = true;
+                }
+                if(conf.enca.codec !== "opus" && (conf.stream.webrtc || conf.stream2.webrtc)) {
+                    alertMsg("<cn>WebRTC协议流仅支持OPUS音频编码格式,请先关闭WebRTC协议流后在重试</cn><en>The WebRTC protocol only supports OPUS audio encoding, please disable the WebRTC stream and try again.</en>", "warning",8000);
+                    hadReset = true;
+                }
+                if((conf.encv.codec !== "h264" && conf.stream.webrtc) || (conf.encv2.codec !== "h264" && conf.stream2.webrtc)) {
+                    alertMsg("<cn>WebRTC协议流仅支持H264视频编码格式,请先关闭WebRTC协议流后在重试</cn><en>The WebRTC protocol only supports H264 video encoding, please disable the WebRTC stream and try again.</en>", "warning",8000);
+                    hadReset = true;
+                }
+                if(hadReset) {
+                    setTimeout(()=>{
+                        handleDefaultConf();
+                    },500)
+                }
+            }
+
             const saveGlobalConfByLocal = () => {
                 for ( let i = 0; i < defaultConf.length; i++ ) {
                     if (defaultConf[i].encv === undefined || defaultConf[i].enca === undefined )
@@ -901,7 +923,7 @@
             }
             
             return {globalConf,defaultConf,hardwareConf, handleEncConf,handleVdoConf,
-                handleAdoConf, saveGlobalConfByLocal,saveDefaultConf}
+                onCodecChange,handleAdoConf, saveGlobalConfByLocal,saveDefaultConf}
         }
     });
     app.use(ignoreCustomElementPlugin);

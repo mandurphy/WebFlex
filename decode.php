@@ -163,7 +163,7 @@
                                 <en>channel name</en>
                             </div>
                             <div class="col-4 text-center">
-                                <cn>流地址</cn>
+                                <cn>拉流地址</cn>
                                 <en>stream url</en>
                             </div>
                             <div class="col text-center">
@@ -713,6 +713,7 @@
                         auth = auth.length > 16 ? auth.substring(0, 16) : auth;
                         if (item.auth)
                             item.key += '?Auth=' + auth;
+                        item.server = item.server.replace("127.0.0.1",window.location.hostname)
                         return item;
                     })
                     return rxPushConf;

@@ -7,6 +7,7 @@ export const useDefaultConf = () => {
     const defaultConf = reactive([]);
     const handleDefaultConf = async () => {
         queryData("config/config.json").then((conf)=>{
+            clearReactiveArray(defaultConf);
             defaultConf.splice(0, defaultConf.length, ...conf);
         });
     }
@@ -26,7 +27,7 @@ export const useDefaultConf = () => {
         })
     }
     onMounted(handleDefaultConf);
-    return { defaultConf,updateDefaultConf }
+    return { defaultConf,handleDefaultConf,updateDefaultConf }
 }
 
 export const useHardwareConf = () => {
@@ -1221,13 +1222,14 @@ export const useRXPushConf = () => {
     }
     const updateRXPushConf = (tip= "tip") => {
         return new Promise((resolve,reject)=>{
-            rxPushConf.forEach(item => {
+            let tempConf = deepCopy(rxPushConf);
+            tempConf.forEach(item => {
                 if(item.hasOwnProperty("server"))
                     delete item.server;
                 if(item.hasOwnProperty("key"))
                     delete item.key;
             })
-            func("/conf/updateRXPushConf",rxPushConf).then(data => {
+            func("/conf/updateRXPushConf",tempConf).then(data => {
                 if ( data.status !== "success" ) {
                     reject();
                     if(tip !== "noTip")
