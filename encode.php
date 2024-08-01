@@ -837,6 +837,7 @@
             });
             
             const handleVdoConf = computed(()=>{
+                if(defaultConf.length === 0) return [];
                 return defaultConf.filter((item,index)=>{
                     return item.type === 'net' || item.type === 'vi';
                 })
