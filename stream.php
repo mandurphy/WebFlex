@@ -1053,7 +1053,7 @@
             const onProtocolSwitchChange = (state,codecA,codecV,type) => {
                 if(state) {
                     if(type === "rtmp" && codecA === "opus") {
-                        alertMsg("<cn>当前该通道音频编码格式为OPUS,RTMP协议流不支持该格式,请调整音频编码参数后在重试</cn><en>OPUS audio is unsupported by RTMP, please change the audio codec settings and retry.</en>", "warning",8000);
+                        alertMsg("<cn>当前通道音频编码格式为OPUS,RTMP协议流不支持该格式,请调整音频编码参数后在重试</cn><en>OPUS audio is unsupported by RTMP, please change the audio codec settings and retry.</en>", "warning",8000);
                         setTimeout(()=>{
                             defaultConf.forEach(item => {
                                 if(item.hasOwnProperty("enca")) {
