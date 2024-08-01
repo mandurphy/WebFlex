@@ -880,9 +880,25 @@
                 for ( let i = 0; i < defaultConf.length; i++ ) {
                     if (defaultConf[i].encv === undefined || defaultConf[i].enca === undefined )
                         continue;
-                    extend(defaultConf[i].encv, deepCopy(globalConf.encv));
-                    extend(defaultConf[i].encv2, deepCopy(globalConf.encv2));
-                    extend(defaultConf[i].enca, deepCopy(globalConf.enca));
+                    let global_conf = deepCopy(globalConf);
+                    if(defaultConf[i].stream.webrtc) {
+                        global_conf.encv.codec = "h264";
+                        global_conf.enca.codec = "opus";
+                    }
+                    if(defaultConf[i].stream2.webrtc) {
+                        global_conf.encv2.codec = "h264";
+                        global_conf.enca.codec = "opus";
+                    }
+                    if(global_conf.enca.codec === "opus") {
+                        if(defaultConf[i].stream.rtmp)
+                            global_conf.enca.codec = defaultConf[i].enca.codec;
+                        if(defaultConf[i].stream2.rtmp)
+                            global_conf.enca.codec = defaultConf[i].enca.codec;
+                    }
+
+                    extend(defaultConf[i].encv, deepCopy(global_conf.encv));
+                    extend(defaultConf[i].encv2, deepCopy(global_conf.encv2));
+                    extend(defaultConf[i].enca, deepCopy(global_conf.enca));
                     if(defaultConf[i].enca.audioSrc === "source")
                         defaultConf[i].enca.audioSrc = defaultConf[i].id;
                     if(defaultConf[i].type !== "vi" && defaultConf[i].enca.hasOwnProperty("audioTrack"))

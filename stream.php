@@ -1090,9 +1090,17 @@
                     if (defaultConf[i].stream === undefined )
                         continue;
 
+                    let globalConf = deepCopy(state.globalConf);
                     for (let key of ['stream', 'stream2']) {
-                        delete state.globalConf[key].suffix;
-                        extend(defaultConf[i][key], deepCopy(state.globalConf[key]));
+                        delete globalConf[key].suffix;
+                        if(defaultConf[i].hasOwnProperty("enca")) {
+                            let codecA = defaultConf[i].enca.codec;
+                            if(codecA === "opus")
+                                globalConf[key].rtmp = false;
+                            else
+                                globalConf[key].webrtc = false;
+                        }
+                        extend(defaultConf[i][key], globalConf[key]);
                         let port = defaultConf[i][key].udp.port;
                         if(typeof port === "string" && port.indexOf("+") > 0) {
                             port = port.replace(/[+\s]/g, '');
