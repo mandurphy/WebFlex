@@ -112,7 +112,7 @@
                                  <div class="col lp-align-center">
                                      <bs-switch v-model="globalConf.stream2.rtsp.enable" ></bs-switch>
                                  </div>
-                                 <div class="col lp-align-center">
+                                 <div class="col lp-align-center" v-if="Object.keys(hardwareConf).length > 0 && hardwareConf.chip !== 'HI3520DV400' && hardwareConf.chip !== 'HI3521DV100' && hardwareConf.chip !== 'HI3531DV100'">
                                      <bs-switch v-model="globalConf.stream2.webrtc" ></bs-switch>
                                  </div>
                                  <div class="col lp-align-center">
