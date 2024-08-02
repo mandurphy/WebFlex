@@ -929,7 +929,7 @@
                 if (stream.rtsp.enable) {
                     const port = getport("rtsp");
                     const portPart = port ? `:${port}` : '';
-                    urls.push(`rtsp://${window.location.host}${portPart}/live/${stream.suffix}`);
+                    urls.push(`rtsp://${window.location.host}${portPart}/${stream.suffix}`);
                 }
 
                 if (stream.srt.enable) {
