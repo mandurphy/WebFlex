@@ -265,10 +265,10 @@
 
            const state = {
                simplebarEle: ref(null),
-               simplebar: reactive(null),
                metismenuEle: ref(null),
                isMenuToggled : ref(false),
-               isSidebarHovered: ref(false)
+               isSidebarHovered: ref(false),
+               simplebar: null,
            }
 
            const onLogout = () => {
@@ -319,7 +319,7 @@
                         if (mutation.type === 'attributes' && mutation.attributeName === 'class') {
                             const target = mutation.target;
                             if (target.classList.contains('mm-active'))
-                                setTimeout(()=> state.simplebar .recalculate(),230);
+                                setTimeout(()=> state.simplebar.recalculate(),230);
                         }
                     });
                 });

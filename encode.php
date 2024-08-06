@@ -838,9 +838,27 @@
             
             const handleVdoConf = computed(()=>{
                 if(defaultConf.length === 0) return [];
-                return defaultConf.filter((item,index)=>{
-                    return item.type === 'net' || item.type === 'vi';
-                })
+                const vodConf = [];
+                defaultConf.forEach((item,index) => {
+                    if(item.type === 'net' || item.type === 'vi') {
+                        if(item.type === 'net') {
+                            if (!item.hasOwnProperty("cap")) {
+                                item.cap = {
+                                    contrast: 0,
+                                    rotate: 0,
+                                    crop: {
+                                        B: 0,
+                                        L: 0,
+                                        R: 0,
+                                        T: 0
+                                    }
+                                }
+                            }
+                        }
+                        vodConf.push(item);
+                    }
+                });
+                return vodConf;
             })
             
             const handleAdoConf = computed(()=>{

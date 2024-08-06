@@ -696,7 +696,7 @@ export const nouiSliderComponent = {
 export const h5PlayerComponent = {
     template: `<div style="width:100%; padding-bottom: 56.25%;  position: relative;">
                     <video autoplay controls muted style="width:100%;height: 100%; position: absolute; background: #555;" ref="videoHandler"></video>
-                    <div style="position: absolute;width: 100%;height: 100%" ref="jessHandler"></div>
+                    <div style="position: absolute;width: 100%;height: 100%;z-index: 0" ref="jessHandler"></div>
                     <video autoplay controls muted style="width:100%;height: 100%; position: absolute; background: #555;" ref="rtcHandler"></video>
                     <div class="lp-video-cloud" ref="cloudHandler">
                         <div class="loading"></div>
