@@ -844,13 +844,13 @@
 
                 for (let i = 0; i < defaultConf.length; i++) {
                     if (defaultConf[i].type === "net") {
-                        if (defaultConf[i].net.decodeV) {
+                        if (defaultConf[i].net.decodeV && defaultConf[i].enable) {
                             if (defaultConf[i].encv.codec === "close") {
                                 defaultConf[i].encv.codec = "h264";
                                 defaultConf[i].encv.profile = "high";
                             }
                         }
-                        if (defaultConf[i].net.decodeA) {
+                        if (defaultConf[i].net.decodeA && defaultConf[i].enable) {
                             if (defaultConf[i].enca.codec === "close")
                                 defaultConf[i].enca.codec = "aac";
                         }
