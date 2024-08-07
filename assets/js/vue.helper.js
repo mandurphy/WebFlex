@@ -2531,6 +2531,10 @@ export const ledOptionComponent = {
             tally: {
                 cn: 'tally灯模式',
                 en: 'tally'
+            },
+            tallyArbiter: {
+                cn: 'tally灯模式(拓展)',
+                en: 'tallyArbiter'
             }
         }
 
@@ -2627,10 +2631,12 @@ export const ledOptionComponent = {
 
                     const funcList = ledConf.funcList;
                     Object.keys(funcList).forEach(key => {
-                        const option = document.createElement('option');
-                        option.value = key;
-                        option.text = modeTitle[key][lang];
-                        document.querySelector('#targetMode').add(option);
+                        if(modeTitle[key].hasOwnProperty(lang)) {
+                            const option = document.createElement('option');
+                            option.value = key;
+                            option.text = modeTitle[key][lang];
+                            document.querySelector('#targetMode').add(option);
+                        }
                     })
                     const targetEnable = document.querySelector("#targetEnable");
                     targetEnable.value = ledConf.enable;
