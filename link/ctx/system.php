@@ -267,4 +267,10 @@ class System extends Basic
         }
         return $this->handleRet($param,'success','切换成功','switch successfully');
     }
+
+    function hadLedDevice() {
+        if(file_exists("/link/config/led/config.json"))
+            return $this->handleRet(true,'success','执行完成','exec successfully');
+        return $this->handleRet(false,'success','执行完成','exec successfully');
+    }
 }

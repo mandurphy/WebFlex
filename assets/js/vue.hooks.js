@@ -431,13 +431,33 @@ export const useButtonConf = () => {
 
 export const useIntercomConf = () => {
     const intercomConf= reactive({});
+    const defIntercomConf = reactive({});
     const handleIntercomConf = () => {
         queryData("config/intercom.json").then((conf)=>{
             Object.assign(intercomConf,conf)
+            Object.assign(defIntercomConf,deepCopy(conf))
+        })
+    }
+
+    const updateIntercomConf = (tip='tip') => {
+        return new Promise((resolve,reject) => {
+            rpc("intercom.update", [ intercomConf ]).then(( res ) => {
+                if ( typeof ( res.error ) != "undefined" ) {
+                    reject();
+                    if(tip !== "noTip")
+                        alertMsg('<cn>保存设置失败</cn><en>Save config failed!</en>', 'error')
+                } else {
+                    resolve();
+                    clearReactiveObject(defIntercomConf);
+                    Object.assign(defIntercomConf,deepCopy(intercomConf))
+                    if(tip !== "noTip")
+                        alertMsg('<cn>保存设置成功</cn><en>Save config success!</en>', 'success');
+                }
+            });
         })
     }
     onMounted(handleIntercomConf);
-    return { intercomConf }
+    return { intercomConf,defIntercomConf,updateIntercomConf }
 }
 
 export const useMqttConf = () => {

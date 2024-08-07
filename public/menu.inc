@@ -24,7 +24,7 @@
                             <i class="fa-solid fa-arrow-right-arrow-left"></i>
                         </a>
                     </li>
-                    <li class="nav-item" v-if="Object.keys(hardwareConf).length > 0 && (hardwareConf.fac === 'ENCS1'|| hardwareConf.fac === 'MINI')">
+                    <li class="nav-item" v-if="hadLed">
                         <led-option></led-option>
                     </li>
                     <li class="nav-item">
@@ -268,6 +268,7 @@
                metismenuEle: ref(null),
                isMenuToggled : ref(false),
                isSidebarHovered: ref(false),
+               hadLed: ref(false),
                simplebar: null,
            }
 
@@ -353,6 +354,8 @@
                state.isMenuToggled.value = false;
            }
 
+           const hadLedDevice = () => func("/system/hadLedDevice").then(ret => state.hadLed.value = ret.data);
+
            const changeWeb = () => {
                confirm({
                    title: '<cn>切换版本</cn><en>Switch Web</en>',
@@ -374,6 +377,8 @@
                    }
                });
            }
+
+           onMounted(hadLedDevice);
 
            return {...state,hardwareConf,themeConf,webVerConf,updateThemeConf,onHrefDash,onLogout,
                onToggleMenu,onMouseEnter,onMouseLeave,onCloseSidebar,updateSysLanguage,changeWeb}

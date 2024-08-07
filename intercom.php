@@ -264,16 +264,20 @@
                                 </div>
                                 <div class="card-body" >
                                     <div class="row mt-3 mb-4">
-                                        <div class="col-lg-2 offset-lg-1 lp-align-center">
-                                            <label>
-                                                <cn>开关</cn>
-                                                <en>Enable</en>
-                                            </label>
+                                        <div class="col-lg-4" v-if="!hadLed">
+                                            <div class="row">
+                                                <div class="col-lg-5 lp-align-center">
+                                                    <label>
+                                                        <cn>开关</cn>
+                                                        <en>Enable</en>
+                                                    </label>
+                                                </div>
+                                                <div class="col-lg-7">
+                                                    <bs-switch v-model="intercomConf.tally.enable" :size="'normal'"></bs-switch>
+                                                </div>
+                                            </div>
                                         </div>
-                                        <div class="col-lg-3">
-                                            <bs-switch v-model="intercomConf.tally.enable" :size="'normal'"></bs-switch>
-                                        </div>
-                                        <div class="col-lg-3">
+                                        <div :class="['col-lg-3',{'offset-lg-2':hadLed}]">
                                             <button type="button" class="btn border-3 btn-primary px-4" @click="showTallyModal = !showTallyModal">
                                                 <cn>测试</cn>
                                                 <en>Test</en>
@@ -291,7 +295,7 @@
                     <div class="card">
                         <div class="card-body">
                             <div class="row my-4">
-                                <button type="button" @click="saveConf" class="col-2 offset-5 btn border-3 btn-primary text-center"><cn>保存</cn><en>Save</en></button>
+                                <button type="button" @click="updateIntercomConf" class="col-2 offset-5 btn border-3 btn-primary text-center"><cn>保存</cn><en>Save</en></button>
                             </div>
                         </div>
                     </div>
@@ -339,7 +343,7 @@
     <?php include ("./public/foot.inc") ?>
 
 <script type="module">
-    import { rpc,alertMsg,clearReactiveObject } from "./assets/js/lp.utils.js";
+    import {rpc, alertMsg, clearReactiveObject, func} from "./assets/js/lp.utils.js";
     import { useIntercomConf } from "./assets/js/vue.hooks.js";
     import { ignoreCustomElementPlugin,filterKeywordPlugin,bootstrapSwitchComponent,languageOptionDirective,customModalComponent } from "./assets/js/vue.helper.js"
     import vue from "./assets/js/vue.build.js";
@@ -355,13 +359,14 @@
         },
         setup(props,context) {
     
-            const { intercomConf } = useIntercomConf();
+            const { intercomConf,defIntercomConf,updateIntercomConf } = useIntercomConf();
 
             const state = {
                 showTallyModal:ref(false),
                 tallyPVMVal: ref(1),
                 tallyPGMVal: ref(1),
-                intercomState: reactive({})
+                intercomState: reactive({}),
+                hadLed: ref(false)
             }
             
             const handleDevicesArray = computed(()=>{
@@ -378,6 +383,13 @@
                 ];
 
                 if(Object.keys(state.intercomState).length > 0 && Object.keys(intercomConf).length > 0) {
+                    deviceList.forEach(dev => {
+                        if(dev.id === parseInt(defIntercomConf.intercom.did) && defIntercomConf.intercom.enable && defIntercomConf.server.enable) {
+                            dev.title = defIntercomConf.intercom.name;
+                            dev.talking = state.intercomState.talking;
+                            dev.state = 0;
+                        }
+                    })
                     state.intercomState.intercom.forEach((item,index) => {
                         deviceList.forEach((dev,idx) => {
                             if(dev.id === item.id || dev.id === parseInt(intercomConf.intercom.did)) {
@@ -401,9 +413,8 @@
 
                 const result = [];
                 const columns = 4;
-                for (let i = 0; i < deviceList.length; i += columns) {
+                for (let i = 0; i < deviceList.length; i += columns)
                     result.push(deviceList.slice(i, i + columns));
-                }
                 return result;
             });
 
@@ -421,20 +432,15 @@
                 })
                 setTimeout(handleIntercomState,500);
             }
-            
-            const saveConf = () => {
-                rpc("intercom.update", [ intercomConf ]).then(( res ) => {
-                    if ( typeof ( res.error ) != "undefined" ) {
-                        alertMsg('<cn>保存设置失败</cn><en>Save config failed!</en>', 'error')
-                    } else {
-                        alertMsg('<cn>保存设置成功</cn><en>Save config success!</en>', 'success');
-                    }
-                });
-            }
 
-            onMounted(handleIntercomState);
+            const hadLedDevice = () => func("/system/hadLedDevice").then(ret => state.hadLed.value = ret.data);
+
+            onMounted(()=>{
+                handleIntercomState();
+                hadLedDevice();
+            })
             
-            return {...state,intercomConf,handleDevicesArray,onTallyTest,saveConf}
+            return {...state,intercomConf,updateIntercomConf,handleDevicesArray,onTallyTest}
         }
     });
     app.use(ignoreCustomElementPlugin);
