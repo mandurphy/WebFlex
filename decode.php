@@ -727,7 +727,7 @@
                         item.url = `srt://${location.hostname}`;
                         if(!isEmpty(item.port))
                             item.url += `:${item.port}`;
-                        item.url += `?mode=listener`;
+                        item.url += `?mode=caller`;
                         if(!isEmpty(item.latency))
                             item.url += `&latency=${item.latency}`;
                         if(!isEmpty(item.passphrase))
@@ -914,7 +914,7 @@
                         "latency": "50",
                         "passphrase": "",
                         "streamid": "",
-                        "url": "srt://127.0.0.1:7001?mode=listener&latency=50"
+                        "url": "srt://127.0.0.1:7001?mode=caller&latency=50"
                     })
                 }
             }
@@ -949,7 +949,7 @@
                                 if (conf.id === item.bind && conf.type === 'net') {
                                     hadBind = true;
                                     //item.url = item.url.replace(location.hostname, '127.0.0.1');
-                                    item.url = item.url.replace('mode=listener', 'mode=caller');
+                                    item.url = item.url.replace('mode=caller','mode=listener');
                                     conf.net.path = item.url;
                                 }
                             })
