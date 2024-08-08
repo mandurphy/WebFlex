@@ -1302,16 +1302,18 @@ export const useLedConf = () => {
     }
     const updateLedConf = (tip= "tip") => {
         return new Promise((resolve,reject)=>{
-            func("/conf/updateLedConf",ledConf).then(data => {
-                if ( data.status !== "success" ) {
-                    reject();
-                    if(tip !== "noTip")
-                        alertMsg('<cn>保存设置失败</cn><en>Save config failed!</en>', 'error');
-                } else {
-                    resolve();
-                    if(tip !== "noTip")
-                        alertMsg('<cn>保存设置成功,重启设备生效</cn><en>Save config successfully,and restart takes effect!</en>', 'success');
-                }
+            rpc("led.update",[ledConf]).then(() => {
+                func("/conf/updateLedConf",ledConf).then(data => {
+                    if ( data.status !== "success" ) {
+                        reject();
+                        if(tip !== "noTip")
+                            alertMsg('<cn>保存设置失败</cn><en>Save config failed!</en>', 'error');
+                    } else {
+                        resolve();
+                        if(tip !== "noTip")
+                            alertMsg('<cn>保存设置成功</cn><en>Save config successfully!</en>', 'success');
+                    }
+                })
             })
         })
     }

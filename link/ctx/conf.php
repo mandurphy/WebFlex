@@ -190,9 +190,9 @@ class Conf extends Basic
     function updateLedConf($param)
     {
         if($param["enable"])
-            exec("setenv led_enable 'y'");
+            exec("fw_setenv led_enable 'y'");
         else
-            exec("setenv led_enable 'n'");
+            exec("fw_setenv led_enable 'n'");
         file_put_contents( '/link/config/led/config.json', json_encode($param,JSON_UNESCAPED_SLASHES|JSON_UNESCAPED_UNICODE|JSON_PRETTY_PRINT));
         return $this->handleRet('','success','保存成功','save successfully');
     }
