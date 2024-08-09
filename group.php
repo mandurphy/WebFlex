@@ -29,6 +29,7 @@
                                         </div>
                                         <div class="col-lg-3">
                                             <select v-if="Object.keys(groupConf).length > 0" class="form-select" v-model.number="groupConf.groupId">
+                                                <option value="-1">-1</option>
                                                 <option value="0">0</option>
                                                 <option value="1">1</option>
                                                 <option value="2">2</option>
