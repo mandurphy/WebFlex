@@ -946,6 +946,8 @@
                 }
                 if (stream.webrtc)
                     urls.push(`http://${window.location.host}/webrtc?app=live&stream=${stream.suffix}`);
+                if(stream.udp.enable)
+                    urls.push(`udp://@${stream.udp.ip}:${stream.udp.port}`)
                 return urls;
             };
 
