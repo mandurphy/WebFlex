@@ -1067,16 +1067,16 @@
                     }
 
                     if(type === "webrtc") {
-                        if(codecA !== "opus")
+                        if(codecA !== "opus" && codecA !== "close")
                             alertMsg("<cn>WebRTC协议流仅支持OPUS音频编码格式,请调整音频编码参数后在重试</cn><en>WebRTC only supports OPUS audio, please change the audio codec settings and retry.</en>", "warning",8000);
                         if(codecV !== "h264")
                             alertMsg("<cn>WebRTC协议流仅支持H264视频编码格式,请调整视频编码参数后在重试</cn><en>WebRTC only supports H264 video, please change the video codec settings and retry.</en>", "warning",8000);
                         setTimeout(()=>{
                             defaultConf.forEach(item => {
                                 if(item.hasOwnProperty("enca")) {
-                                    if(item.enca.codec !== "opus" || item.encv.codec !== "h264")
+                                    if((item.enca.codec !== "opus" && item.enca.codec !== "close") || (item.encv.codec !== "h264" && item.encv.codec !== "close"))
                                         item.stream.webrtc = false;
-                                    if(item.enca.codec !== "opus" || item.encv2.codec !== "h264")
+                                    if((item.enca.codec !== "opus" && item.enca.codec !== "close") || (item.encv.codec !== "h264" && item.encv.codec !== "close"))
                                         item.stream2.webrtc = false;
                                 }
                             })

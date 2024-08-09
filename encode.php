@@ -879,11 +879,11 @@
                     alertMsg("<cn>RTMP协议流不支持OPUS音频编码格式,请先关闭RTMP协议流后在重试</cn><en>The RTMP protocol does not support OPUS audio encoding, please disable the RTMP stream and try again.</en>", "warning",8000);
                     hadReset = true;
                 }
-                if(conf.enca.codec !== "opus" && (conf.stream.webrtc || conf.stream2.webrtc)) {
+                if(conf.enca.codec !== "opus" && conf.enca.codec !== "close" && (conf.stream.webrtc || conf.stream2.webrtc)) {
                     alertMsg("<cn>WebRTC协议流仅支持OPUS音频编码格式,请先关闭WebRTC协议流后在重试</cn><en>The WebRTC protocol only supports OPUS audio encoding, please disable the WebRTC stream and try again.</en>", "warning",8000);
                     hadReset = true;
                 }
-                if((conf.encv.codec !== "h264" && conf.stream.webrtc) || (conf.encv2.codec !== "h264" && conf.stream2.webrtc)) {
+                if((conf.encv.codec !== "h264" && conf.encv.codec !== "close"  && conf.stream.webrtc) || (conf.encv2.codec !== "h264" && conf.encv2.codec !== "close" && conf.stream2.webrtc)) {
                     alertMsg("<cn>WebRTC协议流仅支持H264视频编码格式,请先关闭WebRTC协议流后在重试</cn><en>The WebRTC protocol only supports H264 video encoding, please disable the WebRTC stream and try again.</en>", "warning",8000);
                     hadReset = true;
                 }
