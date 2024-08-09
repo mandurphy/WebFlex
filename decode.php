@@ -876,10 +876,18 @@
                 const textarea = document.createElement("textarea");
                 if(state.tabType.value === 'rtmp') {
                     const urlObject = new URL(rxPushConf[index].url);
-                    if(type === 'server')
-                        textarea.value = `${urlObject.protocol}${urlObject.hostname}${urlObject.port ? ':' + urlObject.port : ''}${urlObject.pathname.split('/').slice(0, -1).join('/')}`;
-                    else
+                    if(type !== 'server') {
                         textarea.value = urlObject.pathname.split('/').pop() + urlObject.search;
+                        if(rxPushConf[index].auth) {
+                            let auth = md5(`uname=${rxPushConf[index].uname}&passwd=${rxPushConf[index].passwd}`).toUpperCase();
+                            auth = auth.length > 16 ? auth.substring(0, 16) : auth;
+                            textarea.value = urlObject.pathname.split('/').pop() + urlObject.search + '?Auth=' + auth;
+                        }
+                    } else {
+                        textarea.value = `${urlObject.protocol}${urlObject.pathname.split('/').slice(0, -1).join('/')}`;
+                        textarea.value = textarea.value.replace("127.0.0.1",window.location.hostname);
+                    }
+
                 }
                 if(state.tabType.value === 'srt')
                     textarea.value = srtPushConf[index].url
