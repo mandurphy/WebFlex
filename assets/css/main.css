@@ -1012,6 +1012,11 @@ input[type="password"]::-ms-reveal{
     display: inline-grid;
 }
 
+.dashboard .vga{
+    width: 102px;
+    display: inline-grid;
+}
+
 .dashboard .hdmi .icon {
     display: inline-block;
     background-image:url(../../assets/img/input.png);
@@ -1029,6 +1034,15 @@ input[type="password"]::-ms-reveal{
     width:45px;
     height:50px;
     background-position:0px 0px;
+    margin: 4px auto 6px auto !important;
+}
+
+.dashboard .vga .icon {
+    display: inline-block;
+    background-image:url(../../assets/img/input.png);
+    width:102px;
+    height:35px;
+    background-position:0px -84px;
     margin: 4px auto 6px auto !important;
 }
 
