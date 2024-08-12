@@ -10,7 +10,7 @@
 <div data-simplebar>
     <main class="page-content output" id="app" v-cloak>
         <div v-if="Object.keys(hardwareConf).length > 0" :class="['row',{'lp-display-hide':!hardwareConf.function.videoOut}]">
-            <div class="col-lg-6 lp-equal-height-container" v-if="hardwareConf.fac !== 'ENCS1'">
+            <div class="col-lg-6 lp-equal-height-container" v-if="hardwareConf.fac !== 'ENCS1' && hardwareConf.fac !== 'VGA1'">
                 <div class="card lp-equal-height-item">
                     <div class="card-header bg-transparent">
                         <div class="p-2 mb-0 d-flex align-items-end">
@@ -205,7 +205,7 @@
                         <div class="p-2 mb-0 d-flex align-items-end">
                             <cn>输出</cn>
                             <en>Output</en>
-                            <div v-if="hardwareConf.fac !== 'ENCS1'">2</div>
+                            <div v-if="hardwareConf.fac !== 'ENCS1' && hardwareConf.fac !== 'VGA1'">2</div>
                         </div>
                     </div>
                     <div class="card-body" v-if="defaultConf.length > 0 && mixIndex > -1">
