@@ -187,9 +187,9 @@
                     </div>
                 </div>
             </div>
-            <upload-modal modal-title="上传资源&Upload" :modal-show="showModal"
-                          upload-allow="['jpg']" upload-action="/link/upd/uploadRes.php" upload-count="2"
-                          upload-tip="请把资源拖到此处，仅支持jpg图片...&Please drag the resourse here..."
+            <upload-modal :modal-title="'上传资源&Upload'" :modal-show="showModal" :modal-fade="true"
+                          :upload-allow="['jpg']" :upload-action="'/link/upd/uploadRes.php'" :upload-count="1"
+                          :upload-tip="'请把资源拖到此处，仅支持jpg图片...&Please drag the resourse here...'"
                           @upload-success="uploadSuccess" @upload-error="uploadError">
             </upload-modal>
         </main>
