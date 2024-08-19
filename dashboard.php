@@ -117,7 +117,7 @@
 
   <script type="module">
       import { rpc,isEmpty } from "./assets/js/lp.utils.js";
-      import { useDefaultConf,useHardwareConf,useThemeActiveConf } from "./assets/js/vue.hooks.js";
+      import {useDefaultConf, useHardwareConf, useThemeActiveConf, useThemeConf} from "./assets/js/vue.hooks.js";
       import { ignoreCustomElementPlugin,filterKeywordPlugin,bootstrapSwitchComponent,statusPieChartComponent,statusTemperatureComponent,netFlotChartComponent } from "./assets/js/vue.helper.js"
       import vue from "./assets/js/vue.build.js";
       import mutationObserver from './assets/plugins/polyfill/mutationobserver.esm.js';
@@ -155,15 +155,26 @@
 
               const { defaultConf } = useDefaultConf();
               const { hardwareConf } = useHardwareConf();
-              const { themeActiveConf } = useThemeActiveConf();
+              //const { themeActiveConf } = useThemeActiveConf();
+              const { themeConf } = useThemeConf();
 
               watchEffect(()=>{
-                  if(!isEmpty(themeActiveConf) && state.useTheme.value) {
-                      state.theme_color.value = themeActiveConf["bs-active-bg-color"];
+                  // if(!isEmpty(themeActiveConf) && state.useTheme.value) {
+                  //     state.theme_color.value = themeActiveConf["bs-active-bg-color"];
+                  //     if(state.useTheme.value === "default")
+                  //       state.tipBorderColor.value = themeActiveConf["bs-active-bg-color"];
+                  //     else
+                  //       state.tipBorderColor.value = "#aaa";
+                  // }
+
+                  if(!isEmpty(themeConf) && state.useTheme.value) {
+                      const activeTheme = themeConf.themeActives.find(item => item.active === themeConf.active);
+
+                      state.theme_color.value = activeTheme.colors["bs-active-bg-color"];
                       if(state.useTheme.value === "default")
-                        state.tipBorderColor.value = themeActiveConf["bs-active-bg-color"];
+                          state.tipBorderColor.value = activeTheme.colors["bs-active-bg-color"];
                       else
-                        state.tipBorderColor.value = "#aaa";
+                          state.tipBorderColor.value = "#aaa";
                   }
               })
 
@@ -286,30 +297,41 @@
                   const html = document.querySelector('html');
                   const observer = new mutationObserver(mutations => {
                       mutations.forEach(mutation => {
-                          if (mutation.type === 'attributes' && mutation.attributeName === "data-bs-theme") {
-                              const theme = mutation.target.getAttribute("data-bs-theme");
-                              state.useTheme.value = theme;
-                              if(theme === "default") {
-                                  state.tickColor.value = '#eee';
-                                  state.borderColor.value = '#ccc';
-                                  state.tipBgColor.value = '#fff';
-                                  state.tipTxtColor.value = '#555';
-                                  state.line2_color.value = '#555';
+                          if (mutation.type === 'attributes') {
+                              if(mutation.attributeName === "data-bs-theme") {
+                                  const theme = mutation.target.getAttribute("data-bs-theme");
+                                  state.useTheme.value = theme;
+                                  if(theme === "default") {
+                                      state.tickColor.value = '#eee';
+                                      state.borderColor.value = '#ccc';
+                                      state.tipBgColor.value = '#fff';
+                                      state.tipTxtColor.value = '#555';
+                                      state.line2_color.value = '#555';
+                                  }
+                                  if(theme === "dark") {
+                                      state.tickColor.value = '#555';
+                                      state.borderColor.value = '#555';
+                                      state.tipBgColor.value = '#333';
+                                      state.tipTxtColor.value = '#adb5bd';
+                                      state.line2_color.value = '#999';
+                                  }
+                                  state.netFlotKey.value++;
                               }
-                              if(theme === "dark") {
-                                  state.tickColor.value = '#555';
-                                  state.borderColor.value = '#555';
-                                  state.tipBgColor.value = '#333';
-                                  state.tipTxtColor.value = '#adb5bd';
-                                  state.line2_color.value = '#999';
+                              if(mutation.attributeName === "data-bs-theme-active") {
+                                  const active = mutation.target.getAttribute("data-bs-theme-active");
+                                  if(!isEmpty(themeConf)) {
+                                      const activeTheme = themeConf.themeActives.find(item => item.active === active);
+                                      state.theme_color.value = activeTheme.colors["bs-active-bg-color"];
+                                      state.netFlotKey.value++;
+                                  }
                               }
-                              state.netFlotKey.value++;
+
                           }
                       });
                   });
                   const config = {
                       attributes: true,
-                      attributeFilter: ["data-bs-theme"],
+                      attributeFilter: ["data-bs-theme",["data-bs-theme-active"]],
                       subtree: false
                   };
                   observer.observe(html, config);

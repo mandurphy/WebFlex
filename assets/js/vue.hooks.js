@@ -1,6 +1,6 @@
-
-import {queryData,checkFileExists,func,alertMsg,rpc,rpc2,rpc3,rpc4,rpc6,deepCopy,clearReactiveObject,clearReactiveArray,isEmpty} from "./lp.utils.js";
+import {alertMsg, checkFileExists, clearReactiveArray, clearReactiveObject, deepCopy, func, isEmpty, queryData, rpc, rpc2, rpc3, rpc4,loadStyle} from "./lp.utils.js";
 import vue from "./vue.build.js";
+
 const { ref,reactive,onMounted } = vue;
 
 export const useDefaultConf = () => {
@@ -153,14 +153,13 @@ export const useThemeConf = () => {
             Object.assign(themeConf,conf);
         })
     }
-    const updateThemeConf = (type) => {
+    const updateThemeConf = (type = "default") => {
         return new Promise((resolve,reject)=>{
             themeConf.used = type;
             func("/conf/updateThemeConf",themeConf).then(data => {
                 if ( data.status === "success" ) {
                     const html = document.querySelector('html');
                     html.setAttribute('data-bs-theme', type);
-                    localStorage.setItem("theme",type);
                     resolve();
                     return;
                 }
@@ -168,8 +167,86 @@ export const useThemeConf = () => {
             })
         })
     }
+
+    const updateThemeActiveConf = (type = "default",active="default") => {
+        return new Promise((resolve,reject)=>{
+            themeConf.used = type;
+            themeConf.active = active;
+            func("/conf/updateThemeConf",themeConf).then(data => {
+                if ( data.status === "success" ) {
+                    const html = document.querySelector('html');
+                    html.setAttribute('data-bs-theme-active', active);
+                    let style = makeThemeActiveStyle();
+                    loadStyle(style).then(()=>{});
+                    resolve();
+                    return;
+                }
+                reject();
+            })
+        })
+    }
+
+    const makeThemeActiveStyle = () => {
+        const activeTheme = themeConf.themeActives.find(item => item.active === themeConf.active);
+        const cssVariables = Object.entries(activeTheme.colors)
+            .map(([key, value]) => `--${key}: ${value};`)
+            .join(' ');
+        return `:root { ${cssVariables} }`;
+    }
+
     onMounted(handleThemeConf);
-    return { themeConf,updateThemeConf }
+    return { themeConf,updateThemeConf,updateThemeActiveConf,makeThemeActiveStyle }
+}
+
+export const useThemeActiveConf = () => {
+    const themeActiveConf = reactive({});
+
+    const handleThemeActiveConf = async () => {
+        let themeActive = "default";
+        if(!sessionStorage.getItem("themeActive")) {
+            const themeConf = await queryData("config/theme_standard.json");
+            if(!themeConf.hasOwnProperty("active"))
+                themeConf.active = "default";
+            themeActive = themeConf.active;
+            sessionStorage.setItem("themeActive",themeActive);
+        } else {
+            themeActive = sessionStorage.getItem("themeActive");
+        }
+        const conf = await queryData(`assets/css/theme-active-${themeActive}.css`);
+        const regex = /--([\w-]+)\s*:\s*([^;]+)/g;
+        let match;
+        while ((match = regex.exec(conf)) !== null) {
+            const [,name, value] = match;
+            themeActiveConf[name.trim()] = value.trim();
+        }
+    }
+
+    const updateThemeActiveConf = async active => {
+        const  themeConf = await queryData("config/theme_standard.json");
+        return new Promise((resolve,reject)=>{
+            themeConf.active = active;
+            func("/conf/updateThemeConf",themeConf).then(data => {
+                if ( data.status === "success" ) {
+                    sessionStorage.setItem("themeActive",active);
+                    location.reload();
+                    resolve();
+                    return;
+                }
+                reject();
+            })
+        })
+    }
+
+    const makeThemeActiveConf = async active => {
+        let css = ":root {\n";
+        for (const [key, value] of Object.entries(themeActiveConf)) {
+            css += `    --${key}:${value};\n`;
+        }
+        css += "}\n";
+    }
+
+    onMounted(handleThemeActiveConf);
+    return { themeActiveConf,updateThemeActiveConf,makeThemeActiveConf }
 }
 
 export const useNetManagerConf = (tip = "tip") => {
@@ -1191,35 +1268,6 @@ export const useDirectsConf = () => {
 
     onMounted(handleDirectsConf);
     return { directsConf }
-}
-
-export const useThemeActiveConf = () => {
-    const themeActiveConf = reactive({});
-
-    const handleThemeActiveConf = async () => {
-        const themeConf = await queryData("config/theme_standard.json");
-        if(!themeConf.hasOwnProperty("active"))
-            themeConf.active = "default";
-        const themeActive = themeConf.active;
-        const conf = await queryData(`assets/css/theme-active-${themeActive}.css`);
-        const regex = /--([\w-]+)\s*:\s*([^;]+)/g;
-        let match;
-        while ((match = regex.exec(conf)) !== null) {
-            const [,name, value] = match;
-            themeActiveConf[name.trim()] = value.trim();
-        }
-    }
-
-    const updateThemeActiveConf = () => {
-        let css = ":root {\n";
-        for (const [key, value] of Object.entries(themeActiveConf)) {
-            css += `    --${key}:${value};\n`;
-        }
-        css += "}\n";
-    }
-
-    onMounted(handleThemeActiveConf);
-    return { themeActiveConf,updateThemeActiveConf }
 }
 
 export const useHelpCodeConf = () => {

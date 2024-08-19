@@ -13,12 +13,12 @@
                             <en @click="updateSysLanguage('cn')">中</en>
                         </a>
                     </li>
-                    <li class="nav-item">
-                        <a class="nav-link" v-if="Object.keys(themeConf).length > 0">
-                            <i v-if="themeConf.used==='default'" class="fa-regular fa-moon" @click="updateThemeConf('dark')"></i>
-                            <i v-else class="fa-regular fa-sun" @click="updateThemeConf('default')"></i>
-                        </a>
-                    </li>
+<!--                    <li class="nav-item">-->
+<!--                        <a class="nav-link" v-if="Object.keys(themeConf).length > 0">-->
+<!--                            <i v-if="themeConf.used==='default'" class="fa-regular fa-moon" @click="updateThemeConf('dark')"></i>-->
+<!--                            <i v-else class="fa-regular fa-sun" @click="updateThemeConf('default')"></i>-->
+<!--                        </a>-->
+<!--                    </li>-->
                     <li class="nav-item" v-if="Object.keys(webVerConf).length > 0 && webVerConf.switch">
                         <a class="nav-link" style="font-size: 19px;" @click="changeWeb">
                             <i class="fa-solid fa-arrow-right-arrow-left"></i>
@@ -29,6 +29,9 @@
                     </li>
                     <li class="nav-item">
                         <usb-option></usb-option>
+                    </li>
+                    <li class="nav-item">
+                        <theme-color></theme-color>
                     </li>
 <!--                    <li class="nav-item">-->
 <!--                        <a class="nav-link" data-bs-toggle="offcanvas" href="#ThemeCustomizer"><i class="fa fa-gear"></i></a>-->
@@ -41,7 +44,8 @@
         <aside class="sidebar-wrapper" @mouseenter="onMouseEnter" @mouseleave="onMouseLeave">
             <div class="sidebar-header">
                 <div class="logo-icon lp-cursor-pointer" @click="onHrefDash">
-                    <img src="assets/img/logo.png" width="78">
+                    <img v-if="!isMenuToggled" src="assets/img/logo-lg.png" class="mt-1" width="180">
+                    <img v-else src="assets/img/logo.png" width="78">
                 </div>
                 <div class="logo-name flex-grow-1">
 <!--                    <h5 class="mb-0 fw-bold">LinkPi</h5>-->
@@ -248,7 +252,7 @@
     import Metismenu from '../assets/plugins/metismenu/js/metisMenu.esm.js';
     import { func,updateSysLanguage,confirm } from "../assets/js/lp.utils.js";
     import { useThemeConf,useHardwareConf,useWebVerConf } from "../assets/js/vue.hooks.js"
-    import { ignoreCustomElementPlugin,usbOptionComponent,searchSettingComponent,ledOptionComponent } from "../assets/js/vue.helper.js"
+    import { ignoreCustomElementPlugin,usbOptionComponent,searchSettingComponent,ledOptionComponent,themeActiveColorComponent } from "../assets/js/vue.helper.js"
     import mutationObserver from '../assets/plugins/polyfill/mutationobserver.esm.js';
 
     const { createApp,ref,reactive,watchEffect,watch,nextTick,onMounted } = vue;
@@ -256,7 +260,8 @@
         components:{
             "usb-option": usbOptionComponent,
             "led-option": ledOptionComponent,
-            "search-setting": searchSettingComponent
+            "search-setting": searchSettingComponent,
+            "theme-color": themeActiveColorComponent
         },
         setup() {
            const { themeConf,updateThemeConf } = useThemeConf();

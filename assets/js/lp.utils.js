@@ -68,7 +68,7 @@ export const request = (url) => {
 
 export const queryData = (url,options= {}) => {
     return new Promise((resolve,reject)=>{
-        axios.get(url,options)
+        axios.get(url+"?rnd="+Math.random(),options)
             .then(response => {
                 resolve(response.data);
             })
@@ -342,10 +342,19 @@ export const loadCSS = (href) => {
         const link = document.createElement('link');
         link.rel = 'stylesheet';
         link.type = 'text/css';
-        link.href = href;
+        link.href = href+"?rnd="+Math.random();
         link.onload = () => resolve(link);
         link.onerror = () => reject(new Error(`Failed to load ${href}`));
         document.head.appendChild(link);
+    });
+}
+
+export const loadStyle = style => {
+    return new Promise((resolve, reject) => {
+        const styleEle = document.createElement('style');
+        styleEle.textContent = style;
+        document.head.appendChild(styleEle);
+        resolve(styleEle);
     });
 }
 

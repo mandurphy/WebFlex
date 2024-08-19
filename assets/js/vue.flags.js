@@ -230,3 +230,61 @@ export const emptyBoxFlagComponent = {
         return { defTheme }
     }
 }
+
+
+export const shirtFlagComponent = {
+    template: `<div>
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-shirt" :width="width" :height="height" viewBox="0 0 24 24" :stroke-width="strokeWidth" :stroke="stroke" fill="none" stroke-linecap="round" stroke-linejoin="round" :style="style">
+                      <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+                      <path d="M15 4l6 2v5h-3v8a1 1 0 0 1 -1 1h-10a1 1 0 0 1 -1 -1v-8h-3v-5l6 -2a3 3 0 0 0 6 0" :fill="color"/>
+                    </svg>
+               </div>`,
+    props: {
+        width: {
+            type: Number,
+            default: 20
+        },
+        height: {
+            type: Number,
+            default: 20
+        },
+        stroke: {
+            type: String,
+            default: "#2c3e50"
+        },
+        strokeWidth: {
+            type: Number,
+            default: 2
+        },
+        color: {
+            type: String,
+            default: ""
+        },
+        style: {
+            type: String,
+            default: ""
+        }
+    },
+    setup(props,context) {
+        const defTheme = ref("");
+        onMounted(()=>{
+            const update = () => {
+                const theme = html.getAttribute('data-bs-theme');
+                defTheme.value = theme;
+            }
+            const html = document.querySelector('html');
+            update();
+            const observer = new mutationObserver(() => {
+                update();
+            });
+            const config = {
+                attributes: true,
+                attributeFilter: ["data-bs-theme"],
+                subtree: false
+            };
+            observer.observe(html, config);
+        })
+
+        return { defTheme }
+    }
+}

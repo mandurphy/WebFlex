@@ -9,8 +9,8 @@
     <div class="card border-3" style="width: 380px" @keydown.tab="handleTabKeyDown">
         <div class="card-body p-4">
             <div class="row">
-                <div class="col-lg-12 text-center">
-                    <img src="assets/img/logo.png" class="" width="126">
+                <div class="col-lg-12 text-center mb-2">
+                    <img src="assets/img/logo-lg.png" class="mb-2" width="300">
                 </div>
             </div>
             <div class="form-body mt-4 pb-3">

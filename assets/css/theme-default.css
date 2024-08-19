@@ -368,6 +368,10 @@
     border: 1px solid #d8d8d8;
 }
 
+[data-bs-theme=default] .menu .dropdown-border-right {
+    border-color: var(--bs-border-color-translucent);
+}
+
 [data-bs-theme=default] .login  {
     background-color: var(--bs-body-bg-color);
     width: 100%;

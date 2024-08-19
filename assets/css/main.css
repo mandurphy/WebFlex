@@ -886,6 +886,10 @@ input[type="password"]::-ms-reveal{
     box-shadow: none;
 }
 
+.menu .dropdown-border-right {
+    border-right: 1px solid #cccccc;
+}
+
 .login .card {
     border-radius: 1rem;
 }

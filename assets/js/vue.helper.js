@@ -6,9 +6,10 @@ import * as noUiSlider from "../plugins/nouislider/js/nouislider.esm.js";
 import mutationObserver from '../plugins/polyfill/mutationobserver.esm.js'
 import {md5} from "../plugins/md5/js.md5.esm.js";
 import {alertMsg, axios_post, clearReactiveArray, confirm, formatTime, func, getUrlParam, isEmpty, rebootConfirm} from './lp.utils.js'
-import {useDiskConf,useLedConf} from "./vue.hooks.js";
+import {useDiskConf, useLedConf, useThemeConf} from "./vue.hooks.js";
+import {shirtFlagComponent} from "./vue.flags.js"
 
-const { ref, reactive, toRefs, watch, watchEffect, computed, onMounted, nextTick, defineAsyncComponent } = vue;
+const {ref, reactive, toRefs, watch, watchEffect, computed, onMounted, nextTick, defineAsyncComponent} = vue;
 
 export const ignoreCustomElementPlugin = {
     install: (app) => {
@@ -19,60 +20,60 @@ export const ignoreCustomElementPlugin = {
 export const filterKeywordPlugin = {
     install(app) {
         const filter = getUrlParam("filter");
-        if(!filter)
+        if (!filter)
             return;
-        const param = {"url":location.pathname, "filter":filter}
-        func("/root/getFilterKeywords",param).then(result => {
+        const param = {"url": location.pathname, "filter": filter}
+        func("/root/getFilterKeywords", param).then(result => {
             const keyword = result.data;
             if (keyword) {
                 // nextTick(() => {
-                    setTimeout(()=>{
-                        const elements = document.querySelectorAll('main cn, main en');
-                        elements.forEach((el) => {
-                            const textContent = el.textContent;
-                            const startIndex = textContent.indexOf(keyword);
-                            if (startIndex !== -1) {
-                                let currentElement = el.parentNode;
-                                while (currentElement) {
-                                    currentElement = currentElement.parentNode;
-                                    if(currentElement) {
-                                        let classList = currentElement.classList;
-                                        if(classList && classList.contains("tab-pane")) {
-                                            let tabId = currentElement.id;
-                                            let navLinks = document.querySelectorAll(".nav.nav-tabs > .nav-item > .nav-link");
-                                            navLinks.forEach(item => {
-                                                if (item.getAttribute('href') === '#'+tabId) {
-                                                    if(item.classList)
-                                                        item.classList.add("active");
-                                                } else {
-                                                    if(item.classList)
-                                                        item.classList.remove("active");
-                                                }
-                                            })
-                                            const siblings = Array.from(currentElement.parentElement.children);
-                                            siblings.forEach((sibling) => {
-                                                sibling.classList.remove('active');
-                                                sibling.classList.remove('show');
-                                            });
-                                            currentElement.classList.add('active');
-                                            currentElement.classList.add('show');
-                                        }
+                setTimeout(() => {
+                    const elements = document.querySelectorAll('main cn, main en');
+                    elements.forEach((el) => {
+                        const textContent = el.textContent;
+                        const startIndex = textContent.indexOf(keyword);
+                        if (startIndex !== -1) {
+                            let currentElement = el.parentNode;
+                            while (currentElement) {
+                                currentElement = currentElement.parentNode;
+                                if (currentElement) {
+                                    let classList = currentElement.classList;
+                                    if (classList && classList.contains("tab-pane")) {
+                                        let tabId = currentElement.id;
+                                        let navLinks = document.querySelectorAll(".nav.nav-tabs > .nav-item > .nav-link");
+                                        navLinks.forEach(item => {
+                                            if (item.getAttribute('href') === '#' + tabId) {
+                                                if (item.classList)
+                                                    item.classList.add("active");
+                                            } else {
+                                                if (item.classList)
+                                                    item.classList.remove("active");
+                                            }
+                                        })
+                                        const siblings = Array.from(currentElement.parentElement.children);
+                                        siblings.forEach((sibling) => {
+                                            sibling.classList.remove('active');
+                                            sibling.classList.remove('show');
+                                        });
+                                        currentElement.classList.add('active');
+                                        currentElement.classList.add('show');
                                     }
                                 }
-                                const endIndex = startIndex + keyword.length;
-                                const beforeText = textContent.slice(0, startIndex);
-                                const highlightedText = textContent.slice(startIndex, endIndex);
-                                const afterText = textContent.slice(endIndex);
-                                const highlightedElement = document.createElement('span');
-                                highlightedElement.style.fontWeight = '700';
-                                highlightedElement.style.color = 'red';
-                                highlightedElement.textContent = highlightedText;
-                                el.innerHTML = beforeText;
-                                el.appendChild(highlightedElement);
-                                el.innerHTML += afterText;
                             }
-                        })
-                    },100);
+                            const endIndex = startIndex + keyword.length;
+                            const beforeText = textContent.slice(0, startIndex);
+                            const highlightedText = textContent.slice(startIndex, endIndex);
+                            const afterText = textContent.slice(endIndex);
+                            const highlightedElement = document.createElement('span');
+                            highlightedElement.style.fontWeight = '700';
+                            highlightedElement.style.color = 'red';
+                            highlightedElement.textContent = highlightedText;
+                            el.innerHTML = beforeText;
+                            el.appendChild(highlightedElement);
+                            el.innerHTML += afterText;
+                        }
+                    })
+                }, 100);
                 // })
             }
         })
@@ -150,6 +151,8 @@ export const statusTemperatureComponent = {
             tmp_text.value.textContent = modelValue.value + '℃';
         })
 
+        watch(activeColor,() => tmp_mask.value.parentElement.style.background = activeColor.value);
+
         onMounted(() => tmp_mask.value.parentElement.style.background = activeColor.value);
 
         return {tmp_mask, tmp_text}
@@ -180,11 +183,17 @@ export const statusPieChartComponent = {
         const pie_chart = ref(null);
         const pie_text = ref(null);
 
-        const {modelValue} = toRefs(props);
+        const {modelValue,activeColor} = toRefs(props);
 
         watch(modelValue, newValue => {
             if ($(pie_chart.value).data('easyPieChart'))
                 $(pie_chart.value).data('easyPieChart').update(newValue);
+        })
+
+        watch(activeColor,newValue => {
+            if ($(pie_chart.value).data('easyPieChart')) {
+                $(pie_chart.value).data('easyPieChart').update(pie_text.value.textContent).options.barColor = newValue;
+            }
         })
 
         onMounted(() => {
@@ -475,7 +484,7 @@ export const multipleSelectComponent = {
             let [value1, value2] = selectValue.value.split(props.split);
             context.emit('update:value1', parseValue(value1));
             context.emit('update:value2', parseValue(value2));
-            context.emit('select-change', parseValue(value1),parseValue(value2));
+            context.emit('select-change', parseValue(value1), parseValue(value2));
         }
 
         onMounted(() => {
@@ -494,7 +503,7 @@ export const multipleSelectComponent = {
             }
         })
 
-        return {selectValue, onSelectChange,selectEle}
+        return {selectValue, onSelectChange, selectEle}
     }
 };
 
@@ -730,7 +739,7 @@ export const h5PlayerComponent = {
     },
     setup(props, context) {
 
-        const {url, codec, audio, buffer, canplay,protocol} = toRefs(props);
+        const {url, codec, audio, buffer, canplay, protocol} = toRefs(props);
         const state = {
             videoHandler: ref(null),
             jessHandler: ref(null),
@@ -756,13 +765,13 @@ export const h5PlayerComponent = {
             }
         })
 
-        const setupWebRTCConnection = offer =>{
-            if(state.rtcConnection !== null) {
+        const setupWebRTCConnection = offer => {
+            if (state.rtcConnection !== null) {
                 state.rtcConnection.close();
                 state.rtcConnection = null;
             }
-            state.rtcConnection  = new RTCPeerConnection();
-            state.rtcConnection .onicecandidate = event => {
+            state.rtcConnection = new RTCPeerConnection();
+            state.rtcConnection.onicecandidate = event => {
                 if (event.candidate) {
                     //console.log('Remote ICE candidate:', event.candidate.candidate);
                 } else {
@@ -770,16 +779,16 @@ export const h5PlayerComponent = {
                 }
             };
 
-            state.rtcConnection .ontrack = event => {
+            state.rtcConnection.ontrack = event => {
                 state.rtcHandler.value.srcObject = event.streams[0];
             };
 
-            state.rtcConnection .setRemoteDescription({ type: 'offer', sdp: offer })
+            state.rtcConnection.setRemoteDescription({type: 'offer', sdp: offer})
                 .then(() => {
-                    return state.rtcConnection .createAnswer();
+                    return state.rtcConnection.createAnswer();
                 })
                 .then(answer => {
-                    return state.rtcConnection .setLocalDescription(answer);
+                    return state.rtcConnection.setLocalDescription(answer);
                 })
                 .catch(error => {
                     console.error('Error during WebRTC connection setup:', error);
@@ -789,7 +798,7 @@ export const h5PlayerComponent = {
         const initPlayer = async () => {
             if (isEmpty(url.value)) return;
 
-            if(protocol.value === "rtmp") {
+            if (protocol.value === "rtmp") {
                 if (codec.value === "h265") {
                     state.videoHandler.value.style.display = 'none';
                     state.rtcHandler.value.style.display = 'none';
@@ -842,9 +851,9 @@ export const h5PlayerComponent = {
                     state.cloudHandler.value.style.display = 'none'
                 });
 
-                if(state.xmlhttp === null)
+                if (state.xmlhttp === null)
                     state.xmlhttp = new XMLHttpRequest();
-                state.xmlhttp.onreadystatechange = function() {
+                state.xmlhttp.onreadystatechange = function () {
                     if (state.xmlhttp.readyState === 4 && state.xmlhttp.status === 200) {
                         const offer = state.xmlhttp.response;
                         setupWebRTCConnection(offer);
@@ -867,13 +876,15 @@ export const h5PlayerComponent = {
                 state.h5Player.destroy();
                 state.h5Player = {};
             }
-            if(state.rtcConnection) {
+            if (state.rtcConnection) {
                 state.rtcConnection.close();
-                state.rtcConnection=null;
+                state.rtcConnection = null;
             }
             state.cloudHandler.value.style.display = 'flex';
-            state.videoHandler.value.removeEventListener("canplay", () => {});
-            state.rtcHandler.value.removeEventListener("canplay", () => {});
+            state.videoHandler.value.removeEventListener("canplay", () => {
+            });
+            state.rtcHandler.value.removeEventListener("canplay", () => {
+            });
             state.hadInitPlayer = false;
         }
         const checkDelay = () => {
@@ -1166,7 +1177,7 @@ export const uploadModalComponent = {
         }
 
         watch(modalShow, () => {
-            if(Object.keys(state.bsModal).length === 0) {
+            if (Object.keys(state.bsModal).length === 0) {
                 updateLangText();
                 initBsModal();
                 initUploadFile();
@@ -2176,7 +2187,7 @@ export const usbOptionComponent = {
                                 const targetDisk = document.querySelector("#targetDisk").value;
                                 const diskFormat = document.querySelector("#diskFormat").value;
                                 const notify = alertMsg("<cn>正在格式化，请勿关闭此页面</cn><en>Do not close this page while formatting</en>", "success", 99999999);
-                                func("/system/formatDisk", {"disk": targetDisk , "format": diskFormat});
+                                func("/system/formatDisk", {"disk": targetDisk, "format": diskFormat});
                                 let interval = setInterval(() => {
                                     func("/system/checkFormatProgress").then(res => {
                                         if (res.data === 0) {
@@ -2195,7 +2206,7 @@ export const usbOptionComponent = {
                         }
                     }
                 },
-                onOpenBefore: ()=>{
+                onOpenBefore: () => {
                     func("/system/getLocalDisk").then(result => {
                         const html = document.querySelector("html");
                         const lang = html.getAttribute("data-bs-language");
@@ -2457,8 +2468,8 @@ export const searchSettingComponent = {
 
         watch(state.searchVal, () => onFilterKeywordCtx());
 
-        const onRedirect = (url,data) => {
-            location.href = url+"?filter="+md5(data);
+        const onRedirect = (url, data) => {
+            location.href = url + "?filter=" + md5(data);
         }
 
         const onClickOutside = () => {
@@ -2484,10 +2495,10 @@ export const searchSettingComponent = {
             });
         }
 
-        onMounted(()=>{
+        onMounted(() => {
             const update = () => {
                 const lang = html.getAttribute('data-bs-language');
-                if(lang === "cn")
+                if (lang === "cn")
                     state.placeholderVal.value = "标题";
                 else
                     state.placeholderVal.value = "Search";
@@ -2503,7 +2514,7 @@ export const searchSettingComponent = {
             };
             observer.observe(html, config);
         })
-        return {...state,onRedirect,onClickOutside,highlightSubstring,onFilterKeywordCtx}
+        return {...state, onRedirect, onClickOutside, highlightSubstring, onFilterKeywordCtx}
     }
 };
 
@@ -2513,7 +2524,7 @@ export const ledOptionComponent = {
                 </a>`,
     setup(props, context) {
 
-        const {ledConf,updateLedConf} = useLedConf();
+        const {ledConf, updateLedConf} = useLedConf();
 
         const modeTitle = {
             signal: {
@@ -2604,7 +2615,8 @@ export const ledOptionComponent = {
                             ledConf.enable = JSON.parse(document.querySelector('#targetEnable').value);
                             ledConf.func = document.querySelector('#targetMode').value;
                             ledConf.brightness = document.querySelector("#targetBright").value;
-                            updateLedConf().then(r => {});
+                            updateLedConf().then(r => {
+                            });
                         }
                     },
                     cancel: {
@@ -2613,21 +2625,21 @@ export const ledOptionComponent = {
                         }
                     }
                 },
-                onOpenBefore: ()=>{
+                onOpenBefore: () => {
                     const html = document.querySelector("html");
                     const lang = html.getAttribute("data-bs-language");
 
-                    if(lang === 'cn') {
-                        document.querySelector('#targetEnable').add(new Option('开启','true'));
-                        document.querySelector('#targetEnable').add(new Option('关闭','false'));
+                    if (lang === 'cn') {
+                        document.querySelector('#targetEnable').add(new Option('开启', 'true'));
+                        document.querySelector('#targetEnable').add(new Option('关闭', 'false'));
                     } else {
-                        document.querySelector('#targetEnable').add(new Option('on','true'));
-                        document.querySelector('#targetEnable').add(new Option('off','false'));
+                        document.querySelector('#targetEnable').add(new Option('on', 'true'));
+                        document.querySelector('#targetEnable').add(new Option('off', 'false'));
                     }
 
                     const funcList = ledConf.funcList;
                     Object.keys(funcList).forEach(key => {
-                        if(modeTitle.hasOwnProperty(key)) {
+                        if (modeTitle.hasOwnProperty(key)) {
                             const option = document.createElement('option');
                             option.value = key;
                             option.text = modeTitle[key][lang];
@@ -2643,8 +2655,184 @@ export const ledOptionComponent = {
                 }
             });
         }
-
-
         return {onClickLedBtn}
+    }
+}
+
+export const themeActiveColorComponent = {
+    template: `<a class="nav-link" :style="{backgroundColor:themeColor}" data-bs-toggle="dropdown">
+                    <shirt-flag :width="26" :height="26" :strokeWidth="1.8" :stroke="themeTxtColor" :style="'margin-top:-5px;'"></shirt-flag>
+                </a>
+                <div class="dropdown">
+                    <div class="dropdown-menu dropdown-menu-end pt-0 pb-0" style="width: 180px;border-top-left-radius: 0;border-bottom-left-radius: 0">
+                        <div class="container">
+                            <div class="row">
+                                <div class="col-lg-3 dropdown-border-right">
+                                    <div v-if="themeConf.used === 'default'" class="row h-50 lp-align-center lp-cursor-pointer" @click="updateThemeConf('default')" :style="{borderBottom: '1px solid #cccccc',background:themeColor,color: themeTxtColor}">
+                                        <i class="fa-regular fa-sun font-22"></i>
+                                    </div>
+                                    <div v-else class="row h-50 lp-align-center lp-cursor-pointer" @click="updateThemeConf('default')">
+                                        <i class="fa-regular fa-sun font-22"></i>
+                                    </div>
+                                    <div v-if="themeConf.used === 'dark'" class="row h-50 lp-align-center ps-1 lp-cursor-pointer" @click="updateThemeConf('dark')" :style="{background:themeColor,color: themeTxtColor}">
+                                        <i class="fa-regular fa-moon font-22"></i>
+                                    </div>
+                                    <div v-else class="row h-50 lp-align-center ps-1 lp-cursor-pointer" @click="updateThemeConf('dark')">
+                                        <i class="fa-regular fa-moon font-22"></i>
+                                    </div>
+                                </div>
+                                <div class="col-lg-9 p-0 pt-2 pb-2">
+                                    <div v-for="item in themeConf.themeActives">
+                                        <a class="dropdown-item mt-1" href="javascript:;" @click="updateThemeActiveConf(themeConf.used,item.active)">
+                                            <div class="row">
+                                                <div class="col">
+                                                    <span class="material-symbols-outlined me-2">
+                                                        <cn>{{item.label_cn}}</cn>
+                                                        <en>{{item.label_en}}</en>
+                                                    </span>
+                                                </div>
+                                                <div class="col" :style="{height: '20px',background: item.colors['bs-active-bg-color']}"></div>
+                                            </div>
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>`,
+    components: {
+      "shirt-flag": shirtFlagComponent
+    },
+    setup(props, context) {
+
+        const themeColor = ref("#ffbb00");
+        const themeTxtColor = ref("");
+        const { themeConf,updateThemeActiveConf,updateThemeConf} = useThemeConf();
+
+        watchEffect(()=>{
+            if(!isEmpty(themeConf)) {
+                const activeTheme = themeConf.themeActives.find(item => item.active === themeConf.active);
+                themeColor.value = activeTheme.colors["bs-active-bg-color"];
+                themeTxtColor.value = activeTheme.colors[themeConf.used + "-bs-default-txt-color"];
+            }
+        })
+
+        const generateColors = baseColor => {
+            const hexToRgb = hex => {
+                let r = 0, g = 0, b = 0;
+                if (hex.length === 7) {
+                    r = parseInt(hex.substring(1, 3), 16);
+                    g = parseInt(hex.substring(3, 5), 16);
+                    b = parseInt(hex.substring(5, 7), 16);
+                }
+                return [r, g, b];
+            }
+
+            const rgbToHex = (r, g, b) => {
+                return `#${((1 << 24) + (r << 16) + (g << 8) + b).toString(16).slice(1).toUpperCase()}`;
+            }
+
+            const adjustColorByOffset = (color, offset) => {
+                const [r, g, b] = hexToRgb(color);
+                const newR = Math.min(255, Math.max(0, r + offset[0]));
+                const newG = Math.min(255, Math.max(0, g + offset[1]));
+                const newB = Math.min(255, Math.max(0, b + offset[2]));
+                return rgbToHex(newR, newG, newB);
+            }
+
+            const base = baseColor;
+            const darkOffset = [-17, -17, -17];
+            const lightOffset = [0, 34, 85];
+            const dark = adjustColorByOffset(baseColor, darkOffset);
+            const light = adjustColorByOffset(baseColor, lightOffset);
+            const transparent = `rgba(${hexToRgb(baseColor).join(', ')}, 0.3)`; // Transparent version
+
+            return {base, dark, light, transparent};
+        }
+
+        const makeThemeActiveConf = () => {
+            const acitveColor = reactive([
+                {
+                    cn: "金沙黄",
+                    en: "yellow",
+                    cr: "#ffbb00",
+                    th: "default"
+                },
+                {
+                    cn: "海湾蓝",
+                    en: "blue",
+                    cr: "#0092ff",
+                    th: "blue"
+                },
+                {
+                    cn: "熔岩红",
+                    en: "red",
+                    cr: "#ff4d4d",
+                    th: "red"
+                },
+                {
+                    cn: "橄榄绿",
+                    en: "green",
+                    cr: "#8fa800",
+                    th: "green"
+                },
+                {
+                    cn: "雅川青",
+                    en: "teal",
+                    cr: "#00a8a1",
+                    th: "teal"
+                },
+                {
+                    cn: "霞光紫",
+                    en: "purple",
+                    cr: "#aa4eaa",
+                    th: "purple"
+                }
+            ])
+
+            const themeActiveAry = [];
+            acitveColor.forEach(item => {
+                const {base,dark,light,transparent} = generateColors(item.cr);
+                const themeActiveObj = {
+                    "label_cn":item.cn,
+                    "label_en":item.en,
+                    "active":item.th,
+                    "colors":{
+                        "bs-active-bg-color": base,
+                        "bs-acitve-color": dark,
+                        "bs-slider-color": base,
+                        "default-bs-slider-bg-color": light,
+                        "default-bs-form-border-color": "#dee2e6",
+                        "default-bs-form-color": "#555555",
+                        "default-bs-body-color": "#555555",
+                        "default-bs-default-txt-color": "#ffffff",
+                        "default-bs-default-focus": transparent,
+                        "dark-bs-slider-bg-color": base,
+                        "dark-bs-form-border-color": "#434343",
+                        "dark-bs-form-color": "#adb5bd",
+                        "dark-bs-body-color": "#555555",
+                        "dark-bs-default-txt-color": "#333333",
+                        "dark-bs-default-focus": transparent
+                    }
+                }
+
+                if(base !== "#ffbb00")
+                    themeActiveObj.colors["dark-bs-default-txt-color"] = "#ffffff";
+                else
+                    themeActiveObj.colors["dark-bs-default-txt-color"] = "#333333";
+                themeActiveAry.push(themeActiveObj);
+            })
+
+            themeConf.themeActive = themeActiveAry;
+            updateThemeConf().then(()=>{});
+        }
+
+        onMounted(()=>{
+            // setTimeout(()=>{
+            //     makeThemeActiveConf();
+            // },1000)
+        })
+
+        return {themeConf,themeColor,themeTxtColor,updateThemeActiveConf,updateThemeConf}
     }
 }

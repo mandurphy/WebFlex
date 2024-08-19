@@ -444,6 +444,10 @@
     border-color: var(--bs-border-color-translucent) !important;
 }
 
+[data-bs-theme=dark] .menu .dropdown-border-right {
+    border-color: var(--bs-border-color-translucent) !important;
+}
+
 [data-bs-theme=dark] .menu .search-tip-text {
     color: #888 !important;
 }
