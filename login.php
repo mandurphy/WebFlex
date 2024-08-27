@@ -9,11 +9,11 @@
     <div class="card border-3" style="width: 380px" @keydown.tab="handleTabKeyDown">
         <div class="card-body p-4">
             <div class="row">
-                <div class="col-lg-12 text-center mb-2">
-                    <img src="assets/img/logo-lg.png" class="mb-2" width="300">
+                <div class="col-lg-12 lp-align-center mb-2">
+                    <img src="assets/img/logo-lg.png" class="mb-2" style="max-height: 52px;">
                 </div>
             </div>
-            <div class="form-body mt-4 pb-3">
+            <div class="form-body mt-2 pb-3">
                 <form @submit.prevent="handleSubmit" class="row g-3" action="/link/action.php" method="post" ref="form" autocomplete="off">
                     <div class="col-12">
                         <div class="input-group">

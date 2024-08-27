@@ -1307,17 +1307,18 @@ input[type="password"]::-ms-reveal{
 }
 
 .push .push-bar {
-    background: #555;
+    display: inline-block;
     color: #ddd;
     text-align: center;
     border-radius: 4px;
-    padding-top: .5rem!important;
-    padding-bottom: .5rem!important
+    padding: .45rem .6rem!important;
+    border: 2px dashed transparent;
+    border-image: repeating-linear-gradient(#aaaaaa 0, #aaaaaa 10px, transparent 5px, transparent 42px) 1;
 }
 .push .push-bar button.btn-default {
-    background-color: #f0f0f0;
-    border-color: #f0f0f0;
-    color: #555;
+    background-color: #ddd;
+    border-color: #ddd;
+    color: black;
     font-size: 14px;
     font-weight: normal;
     padding: 6px 12px;
@@ -1351,6 +1352,10 @@ input[type="password"]::-ms-reveal{
 .push .input-group-text {
     color: #555;
     background-color: #eee;
+}
+
+.push .push-dot {
+    color: #fb0;
 }
 
 .player .input-group {

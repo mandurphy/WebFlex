@@ -504,6 +504,10 @@
                              <en>auth</en>
                          </div>
                          <div class="col-1 text-center">
+                             <cn>Onvif</cn>
+                             <en>onvif</en>
+                         </div>
+                         <div class="col-1 text-center">
                              <cn>开关</cn>
                              <en>enable</en>
                          </div>
@@ -525,6 +529,9 @@
                                      <bs-switch v-model="item.stream.rtsp.auth"></bs-switch>
                                  </div>
                                  <div class="col-1 lp-align-center">
+                                     <bs-switch v-model="item.stream.rtsp.onvif"></bs-switch>
+                                 </div>
+                                 <div class="col-1 lp-align-center">
                                      <bs-switch v-model="item.stream.rtsp.enable"></bs-switch>
                                  </div>
                              </div>
@@ -538,6 +545,9 @@
                                  </div>
                                  <div class="col-1 lp-align-center">
                                      <bs-switch v-model="item.stream2.rtsp.auth"></bs-switch>
+                                 </div>
+                                 <div class="col-1 lp-align-center">
+                                     <bs-switch v-model="item.stream.rtsp.onvif"></bs-switch>
                                  </div>
                                  <div class="col-1 lp-align-center">
                                      <bs-switch v-model="item.stream2.rtsp.enable"></bs-switch>

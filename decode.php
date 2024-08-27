@@ -114,7 +114,7 @@
                             <div class="d-flex align-items-center">
                                 <div class="tab-icon"><i class="fa-brands fa-internet-explorer me-1"></i></div>
                                 <div class="tab-title">
-                                    <cn>网络输入</cn>
+                                    <cn>网络拉流</cn>
                                     <en>Network stream</en>
                                 </div>
                             </div>
@@ -150,6 +150,17 @@
                                 <div class="tab-title">
                                     <cn>接收srt流</cn>
                                     <en>Receive srt</en>
+                                </div>
+                            </div>
+                        </a>
+                    </li>
+                    <li class="nav-item" role="presentation" @click="tabType = 'ndi'">
+                        <a class="nav-link" data-bs-toggle="tab" href="#tab5" role="tab" aria-selected="false">
+                            <div class="d-flex align-items-center">
+                                <div class="tab-icon"><i class="fa-brands fa-audible me-1"></i></div>
+                                <div class="tab-title">
+                                    <cn>NDI解码</cn>
+                                    <en>Decode ndi</en>
                                 </div>
                             </div>
                         </a>
@@ -585,8 +596,81 @@
                             </div>
                         </div>
                     </div>
+                    <div class="tab-pane fade" id="tab5" role="tabpanel">
+                        <div class="row">
+                            <div class="col-2 text-center">
+                                <cn>描述</cn>
+                                <en>description</en>
+                            </div>
+                            <div class="col-5 text-center">
+                                <cn>NDI源</cn>
+                                <en>ndi source</en>
+                            </div>
+                            <div class="col-1 text-center">
+                                <cn>解码通道</cn>
+                                <en>decode channel</en>
+                            </div>
+                            <div class="col-1 text-center">
+                                <cn>操作</cn>
+                                <en>option</en>
+                            </div>
+                        </div>
+                        <hr>
+                        <div class="row mt-1" v-for="(item,index) in ndiReciveConf" :key="item.id">
+                            <div class="col-lg-12">
+                                <div class="row">
+                                    <div class="col-2 text-center">
+                                        <input type="text" class="form-control" v-model.trim.lazy="item.desc">
+                                    </div>
+                                    <div class="col-5">
+                                        <div class="input-group">
+                                            <select class="form-select" v-model="item.url">
+                                                <option v-for="it in ndiList" :value="it">{{it}}</option>
+                                            </select>
+                                            <button class="btn btn-primary input-group-text input-group-addon lp-cursor-pointer"
+                                                    @click="refreshNdiSourceList">
+                                                <i class="fa-solid fa-repeat"></i>
+                                            </button>
+                                        </div>
+                                    </div>
+                                    <div class="col-1">
+                                        <select class="form-select" v-model="item.bind">
+                                            <option v-if="handleNetConf.length > 0" v-for="(it,index) in handleNetConf"
+                                                    :key="index" :value="it.id">{{it.name}}
+                                            </option>
+                                            <option value="-1" cn="关闭" en="Close" v-language-option></option>
+                                        </select>
+                                    </div>
+                                    <div class="col-1 lp-align-center">
+                                        <button type="button" class="btn btn-primary border-1 px-3"
+                                                @click="onDelReceiveChn(index)">
+                                            <cn>删除</cn>
+                                            <en>delete</en>
+                                        </button>
+                                    </div>
+                                </div>
+                                <hr>
+                            </div>
+                        </div>
+                        <div class="row mt-3">
+                            <div class="col-lg-12 tips">
+                                <cn>1、设备作为流媒体服务器使用，可以接收其他设备推送的 SRT 流。</cn>
+                                <en>1. The device is used as a streaming media server and can receive SRT streams pushed by other devices.</en>
+                            </div>
+                            <div class="col-lg-12 tips">
+                                <cn>2、需要绑定解码通道时，请确定要绑定的通道没有正在使用。</cn>
+                                <en>2. Make sure that the binding channel is not in use</en>
+                            </div>
+                            <div class="col-lg-12 tips">
+                                <cn>3、设置解码通道后，保存时，会自动把该通道的流地址替换为当前的解码地址。</cn>
+                                <en>3. After the decoding channel is set, the stream address of the corresponding
+                                    channel is automatically replaced with the current decoding address when saving.
+                                </en>
+                            </div>
+                        </div>
+                    </div>
                     <div class="row mt-3">
-                        <div class="col-lg-12 text-center" v-if="tabType!=='rtmp' && tabType!=='srt'">
+                        <div class="col-lg-12 text-center" v-if="tabType!=='rtmp' && tabType!=='srt' && tabType!=='ndi'">
                             <button type="button" class="btn btn-primary border-3 px-5 me-2" v-if="tabType==='file'"
                                     @click="onAddVideoFile">
                                 <cn>添加</cn>
@@ -617,6 +701,16 @@
                                 <en>Save</en>
                             </button>
                         </div>
+                        <div class="col-lg-12 text-center" v-if="tabType==='ndi'">
+                            <button type="button" class="btn btn-primary border-3 px-5 me-2" @click="onAddReceiveChn">
+                                <cn>添加</cn>
+                                <en>Add</en>
+                            </button>
+                            <button type="button" class="btn btn-primary border-3 px-5" @click="saveReceiveChnConf">
+                                <cn>保存</cn>
+                                <en>Save</en>
+                            </button>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -627,7 +721,7 @@
 <script type="module">
     
     import {rpc, extend, deepCopy, confirm, swap, clearReactiveArray, clearReactiveObject, formatTime, alertMsg,isEmpty} from "./assets/js/lp.utils.js";
-    import {useDefaultConf, useUsbFilesConf, useHardwareConf, useRXPushConf,useSrtPushConf} from "./assets/js/vue.hooks.js";
+    import {useDefaultConf, useUsbFilesConf, useHardwareConf, useRXPushConf,useSrtPushConf,useNdiReciveConf} from "./assets/js/vue.hooks.js";
     import {ignoreCustomElementPlugin, filterKeywordPlugin, bootstrapSwitchComponent, multipleSelectComponent, nouiSliderComponent, languageOptionDirective} from "./assets/js/vue.helper.js"
     import {md5} from "./assets/plugins/md5/js.md5.esm.js";
     import vue from "./assets/js/vue.build.js";
@@ -649,13 +743,15 @@
             const {hardwareConf} = useHardwareConf();
             const {rxPushConf, updateRXPushConf} = useRXPushConf();
             const {srtPushConf, updateSrtPushConf} = useSrtPushConf();
+            const {ndiReciveConf, updateNdiReciveConf} = useNdiReciveConf();
             const {usbFiles} = useUsbFilesConf();
 
             const state = {
                 globalConf: reactive({}),
                 tabType: ref("net"),
                 playList: reactive([]),
-                playPostion: reactive([])
+                playPostion: reactive([]),
+                ndiList: reactive([])
             }
 
             const unwatch = watch(defaultConf, (value) => {
@@ -925,12 +1021,21 @@
                         "url": "srt://127.0.0.1:7001?mode=caller&latency=50"
                     })
                 }
+                if(state.tabType.value === 'ndi') {
+                    ndiReciveConf.push({
+                        "desc": "New NDI Recive",
+                        "bind": -1,
+                        "url": ""
+                    })
+                }
             }
             const onDelReceiveChn = index => {
                 if(state.tabType.value === 'rtmp')
                     rxPushConf.splice(index, 1);
                 if(state.tabType.value === 'srt')
                     srtPushConf.splice(index, 1);
+                if(state.tabType.value === 'ndi')
+                    ndiReciveConf.splice(index, 1);
             }
 
             const saveReceiveChnConf = () => {
@@ -965,18 +1070,45 @@
                     })
                     updateSrtPushConf();
                 }
+                if(state.tabType.value === 'ndi') {
+                    ndiReciveConf.forEach(item => {
+                        if (item.bind !== "-1") {
+                            defaultConf.forEach(conf => {
+                                if (conf.id === item.bind && conf.type === 'net') {
+                                    hadBind = true;
+                                    conf.net.path = "ndi://" + item.url;
+                                }
+                            })
+                        }
+                    })
+                    updateNdiReciveConf();
+                }
                 if (hadBind) updateDefaultConf('noTip');
             }
+
+            const refreshNdiSourceList = (tip, retryCount = 0) => {
+                rpc("enc.getNDIList").then(data => {
+                    if (data.length === 0 && retryCount < 5) {
+                        setTimeout(() => refreshNdiSourceList(tip, retryCount + 1),500);
+                    } else {
+                        clearReactiveArray(state.ndiList);
+                        state.ndiList.push(...data);
+                        if (tip !== "noTip")
+                            alertMsg("<cn>刷新NDI源列表成功</cn><en>Refresh ndi source list successfully</en>");
+                    }
+                });
+            };
 
             onMounted(() => {
                 onGetPlayList();
                 onGetPlayPosition();
+                refreshNdiSourceList("noTip");
             });
             
             return {...state, defaultConf, hardwareConf, handleVideoFileConf, handleUsbMp4File, onAddVideoFile, onVideoFileOption,
                 formatTime, onTimelineSliderEnd, onHandleFileDuration, onHandleFilePostion, onDisplayHdmi, handleNetConf,
                 saveGlobalConfByLocal, saveDefaultConf, handleRXPushConf, onResetRXPushChnUrl, onCopyReceiveChnUrl,
-                onAddReceiveChn, onDelReceiveChn,handleSrtPushConf,saveReceiveChnConf}
+                onAddReceiveChn, onDelReceiveChn,handleSrtPushConf,saveReceiveChnConf,ndiReciveConf,refreshNdiSourceList}
         }
     });
     app.use(ignoreCustomElementPlugin);

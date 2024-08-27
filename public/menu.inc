@@ -44,7 +44,7 @@
         <aside class="sidebar-wrapper" @mouseenter="onMouseEnter" @mouseleave="onMouseLeave">
             <div class="sidebar-header">
                 <div class="logo-icon lp-cursor-pointer" @click="onHrefDash">
-                    <img v-if="!isMenuToggled" src="assets/img/logo-lg.png" class="mt-1" width="180">
+                    <img v-if="!isMenuToggled" src="assets/img/logo-lg.png" class="mt-1" style="max-height: 33px;">
                     <img v-else src="assets/img/logo.png" width="78">
                 </div>
                 <div class="logo-name flex-grow-1">

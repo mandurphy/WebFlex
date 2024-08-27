@@ -463,7 +463,34 @@ export const usePushConf = () => {
     }
     const updatePushConf = (tip = "tip") => {
         return new Promise((resolve,reject)=> {
-            rpc("push.update", [ JSON.stringify( pushConf, null, 2 ) ]).then(data => {
+            const push_conf = deepCopy(pushConf);
+            const urls = push_conf.url;
+            urls.forEach(item => {
+                if(item.type === "rtmp") {
+                    let server = item.server;
+                    let key = item.key;
+                    if(server.endsWith("/"))
+                        server = server.substring(0, server.length - 1);
+                    if(key.startsWith("/"))
+                        key = key.substring(1);
+                    item.path = server + "/" + key;
+                }
+                if(item.type === "srt") {
+                    item.path = `srt://${item.ip}`;
+                    if(!isEmpty(item.port))
+                        item.path += `:${item.port}`;
+                    item.path += `?mode=${item.mode}`;
+                    if(!isEmpty(item.latency))
+                        item.path += `&latency=${item.latency}`;
+                    if(!isEmpty(item.passphrase))
+                        item.path += `&passphrase=${item.passphrase}`;
+                    if(!isEmpty(item.streamid))
+                        item.path += `&streamid=${item.streamid}`;
+                }
+                delete item.duration;
+                delete item.speed;
+            })
+            rpc("push.update", [ JSON.stringify( push_conf, null, 2 ) ]).then(data => {
                 if ( typeof ( data.error ) !== "undefined" ) {
                     if(tip !== "noTip")
                         alertMsg('<cn>保存设置失败</cn><en>Save config failed!</en>', 'error');
@@ -474,6 +501,7 @@ export const usePushConf = () => {
             });
         })
     }
+
     onMounted(handlePushConf);
     return { pushConf,updatePushConf }
 }
@@ -1393,6 +1421,32 @@ export const useWebRTCConf = () => {
     }
     onMounted(handleLedConf);
     return {webrtcConf,updateWebRTCConf}
+}
+
+export const useNdiReciveConf = () => {
+    const ndiReciveConf = reactive([]);
+    const handleNdiReciveConf = () => {
+        queryData("config/misc/ndiRecive.json").then((conf) => {
+            ndiReciveConf.splice(0, ndiReciveConf.length, ...conf);
+        });
+    }
+    const updateNdiReciveConf = (tip= "tip") => {
+        return new Promise((resolve,reject)=>{
+            func("/conf/updateNdiReciveConf",ndiReciveConf).then(data => {
+                if ( data.status !== "success" ) {
+                    reject();
+                    if(tip !== "noTip")
+                        alertMsg('<cn>保存设置失败</cn><en>Save config failed!</en>', 'error');
+                } else {
+                    resolve();
+                    if(tip !== "noTip")
+                        alertMsg('<cn>保存设置成功</cn><en>Save config successfully!</en>', 'success');
+                }
+            })
+        })
+    }
+    onMounted(handleNdiReciveConf);
+    return {ndiReciveConf,updateNdiReciveConf}
 }
 
 

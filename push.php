@@ -10,8 +10,8 @@
     <div data-simplebar>
         <main class="page-content push" id="app" v-cloak>
             <div class="row">
-                <div class="col-lg-7 lp-equal-height-container">
-                    <div class="card lp-equal-height-item">
+                <div class="col-lg-6 lp-equal-height-container">
+                    <div class="card lp-equal-height-item mb-0">
                         <div class="card-header bg-transparent">
                             <div class="p-2 mb-0 d-flex align-items-end">
                                 <cn>视频预览</cn>
@@ -39,11 +39,11 @@
                         </div>
                     </div>
                 </div>
-                <div class="col-lg-5 lp-equal-height-container">
+                <div class="col-lg-6 lp-equal-height-container">
                     <div class="lp-equal-height-item d-flex flex-column">
-                        <div class="row flex-grow-1 pb-2">
+                        <div class="row flex-grow-1">
                             <div class="col-lg-12">
-                                <div class="card h-100 d-flex flex-column">
+                                <div class="card h-100 d-flex flex-column mb-0">
                                     <div class="card-header bg-transparent">
                                         <div class="p-2 mb-0 d-flex align-items-end">
                                             <cn>基本设置</cn>
@@ -52,6 +52,7 @@
                                     </div>
                                     <div class="card-body">
                                         <div class="d-flex flex-column justify-content-between h-100" v-if="Object.keys(pushConf).length > 0">
+                                            <div class="row"></div>
                                             <div class="row">
                                                 <div class="col-lg-4 lp-align-right pe-4">
                                                     <label>
@@ -142,10 +143,6 @@
                                                     <time-picker v-model="pushCron.stop.time"></time-picker>
                                                 </div>
                                             </div>
-<!--                                            <div class="hr-container">-->
-<!--                                                <hr>-->
-<!--                                                <span class="hr-text">OR</span>-->
-<!--                                            </div>-->
                                             <div class="row">
                                                 <div class="col-lg-4 lp-align-right pe-4">
                                                     <label>
@@ -160,7 +157,7 @@
                                                     </select>
                                                 </div>
                                             </div>
-                                            <div class="row mt-2">
+                                            <div class="row">
                                                 <div class="col-lg-12 text-center">
                                                     <button type="button" class="btn border-3 btn-primary px-5" @click="savePushConf">
                                                         <cn>保存</cn>
@@ -168,33 +165,7 @@
                                                     </button>
                                                 </div>
                                             </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="row flex-grow-0">
-                            <div class="col-lg-12">
-                                <div class="card">
-                                    <div class="card-body">
-                                        <div class="push-bar">
-                                            <div class="row">
-                                                <div class="col-4 text-center" style="line-height: 34px;">
-                                                    <strong>{{pushTimeCount}}</strong>
-                                                </div>
-                                                <div class="col-7 d-flex align-items-start">
-                                                    <button type="button" :class="['btn border-3',{'btn-primary':!pushState.pushing},{'btn-default disabled':pushState.pushing}]" @click="onPushStart">
-                                                        <i class="fa-solid fa-video me-1"></i>
-                                                        <cn>推流</cn>
-                                                        <en>Push</en>
-                                                    </button>
-                                                    <button type="button" :class="['btn border-3 ms-1',{'btn-primary':pushState.pushing},{'btn-default disabled':!pushState.pushing}]" @click="onPushStop">
-                                                        <i class="fa-solid fa-stop me-1"></i>
-                                                        <cn>停止</cn>
-                                                        <en>Stop</en>
-                                                    </button>
-                                                </div>
-                                            </div>
+                                            <div></div>
                                         </div>
                                     </div>
                                 </div>
@@ -203,28 +174,92 @@
                     </div>
                 </div>
             </div>
-            <div class="row">
-                <div class="col-lg-12">
-                    <div class="card">
-                        <div class="card-header bg-transparent">
-                            <div class="p-2 mb-0 d-flex align-items-end">
-                                <cn>推流设置</cn>
-                                <en>Push config</en>
-                            </div>
-                        </div>
-                        <div class="card-body">
+            <div class="row mt-4">
+                <div class="col-lg-12 mx-auto">
+                    <ul class="nav nav-tabs nav-primary" role="tablist">
+                        <li class="nav-item" role="presentation" @click="tabType = 'rtmp'">
+                            <a class="nav-link active" data-bs-toggle="tab" href="#tab1" role="tab" aria-selected="false">
+                                <div class="d-flex align-items-center">
+                                    <div class="tab-icon">
+                                        <i v-if="handleEnableRtmp" class="fa-solid fa-circle-dot fa-sm push-dot"></i>
+                                        <i class="fa-solid fa-angles-up mx-1"></i>
+                                    </div>
+                                    <div class="tab-title">
+                                        <cn>推rtmp流</cn>
+                                        <en>RTMP</en>
+                                    </div>
+                                </div>
+                            </a>
+                        </li>
+                        <li class="nav-item" role="presentation" @click="tabType = 'srt'">
+                            <a class="nav-link" data-bs-toggle="tab" href="#tab2" role="tab" aria-selected="false">
+                                <div class="d-flex align-items-center">
+                                    <div class="tab-icon">
+                                        <i v-if="handleEnableSrt" class="fa-solid fa-circle-dot fa-sm push-dot"></i>
+                                        <i class="fa-solid fa-arrow-up-long mx-1"></i>
+                                    </div>
+                                    <div class="tab-title">
+                                        <cn>推srt流</cn>
+                                        <en>SRT</en>
+                                    </div>
+                                </div>
+                            </a>
+                        </li>
+                        <li class="nav-item" role="presentation" @click="tabType = 'webrtc'">
+                            <a class="nav-link" data-bs-toggle="tab" href="#tab3" role="tab" aria-selected="false">
+                                <div class="d-flex align-items-center">
+                                    <div class="tab-icon">
+                                        <i v-if="handleEnableWebRtc" class="fa-solid fa-circle-dot fa-sm push-dot"></i>
+                                        <i class="fa-solid fa-arrow-turn-up mx-1"></i>
+                                    </div>
+                                    <div class="tab-title">
+                                        <cn>推webrtc流</cn>
+                                        <en>WebRTC</en>
+                                    </div>
+                                </div>
+                            </a>
+                        </li>
+                        <li class="nav-item" role="presentation" @click="tabType = 'custom'">
+                            <a class="nav-link" data-bs-toggle="tab" href="#tab4" role="tab" aria-selected="false">
+                                <div class="d-flex align-items-center">
+                                    <div class="tab-icon">
+                                        <i v-if="handleEnableCustom" class="fa-solid fa-circle-dot fa-sm push-dot"></i>
+                                        <i class="fa-solid fa-arrows-split-up-and-left mx-1"></i>
+                                    </div>
+                                    <div class="tab-title">
+                                        <cn>自定义推流</cn>
+                                        <en>Custom</en>
+                                    </div>
+                                </div>
+                            </a>
+                        </li>
+                    </ul>
+                    <div class="tab-content py-3 pe-2 ps-2">
+                        <div class="tab-pane fade show active" id="tab1" role="tabpanel">
                             <div class="row">
                                 <div class="col-lg-2 text-center">
                                     <cn>描述</cn>
                                     <en>Description</en>
                                 </div>
-                                <div class="col-lg-5 text-center">
-                                    <cn>推流地址</cn>
+                                <div class="col-lg-2 text-center">
+                                    <cn>服务器</cn>
                                     <en>Push Url</en>
                                 </div>
-                                <div class="col-lg-2 text-center">
+                                <div class="col-lg-3 text-center">
+                                    <cn>推流码</cn>
+                                    <en>Push Url</en>
+                                </div>
+                                <div class="col-lg-1 text-center">
                                     <cn>兼容性</cn>
                                     <en>Compatible</en>
+                                </div>
+                                <div class="col-lg-1 text-center">
+                                    <cn>速度</cn>
+                                    <en>Speed</en>
+                                </div>
+                                <div class="col-lg-1 text-center">
+                                    <cn>时长</cn>
+                                    <en>Duration</en>
                                 </div>
                                 <div class="col-lg-1 text-center">
                                     <cn>启用</cn>
@@ -234,13 +269,197 @@
                                     <cn>操作</cn>
                                     <en>Option</en>
                                 </div>
+                            </div>
+                            <hr class="my-3">
+                            <div class="row" v-if="Object.keys(pushConf).length > 0" v-for="(item,index) in handleRtmpConf">
+                                <div class="co-lg-12">
+                                    <div class="row">
+                                        <div class="col-lg-2">
+                                            <input type="text" class="form-control" v-model.trim.lazy="item.des">
+                                        </div>
+                                        <div class="col-lg-2">
+                                            <input type="text" class="form-control" v-model.trim.lazy="item.server">
+                                        </div>
+                                        <div class="col-lg-3">
+                                            <input type="text" class="form-control" v-model.trim.lazy="item.key">
+                                        </div>
+                                        <div class="col-lg-1">
+                                            <select class="form-select" v-model="item.flvflags">
+                                                <option cn="标准" en="normal" value="" v-language-option></option>
+                                                <option value="ext_header">enhanced-rtmp</option>
+                                            </select>
+                                        </div>
+                                        <div class="col-lg-1 text-center">
+                                            {{item.speed}} kb/s
+                                        </div>
+                                        <div class="col-lg-1 text-center">
+                                            {{formatPushTimeCount(item.duration)}}
+                                        </div>
+                                        <div class="col-lg-1 lp-align-center">
+                                            <bs-switch v-model="item.enable"></bs-switch>
+                                        </div>
+                                        <div class="col-lg-1 text-center">
+                                            <button type="button" class="btn border-3 btn-primary" @click="delPushUrl(index)">
+                                                <cn>删除</cn>
+                                                <en>delete</en>
+                                            </button>
+                                        </div>
+                                    </div>
+                                    <hr class="my-3">
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-lg-12 tips">
+                                    <cn>1、在基本设置里选择使用的音频源和视频源，如果需要使用Line-In的音频，音频源请选择Mix通道。</cn>
+                                    <en>1. In basic settings, choose the audio and video sources. For Line-In audio, select the Mix channel.</en>
+                                </div>
+                                <div class="col-lg-12 tips">
+                                    <cn>2、点击推流按钮，可以向全部已启用的通道推流，推流速度大于0表示推流成功。</cn>
+                                    <en>2. Click the push button to stream to all enabled channels. A speed greater than 0 indicates a successful stream.</en>
+                                </div>
+                                <div class="col-lg-12 tips">
+                                    <cn>3、当有通道推流时，会在对应标签页前显示[ <i class="fa-solid fa-circle-dot fa-sm push-dot"></i> ]图标提示。</cn>
+                                    <en>3. When a channel is streaming, a [ <i class="fa-solid fa-circle-dot fa-sm push-dot"></i> ] icon will appear in front of the corresponding tab as a notification.</en>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="tab-pane fade" id="tab2" role="tabpanel">
+                            <div class="row">
+                                <div class="col-2 text-center">
+                                    <cn>描述</cn>
+                                    <en>Description</en>
+                                </div>
+                                <div class="col text-center">
+                                    <cn>模式</cn>
+                                    <en>Mode</en>
+                                </div>
+                                <div class="col text-center">
+                                    IP
+                                </div>
+                                <div class="col text-center">
+                                    <cn>端口</cn>
+                                    <en>Port</en>
+                                </div>
+                                <div class="col text-center">
+                                    <cn>密码</cn>
+                                    <en>Password</en>
+                                </div>
+                                <div class="col text-center">
+                                    <cn>延时</cn>
+                                    <en>Latency</en>
+                                </div>
+                                <div class="col text-center">
+                                    Stream ID
+                                </div>
                                 <div class="col-lg-1 text-center">
                                     <cn>速度</cn>
                                     <en>Speed</en>
                                 </div>
+                                <div class="col-lg-1 text-center">
+                                    <cn>时长</cn>
+                                    <en>Duration</en>
+                                </div>
+                                <div class="col-lg-1 text-center">
+                                    <cn>启用</cn>
+                                    <en>Enable</en>
+                                </div>
+                                <div class="col-lg-1 text-center">
+                                    <cn>操作</cn>
+                                    <en>Option</en>
+                                </div>
+                            </div>
+                            <hr >
+                            <div class="row mt-1" v-for="(item,index) in handleSrtConf" :key="item.id">
+                                <div class="col-lg-12">
+                                    <div class="row">
+                                        <div class="col-2 text-center">
+                                            <input type="text" class="form-control" v-model.trim.lazy="item.des">
+                                        </div>
+                                        <div class="col">
+                                            <select class="form-select" v-model="item.mode">
+                                                <option value="caller">caller</option>
+                                                <option value="listener">listener</option>
+                                                <option value="rendezvous">rendezvous</option>
+                                            </select>
+                                        </div>
+                                        <div class="col">
+                                            <input type="text" class="form-control" v-model.trim.lazy="item.ip">
+                                        </div>
+                                        <div class="col">
+                                            <input type="text" class="form-control" v-model.trim.lazy="item.port">
+                                        </div>
+                                        <div class="col">
+                                            <input type="text" class="form-control" v-model.trim.lazy="item.passphrase">
+                                        </div>
+                                        <div class="col">
+                                            <input type="text" class="form-control" v-model.trim.lazy="item.latency">
+                                        </div>
+                                        <div class="col">
+                                            <input type="text" class="form-control" v-model.trim.lazy="item.streamid">
+                                        </div>
+                                        <div class="col-lg-1 text-center">
+                                            {{item.speed}} kb/s
+                                        </div>
+                                        <div class="col-lg-1 text-center">
+                                            {{formatPushTimeCount(item.duration)}}
+                                        </div>
+                                        <div class="col-lg-1 lp-align-center">
+                                            <bs-switch v-model="item.enable"></bs-switch>
+                                        </div>
+                                        <div class="col-lg-1 text-center">
+                                            <button type="button" class="btn border-3 btn-primary" @click="delPushUrl(index)">
+                                                <cn>删除</cn>
+                                                <en>delete</en>
+                                            </button>
+                                        </div>
+                                    </div>
+                                    <hr class="my-3">
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-lg-12 tips">
+                                    <cn>1、在基本设置里选择使用的音频源和视频源，如果需要使用Line-In的音频，音频源请选择Mix通道。</cn>
+                                    <en>1. In basic settings, choose the audio and video sources. For Line-In audio, select the Mix channel.</en>
+                                </div>
+                                <div class="col-lg-12 tips">
+                                    <cn>2、点击推流按钮，可以向全部已启用的通道推流，推流速度大于0表示推流成功。</cn>
+                                    <en>2. Click the push button to stream to all enabled channels. A speed greater than 0 indicates a successful stream.</en>
+                                </div>
+                                <div class="col-lg-12 tips">
+                                    <cn>3、当有通道推流时，会在对应标签页前显示[ <i class="fa-solid fa-circle-dot fa-sm push-dot"></i> ]图标提示。</cn>
+                                    <en>3. When a channel is streaming, a [ <i class="fa-solid fa-circle-dot fa-sm push-dot"></i> ] icon will appear in front of the corresponding tab as a notification.</en>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="tab-pane fade" id="tab3" role="tabpanel">
+                            <div class="row">
+                                <div class="col-lg-2 text-center">
+                                    <cn>描述</cn>
+                                    <en>Description</en>
+                                </div>
+                                <div class="col-lg-5 text-center">
+                                    <cn>推流地址</cn>
+                                    <en>Push Url</en>
+                                </div>
+                                <div class="col-lg-1 text-center">
+                                    <cn>速度</cn>
+                                    <en>Speed</en>
+                                </div>
+                                <div class="col-lg-1 text-center">
+                                    <cn>时长</cn>
+                                    <en>Duration</en>
+                                </div>
+                                <div class="col-lg-1 text-center">
+                                    <cn>启用</cn>
+                                    <en>Enable</en>
+                                </div>
+                                <div class="col-lg-1 text-center">
+                                    <cn>操作</cn>
+                                    <en>Option</en>
+                                </div>
                             </div>
                             <hr class="my-3">
-                            <div class="row" v-if="Object.keys(pushConf).length > 0" v-for="(item,index) in pushConf.url">
+                            <div class="row" v-if="Object.keys(pushConf).length > 0" v-for="(item,index) in handleWebRtcConf">
                                 <div class="co-lg-12">
                                     <div class="row">
                                         <div class="col-lg-2">
@@ -249,37 +468,131 @@
                                         <div class="col-lg-5">
                                             <input type="text" class="form-control" v-model.trim.lazy="item.path">
                                         </div>
-                                        <div class="col-lg-2">
-                                            <select class="form-select" v-model="item.flvflags">
-                                                <option cn="标准" en="normal" value="" v-language-option></option>
-                                                <option value="ext_header">enhanced-rtmp</option>
-                                            </select>
+                                        <div class="col-lg-1 text-center">
+                                            {{item.speed}} kb/s
+                                        </div>
+                                        <div class="col-lg-1 text-center">
+                                            {{formatPushTimeCount(item.duration)}}
                                         </div>
                                         <div class="col-lg-1 lp-align-center">
                                             <bs-switch v-model="item.enable"></bs-switch>
                                         </div>
                                         <div class="col-lg-1 text-center">
                                             <button type="button" class="btn border-3 btn-primary" @click="delPushUrl(index)">
-                                                <cn>移除</cn>
+                                                <cn>删除</cn>
                                                 <en>delete</en>
                                             </button>
-                                        </div>
-                                        <div class="col-lg-1 text-center">
-                                            {{getPushSpeed(index)}} kb/s
                                         </div>
                                     </div>
                                     <hr class="my-3">
                                 </div>
                             </div>
                             <div class="row">
-                                <div class="col-lg-12 text-center">
-                                    <button type="button" class="btn border-3 btn-primary px-5" @click="addPushUrl">
-                                        <cn>添加</cn>
-                                        <en>Add</en>
+                                <div class="col-lg-12 tips">
+                                    <cn>1、在基本设置里选择使用的音频源和视频源，如果需要使用Line-In的音频，音频源请选择Mix通道。</cn>
+                                    <en>1. In basic settings, choose the audio and video sources. For Line-In audio, select the Mix channel.</en>
+                                </div>
+                                <div class="col-lg-12 tips">
+                                    <cn>2、点击推流按钮，可以向全部已启用的通道推流，推流速度大于0表示推流成功。</cn>
+                                    <en>2. Click the push button to stream to all enabled channels. A speed greater than 0 indicates a successful stream.</en>
+                                </div>
+                                <div class="col-lg-12 tips">
+                                    <cn>3、当有通道推流时，会在对应标签页前显示[ <i class="fa-solid fa-circle-dot fa-sm push-dot"></i> ]图标提示。</cn>
+                                    <en>3. When a channel is streaming, a [ <i class="fa-solid fa-circle-dot fa-sm push-dot"></i> ] icon will appear in front of the corresponding tab as a notification.</en>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="tab-pane fade" id="tab4" role="tabpanel">
+                            <div class="row">
+                                <div class="col-lg-2 text-center">
+                                    <cn>描述</cn>
+                                    <en>Description</en>
+                                </div>
+                                <div class="col-lg-5 text-center">
+                                    <cn>推流地址</cn>
+                                    <en>Push Url</en>
+                                </div>
+                                <div class="col-lg-1 text-center">
+                                    <cn>速度</cn>
+                                    <en>Speed</en>
+                                </div>
+                                <div class="col-lg-1 text-center">
+                                    <cn>时长</cn>
+                                    <en>Duration</en>
+                                </div>
+                                <div class="col-lg-1 text-center">
+                                    <cn>启用</cn>
+                                    <en>Enable</en>
+                                </div>
+                                <div class="col-lg-1 text-center">
+                                    <cn>操作</cn>
+                                    <en>Option</en>
+                                </div>
+                            </div>
+                            <hr class="my-3">
+                            <div class="row" v-if="Object.keys(pushConf).length > 0" v-for="(item,index) in handleCustomConf">
+                                <div class="co-lg-12">
+                                    <div class="row">
+                                        <div class="col-lg-2">
+                                            <input type="text" class="form-control" v-model.trim.lazy="item.des">
+                                        </div>
+                                        <div class="col-lg-5">
+                                            <input type="text" class="form-control" v-model.trim.lazy="item.path">
+                                        </div>
+                                        <div class="col-lg-1 text-center">
+                                            {{item.speed}} kb/s
+                                        </div>
+                                        <div class="col-lg-1 text-center">
+                                            {{formatPushTimeCount(item.duration)}}
+                                        </div>
+                                        <div class="col-lg-1 lp-align-center">
+                                            <bs-switch v-model="item.enable"></bs-switch>
+                                        </div>
+                                        <div class="col-lg-1 text-center">
+                                            <button type="button" class="btn border-3 btn-primary" @click="delPushUrl(index)">
+                                                <cn>删除</cn>
+                                                <en>delete</en>
+                                            </button>
+                                        </div>
+                                    </div>
+                                    <hr class="my-3">
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-lg-12 tips">
+                                    <cn>1、在基本设置里选择使用的音频源和视频源，如果需要使用Line-In的音频，音频源请选择Mix通道。</cn>
+                                    <en>1. In basic settings, choose the audio and video sources. For Line-In audio, select the Mix channel.</en>
+                                </div>
+                                <div class="col-lg-12 tips">
+                                    <cn>2、点击推流按钮，可以向全部已启用的通道推流，推流速度大于0表示推流成功。</cn>
+                                    <en>2. Click the push button to stream to all enabled channels. A speed greater than 0 indicates a successful stream.</en>
+                                </div>
+                                <div class="col-lg-12 tips">
+                                    <cn>3、当有通道推流时，会在对应标签页前显示[ <i class="fa-solid fa-circle-dot fa-sm push-dot"></i> ]图标提示。</cn>
+                                    <en>3. When a channel is streaming, a [ <i class="fa-solid fa-circle-dot fa-sm push-dot"></i> ] icon will appear in front of the corresponding tab as a notification.</en>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-lg-12 text-center">
+                                <button type="button" class="btn border-3 btn-primary px-5" @click="addPushUrl">
+                                    <cn>添加</cn>
+                                    <en>Add</en>
+                                </button>
+                                <button type="button" class="btn border-3 btn-primary px-5 ms-2" @click="savePushConf">
+                                    <cn>保存</cn>
+                                    <en>Save</en>
+                                </button>
+                                <div class="push-bar ms-5">
+                                    <button type="button" :class="['btn border-3 px-4',{'btn-primary':!pushState.pushing},{'btn-default disabled':pushState.pushing}]" @click="onPushStart">
+                                        <i class="fa-solid fa-video me-1"></i>
+                                        <cn>推流</cn>
+                                        <en>Push</en>
                                     </button>
-                                    <button type="button" class="btn border-3 btn-primary px-5 ms-2" @click="savePushConf">
-                                        <cn>保存</cn>
-                                        <en>Save</en>
+                                    <button type="button" :class="['btn border-3 px-4 ms-2',{'btn-primary':pushState.pushing},{'btn-default disabled':!pushState.pushing}]" @click="onPushStop">
+                                        <i class="fa-solid fa-stop me-1"></i>
+                                        <cn>停止</cn>
+                                        <en>Stop</en>
                                     </button>
                                 </div>
                             </div>
@@ -291,7 +604,7 @@
     </div>
 <?php include ("./public/foot.inc") ?>
 <script type="module">
-    import { rpc,func,alertMsg } from "./assets/js/lp.utils.js";
+    import {rpc, func, alertMsg, isEmpty, extend} from "./assets/js/lp.utils.js";
     import { useDefaultConf,usePushConf } from "./assets/js/vue.hooks.js";
     import { ignoreCustomElementPlugin,filterKeywordPlugin,bootstrapSwitchComponent,h5PlayerComponent,timepickerComponent,languageOptionDirective } from "./assets/js/vue.helper.js"
     import vue from "./assets/js/vue.build.js";
@@ -316,8 +629,9 @@
                 defaultSubEnable:ref(null),
                 hadPlayed:ref(false),
                 playUrl:ref('http://'+window.location.host+'/flv?app=live&stream=preview'),
-                pushTimeCount:ref("00:00:00"),
                 updateTime:0,
+                tabType:ref('rtmp'),
+                pushState:reactive({}),
                 pushCron: reactive({
                     start:{
                         day:"x",
@@ -327,12 +641,7 @@
                         day:"x",
                         time:"00:00"
                     }
-                }),
-                pushState:reactive({
-                    duration:0,
-                    pushing:false,
-                    speed:[]
-                }),
+                })
             }
 
             const unwatch = watchEffect(()=>{
@@ -357,6 +666,117 @@
                })
             });
 
+            const handleRtmpConf = computed(()=>{
+                if(!isEmpty(pushConf) && !isEmpty(state.pushState)) {
+                    const { status } = state.pushState;
+                    let { url } = pushConf;
+                    url = url.filter(item => item.type === 'rtmp');
+                    url.forEach(item => {
+                        item.duration = 0;
+                        item.speed = 0;
+                        status.forEach(st => {
+                            if(item.type === st.type && item.path === st.path)
+                                extend(item,st);
+                        })
+                    })
+                    return url;
+                }
+                return [];
+            })
+
+            const handleEnableRtmp = computed(()=>{
+                if(!isEmpty(pushConf)) {
+                    const { status } = state.pushState;
+                    let { url } = pushConf;
+                    url = url.filter(item => item.type === 'rtmp' && item.enable);
+                    return state.hadPlayed.value && url.length > 0;
+                }
+                return false;
+            })
+
+            const handleSrtConf = computed(()=>{
+                if(!isEmpty(pushConf) && !isEmpty(state.pushState)) {
+                    const { status } = state.pushState;
+                    let { url } = pushConf;
+                    url = url.filter(item => item.type === 'srt');
+                    url.forEach(item => {
+                        item.duration = 0;
+                        item.speed = 0;
+                        status.forEach(st => {
+                            if(item.type === st.type && item.path === st.path)
+                                extend(item,st);
+                        })
+                    })
+                    return url;
+                }
+                return [];
+            })
+
+            const handleEnableSrt = computed(()=>{
+                if(!isEmpty(pushConf)) {
+                    const { status } = state.pushState;
+                    let { url } = pushConf;
+                    url = url.filter(item => item.type === 'srt' && item.enable);
+                    return state.hadPlayed.value && url.length > 0;
+                }
+                return false;
+            })
+
+            const handleWebRtcConf = computed(()=>{
+                if(!isEmpty(pushConf) && !isEmpty(state.pushState)) {
+                    const { status } = state.pushState;
+                    let { url } = pushConf;
+                    url = url.filter(item => item.type === 'webrtc');
+                    url.forEach(item => {
+                        item.duration = 0;
+                        item.speed = 0;
+                        status.forEach(st => {
+                            if(item.type === st.type && item.path === st.path)
+                                extend(item,st);
+                        })
+                    })
+                    return url;
+                }
+                return [];
+            })
+
+            const handleEnableWebRtc = computed(()=>{
+                if(!isEmpty(pushConf)) {
+                    const { status } = state.pushState;
+                    let { url } = pushConf;
+                    url = url.filter(item => item.type === 'webrtc' && item.enable);
+                    return state.hadPlayed.value && url.length > 0;
+                }
+                return false;
+            })
+
+            const handleCustomConf = computed(()=>{
+                if(!isEmpty(pushConf) && !isEmpty(state.pushState)) {
+                    const { status } = state.pushState;
+                    let { url } = pushConf;
+                    url = url.filter(item => item.type === 'custom');
+                    url.forEach(item => {
+                        item.duration = 0;
+                        item.speed = 0;
+                        status.forEach(st => {
+                            if(item.type === st.type && item.path === st.path)
+                                extend(item,st);
+                        })
+                    })
+                    return url;
+                }
+                return [];
+            })
+
+            const handleEnableCustom = computed(()=>{
+                if(!isEmpty(pushConf)) {
+                    const { status } = state.pushState;
+                    let { url } = pushConf;
+                    url = url.filter(item => item.type === 'custom' && item.enable);
+                    return state.hadPlayed.value && url.length > 0;
+                }
+                return false;
+            })
             const handlePushCrontab = () => {
                 func("/system/getPushCrontab").then(result => {
                     const keys = Object.keys(result.data);
@@ -387,15 +807,11 @@
                     state.updateTime = new Date().getTime() / 1000;
                     state.hadPlayed.value = state.pushState.pushing;
                 });
-                setTimeout(handlePushState,2000);
+                setTimeout(handlePushState,1000);
             }
 
-            const getPushSpeed = index => {
-                return state.pushState.speed[index];
-            }
-
-            const handlePushTimeCount = () => {
-                if (state.pushState.pushing) {
+            const formatPushTimeCount = count => {
+                if (state.pushState.pushing && count > 0) {
                     const fix = num => {
                         if ( num < 10 )
                             return '0' + num;
@@ -403,15 +819,13 @@
                             return num;
                     }
                     let now = new Date();
-                    let diff = now.getTime() / 1000 - state.updateTime + state.pushState.duration/1000;
+                    let diff = now.getTime() / 1000 - state.updateTime + count/1000;
                     let h = Math.floor(diff / 3600);
                     let m = Math.floor( diff % 3600 / 60 );
                     let s = Math.floor( diff % 60 );
-                    state.pushTimeCount.value = "[" + fix(h) + ":" + fix( m ) + ":" + fix( s ) + "]"
-                } else {
-                    state.pushTimeCount.value = "[--:--:--]";
+                    return fix(h) + ":" + fix( m ) + ":" + fix( s );
                 }
-                setTimeout(handlePushTimeCount,1000);
+                return "--:--:--";
             }
             
             const onPushStart = () => {
@@ -427,15 +841,49 @@
             }
             
             const addPushUrl = () => {
-                pushConf.url.push({
-                    "des": "platform "+ (pushConf.url.length+1),
-                    "enable": false,
-                    "path": ""
-                })
+                if(state.tabType.value === 'rtmp') {
+                    pushConf.url.push({
+                        "des": "new platform",
+                        "enable": false,
+                        "type":"rtmp",
+                        "server": "",
+                        "key":"",
+                        "path":"",
+                        "flvflags":""
+                    })
+                }
+                if(state.tabType.value === 'srt') {
+                    pushConf.url.push({
+                        "des": "new platform",
+                        "enable": false,
+                        "type":"srt",
+                        "mode": "caller",
+                        "ip": "127.0.0.1",
+                        "port": 7001,
+                        "latency": 50,
+                        "passwd": "",
+                        "path": ""
+                    })
+                }
+                if(state.tabType.value === 'webrtc' || state.tabType.value === 'custom') {
+                    pushConf.url.push({
+                        "des": "new platform",
+                        "enable": false,
+                        "type":`${state.tabType.value}`,
+                        "path":"",
+                    })
+                }
             }
             
             const delPushUrl = (index) => {
-                pushConf.url.splice(index,1);
+                let count = 0;
+                pushConf.url.forEach((item,idx) => {
+                    if (item.type === state.tabType.value) {
+                        if (count === index)
+                            pushConf.url.splice(idx, 1);
+                        count++;
+                    }
+                })
             }
 
             const savePushConf = () => {
@@ -459,10 +907,10 @@
             onMounted(() => {
                 handlePushCrontab();
                 handlePushState();
-                handlePushTimeCount();
             })
             
-            return {...state,pushConf,onChangeSrcV,onPushStart,onPushStop,addPushUrl,delPushUrl,handleEnableConf,getPushSpeed,savePushConf}
+            return {...state,pushConf,handleRtmpConf,handleEnableRtmp,handleSrtConf,handleEnableSrt,handleWebRtcConf,handleEnableWebRtc,
+                handleCustomConf,handleEnableCustom,formatPushTimeCount,onChangeSrcV,onPushStart,onPushStop,addPushUrl,delPushUrl,handleEnableConf,savePushConf}
         }
     });
     app.use(ignoreCustomElementPlugin);

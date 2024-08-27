@@ -577,9 +577,8 @@
     color: var(--bs-body-color-semi);
 }
 
-[data-bs-theme=dark] .push .push-bar {
-    background-color: transparent;
-    border-color: transparent;
+[data-bs-theme=dark] .push .push-dot {
+    color: var(--bs-default-active-bg-color);
 }
 
 [data-bs-theme=dark] .mix .lay-border {

@@ -2540,8 +2540,12 @@ export const ledOptionComponent = {
                 en: 'push'
             },
             tally: {
-                cn: 'tally灯模式',
+                cn: 'Tally(vMix)',
                 en: 'tally'
+            },
+            tallyArbiter: {
+                cn: 'TallyArbiter',
+                en: 'TallyArbiter'
             }
         }
 
@@ -2561,17 +2565,6 @@ export const ledOptionComponent = {
                                         </div>
                                         <div class="col-lg-9">
                                             <select class="form-select" id="targetEnable"></select>
-                                        </div>
-                                </div>
-                                <div class="row mt-2">
-                                        <div class="col-lg-3 lp-align-center">
-                                            <label>
-                                                <cn>模式</cn>
-                                                <en>Mode</en>
-                                            </label>
-                                        </div>
-                                        <div class="col-lg-9">
-                                            <select class="form-select" id="targetMode"></select>
                                         </div>
                                 </div>
                                 <div class="row mt-2">
@@ -2596,9 +2589,48 @@ export const ledOptionComponent = {
                                         </select>
                                     </div>
                                 </div>
+                                <div class="row mt-2" style="height: 38px">
+                                        <div class="col-lg-3 lp-align-center">
+                                            <label>
+                                                <cn>模式</cn>
+                                                <en>Mode</en>
+                                            </label>
+                                        </div>
+                                        <div class="col-lg-9">
+                                            <select class="form-select" id="targetMode"></select>
+                                        </div>
+                                </div>
+                                <div class="row mt-2" id="tallyArbiter">
+                                    <div class="col-lg-12">
+                                        <div class="row mt-2" id="arbiterIp">
+                                            <div class="col-lg-3 lp-align-center">
+                                                <label>
+                                                    <cn>服务</cn>
+                                                    <en>IP</en>
+                                                </label>
+                                            </div>
+                                            <div class="col-lg-9">
+                                                <input class="form-control" id="tallyArbiterIp">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-12">
+                                        <div class="row mt-2" id="arbiterPort">
+                                            <div class="col-lg-3 lp-align-center">
+                                                <label>
+                                                    <cn>端口</cn>
+                                                    <en>Port</en>
+                                                </label>
+                                            </div>
+                                            <div class="col-lg-9">
+                                                <input class="form-control" id="tallyArbiterPort">
+                                            </div>
+                                        </div>
+                                    </div>
+                                <div>
                                 <div class="row mt-4">
                                     <div class="col-lg-12 tips" style="padding-left: 40px">
-                                        <cn>1、该功能可以使用设备两侧的LED灯提示设备的当前状态。</cn>
+                                        <cn>1、该功能可以使用设备两侧的LED灯提示设备的运行状态。</cn>
                                         <en>1. This function uses side LEDs to show device status.</en>
                                     </div>
                                     <div class="col-lg-12 tips" style="padding-left: 40px">
@@ -2615,6 +2647,11 @@ export const ledOptionComponent = {
                             ledConf.enable = JSON.parse(document.querySelector('#targetEnable').value);
                             ledConf.func = document.querySelector('#targetMode').value;
                             ledConf.brightness = document.querySelector("#targetBright").value;
+                            if(ledConf.func === 'tallyArbiter') {
+                                const funcList = ledConf.funcList;
+                                funcList['tallyArbiter'].ip = document.querySelector("#tallyArbiterIp").value;
+                                funcList['tallyArbiter'].port = document.querySelector("#tallyArbiterPort").value;
+                            }
                             updateLedConf().then(r => {
                             });
                         }
@@ -2646,12 +2683,21 @@ export const ledOptionComponent = {
                             document.querySelector('#targetMode').add(option);
                         }
                     })
-                    const targetEnable = document.querySelector("#targetEnable");
-                    targetEnable.value = ledConf.enable;
-                    const targetMode = document.querySelector("#targetMode");
-                    targetMode.value = ledConf.func;
-                    const targetBright = document.querySelector("#targetBright");
-                    targetBright.value = ledConf.brightness;
+                    document.querySelector("#targetEnable").value = ledConf.enable;
+                    document.querySelector("#targetMode").value = ledConf.func;
+                    document.querySelector("#targetBright").value = ledConf.brightness;;
+                    document.querySelector("#tallyArbiter").style.display = (ledConf.func === 'tallyArbiter') ? "flex" : "none";
+                    if(ledConf.funcList.hasOwnProperty('tallyArbiter')) {
+                        document.querySelector("#tallyArbiterIp").value = ledConf.funcList['tallyArbiter'].ip;
+                        document.querySelector("#tallyArbiterPort").value = ledConf.funcList['tallyArbiter'].port;
+                    }
+                },
+                onOpen: ()=>{
+                    const targetModeEle = document.querySelector('#targetMode');
+                    targetModeEle.addEventListener('change',event => {
+                        const selectedValue = event.target.value;
+                        document.querySelector("#tallyArbiter").style.display = (selectedValue === 'tallyArbiter') ? "flex" : "none";
+                    })
                 }
             });
         }
@@ -2667,18 +2713,18 @@ export const themeActiveColorComponent = {
                     <div class="dropdown-menu dropdown-menu-end pt-0 pb-0" style="width: 180px;border-top-left-radius: 0;border-bottom-left-radius: 0">
                         <div class="container">
                             <div class="row">
-                                <div class="col-lg-3 dropdown-border-right">
-                                    <div v-if="themeConf.used === 'default'" class="row h-50 lp-align-center lp-cursor-pointer" @click="updateThemeConf('default')" :style="{borderBottom: '1px solid #cccccc',background:themeColor,color: themeTxtColor}">
-                                        <i class="fa-regular fa-sun font-22"></i>
+                                <div class="col-lg-2 dropdown-border-right" style="width: 20%">
+                                    <div v-if="themeConf.used === 'default'" class="row h-50 lp-align-center lp-cursor-pointer" @click="updateThemeConf('default')" :style="{background:themeColor,color: themeTxtColor}">
+                                        <i class="fa-regular fa-sun font-20" style="margin-left: -7px"></i>
                                     </div>
                                     <div v-else class="row h-50 lp-align-center lp-cursor-pointer" @click="updateThemeConf('default')">
-                                        <i class="fa-regular fa-sun font-22"></i>
+                                        <i class="fa-regular fa-sun font-20" style="margin-left: -7px"></i>
                                     </div>
                                     <div v-if="themeConf.used === 'dark'" class="row h-50 lp-align-center ps-1 lp-cursor-pointer" @click="updateThemeConf('dark')" :style="{background:themeColor,color: themeTxtColor}">
-                                        <i class="fa-regular fa-moon font-22"></i>
+                                        <i class="fa-regular fa-moon font-20" style="margin-left: -4px"></i>
                                     </div>
                                     <div v-else class="row h-50 lp-align-center ps-1 lp-cursor-pointer" @click="updateThemeConf('dark')">
-                                        <i class="fa-regular fa-moon font-22"></i>
+                                        <i class="fa-regular fa-moon font-20" style="margin-left: -4px"></i>
                                     </div>
                                 </div>
                                 <div class="col-lg-9 p-0 pt-2 pb-2">
@@ -2826,12 +2872,6 @@ export const themeActiveColorComponent = {
             themeConf.themeActive = themeActiveAry;
             updateThemeConf().then(()=>{});
         }
-
-        onMounted(()=>{
-            // setTimeout(()=>{
-            //     makeThemeActiveConf();
-            // },1000)
-        })
 
         return {themeConf,themeColor,themeTxtColor,updateThemeActiveConf,updateThemeConf}
     }
