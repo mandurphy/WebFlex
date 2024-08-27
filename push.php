@@ -667,17 +667,19 @@
             });
 
             const handleRtmpConf = computed(()=>{
-                if(!isEmpty(pushConf) && !isEmpty(state.pushState)) {
-                    const { status } = state.pushState;
+                if(!isEmpty(pushConf)) {
                     let { url } = pushConf;
                     url = url.filter(item => item.type === 'rtmp');
                     url.forEach(item => {
                         item.duration = 0;
                         item.speed = 0;
-                        status.forEach(st => {
-                            if(item.type === st.type && item.path === st.path)
-                                extend(item,st);
-                        })
+                        if(!isEmpty(state.pushState)) {
+                            const { status } = state.pushState;
+                            status.forEach(st => {
+                                if(item.type === st.type && item.path === st.path)
+                                    extend(item,st);
+                            })
+                        }
                     })
                     return url;
                 }
@@ -686,7 +688,6 @@
 
             const handleEnableRtmp = computed(()=>{
                 if(!isEmpty(pushConf)) {
-                    const { status } = state.pushState;
                     let { url } = pushConf;
                     url = url.filter(item => item.type === 'rtmp' && item.enable);
                     return state.hadPlayed.value && url.length > 0;
@@ -695,17 +696,19 @@
             })
 
             const handleSrtConf = computed(()=>{
-                if(!isEmpty(pushConf) && !isEmpty(state.pushState)) {
-                    const { status } = state.pushState;
+                if(!isEmpty(pushConf)) {
                     let { url } = pushConf;
                     url = url.filter(item => item.type === 'srt');
                     url.forEach(item => {
                         item.duration = 0;
                         item.speed = 0;
-                        status.forEach(st => {
-                            if(item.type === st.type && item.path === st.path)
-                                extend(item,st);
-                        })
+                        if(!isEmpty(state.pushState)) {
+                            const { status } = state.pushState;
+                            status.forEach(st => {
+                                if(item.type === st.type && item.path === st.path)
+                                    extend(item,st);
+                            })
+                        }
                     })
                     return url;
                 }
@@ -714,7 +717,6 @@
 
             const handleEnableSrt = computed(()=>{
                 if(!isEmpty(pushConf)) {
-                    const { status } = state.pushState;
                     let { url } = pushConf;
                     url = url.filter(item => item.type === 'srt' && item.enable);
                     return state.hadPlayed.value && url.length > 0;
@@ -723,17 +725,19 @@
             })
 
             const handleWebRtcConf = computed(()=>{
-                if(!isEmpty(pushConf) && !isEmpty(state.pushState)) {
-                    const { status } = state.pushState;
+                if(!isEmpty(pushConf)) {
                     let { url } = pushConf;
                     url = url.filter(item => item.type === 'webrtc');
                     url.forEach(item => {
                         item.duration = 0;
                         item.speed = 0;
-                        status.forEach(st => {
-                            if(item.type === st.type && item.path === st.path)
-                                extend(item,st);
-                        })
+                        if(!isEmpty(state.pushState)) {
+                            const { status } = state.pushState;
+                            status.forEach(st => {
+                                if(item.type === st.type && item.path === st.path)
+                                    extend(item,st);
+                            })
+                        }
                     })
                     return url;
                 }
@@ -742,7 +746,6 @@
 
             const handleEnableWebRtc = computed(()=>{
                 if(!isEmpty(pushConf)) {
-                    const { status } = state.pushState;
                     let { url } = pushConf;
                     url = url.filter(item => item.type === 'webrtc' && item.enable);
                     return state.hadPlayed.value && url.length > 0;
@@ -751,17 +754,19 @@
             })
 
             const handleCustomConf = computed(()=>{
-                if(!isEmpty(pushConf) && !isEmpty(state.pushState)) {
-                    const { status } = state.pushState;
+                if(!isEmpty(pushConf)) {
                     let { url } = pushConf;
                     url = url.filter(item => item.type === 'custom');
                     url.forEach(item => {
                         item.duration = 0;
                         item.speed = 0;
-                        status.forEach(st => {
-                            if(item.type === st.type && item.path === st.path)
-                                extend(item,st);
-                        })
+                        if(!isEmpty(state.pushState)) {
+                            const { status } = state.pushState;
+                            status.forEach(st => {
+                                if(item.type === st.type && item.path === st.path)
+                                    extend(item,st);
+                            })
+                        }
                     })
                     return url;
                 }
@@ -770,7 +775,6 @@
 
             const handleEnableCustom = computed(()=>{
                 if(!isEmpty(pushConf)) {
-                    const { status } = state.pushState;
                     let { url } = pushConf;
                     url = url.filter(item => item.type === 'custom' && item.enable);
                     return state.hadPlayed.value && url.length > 0;
