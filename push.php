@@ -146,7 +146,7 @@
                                             <div class="row">
                                                 <div class="col-lg-4 lp-align-right pe-4">
                                                     <label>
-                                                        <cn>开机启动</cn>
+                                                        <cn>开机推流</cn>
                                                         <en>auto push</en>
                                                     </label>
                                                 </div>
@@ -159,13 +159,28 @@
                                             </div>
                                             <div class="row">
                                                 <div class="col-lg-12 text-center">
-                                                    <button type="button" class="btn border-3 btn-primary px-5" @click="savePushConf">
+                                                    <button type="button" class="btn border-3 btn-primary px-4" @click="savePushConf">
                                                         <cn>保存</cn>
                                                         <en>Save</en>
                                                     </button>
                                                 </div>
                                             </div>
-                                            <div></div>
+                                            <div class="row">
+                                                <div class="col-lg-10 offset-lg-1 lp-align-center">
+                                                    <div class="push-bar w-100">
+                                                        <button type="button" :class="['btn border-3 px-4',{'btn-primary':!pushState.pushing},{'btn-default disabled':pushState.pushing}]" @click="onPushStart">
+                                                            <i class="fa-solid fa-video me-1"></i>
+                                                            <cn>推流</cn>
+                                                            <en>Push</en>
+                                                        </button>
+                                                        <button type="button" :class="['btn border-3 ms-2 px-4',{'btn-primary':pushState.pushing},{'btn-default disabled':!pushState.pushing}]" @click="onPushStop">
+                                                            <i class="fa-solid fa-stop me-1"></i>
+                                                            <cn>停止</cn>
+                                                            <en>Stop</en>
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -181,8 +196,8 @@
                             <a class="nav-link active" data-bs-toggle="tab" href="#tab1" role="tab" aria-selected="false">
                                 <div class="d-flex align-items-center">
                                     <div class="tab-icon">
-                                        <i v-if="handleEnableRtmp" class="fa-solid fa-circle-dot fa-sm push-dot"></i>
-                                        <i class="fa-solid fa-angles-up mx-1"></i>
+                                        <i v-if="handleEnableRtmp" class="fa-solid fa-circle-dot fa-sm mx-1 push-dot"></i>
+                                        <i v-else class="fa-solid fa-angles-up mx-1"></i>
                                     </div>
                                     <div class="tab-title">
                                         <cn>推rtmp流</cn>
@@ -195,8 +210,8 @@
                             <a class="nav-link" data-bs-toggle="tab" href="#tab2" role="tab" aria-selected="false">
                                 <div class="d-flex align-items-center">
                                     <div class="tab-icon">
-                                        <i v-if="handleEnableSrt" class="fa-solid fa-circle-dot fa-sm push-dot"></i>
-                                        <i class="fa-solid fa-arrow-up-long mx-1"></i>
+                                        <i v-if="handleEnableSrt" class="fa-solid fa-circle-dot fa-sm me-1 push-dot"></i>
+                                        <i v-else class="fa-solid fa-arrow-up-long mx-1"></i>
                                     </div>
                                     <div class="tab-title">
                                         <cn>推srt流</cn>
@@ -209,8 +224,8 @@
                             <a class="nav-link" data-bs-toggle="tab" href="#tab3" role="tab" aria-selected="false">
                                 <div class="d-flex align-items-center">
                                     <div class="tab-icon">
-                                        <i v-if="handleEnableWebRtc" class="fa-solid fa-circle-dot fa-sm push-dot"></i>
-                                        <i class="fa-solid fa-arrow-turn-up mx-1"></i>
+                                        <i v-if="handleEnableWebRtc" class="fa-solid fa-circle-dot fa-sm me-1 push-dot"></i>
+                                        <i v-else class="fa-solid fa-arrow-turn-up me-1"></i>
                                     </div>
                                     <div class="tab-title">
                                         <cn>推webrtc流</cn>
@@ -223,8 +238,8 @@
                             <a class="nav-link" data-bs-toggle="tab" href="#tab4" role="tab" aria-selected="false">
                                 <div class="d-flex align-items-center">
                                     <div class="tab-icon">
-                                        <i v-if="handleEnableCustom" class="fa-solid fa-circle-dot fa-sm push-dot"></i>
-                                        <i class="fa-solid fa-arrows-split-up-and-left mx-1"></i>
+                                        <i v-if="handleEnableCustom" class="fa-solid fa-circle-dot fa-sm me-1 push-dot"></i>
+                                        <i v-else class="fa-solid fa-arrows-split-up-and-left me-1"></i>
                                     </div>
                                     <div class="tab-title">
                                         <cn>自定义推流</cn>
@@ -310,7 +325,7 @@
                             </div>
                             <div class="row">
                                 <div class="col-lg-12 tips">
-                                    <cn>1、在基本设置里选择使用的音频源和视频源，如果需要使用Line-In的音频，音频源请选择Mix通道。</cn>
+                                    <cn>1、基本设置模块里选择推流使用的音频源和视频源，如果需要使用Line-In的音频，音频源请选择Mix通道。</cn>
                                     <en>1. In basic settings, choose the audio and video sources. For Line-In audio, select the Mix channel.</en>
                                 </div>
                                 <div class="col-lg-12 tips">
@@ -318,8 +333,8 @@
                                     <en>2. Click the push button to stream to all enabled channels. A speed greater than 0 indicates a successful stream.</en>
                                 </div>
                                 <div class="col-lg-12 tips">
-                                    <cn>3、当有通道推流时，会在对应标签页前显示[ <i class="fa-solid fa-circle-dot fa-sm push-dot"></i> ]图标提示。</cn>
-                                    <en>3. When a channel is streaming, a [ <i class="fa-solid fa-circle-dot fa-sm push-dot"></i> ] icon will appear in front of the corresponding tab as a notification.</en>
+                                    <cn>3、当有推流地址启用时，会在对应标签页前显示[ <i class="fa-solid fa-circle-dot fa-sm push-dot"></i> ]图标提示。</cn>
+                                    <en>3. When a streaming URL is enable, the icon [ <i class='fa-solid fa-circle-dot fa-sm push-dot'></i> ] appears before the corresponding tab.</en>
                                 </div>
                             </div>
                         </div>
@@ -583,18 +598,6 @@
                                     <cn>保存</cn>
                                     <en>Save</en>
                                 </button>
-                                <div class="push-bar ms-5">
-                                    <button type="button" :class="['btn border-3 px-4',{'btn-primary':!pushState.pushing},{'btn-default disabled':pushState.pushing}]" @click="onPushStart">
-                                        <i class="fa-solid fa-video me-1"></i>
-                                        <cn>推流</cn>
-                                        <en>Push</en>
-                                    </button>
-                                    <button type="button" :class="['btn border-3 px-4 ms-2',{'btn-primary':pushState.pushing},{'btn-default disabled':!pushState.pushing}]" @click="onPushStop">
-                                        <i class="fa-solid fa-stop me-1"></i>
-                                        <cn>停止</cn>
-                                        <en>Stop</en>
-                                    </button>
-                                </div>
                             </div>
                         </div>
                     </div>
@@ -690,7 +693,7 @@
                 if(!isEmpty(pushConf)) {
                     let { url } = pushConf;
                     url = url.filter(item => item.type === 'rtmp' && item.enable);
-                    return state.hadPlayed.value && url.length > 0;
+                    return url.length > 0;
                 }
                 return false;
             })
@@ -719,7 +722,7 @@
                 if(!isEmpty(pushConf)) {
                     let { url } = pushConf;
                     url = url.filter(item => item.type === 'srt' && item.enable);
-                    return state.hadPlayed.value && url.length > 0;
+                    return url.length > 0;
                 }
                 return false;
             })
@@ -748,7 +751,7 @@
                 if(!isEmpty(pushConf)) {
                     let { url } = pushConf;
                     url = url.filter(item => item.type === 'webrtc' && item.enable);
-                    return state.hadPlayed.value && url.length > 0;
+                    return url.length > 0;
                 }
                 return false;
             })
@@ -777,7 +780,7 @@
                 if(!isEmpty(pushConf)) {
                     let { url } = pushConf;
                     url = url.filter(item => item.type === 'custom' && item.enable);
-                    return state.hadPlayed.value && url.length > 0;
+                    return url.length > 0;
                 }
                 return false;
             })

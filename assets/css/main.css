@@ -1307,18 +1307,17 @@ input[type="password"]::-ms-reveal{
 }
 
 .push .push-bar {
-    display: inline-block;
+    background: #555;
     color: #ddd;
     text-align: center;
     border-radius: 4px;
-    padding: .45rem .6rem!important;
-    border: 2px dashed transparent;
-    border-image: repeating-linear-gradient(#aaaaaa 0, #aaaaaa 10px, transparent 5px, transparent 42px) 1;
+    padding-top: .5rem!important;
+    padding-bottom: .5rem!important
 }
 .push .push-bar button.btn-default {
-    background-color: #ddd;
-    border-color: #ddd;
-    color: black;
+    background-color: #f0f0f0;
+    border-color: #f0f0f0;
+    color: #555;
     font-size: 14px;
     font-weight: normal;
     padding: 6px 12px;
