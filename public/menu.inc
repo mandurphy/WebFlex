@@ -2,9 +2,10 @@
     <menu :class="['menu',{'sidebar-hovered': isSidebarHovered}]">
         <header class="top-header">
             <nav class="navbar navbar-expand justify-content-between">
-                <div class="btn-toggle-menu" @click="onToggleMenu">
+                <div v-if="isMenuToggled" class="btn-toggle-menu" @click="onToggleMenu">
                     <i class="fa-solid fa-bars"></i>
                 </div>
+                <div v-else ></div>
                 <search-setting></search-setting>
                 <ul class="navbar-nav top-right-menu gap-2">
                     <li class="nav-item">
@@ -44,8 +45,7 @@
         <aside class="sidebar-wrapper" @mouseenter="onMouseEnter" @mouseleave="onMouseLeave">
             <div class="sidebar-header">
                 <div class="logo-icon lp-cursor-pointer" @click="onHrefDash">
-                    <img v-if="!isMenuToggled" src="assets/img/logo.png" class="mt-1" style="max-height: 33px;">
-                    <img v-else src="assets/img/logo-sm.png" width="78">
+                    <img src="assets/img/logo.png" class="mt-1" style="max-height: 33px;">
                 </div>
                 <div class="logo-name flex-grow-1">
 <!--                    <h5 class="mb-0 fw-bold">LinkPi</h5>-->

@@ -927,33 +927,33 @@
             
             const saveDefaultConf = () => {
 
-                const maxENC = hardwareConf.capability.encode.maxPixel;
-                let sum=0;
-                for ( let i = 0; i < defaultConf.length; i++ ) {
-                    if(defaultConf[i].enable && defaultConf[i].encv !== undefined){
-                        if(defaultConf[i].encv.codec !== "close")
-                            sum+=defaultConf[i].encv.width*defaultConf[i].encv.height*defaultConf[i].encv.framerate;
-                        if(defaultConf[i].enable2 && defaultConf[i].encv2.codec !== "close"){
-                            sum+=defaultConf[i].encv2.width*defaultConf[i].encv2.height*defaultConf[i].encv2.framerate;
-                        }
-                    }
-                }
+                // const maxENC = hardwareConf.capability.encode.maxPixel;
+                // let sum=0;
+                // for ( let i = 0; i < defaultConf.length; i++ ) {
+                //     if(defaultConf[i].enable && defaultConf[i].encv !== undefined){
+                //         if(defaultConf[i].encv.codec !== "close")
+                //             sum+=defaultConf[i].encv.width*defaultConf[i].encv.height*defaultConf[i].encv.framerate;
+                //         if(defaultConf[i].enable2 && defaultConf[i].encv2.codec !== "close"){
+                //             sum+=defaultConf[i].encv2.width*defaultConf[i].encv2.height*defaultConf[i].encv2.framerate;
+                //         }
+                //     }
+                // }
 
-                if(maxENC > 0 && sum > maxENC) {
-                    confirm( {
-                        title: '<cn>警告</cn><en>Warning</en>',
-                        content: '<cn>超出编码性能上限，请调整编码参数！</cn><en>The limit of encode performance is exceeded. Please adjust the encode parameters!</en>',
-                        buttons: {
-                            ok: {
-                                text: "<cn>知道了</cn><en>I know</en>",
-                                btnClass: 'btn-primary',
-                                keys: [ 'enter' ],
-                                action: () => updateDefaultConf()
-                            }
-                        }
-                    } );
-                    return;
-                }
+                // if(maxENC > 0 && sum > maxENC) {
+                //     confirm( {
+                //         title: '<cn>警告</cn><en>Warning</en>',
+                //         content: '<cn>超出编码性能上限，请调整编码参数！</cn><en>The limit of encode performance is exceeded. Please adjust the encode parameters!</en>',
+                //         buttons: {
+                //             ok: {
+                //                 text: "<cn>知道了</cn><en>I know</en>",
+                //                 btnClass: 'btn-primary',
+                //                 keys: [ 'enter' ],
+                //                 action: () => updateDefaultConf()
+                //             }
+                //         }
+                //     } );
+                //     return;
+                // }
                 updateDefaultConf();
             }
             
