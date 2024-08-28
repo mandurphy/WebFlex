@@ -10,7 +10,7 @@
         <div class="card-body p-4">
             <div class="row">
                 <div class="col-lg-12 lp-align-center mb-2">
-                    <img src="assets/img/logo-lg.png" class="mb-2" style="max-height: 52px;">
+                    <img src="assets/img/logo.png" class="mb-2" style="max-height: 52px;">
                 </div>
             </div>
             <div class="form-body mt-2 pb-3">

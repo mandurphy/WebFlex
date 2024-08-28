@@ -44,8 +44,8 @@
         <aside class="sidebar-wrapper" @mouseenter="onMouseEnter" @mouseleave="onMouseLeave">
             <div class="sidebar-header">
                 <div class="logo-icon lp-cursor-pointer" @click="onHrefDash">
-                    <img v-if="!isMenuToggled" src="assets/img/logo-lg.png" class="mt-1" style="max-height: 33px;">
-                    <img v-else src="assets/img/logo.png" width="78">
+                    <img v-if="!isMenuToggled" src="assets/img/logo.png" class="mt-1" style="max-height: 33px;">
+                    <img v-else src="assets/img/logo-sm.png" width="78">
                 </div>
                 <div class="logo-name flex-grow-1">
 <!--                    <h5 class="mb-0 fw-bold">LinkPi</h5>-->
