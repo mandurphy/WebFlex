@@ -150,6 +150,8 @@ export const useThemeConf = () => {
     const handleThemeConf = () => {
         queryData("config/theme_standard.json").then(conf => {
             clearReactiveObject(themeConf);
+            if(!conf.hasOwnProperty("mod"))
+                conf.mod = "link";
             Object.assign(themeConf,conf);
         })
     }
@@ -166,6 +168,21 @@ export const useThemeConf = () => {
                 reject();
             })
         })
+    }
+
+    const handleThemeActiveLinkStyle = async () => {
+        const linkStyle = {};
+        let themeActive = "default";
+        if(themeConf.hasOwnProperty("active"))
+            themeActive = themeConf.active;
+        const conf = await queryData(`assets/css/theme-active-${themeActive}.css`);
+        const regex = /--([\w-]+)\s*:\s*([^;]+)/g;
+        let match;
+        while ((match = regex.exec(conf)) !== null) {
+            const [,name, value] = match;
+            linkStyle[name.trim()] = value.trim();
+        }
+        return linkStyle;
     }
 
     const updateThemeActiveConf = (type = "default",active="default") => {
@@ -195,58 +212,7 @@ export const useThemeConf = () => {
     }
 
     onMounted(handleThemeConf);
-    return { themeConf,updateThemeConf,updateThemeActiveConf,makeThemeActiveStyle }
-}
-
-export const useThemeActiveConf = () => {
-    const themeActiveConf = reactive({});
-
-    const handleThemeActiveConf = async () => {
-        let themeActive = "default";
-        if(!sessionStorage.getItem("themeActive")) {
-            const themeConf = await queryData("config/theme_standard.json");
-            if(!themeConf.hasOwnProperty("active"))
-                themeConf.active = "default";
-            themeActive = themeConf.active;
-            sessionStorage.setItem("themeActive",themeActive);
-        } else {
-            themeActive = sessionStorage.getItem("themeActive");
-        }
-        const conf = await queryData(`assets/css/theme-active-${themeActive}.css`);
-        const regex = /--([\w-]+)\s*:\s*([^;]+)/g;
-        let match;
-        while ((match = regex.exec(conf)) !== null) {
-            const [,name, value] = match;
-            themeActiveConf[name.trim()] = value.trim();
-        }
-    }
-
-    const updateThemeActiveConf = async active => {
-        const  themeConf = await queryData("config/theme_standard.json");
-        return new Promise((resolve,reject)=>{
-            themeConf.active = active;
-            func("/conf/updateThemeConf",themeConf).then(data => {
-                if ( data.status === "success" ) {
-                    sessionStorage.setItem("themeActive",active);
-                    location.reload();
-                    resolve();
-                    return;
-                }
-                reject();
-            })
-        })
-    }
-
-    const makeThemeActiveConf = async active => {
-        let css = ":root {\n";
-        for (const [key, value] of Object.entries(themeActiveConf)) {
-            css += `    --${key}:${value};\n`;
-        }
-        css += "}\n";
-    }
-
-    onMounted(handleThemeActiveConf);
-    return { themeActiveConf,updateThemeActiveConf,makeThemeActiveConf }
+    return { themeConf,updateThemeConf,handleThemeActiveLinkStyle,updateThemeActiveConf,makeThemeActiveStyle }
 }
 
 export const useNetManagerConf = (tip = "tip") => {

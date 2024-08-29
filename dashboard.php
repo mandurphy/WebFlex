@@ -117,7 +117,7 @@
 
   <script type="module">
       import { rpc,isEmpty } from "./assets/js/lp.utils.js";
-      import {useDefaultConf, useHardwareConf, useThemeActiveConf, useThemeConf} from "./assets/js/vue.hooks.js";
+      import {useDefaultConf, useHardwareConf, useThemeConf} from "./assets/js/vue.hooks.js";
       import { ignoreCustomElementPlugin,filterKeywordPlugin,bootstrapSwitchComponent,statusPieChartComponent,statusTemperatureComponent,netFlotChartComponent } from "./assets/js/vue.helper.js"
       import vue from "./assets/js/vue.build.js";
       import mutationObserver from './assets/plugins/polyfill/mutationobserver.esm.js';
@@ -155,26 +155,26 @@
 
               const { defaultConf } = useDefaultConf();
               const { hardwareConf } = useHardwareConf();
-              //const { themeActiveConf } = useThemeActiveConf();
-              const { themeConf } = useThemeConf();
+              const { themeConf,handleThemeActiveLinkStyle } = useThemeConf();
 
               watchEffect(()=>{
-                  // if(!isEmpty(themeActiveConf) && state.useTheme.value) {
-                  //     state.theme_color.value = themeActiveConf["bs-active-bg-color"];
-                  //     if(state.useTheme.value === "default")
-                  //       state.tipBorderColor.value = themeActiveConf["bs-active-bg-color"];
-                  //     else
-                  //       state.tipBorderColor.value = "#aaa";
-                  // }
-
-                  if(!isEmpty(themeConf) && state.useTheme.value) {
-                      const activeTheme = themeConf.themeActives.find(item => item.active === themeConf.active);
-
-                      state.theme_color.value = activeTheme.colors["bs-active-bg-color"];
-                      if(state.useTheme.value === "default")
-                          state.tipBorderColor.value = activeTheme.colors["bs-active-bg-color"];
-                      else
-                          state.tipBorderColor.value = "#aaa";
+                  if(themeConf.mod === 'style') {
+                      if(!isEmpty(themeConf) && state.useTheme.value) {
+                          const activeTheme = themeConf.themeActives.find(item => item.active === themeConf.active);
+                          state.theme_color.value = activeTheme.colors["bs-active-bg-color"];
+                          if(state.useTheme.value === "default")
+                              state.tipBorderColor.value = activeTheme.colors["bs-active-bg-color"];
+                          else
+                              state.tipBorderColor.value = "#aaa";
+                      }
+                  } else {
+                      handleThemeActiveLinkStyle().then(themeActiveConf =>{
+                          state.theme_color.value = themeActiveConf["bs-active-bg-color"];
+                          if(state.useTheme.value === "default")
+                              state.tipBorderColor.value = themeActiveConf["bs-active-bg-color"];
+                          else
+                              state.tipBorderColor.value = "#aaa";
+                      })
                   }
               })
 

@@ -14,12 +14,12 @@
                             <en @click="updateSysLanguage('cn')">中</en>
                         </a>
                     </li>
-<!--                    <li class="nav-item">-->
-<!--                        <a class="nav-link" v-if="Object.keys(themeConf).length > 0">-->
-<!--                            <i v-if="themeConf.used==='default'" class="fa-regular fa-moon" @click="updateThemeConf('dark')"></i>-->
-<!--                            <i v-else class="fa-regular fa-sun" @click="updateThemeConf('default')"></i>-->
-<!--                        </a>-->
-<!--                    </li>-->
+                    <li class="nav-item">
+                        <a class="nav-link" v-if="Object.keys(themeConf).length > 0 && themeConf.mod  === 'link'">
+                            <i v-if="themeConf.used==='default'" class="fa-regular fa-moon" @click="updateThemeConf('dark')"></i>
+                            <i v-else class="fa-regular fa-sun" @click="updateThemeConf('default')"></i>
+                        </a>
+                    </li>
                     <li class="nav-item" v-if="Object.keys(webVerConf).length > 0 && webVerConf.switch">
                         <a class="nav-link" style="font-size: 19px;" @click="changeWeb">
                             <i class="fa-solid fa-arrow-right-arrow-left"></i>
@@ -31,7 +31,7 @@
                     <li class="nav-item">
                         <usb-option></usb-option>
                     </li>
-                    <li class="nav-item">
+                    <li class="nav-item" v-if="Object.keys(themeConf).length > 0 && themeConf.mod === 'style'">
                         <theme-color></theme-color>
                     </li>
 <!--                    <li class="nav-item">-->
