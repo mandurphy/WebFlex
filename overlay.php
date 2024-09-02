@@ -35,7 +35,7 @@
                                                     <en>Channel</en>:
                                                 </label>
                                             </div>
-                                            <div class="flex-grow-0" v-if="Object.keys(hardwareConf).length > 0 && hardwareConf.chip !== 'HI3516CV610'">
+                                            <div class="flex-grow-0" v-show="Object.keys(hardwareConf).length > 0 && hardwareConf.chip !== 'HI3516CV610'">
                                                 <select class="form-select" v-model="preType" ref="preTypeEle"></select>
                                             </div>
                                             <div class="flex-grow-0" v-if="playerCodec === 'h265'">
@@ -503,7 +503,7 @@
             }
 
             const unwatch = watchEffect(()=>{
-                if(defaultConf.length > 0 && Object.keys(overlayConf).length > 0 && state.preTypeEle.value !== null && state.preType.value !== undefined) {
+                if(defaultConf.length > 0 && Object.keys(overlayConf).length > 0 && state.preTypeEle.value !== null && state.preTypeEle.value !== undefined) {
                     for(let i=0;i<defaultConf.length;i++) {
                         let item = defaultConf[i];
                         const html = document.querySelector('html');
