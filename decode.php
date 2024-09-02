@@ -401,7 +401,7 @@
                                 <en>stream key</en>
                             </div>
                             <div class="col text-center">
-                                <cn>解码通道</cn>
+                                <cn>解码频道</cn>
                                 <en>decode channel</en>
                             </div>
                             <div class="col text-center">
@@ -485,11 +485,11 @@
                                 <en>1. The device is used as a streaming media server and can receive RTMP streams pushed by other devices.</en>
                             </div>
                             <div class="col-lg-12 tips">
-                                <cn>2、需要绑定解码通道时，请确定要绑定的通道没有正在使用。</cn>
+                                <cn>2、需要绑定解码频道时，请确定要绑定的频道没有正在使用。</cn>
                                 <en>2. Make sure that the binding channel is not in use</en>
                             </div>
                             <div class="col-lg-12 tips">
-                                <cn>3、设置解码通道后，保存时，会自动把该通道的流地址替换为当前的解码地址。</cn>
+                                <cn>3、设置解码频道后，保存时会自动把该频道的流地址替换为对应的解码地址。</cn>
                                 <en>3. After the decoding channel is set, the stream address of the corresponding
                                     channel is automatically replaced with the current decoding address when saving.
                                 </en>
@@ -507,7 +507,7 @@
                                 <en>recive url</en>
                             </div>
                             <div class="col text-center">
-                                <cn>解码通道</cn>
+                                <cn>解码频道</cn>
                                 <en>decode channel</en>
                             </div>
                             <div class="col text-center">
@@ -515,8 +515,8 @@
                                 <en>port</en>
                             </div>
                             <div class="col text-center">
-                                <cn>密码(至少10位)</cn>
-                                <en>password(least 10)</en>
+                                <cn>密码</cn>
+                                <en>password</en>
                             </div>
                             <div class="col text-center">
                                 <cn>延时</cn>
@@ -585,11 +585,11 @@
                                 <en>1. The device is used as a streaming media server and can receive SRT streams pushed by other devices.</en>
                             </div>
                             <div class="col-lg-12 tips">
-                                <cn>2、需要绑定解码通道时，请确定要绑定的通道没有正在使用。</cn>
+                                <cn>2、需要绑定解码频道时，请确定要绑定的频道没有正在使用。</cn>
                                 <en>2. Make sure that the binding channel is not in use</en>
                             </div>
                             <div class="col-lg-12 tips">
-                                <cn>3、设置解码通道后，保存时，会自动把该通道的流地址替换为当前的解码地址。</cn>
+                                <cn>3、设置解码频道后，保存时会自动把该频道的流地址替换为对应的解码地址。</cn>
                                 <en>3. After the decoding channel is set, the stream address of the corresponding
                                     channel is automatically replaced with the current decoding address when saving.
                                 </en>
@@ -607,7 +607,7 @@
                                 <en>ndi source</en>
                             </div>
                             <div class="col-1 text-center">
-                                <cn>解码通道</cn>
+                                <cn>解码频道</cn>
                                 <en>decode channel</en>
                             </div>
                             <div class="col-1 text-center">
@@ -654,15 +654,15 @@
                         </div>
                         <div class="row mt-3">
                             <div class="col-lg-12 tips">
-                                <cn>1、设备作为流媒体服务器使用，可以接收其他设备推送的 SRT 流。</cn>
-                                <en>1. The device is used as a streaming media server and can receive SRT streams pushed by other devices.</en>
+                                <cn>1、设备支持解码NDI HX协议流。</cn>
+                                <en>1. The device supports decoding NDI HX protocol streams.</en>
                             </div>
                             <div class="col-lg-12 tips">
-                                <cn>2、需要绑定解码通道时，请确定要绑定的通道没有正在使用。</cn>
+                                <cn>2、需要绑定解码频道时，请确定要绑定的频道没有正在使用。</cn>
                                 <en>2. Make sure that the binding channel is not in use</en>
                             </div>
                             <div class="col-lg-12 tips">
-                                <cn>3、设置解码通道后，保存时，会自动把该通道的流地址替换为当前的解码地址。</cn>
+                                <cn>3、设置解码频道后，保存时会自动把该频道的流地址替换为对应的解码地址。</cn>
                                 <en>3. After the decoding channel is set, the stream address of the corresponding
                                     channel is automatically replaced with the current decoding address when saving.
                                 </en>

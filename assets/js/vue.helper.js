@@ -832,7 +832,7 @@ export const h5PlayerComponent = {
                     state.h5Player = flvjs.createPlayer({
                         type: 'flv',
                         url: url.value,
-                        audio: JSON.parse(audio.value),
+                        hasAudio: JSON.parse(audio.value)
                     });
                     state.h5Player.attachMediaElement(state.videoHandler.value);
                     state.h5Player.load();

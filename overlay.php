@@ -11,25 +11,57 @@
     <div data-simplebar>
         <main class="page-content overlay" id="app" v-cloak>
             <div class="row">
-                <div class="col-lg-7">
+                <div class="col-lg-6">
                     <div class="row">
                         <div class="col-lg-12">
                             <div class="card">
                                 <div class="card-body" >
                                     <div class="row">
-                                        <div class="col-lg-12">
-                                            <select class="form-select" v-model="chnIndex">
-                                                <option v-for="(item,index) in handleEnableConf" :key="item.id" :value="item.id">{{item.name}}</option>
-                                            </select>
+                                        <div class="d-flex align-items-center gap-3 px-2 py-1">
+                                            <div class="flex-grow-0">
+                                                <label class="fw-bold">
+                                                    <cn>频道</cn>
+                                                    <en>Channel</en>:
+                                                </label>
+                                            </div>
+                                            <div class="flex-grow-0">
+                                                <select class="form-select" v-model="activeChnId" @change="onChangePlayerChn">
+                                                    <option v-for="(item,index) in handleEnableConf" :value="item.id" :data-attr-codec="item.encv.codec" :data-attr-suffix="item.stream.suffix" :data-attr-audio="item.enca.codec !== 'close'" :data-attr-protocol="(item.stream.rtmp || item.stream.webrtc) ? (item.stream.rtmp ? 'rtmp' : 'webrtc') : ''">{{item.name}}</option>
+                                                </select>
+                                            </div>
+                                            <div class="flex-grow-0" v-if="Object.keys(hardwareConf).length > 0 && hardwareConf.chip !== 'HI3516CV610'">
+                                                <label class="fw-bold">
+                                                    <cn>预览</cn>
+                                                    <en>Channel</en>:
+                                                </label>
+                                            </div>
+                                            <div class="flex-grow-0" v-if="Object.keys(hardwareConf).length > 0 && hardwareConf.chip !== 'HI3516CV610'">
+                                                <select class="form-select" v-model="preType" ref="preTypeEle"></select>
+                                            </div>
+                                            <div class="flex-grow-0" v-if="playerCodec === 'h265'">
+                                                <label class="fw-bold">
+                                                    <cn>缓冲</cn>
+                                                    <en>Buffer</en>:
+                                                </label>
+                                            </div>
+                                            <div class="flex-grow-0" v-if="playerCodec === 'h265'">
+                                                <div class="input-group">
+                                                    <input type="text" class="form-control" v-model="bufferTime" @change="onChangeBufferTime">
+                                                    <span class="input-group-text">ms</span>
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>
                                     <div class="row">
-                                        <div class="col-lg-12 mt-2">
+                                        <div v-show="preType === 'img'" class="col-lg-12 mt-2">
                                             <div class="card-img-content">
                                                 <div class="card-img-background"></div>
                                                 <img :src="chnImgUrl" class="card-img" :style="handleAutoStyle()">
                                                 <img :src="chnImgUrl" class="card-img" style="visibility: hidden">
                                             </div>
+                                        </div>
+                                        <div v-show="preType === 'vdo'" class="col-lg-12 mt-2 mb-2">
+                                            <h5-player :url="playerUrl" :codec="playerCodec" :audio="playerAudio" :protocol="playerProtocol" :buffer="bufferTime"></h5-player>
                                         </div>
                                     </div>
                                 </div>
@@ -143,12 +175,30 @@
                                             </div>
                                         </div>
                                     </div>
+                                    <div class="row mt-3">
+                                        <div class="col-lg-12 tips">
+                                            <cn>1、水印特效仅支持png格式的图片。</cn>
+                                            <en>1. Image effect supports PNG images only.</en>
+                                        </div>
+                                        <div class="col-lg-12 tips">
+                                            <cn>2、时间特效格式中yyyy代表年，MM代表月，dd代表日，hh代表时，mm代表分，ss代表秒。</cn>
+                                            <en>2. In the time effect format, yyyy is year, MM is month, dd is day, hh is hour, mm is minute, and ss is second."</en>
+                                        </div>
+                                        <div v-if="Object.keys(hardwareConf).length > 0 && hardwareConf.chip !== 'HI3516CV610'" class="col-lg-12 tips">
+                                            <cn>3、优先以视频流的方式预览，如果对应频道没有开启rtmp或webrtc协议流，则以图片的方式预览。</cn>
+                                            <en>3. Prefer video stream preview; if rtmp or webrtc isn't enabled, use image preview.</en>
+                                        </div>
+                                        <div v-else class="col-lg-12 tips">
+                                            <cn>3、预览效果，请先开启对应频道的rtmp或webrtc协议流。</cn>
+                                            <en>3. To preview, please first enable the corresponding channel's rtmp or webrtc stream.</en>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
-                <div class="col-lg-5">
+                <div class="col-lg-6">
                     <div class="row">
                         <div class="col-lg-12">
                             <div class="card">
@@ -374,7 +424,7 @@
                                 <div class="card-body" >
                                     <div class="row">
                                         <div class="team-list col-lg-12">
-                                            <div class="p-0 m-0" v-for="(item,index) in resConf" :key="index">
+                                            <div class="p-0 m-0" v-for="(item,index) in handleResList" :key="index">
                                                 <div class="row align-items-center px-2" >
                                                     <div class="col-8 text-center lp-text-overflow">
                                                         <span>{{item.name}}</span>
@@ -405,14 +455,18 @@
 <script src="assets/plugins/fileinput/js/locales/zh.js" type="module"></script>
 <script src="assets/plugins/fileinput/themes/fa6/theme.min.js" type="module"></script>
 <script type="module">
-    import { rpc,alertMsg,confirm,func } from "./assets/js/lp.utils.js";
-    import { useDefaultConf,useOverlayConf,useResConf } from "./assets/js/vue.hooks.js";
-    import { ignoreCustomElementPlugin,filterKeywordPlugin,bootstrapSwitchComponent,nouiSliderComponent,vueColorPickerComponent,uploadModalComponent } from "./assets/js/vue.helper.js"
+    import {rpc, alertMsg, confirm, func, isEmpty} from "./assets/js/lp.utils.js";
+    import { useDefaultConf,useOverlayConf,useResConf,useHardwareConf } from "./assets/js/vue.hooks.js";
+    import { ignoreCustomElementPlugin,filterKeywordPlugin,h5PlayerComponent,bootstrapSwitchComponent,nouiSliderComponent,vueColorPickerComponent,uploadModalComponent,languageOptionDirective } from "./assets/js/vue.helper.js"
     import vue from "./assets/js/vue.build.js";
 
     const {createApp,ref,reactive,watchEffect,computed} = vue;
     const app = createApp({
+        directives: {
+            "language-option": languageOptionDirective
+        },
         components:{
+            "h5-player": h5PlayerComponent,
             "bs-switch" : bootstrapSwitchComponent,
             "noui-slider": nouiSliderComponent,
             "picker-color": vueColorPickerComponent,
@@ -423,32 +477,77 @@
             const { defaultConf } = useDefaultConf();
             const { overlayConf,updateOverlayConf } = useOverlayConf();
             const { resConf,handleResConf } = useResConf();
+            const { hardwareConf } = useHardwareConf();
 
             const state = {
-                chnIndex : ref(-1),
+                activeChnId : ref(-1),
                 chnImgUrl : ref(""),
+                playerUrl: ref(""),
+                playerCodec: ref(""),
+                playerAudio: ref(false),
+                playerProtocol:ref(""),
+                bufferTime:ref(200),
+                preType:ref("vdo"),
+                preTypeEle:ref(null),
                 handleEditData: reactive({}),
                 layIndex : ref(0),
                 colors : ref('#194d33'),
                 showModal: ref(false),
-                modalTitle:ref(""),
+                modalTitle:ref("")
             }
-
             
             const updateChnImage = () => {
-                state.chnImgUrl.value = "snap/snap" + state.chnIndex.value + ".jpg?rnd=" + Math.random();
+                state.chnImgUrl.value = "snap/snap" + state.activeChnId.value + ".jpg?rnd=" + Math.random();
                 setTimeout(() => { rpc( "enc.snap" ) },200)
                 setTimeout(updateChnImage,500);
             }
-    
+
+            const unwatch = watchEffect(()=>{
+                if(defaultConf.length > 0 && Object.keys(overlayConf).length > 0) {
+                    for(let i=0;i<defaultConf.length;i++) {
+                        let item = defaultConf[i];
+                        if(state.preTypeEle.value !== null && state.preType.value !== undefined) {
+                            const html = document.querySelector('html');
+                            let lang = html.getAttribute('data-bs-language');
+                            if(item.enable || hardwareConf.chip === 'HI3516CV610') {
+                                state.activeChnId.value = i;
+                                if (item.stream.rtmp || item.stream.webrtc) {
+                                    const protocol = item.stream.rtmp ? "rtmp" : "webrtc";
+                                    state.activeChnId.value = item.id;
+                                    if(protocol === 'webrtc')
+                                        state.playerUrl.value = `http://${window.location.host}/webrtc?app=live&stream=${item.stream.suffix}`;
+                                    else
+                                        state.playerUrl.value = `http://${window.location.host}/flv?app=live&stream=${item.stream.suffix}`;
+                                    state.playerCodec.value = item.encv.codec;
+                                    state.playerAudio.value = false;
+                                    state.playerProtocol.value = protocol;
+                                    if(lang === 'cn')
+                                        state.preTypeEle.value.add(new Option("视频", "vdo"));
+                                    else
+                                        state.preTypeEle.value.add(new Option("video", "vdo"));
+                                }
+                                if(lang === 'cn')
+                                    state.preTypeEle.value.add(new Option("图片", "img"));
+                                else
+                                    state.preTypeEle.value.add(new Option("image", "img"));
+                                unwatch();
+                                break;
+                            }
+                        }
+                    }
+                    editOverlay(0);
+                    updateChnImage();
+                }
+            })
+
             const handleEnableConf = computed(()=>{
                 return defaultConf.filter((item,index)=>{
-                    return !!item.enable;
+                    return (!!item.enable && item.type !=="ndi");
                 })
             })
     
             const handleOverlayConf = computed(()=>{
-                return overlayConf[state.chnIndex.value] || [];
+                return overlayConf[state.activeChnId.value] || [];
             });
 
             const handleEditData = computed(()=>{
@@ -466,32 +565,62 @@
 
             const handleFontConf = computed(()=>{
                 return resConf.filter((item,index) => {
-                    if(item.name.includes(".ttf")) {
+                    if(item.name.includes(".ttf") && item.name !== "led.ttf") {
                         item.path = "/link/res/"+item.name;
                         return true;
                     }
                 })
             });
 
-            const unwatch = watchEffect(()=>{
-                if(defaultConf.length > 0 && Object.keys(overlayConf).length > 0) {
-                    for(let i=0;i<defaultConf.length;i++) {
-                        if(defaultConf[i].enable) {
-                            state.chnIndex.value = i;
-                            break;
-                        }
-                    }
-                    editOverlay(0);
-                    updateChnImage();
-                    unwatch();
-                }
-            })
+            const handleResList = computed(()=>{
+                return resConf.filter((item,index) => {
+                    return item.name !== "led.ttf";
+                })
+            });
 
+            const onChangePlayerChn = (event) => {
+                const selectElement = event.target;
+                const selectedOption = selectElement.options[selectElement.selectedIndex];
+                const protocol = selectedOption.getAttribute('data-attr-protocol');
+                const suffix = selectedOption.getAttribute('data-attr-suffix');
+                const html = document.querySelector('html');
+                let lang = html.getAttribute('data-bs-language');
+                state.preTypeEle.value.options.length = 0;
+                if(!isEmpty(protocol)) {
+                    if(lang === 'cn') {
+                        state.preTypeEle.value.add(new Option("视频", "vdo"));
+                        state.preTypeEle.value.add(new Option("图片", "img"));
+                    } else {
+                        state.preTypeEle.value.add(new Option("video", "vdo"));
+                        state.preTypeEle.value.add(new Option("image", "img"));
+                    }
+                    state.preType.value = "vdo";
+                    state.playerCodec.value = selectedOption.getAttribute('data-attr-codec');
+                    state.playerAudio.value = selectedOption.getAttribute('data-attr-audio');
+                    if(protocol === 'webrtc')
+                        state.playerUrl.value = `http://${window.location.host}/webrtc?app=live&stream=${suffix}`;
+                    else
+                        state.playerUrl.value = `http://${window.location.host}/flv?app=live&stream=${suffix}`;
+                    state.playerProtocol.value = protocol;
+                } else {
+                    if(lang === 'cn')
+                        state.preTypeEle.value.add(new Option("图片", "img"));
+                    else
+                        state.preTypeEle.value.add(new Option("image", "img"));
+                    state.preType.value = "img";
+                    state.playerUrl.value = `http://${window.location.host}/flv?app=live&stream=${suffix}`;
+                    state.playerProtocol.value = "rtmp";
+                }
+            }
+
+            const onChangeBufferTime = () => {
+                localStorage.setItem("bufferTime",state.bufferTime.value);
+            }
 
             const handleAutoStyle = () => {
-                if(state.chnIndex.value < 0)
+                if(state.activeChnId.value < 0)
                     return "";
-                const encv = defaultConf[state.chnIndex.value].encv;
+                const encv = defaultConf[state.activeChnId.value].encv;
                 let { width, height} = encv;
                 width = Number(width) > 0 ? Number(width) : 1920;
                 height = Number(height) > 0 ? Number(height) : 1080;
@@ -518,7 +647,7 @@
                             btnClass: 'btn-primary',
                             keys: [ 'enter' ],
                             action: () => {
-                                overlayConf[state.chnIndex.value].splice(idx, 1);
+                                overlayConf[state.activeChnId.value].splice(idx, 1);
                                 state.layIndex.value = 0;
                                 updateOverlayConf("noTip");
                             }
@@ -551,8 +680,8 @@
                 if(lay.type === "time")
                     lay.content="yyyy-MM-dd hh:mm:ss";
 
-                overlayConf[state.chnIndex.value].push(lay);
-                editOverlay(overlayConf[state.chnIndex.value].length-1)
+                overlayConf[state.activeChnId.value].push(lay);
+                editOverlay(overlayConf[state.activeChnId.value].length-1)
             }
 
             const delCurrentRes = resName => {
@@ -587,8 +716,10 @@
                 alertMsg(errMsg, 'error');
             }
 
-            return {...state,defaultConf,handleEnableConf,handleOverlayConf,handleEditData,handlePngConf,handleFontConf,resConf,
-                handleAutoStyle,editOverlay,delOverlay,addOverlay,delCurrentRes,uploadRes,uploadSuccess,uploadError,updateOverlayConf}
+            return {...state,defaultConf,handleEnableConf,onChangePlayerChn,onChangeBufferTime,
+                handleOverlayConf,hardwareConf,handleEditData,handlePngConf,handleFontConf,
+                handleResList, handleAutoStyle,editOverlay,delOverlay,addOverlay,delCurrentRes,
+                uploadRes,uploadSuccess,uploadError,updateOverlayConf}
         }
     });
     app.use(ignoreCustomElementPlugin);

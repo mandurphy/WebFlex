@@ -813,8 +813,9 @@
                     Object.assign(state.pushState, data);
                     state.updateTime = new Date().getTime() / 1000;
                     state.hadPlayed.value = state.pushState.pushing;
+                    if(state.hadPlayed.value)
+                        setTimeout(handlePushState,1000);
                 });
-                setTimeout(handlePushState,1000);
             }
 
             const formatPushTimeCount = count => {
