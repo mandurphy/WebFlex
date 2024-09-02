@@ -503,40 +503,38 @@
             }
 
             const unwatch = watchEffect(()=>{
-                if(defaultConf.length > 0 && Object.keys(overlayConf).length > 0) {
+                if(defaultConf.length > 0 && Object.keys(overlayConf).length > 0 && state.preTypeEle.value !== null && state.preType.value !== undefined) {
                     for(let i=0;i<defaultConf.length;i++) {
                         let item = defaultConf[i];
-                        if(state.preTypeEle.value !== null && state.preType.value !== undefined) {
-                            const html = document.querySelector('html');
-                            let lang = html.getAttribute('data-bs-language');
-                            if(item.enable || hardwareConf.chip === 'HI3516CV610') {
-                                state.activeChnId.value = i;
-                                if (item.stream.rtmp || item.stream.webrtc) {
-                                    const protocol = item.stream.rtmp ? "rtmp" : "webrtc";
-                                    state.activeChnId.value = item.id;
-                                    if(protocol === 'webrtc')
-                                        state.playerUrl.value = `http://${window.location.host}/webrtc?app=live&stream=${item.stream.suffix}`;
-                                    else
-                                        state.playerUrl.value = `http://${window.location.host}/flv?app=live&stream=${item.stream.suffix}`;
-                                    state.playerCodec.value = item.encv.codec;
-                                    state.playerAudio.value = false;
-                                    state.playerProtocol.value = protocol;
-                                    if(lang === 'cn')
-                                        state.preTypeEle.value.add(new Option("视频", "vdo"));
-                                    else
-                                        state.preTypeEle.value.add(new Option("video", "vdo"));
-                                }
-                                if(lang === 'cn')
-                                    state.preTypeEle.value.add(new Option("图片", "img"));
+                        const html = document.querySelector('html');
+                        let lang = html.getAttribute('data-bs-language');
+                        if(item.enable || hardwareConf.chip === 'HI3516CV610') {
+                            state.activeChnId.value = i;
+                            if (item.stream.rtmp || item.stream.webrtc) {
+                                const protocol = item.stream.rtmp ? "rtmp" : "webrtc";
+                                state.activeChnId.value = item.id;
+                                if(protocol === 'webrtc')
+                                    state.playerUrl.value = `http://${window.location.host}/webrtc?app=live&stream=${item.stream.suffix}`;
                                 else
-                                    state.preTypeEle.value.add(new Option("image", "img"));
-                                unwatch();
-                                break;
+                                    state.playerUrl.value = `http://${window.location.host}/flv?app=live&stream=${item.stream.suffix}`;
+                                state.playerCodec.value = item.encv.codec;
+                                state.playerAudio.value = false;
+                                state.playerProtocol.value = protocol;
+                                if(lang === 'cn')
+                                    state.preTypeEle.value.add(new Option("视频", "vdo"));
+                                else
+                                    state.preTypeEle.value.add(new Option("video", "vdo"));
                             }
+                            if(lang === 'cn')
+                                state.preTypeEle.value.add(new Option("图片", "img"));
+                            else
+                                state.preTypeEle.value.add(new Option("image", "img"));
+                            break;
                         }
                     }
                     editOverlay(0);
                     updateChnImage();
+                    unwatch();
                 }
             })
 
