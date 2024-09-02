@@ -58,7 +58,7 @@ foreach ($configFiles as $historyFile) {
     if(!strpos($currentFile, ".json") || md5_file($historyFile) == md5_file($currentFile))
         continue;
 
-    $ignoreFiles = ['version.json', 'net.json', 'net2.json', 'netEx.json', 'netManager.json', 'verLogs.json'];
+    $ignoreFiles = ['version.json', 'net.json', 'net2.json', 'netEx.json', 'netManager.json', 'verLogs.json', 'theme_standard.json'];
     if (in_array(basename($currentFile), $ignoreFiles))
         continue;
 
