@@ -93,8 +93,8 @@
                                     <div class="card">
                                         <div class="card-img-content">
                                             <div class="card-img-background"></div>
-                                            <img :src="makeImgUrl(item.id)" class="card-img-top" :style="handleImgStyle(item.encv.width,item.encv.height)">
-                                            <img :src="makeImgUrl(item.id)" class="card-img-top" style="visibility: hidden">
+                                            <img v-once class="card-img-top preview">
+                                            <img v-once src="assets/img/nosignal.jpg" class="card-img-top" style="visibility: hidden">
                                         </div>
                                         <div class="chn-volume" :style="{'width':handleChnVolume(item.id,'L')}"></div>
                                         <div class="chn-volume" :style="{'width':handleChnVolume(item.id,'R')}"></div>
@@ -137,8 +137,13 @@
                   mem: ref(0), maxy: ref(0),
                   tx : reactive([]),
                   rx : reactive([]),
-                  data1:reactive([]),
-                  data2:reactive([]),
+                  netFlotKey:ref(0),
+                  data1:[],
+                  data2:[],
+                  preview : reactive([]),
+                  hadPreView: ref(false),
+                  input : reactive([]),
+                  volume: [],
                   theme_color:ref(""),
                   line2_color:ref("#555555"),
                   tipBorderColor:ref("#ffbb00"),
@@ -146,11 +151,7 @@
                   tipTxtColor:ref("#555555"),
                   tickColor:ref("#eeeeee"),
                   borderColor:ref("#cccccc"),
-                  netFlotKey:ref(0),
-                  preview : reactive([]),
-                  input : reactive([]),
-                  volume: reactive([]),
-                  useTheme: ref("")
+                  useTheme: ""
               }
 
               const { defaultConf } = useDefaultConf();
@@ -159,10 +160,10 @@
 
               watchEffect(()=>{
                   if(themeConf.mod === 'style') {
-                      if(!isEmpty(themeConf) && state.useTheme.value) {
+                      if(!isEmpty(themeConf) && state.useTheme) {
                           const activeTheme = themeConf.themeActives.find(item => item.active === themeConf.active);
                           state.theme_color.value = activeTheme.colors["bs-active-bg-color"];
-                          if(state.useTheme.value === "default")
+                          if(state.useTheme === "default")
                               state.tipBorderColor.value = activeTheme.colors["bs-active-bg-color"];
                           else
                               state.tipBorderColor.value = "#aaa";
@@ -170,7 +171,7 @@
                   } else {
                       handleThemeActiveLinkStyle().then(themeActiveConf =>{
                           state.theme_color.value = themeActiveConf["bs-active-bg-color"];
-                          if(state.useTheme.value === "default")
+                          if(state.useTheme === "default")
                               state.tipBorderColor.value = themeActiveConf["bs-active-bg-color"];
                           else
                               state.tipBorderColor.value = "#aaa";
@@ -231,8 +232,6 @@
                   setTimeout(getSysState,80);
               }
 
-              const makeImgUrl = (id) => "snap/snap" + id + ".jpg?rnd=" + Math.floor(Date.now() / 500);
-
               const handleImgStyle = (width, height) => {
                   width = Number(width) > 0 ? Number(width) : 1920;
                   height = Number(height) > 0 ? Number(height) : 1080;
@@ -245,7 +244,6 @@
                   return `position: absolute;width: ${ww};height: ${hh};`;
               };
 
-
               const updatePreview = () => {
                   if(state.preview.length === 0) {
                       for(let i=0;i<defaultConf.length;i++) {
@@ -254,8 +252,19 @@
                           state.preview.push(defaultConf[i]);
                       }
                   }
-                  setTimeout(() => rpc("enc.snap"),300);
-                  setTimeout(updatePreview,800);
+
+                  rpc("enc.snap").then(() => {
+                      setTimeout(() => {
+                          document.querySelectorAll("img.preview").forEach((img,index) => {
+                              if(state.preview.length > 0) {
+                                  const preChn = state.preview[index];
+                                  img.src = "snap/snap" + preChn.id + ".jpg" + "?rnd=" + Math.floor(Date.now());
+                                  img.style.cssText = handleImgStyle(preChn.encv.width,preChn.encv.height);
+                              }
+                          })
+                      },100);
+                  })
+                  setTimeout(updatePreview,500);
               }
 
               const handleChnVolume = (chnId,type) => {
@@ -300,7 +309,7 @@
                           if (mutation.type === 'attributes') {
                               if(mutation.attributeName === "data-bs-theme") {
                                   const theme = mutation.target.getAttribute("data-bs-theme");
-                                  state.useTheme.value = theme;
+                                  state.useTheme = theme;
                                   if(theme === "default") {
                                       state.tickColor.value = '#eee';
                                       state.borderColor.value = '#ccc';
@@ -347,7 +356,7 @@
                 }
               )
 
-              return {...state, hardwareConf,makeImgUrl,handleImgStyle,handleChnVolume}
+              return {...state,hardwareConf,handleChnVolume}
           }
       })
       app.use(ignoreCustomElementPlugin);

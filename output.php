@@ -254,6 +254,7 @@
                                     <option value="1080P50">1080P50</option>
                                     <option value="1080I50">1080I50</option>
                                     <option value="1080P30">1080P30</option>
+                                    <option value="1080P25">1080P25</option>
                                     <option value="720P60">720P60</option>
                                     <option value="720P50">720P50</option>
                                 </select>
