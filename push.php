@@ -25,7 +25,7 @@
                         <div class="card-body d-flex">
                             <div class="row flex-grow-1 lp-align-center">
                                 <div class="col-lg-12">
-                                    <h5-player v-show="hadPlayed" :url="playUrl" :codec="playerCodec" :audio="true" :canplay="hadPlayed"></h5-player>
+                                    <h5-player v-show="hadPlayed" :url="playUrl" :codec="playerCodec" :audio="hadAudio" :canplay="hadPlayed"></h5-player>
                                     <div v-show="!hadPlayed" class="lp-aspect-ratio">
                                         <div class="aspect-ratio-content lp-align-center" style="background: #555">
                                             <label class="text-white" style="font-size: 3.5rem">
@@ -632,6 +632,7 @@
                 defaultSubEnable:ref(null),
                 hadPlayed:ref(false),
                 playUrl:ref('http://'+window.location.host+'/flv?app=live&stream=preview'),
+                hadAudio:ref(true),
                 updateTime:0,
                 tabType:ref('rtmp'),
                 pushState:reactive({}),
@@ -650,6 +651,7 @@
             const unwatch = watchEffect(()=>{
                 if(Object.keys(pushConf).length > 0) {
                     defaultConf.forEach(item => {
+                        state.hadAudio.value = -1 !== parseInt(pushConf.srcA);
                         if(item.id === pushConf.srcV) {
                             if(pushConf.srcV_chn === "sub" && item.enable2)
                                 state.playerCodec.value = item.encv2.codec;
@@ -902,6 +904,7 @@
                         else
                             state.playerCodec.value = item.encv.codec;
                     }
+                    state.hadAudio.value = -1 !== parseInt(pushConf.srcA);
                 });
 
                 updatePushConf().then(()=>{

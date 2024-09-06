@@ -722,7 +722,7 @@ export const h5PlayerComponent = {
         },
         audio: {
             type: Boolean,
-            default: true
+            default: false
         },
         protocol: {
             type: String,
@@ -734,7 +734,7 @@ export const h5PlayerComponent = {
         },
         canplay: {
             type: Boolean,
-            default: true
+            default: false
         }
     },
     setup(props, context) {
@@ -752,18 +752,21 @@ export const h5PlayerComponent = {
             rtcConnection: null
         }
 
-        watchEffect(() => {
+        watch([canplay, audio, url], () => {
             if (canplay.value) {
                 if (url.value !== "") {
-                    if (state.hadInitPlayer)
+                    if (state.hadInitPlayer) {
                         destroyPlayer();
+                    }
                     setTimeout(initPlayer, 300);
                 }
             } else {
-                if (state.hadInitPlayer)
+                if (state.hadInitPlayer) {
                     destroyPlayer();
+                }
             }
-        })
+        });
+
 
         const setupWebRTCConnection = offer => {
             if (state.rtcConnection !== null) {

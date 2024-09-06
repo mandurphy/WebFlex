@@ -62,6 +62,7 @@ foreach ($configFiles as $historyFile) {
     if (in_array(basename($currentFile), $ignoreFiles))
         continue;
 
+
     $historyCtx = json_decode(file_get_contents($historyFile));
     $currentCtx = json_decode(file_get_contents($currentFile));
 

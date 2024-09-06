@@ -40,7 +40,7 @@
                             </div>
                             <div class="row">
                                 <div class="col-lg-12 mt-2 mb-2">
-                                    <h5-player :url="playerUrl" :codec="playerCodec" :audio="playerAudio" :protocol="playerProtocol" :buffer="bufferTime"></h5-player>
+                                    <h5-player :url="playerUrl" :canplay="true" :codec="playerCodec" :audio="playerAudio" :protocol="playerProtocol" :buffer="bufferTime"></h5-player>
                                 </div>
                             </div>
                             <div class="row mt-2">
