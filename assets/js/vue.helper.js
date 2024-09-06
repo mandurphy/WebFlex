@@ -734,7 +734,7 @@ export const h5PlayerComponent = {
         },
         canplay: {
             type: Boolean,
-            default: false
+            default: true
         }
     },
     setup(props, context) {
