@@ -2734,13 +2734,13 @@ export const themeActiveColorComponent = {
                                     <div v-for="item in themeConf.themeActives">
                                         <a class="dropdown-item mt-1" href="javascript:;" @click="updateThemeActiveConf(themeConf.used,item.active)">
                                             <div class="row">
-                                                <div class="col">
+                                                <div style="width: 50%">
                                                     <span class="material-symbols-outlined me-2">
                                                         <cn>{{item.label_cn}}</cn>
                                                         <en>{{item.label_en}}</en>
                                                     </span>
                                                 </div>
-                                                <div class="col" :style="{height: '20px',background: item.colors['bs-active-bg-color']}"></div>
+                                                <div style="width: 50%" :style="{height: '20px',background: item.colors['bs-active-bg-color']}"></div>
                                             </div>
                                         </a>
                                     </div>
