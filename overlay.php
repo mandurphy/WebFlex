@@ -487,7 +487,7 @@
                 playerAudio: ref(false),
                 playerProtocol:ref(""),
                 bufferTime:ref(200),
-                preType:ref("vdo"),
+                preType:ref("img"),
                 preTypeEle:ref(null),
                 handleEditData: reactive({}),
                 layIndex : ref(0),
@@ -520,6 +520,7 @@
                                 state.playerCodec.value = item.encv.codec;
                                 state.playerAudio.value = false;
                                 state.playerProtocol.value = protocol;
+                                state.preType.value = "vdo";
                                 if(lang === 'cn')
                                     state.preTypeEle.value.add(new Option("视频", "vdo"));
                                 else
