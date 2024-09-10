@@ -2630,10 +2630,10 @@ export const ledOptionComponent = {
                                             </div>
                                         </div>
                                     </div>
-                                <div>
+                                </div>
                                 <div class="row mt-4">
                                     <div class="col-lg-12 tips" style="padding-left: 40px">
-                                        <cn>1、该功能可以使用设备两侧的LED灯提示设备的运行状态。</cn>
+                                        <cn>1、该功能可以使用设备两侧的LED灯带提示设备的运行状态。</cn>
                                         <en>1. This function uses side LEDs to show device status.</en>
                                     </div>
                                     <div class="col-lg-12 tips" style="padding-left: 40px">
@@ -2641,6 +2641,7 @@ export const ledOptionComponent = {
                                         <en>2. Choose modes for different scenarios.</en>
                                     </div>
                                 </div>
+                            </div>
                           </div>`,
                 buttons: {
                     ok: {
