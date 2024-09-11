@@ -120,12 +120,12 @@
                             <div class="menu-title"><cn>扩展功能</cn><en>Extend</en></div>
                         </a>
                         <ul class="ps-3">
-                            <li v-if="Object.keys(hardwareConf).length > 0 && hardwareConf.function.ndi">
-                                <a href="ndi.php">
-                                    <i class="fa-solid fa-desktop"></i>
-                                    <div class="menu-title"><cn>NDI解码</cn><en>NDI Decode</en></div>
-                                </a>
-                            </li>
+<!--                            <li v-if="Object.keys(hardwareConf).length > 0 && hardwareConf.function.ndi">-->
+<!--                                <a href="ndi.php">-->
+<!--                                    <i class="fa-solid fa-desktop"></i>-->
+<!--                                    <div class="menu-title"><cn>NDI解码</cn><en>NDI Decode</en></div>-->
+<!--                                </a>-->
+<!--                            </li>-->
                             <li v-if="Object.keys(hardwareConf).length > 0 && hardwareConf.function.record">
                                 <a href="record.php">
                                     <i class="fa-solid fa-folder-open"></i>

@@ -154,7 +154,7 @@
                             </div>
                         </a>
                     </li>
-                    <li class="nav-item" role="presentation" @click="tabType = 'ndi'">
+                    <li v-if="Object.keys(hardwareConf).length > 0 && hardwareConf.function.ndi" class="nav-item" role="presentation" @click="tabType = 'ndi'">
                         <a class="nav-link" data-bs-toggle="tab" href="#tab5" role="tab" aria-selected="false">
                             <div class="d-flex align-items-center">
                                 <div class="tab-icon"><i class="fa-brands fa-audible me-1"></i></div>
@@ -489,7 +489,7 @@
                                 <en>2. Make sure that the binding channel is not in use</en>
                             </div>
                             <div class="col-lg-12 tips">
-                                <cn>3、设置解码频道后，保存时会自动把该频道的流地址替换为对应的解码地址。</cn>
+                                <cn>3、设置解码频道后，保存时会自动把该频道的拉流地址替换为对应的解码地址。</cn>
                                 <en>3. After the decoding channel is set, the stream address of the corresponding
                                     channel is automatically replaced with the current decoding address when saving.
                                 </en>
@@ -589,7 +589,7 @@
                                 <en>2. Make sure that the binding channel is not in use</en>
                             </div>
                             <div class="col-lg-12 tips">
-                                <cn>3、设置解码频道后，保存时会自动把该频道的流地址替换为对应的解码地址。</cn>
+                                <cn>3、设置解码频道后，保存时会自动把该频道的拉流地址替换为对应的解码地址。</cn>
                                 <en>3. After the decoding channel is set, the stream address of the corresponding
                                     channel is automatically replaced with the current decoding address when saving.
                                 </en>
@@ -662,7 +662,7 @@
                                 <en>2. Make sure that the binding channel is not in use</en>
                             </div>
                             <div class="col-lg-12 tips">
-                                <cn>3、设置解码频道后，保存时会自动把该频道的流地址替换为对应的解码地址。</cn>
+                                <cn>3、设置解码频道后，保存时会自动把该频道的拉流地址替换为对应的解码地址。</cn>
                                 <en>3. After the decoding channel is set, the stream address of the corresponding
                                     channel is automatically replaced with the current decoding address when saving.
                                 </en>
