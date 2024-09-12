@@ -68,7 +68,7 @@
                             <div class="col-lg-12 mt-2 mb-2">
                                 <div class="layout-bg card-img-content pb-0 h-100">
                                     <div class="bg-black" :style="handleAutoStyle()">
-                                        <div class="lay-border" v-for="(item,index) in handleActiveDefLayConf.layouts" :style="{position:'absolute',width:item.pos.w * 100+'%',height:item.pos.h*100+'%',left:item.pos.x*100+'%',top:item.pos.y*100+'%'}">
+                                        <div class="lay-border" v-for="(item,index) in handleActiveDefLayConf.layouts" :style="{position:'absolute',width:item.pos.w * 100+'%',height:item.pos.h*100+'%',left:item.pos.x*100+'%',top:item.pos.y*100+'%',zIndex:item.pos.index}">
                                             <div :style="{width:'100%',height:'100%',backgroundColor: handleLayBackColor(index)}">
                                                 <div class="d-flex align-items-center gap-1 border-0 px-2 py-1">
                                                     <div class="flex-grow-1">
