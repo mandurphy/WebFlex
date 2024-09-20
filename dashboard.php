@@ -64,11 +64,19 @@
             <div class="row" v-if="Object.keys(hardwareConf).length > 0 && hardwareConf.chip !== 'SS626V100'">
                 <div class="col-lg-12">
                     <div class="card">
-                        <div class="card-body iface py-3">
-                            <div v-for="(item,index) in input" :key="index" :class="[{'ms-5':index > 0},{'hdmi':item.protocol==='HDMI'},{'sdi':item.protocol==='SDI' || item.protocol==='AHD'},{'vga':item.protocol==='VGA'},{'disable':!item.avalible}]">
-                                <span class="info">{{item.info}}</span>
-                                <div :class="['icon']"></div>
-                                <span class="name">{{item.name}}</span>
+                        <div class="card-header bg-transparent">
+                            <div class="p-2 mb-0 d-flex align-items-end">
+                                <cn>端口状态</cn>
+                                <en>Interface state</en>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <div class="iface">
+                                <div v-for="(item,index) in input" :key="index" :class="[{'ms-5':index > 0},{'hdmi':item.protocol==='HDMI'},{'sdi':item.protocol==='SDI' || item.protocol==='AHD'},{'vga':item.protocol==='VGA'},{'disable':!item.avalible}]">
+                                    <span class="info">{{item.info}}</span>
+                                    <div :class="['icon']"></div>
+                                    <span class="name">{{item.name}}</span>
+                                </div>
                             </div>
                         </div>
                     </div>

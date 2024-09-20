@@ -551,6 +551,8 @@
 [data-bs-theme=dark] .dashboard .iface{
     background: var(--bs-default-bg-color);
     color: var(--bs-body-color-semi);
+    padding-top: .25rem!important;
+    padding-bottom: .25rem!important;
 }
 
 [data-bs-theme=dark] .dashboard .hdmi,
