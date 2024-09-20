@@ -196,12 +196,6 @@ a {
     width: 35px;
 }
 
-.sidebar-wrapper .sidebar-header .logo-name h5{
-    font-size: 18px;
-    /*text-transform: uppercase;*/
-    font-weight: 600;
-}
-
 .sidebar-wrapper .sidebar-header .sidebar-close {
     cursor: pointer;
     display: none;
@@ -377,59 +371,58 @@ a {
 		box-shadow: 0 0.5rem 1rem rgb(0 0 0 / 15%);
 	}
 
-	.toggled .menu:not(.sidebar-hovered) .sidebar-wrapper .sidebar-header .logo-name {
-		display: none
-	}
-	.toggled .menu:not(.sidebar-hovered) .sidebar-wrapper {
-		width: 70px
-	}
-	.toggled .menu:not(.sidebar-hovered) .sidebar-wrapper .sidebar-header {
-		width: 70px
-	}
-	.toggled .menu:not(.sidebar-hovered) .sidebar-wrapper .sidebar-header .toggle-icon {
-		display: none
-	}
+    .toggled .menu:not(.sidebar-hovered) .sidebar-wrapper .sidebar-header .logo-name {
+        display: none
+    }
+    .toggled .menu:not(.sidebar-hovered) .sidebar-wrapper {
+        width: 70px
+    }
+    .toggled .menu:not(.sidebar-hovered) .sidebar-wrapper .sidebar-header {
+        width: 70px;
+        padding: 5px;
+    }
+    .toggled .menu:not(.sidebar-hovered) .sidebar-wrapper .sidebar-header .toggle-icon {
+        display: none
+    }
     .toggled .menu .sidebar-wrapper:hover .sidebar-header .sidebar-close {
-		display: block
-	}
-	.toggled .menu:not(.sidebar-hovered) .sidebar-wrapper .sidebar-header {
-		justify-content: center
-	}
-	.toggled .menu:not(.sidebar-hovered) .sidebar-wrapper .sidebar-header {
-		width: 70px
-	}
-	.toggled .menu:not(.sidebar-hovered) .sidebar-wrapper .metismenu a {
-		justify-content: center
-	}
-	.toggled .menu:not(.sidebar-hovered) .sidebar-wrapper .metismenu .menu-title {
-		display: none
-	}
-	.toggled .menu:not(.sidebar-hovered) .sidebar-wrapper .metismenu li ul {
-		display: none
-	}
-	.toggled .menu:not(.sidebar-hovered) .sidebar-wrapper .metismenu li.menu-label {
-		display: none
-	}
-	.toggled .menu:not(.sidebar-hovered) .sidebar-wrapper .metismenu .has-arrow:after {
-		display: none
-	}
+        display: none;
+    }
+    .toggled .menu:not(.sidebar-hovered) .sidebar-wrapper .sidebar-header {
+        justify-content: center
+    }
+    .toggled .menu:not(.sidebar-hovered) .sidebar-wrapper .sidebar-header {
+        width: 70px
+    }
+    .toggled .menu:not(.sidebar-hovered) .sidebar-wrapper .metismenu a {
+        justify-content: center
+    }
+    .toggled .menu:not(.sidebar-hovered) .sidebar-wrapper .metismenu .menu-title {
+        display: none
+    }
+    .toggled .menu:not(.sidebar-hovered) .sidebar-wrapper .metismenu li ul {
+        display: none
+    }
+    .toggled .menu:not(.sidebar-hovered) .sidebar-wrapper .metismenu li.menu-label {
+        display: none
+    }
+    .toggled .menu:not(.sidebar-hovered) .sidebar-wrapper .metismenu .has-arrow:after {
+        display: none
+    }
     .toggled .menu:not(.sidebar-hovered) .sidebar-wrapper .sidebar-bottom {
-		width: 70px
-	}
+        width: 70px
+    }
+    .toggled .menu:not(.sidebar-hovered) .sidebar-wrapper .sidebar-bottom .user-icon,
     .toggled .menu:not(.sidebar-hovered) .sidebar-wrapper .sidebar-bottom .user-info {
-		display: none
-	}
+        display: none
+    }
     .toggled .menu:not(.sidebar-hovered) .sidebar-bottom .dropdown-toggle::after {
         display: none;
     }
 
     .toggled .menu:not(.sidebar-hovered) .sidebar-bottom .dropdown-toggle {
         justify-content: center;
-     }
+    }
 }
-
-
-
 
 /* sidebar bottom */
 
@@ -606,10 +599,6 @@ a {
 
     .toggled .sidebar-wrapper .sidebar-header {
         width: 260px;
-    }
-
-    .toggled .logo-name {
-        display: block;
     }
 
     .toggled .top-header .navbar {

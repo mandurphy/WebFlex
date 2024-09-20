@@ -1,11 +1,10 @@
 <div id="menu">
-    <menu :class="['menu',{'sidebar-hovered': isSidebarHovered}]">
+    <menu class="menu">
         <header class="top-header">
             <nav class="navbar navbar-expand justify-content-between">
-                <div v-if="isMenuToggled" class="btn-toggle-menu" @click="onToggleMenu">
+                <div class="btn-toggle-menu" @click="onToggleMenu">
                     <i class="fa-solid fa-bars"></i>
                 </div>
-                <div v-else ></div>
                 <search-setting></search-setting>
                 <ul class="navbar-nav top-right-menu gap-2">
                     <li class="nav-item">
@@ -42,16 +41,12 @@
 
         </header>
 
-        <aside class="sidebar-wrapper" @mouseenter="onMouseEnter" @mouseleave="onMouseLeave">
+        <aside class="sidebar-wrapper">
             <div class="sidebar-header">
-                <div class="logo-icon lp-cursor-pointer" @click="onHrefDash">
+                <div class="logo-icon lp-cursor-pointer flex-grow-1" @click="onHrefDash" style="white-space: nowrap;overflow: hidden">
                     <img src="assets/img/logo.png" class="mt-1" style="max-height: 33px;">
                 </div>
-                <div class="logo-name flex-grow-1">
-<!--                    <h5 class="mb-0 fw-bold">LinkPi</h5>-->
-                </div>
-
-                <div class="sidebar-close" @click="onCloseSidebar">
+                <div class="sidebar-close flex-grow-0" @click="onCloseSidebar">
                     <i class="fa-solid fa-xmark"></i>
                 </div>
             </div>
@@ -272,7 +267,6 @@
                simplebarEle: ref(null),
                metismenuEle: ref(null),
                isMenuToggled : ref(false),
-               isSidebarHovered: ref(false),
                hadLed: ref(false),
                simplebar: null,
            }
@@ -343,23 +337,13 @@
 
            const onToggleMenu = () => {
                state.isMenuToggled.value = !state.isMenuToggled.value;
+               localStorage.setItem("menu-toggled",state.isMenuToggled.value);
            }
-
-           const onMouseEnter = () => {
-               if(state.isMenuToggled.value)
-                   state.isSidebarHovered.value = true;
-           };
-
-           const onMouseLeave = () => {
-               if(state.isSidebarHovered.value)
-                   state.isSidebarHovered.value = false;
-           };
 
            const onCloseSidebar = () => {
                state.isMenuToggled.value = false;
+               localStorage.setItem("menu-toggled",state.isMenuToggled.value);
            }
-
-           const hadLedDevice = () => func("/system/hadLedDevice").then(ret => state.hadLed.value = ret.data);
 
            const changeWeb = () => {
                confirm({
@@ -383,10 +367,13 @@
                });
            }
 
-           onMounted(hadLedDevice);
+           onMounted(()=>{
+               state.isMenuToggled.value = localStorage.getItem("menu-toggled") ? JSON.parse(localStorage.getItem("menu-toggled")) : false;
+               func("/system/hadLedDevice").then(ret => state.hadLed.value = ret.data);
+           });
 
            return {...state,hardwareConf,themeConf,webVerConf,updateThemeConf,onHrefDash,onLogout,
-               onToggleMenu,onMouseEnter,onMouseLeave,onCloseSidebar,updateSysLanguage,changeWeb}
+               onToggleMenu,onCloseSidebar,updateSysLanguage,changeWeb}
        }
     });
     menu.use(ignoreCustomElementPlugin);
