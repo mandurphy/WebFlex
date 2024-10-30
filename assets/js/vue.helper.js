@@ -2218,7 +2218,7 @@ export const usbOptionComponent = {
                             option.value = item.name;
                             if (item.name === "/dev/mmcblk0p6") {
                                 if (lang === "cn")
-                                    item.name = "内部存储";
+                                    item.name = "机身存储";
                                 else
                                     item.name = "device storage";
                             }
@@ -2399,7 +2399,7 @@ export const usbOptionComponent = {
                             option.value = item.name;
                             if (item.name === "/dev/mmcblk0p6") {
                                 if (lang === "cn")
-                                    item.name = "内部存储";
+                                    item.name = "机身存储";
                                 else
                                     item.name = "device storage";
                             }

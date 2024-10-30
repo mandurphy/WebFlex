@@ -631,7 +631,7 @@
                                     </div>
                                     <div class="col-2">
                                         <select class="form-select" v-model="item.cap.rotate">
-                                            <option value="0">0</option>black
+                                            <option value="0">0</option>
                                             <option value="90">90</option>
                                             <option value="180">180</option>
                                             <option value="270">270</option>
