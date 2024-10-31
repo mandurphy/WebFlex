@@ -435,9 +435,9 @@ export const usePushConf = () => {
                 if(item.type === "rtmp") {
                     let server = item.server;
                     let key = item.key;
-                    if(server.endsWith("/"))
+                    if(!isEmpty(server) && server.endsWith("/"))
                         server = server.substring(0, server.length - 1);
-                    if(key.startsWith("/"))
+                    if(!isEmpty(key) && key.startsWith("/"))
                         key = key.substring(1);
                     item.path = server + "/" + key;
                 }

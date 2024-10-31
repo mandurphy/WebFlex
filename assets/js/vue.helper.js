@@ -740,6 +740,7 @@ export const h5PlayerComponent = {
     setup(props, context) {
 
         const {url, codec, audio, buffer, canplay, protocol} = toRefs(props);
+
         const state = {
             videoHandler: ref(null),
             jessHandler: ref(null),

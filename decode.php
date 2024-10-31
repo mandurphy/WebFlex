@@ -485,13 +485,15 @@
                                 <en>1. The device is used as a streaming media server and can receive RTMP streams pushed by other devices.</en>
                             </div>
                             <div class="col-lg-12 tips">
-                                <cn>2、需要绑定解码频道时，请确定要绑定的频道没有正在使用。</cn>
-                                <en>2. Make sure that the binding channel is not in use</en>
+                                <cn>2、设置解码频道后，保存时会自动把该频道的拉流地址替换为对应的解码地址。</cn>
+                                <en>2. After the decoding channel is set, the stream address of the corresponding
+                                    channel is automatically replaced with the current decoding address when saving.
+                                </en>
                             </div>
                             <div class="col-lg-12 tips">
-                                <cn>3、设置解码频道后，保存时会自动把该频道的拉流地址替换为对应的解码地址。</cn>
-                                <en>3. After the decoding channel is set, the stream address of the corresponding
-                                    channel is automatically replaced with the current decoding address when saving.
+                                <cn>3、设置解码频道并保存后，请返回【网络拉流】标签页，根据使用场景打开/关闭音视频解码。</cn>
+                                <en>3. After setting the decoding channel and saving, please go back to the Network
+                                    Streaming tab. From there, you can enable or disable audio and video decoding as needed.
                                 </en>
                             </div>
                         </div>
@@ -581,17 +583,19 @@
                         </div>
                         <div class="row mt-3">
                             <div class="col-lg-12 tips">
-                                <cn>1、设备作为流媒体服务器使用，可以接收其他设备推送的 SRT 流。</cn>
-                                <en>1. The device is used as a streaming media server and can receive SRT streams pushed by other devices.</en>
+                                <cn>1、设备作为流媒体服务器使用，可以接收其他设备推送的 RTMP 流。</cn>
+                                <en>1. The device is used as a streaming media server and can receive RTMP streams pushed by other devices.</en>
                             </div>
                             <div class="col-lg-12 tips">
-                                <cn>2、需要绑定解码频道时，请确定要绑定的频道没有正在使用。</cn>
-                                <en>2. Make sure that the binding channel is not in use</en>
-                            </div>
-                            <div class="col-lg-12 tips">
-                                <cn>3、设置解码频道后，保存时会自动把该频道的拉流地址替换为对应的解码地址。</cn>
-                                <en>3. After the decoding channel is set, the stream address of the corresponding
+                                <cn>2、设置解码频道后，保存时会自动把该频道的拉流地址替换为对应的解码地址。</cn>
+                                <en>2. After the decoding channel is set, the stream address of the corresponding
                                     channel is automatically replaced with the current decoding address when saving.
+                                </en>
+                            </div>
+                            <div class="col-lg-12 tips">
+                                <cn>3、设置解码频道并保存后，请返回【网络拉流】标签页，根据使用场景打开/关闭音视频解码。</cn>
+                                <en>3. After setting the decoding channel and saving, please go back to the Network
+                                    Streaming tab. From there, you can enable or disable audio and video decoding as needed.
                                 </en>
                             </div>
                         </div>
@@ -654,17 +658,19 @@
                         </div>
                         <div class="row mt-3">
                             <div class="col-lg-12 tips">
-                                <cn>1、设备支持解码NDI HX协议流。</cn>
-                                <en>1. The device supports decoding NDI HX protocol streams.</en>
+                                <cn>1、设备作为流媒体服务器使用，可以接收其他设备推送的 RTMP 流。</cn>
+                                <en>1. The device is used as a streaming media server and can receive RTMP streams pushed by other devices.</en>
                             </div>
                             <div class="col-lg-12 tips">
-                                <cn>2、需要绑定解码频道时，请确定要绑定的频道没有正在使用。</cn>
-                                <en>2. Make sure that the binding channel is not in use</en>
-                            </div>
-                            <div class="col-lg-12 tips">
-                                <cn>3、设置解码频道后，保存时会自动把该频道的拉流地址替换为对应的解码地址。</cn>
-                                <en>3. After the decoding channel is set, the stream address of the corresponding
+                                <cn>2、设置解码频道后，保存时会自动把该频道的拉流地址替换为对应的解码地址。</cn>
+                                <en>2. After the decoding channel is set, the stream address of the corresponding
                                     channel is automatically replaced with the current decoding address when saving.
+                                </en>
+                            </div>
+                            <div class="col-lg-12 tips">
+                                <cn>3、设置解码频道并保存后，请返回【网络拉流】标签页，根据使用场景打开/关闭音视频解码。</cn>
+                                <en>3. After setting the decoding channel and saving, please go back to the Network
+                                    Streaming tab. From there, you can enable or disable audio and video decoding as needed.
                                 </en>
                             </div>
                         </div>
@@ -720,7 +726,7 @@
 <?php include("./public/foot.inc") ?>
 <script type="module">
     
-    import {rpc, extend, deepCopy, confirm, swap, clearReactiveArray, clearReactiveObject, formatTime, alertMsg,isEmpty} from "./assets/js/lp.utils.js";
+    import {rpc, extend, deepCopy, swap, clearReactiveArray, clearReactiveObject, formatTime, alertMsg,isEmpty} from "./assets/js/lp.utils.js";
     import {useDefaultConf, useUsbFilesConf, useHardwareConf, useRXPushConf,useSrtPushConf,useNdiReciveConf} from "./assets/js/vue.hooks.js";
     import {ignoreCustomElementPlugin, filterKeywordPlugin, bootstrapSwitchComponent, multipleSelectComponent, nouiSliderComponent, languageOptionDirective} from "./assets/js/vue.helper.js"
     import {md5} from "./assets/plugins/md5/js.md5.esm.js";
@@ -1049,6 +1055,9 @@
                                     conf.net.path = item.url.replace(/rtmp:\/\/[^\/]+\/(.*?)(\?.*)?$/, 'rtmp://127.0.0.1/$1');
                                     if (item.auth)
                                         conf.net.path += "?uname=" + item.uname + "&passwd=" + item.passwd;
+                                    conf.enable = true;
+                                    conf.net.decodeV = true;
+                                    conf.net.decodeA = true;
                                 }
                             })
                         }
@@ -1064,6 +1073,9 @@
                                     //item.url = item.url.replace(location.hostname, '127.0.0.1');
                                     item.url = item.url.replace('mode=caller','mode=listener');
                                     conf.net.path = item.url;
+                                    conf.enable = true;
+                                    conf.net.decodeV = true;
+                                    conf.net.decodeA = true;
                                 }
                             })
                         }
@@ -1077,6 +1089,9 @@
                                 if (conf.id === item.bind && conf.type === 'net') {
                                     hadBind = true;
                                     conf.net.path = "ndi://" + item.url;
+                                    conf.enable = true;
+                                    conf.net.decodeV = true;
+                                    conf.net.decodeA = true;
                                 }
                             })
                         }

@@ -12,6 +12,7 @@ export const getUrlParam = (key) => {
         if(pair[0] === key)
             param = pair[1]
     }
+    param = param.replace(/%22/g, "");
     return param;
 }
 

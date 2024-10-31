@@ -52,6 +52,10 @@
                                     <cn>2、播放h265编码的视频流对电脑配置要求较高，如果遇到音视频卡顿问题，请更换性能更好的电脑播放</cn>
                                     <en>2. Playing H265 encoded video stream has high requirements for computer configuration. If you encounter audio and video delay problem, please replace the device with better performance</en>
                                 </div>
+                                <div class="col-lg-12 tips">
+                                    <cn>3、为当前频道创建一个全屏播放快捷方式，请点击此处<a href="#" @click="onDownloadPlayShortcut" style="text-decoration: underline;">下载</a></cn>
+                                    <en>3. Create a fullscreen play shortcut for the current channel. Please click <a href="#" @click="onDownloadPlayShortcut" style="text-decoration: underline;">here</a> to download.</en>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -63,6 +67,7 @@
 <script type="module">
     import { useDefaultConf } from "./assets/js/vue.hooks.js";
     import { ignoreCustomElementPlugin,filterKeywordPlugin,h5PlayerComponent } from "./assets/js/vue.helper.js"
+    import { getUrlParam } from "./assets/js/lp.utils.js"
     import vue from "./assets/js/vue.build.js";
 
     const {createApp,ref,reactive,watch,watchEffect,computed,onMounted} = vue;
@@ -73,6 +78,7 @@
         setup(props,context) {
             
             const { defaultConf } = useDefaultConf();
+            let chnId = parseInt(getUrlParam("channel"));
 
             const state = {
                 activeChnId : ref(0),
@@ -86,6 +92,8 @@
             const unwatch = watch(defaultConf,(value)=>{
                 for(let i=0;i<defaultConf.length;i++) {
                     let item = defaultConf[i];
+                    if(chnId && item.id !== chnId)
+                        continue;
                     if (item.enable && (item.stream.rtmp || item.stream.webrtc)) {
                         const protocol = item.stream.rtmp ? "rtmp" : "webrtc";
                         state.activeChnId.value = item.id;
@@ -125,14 +133,35 @@
                 state.playerAudio.value = selectedOption.getAttribute('data-attr-audio');
                 state.playerProtocol.value = protocol;
             }
-            
+
+            const onDownloadPlayShortcut = () => {
+                const href = "http://"+window.location.host+"/fplayer.php?channel="+state.activeChnId.value;
+                let content = `[{000214A0-0000-0000-C000-000000000046}]
+                                 Prop3=19,2
+                                 [InternetShortcut]
+                                 IDList=
+                                 URL=${href}`;
+
+                content = content.replace(/^\s+/gm, '');
+                const blob = new Blob([content], { type: 'text/plain' });
+                const link = document.createElement('a');
+                link.href = URL.createObjectURL(blob);
+
+                let chnName = defaultConf[state.activeChnId.value].name;
+                link.download = chnName+"-full-player.url";
+
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+            }
+
             onMounted(()=>{
                 let buffer = localStorage.getItem("bufferTime");
                 if(buffer !== null && buffer !== undefined)
                     state.bufferTime.value = buffer;
             })
             
-            return {...state,handleActivePlayerConf,onChangePlayerChn,onChangeBufferTime}
+            return {...state,handleActivePlayerConf,onChangePlayerChn,onChangeBufferTime,onDownloadPlayShortcut}
         }
     });
     app.use(ignoreCustomElementPlugin);

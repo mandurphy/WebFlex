@@ -168,6 +168,7 @@
                                             <div class="row">
                                                 <div class="col-lg-10 offset-lg-1 lp-align-center">
                                                     <div class="push-bar w-100">
+                                                        <strong style="margin-right: 50px;font-size: 15px;">{{formatPushTimeCount(pushState.duration)}}</strong>
                                                         <button type="button" :class="['btn border-3 px-4',{'btn-primary':!pushState.pushing},{'btn-default disabled':pushState.pushing}]" @click="onPushStart">
                                                             <i class="fa-solid fa-video me-1"></i>
                                                             <cn>推流</cn>
@@ -256,7 +257,7 @@
                                     <cn>描述</cn>
                                     <en>Description</en>
                                 </div>
-                                <div class="col-lg-2 text-center">
+                                <div class="col-lg-3 text-center">
                                     <cn>服务器</cn>
                                     <en>Push Url</en>
                                 </div>
@@ -271,10 +272,6 @@
                                 <div class="col-lg-1 text-center">
                                     <cn>速度</cn>
                                     <en>Speed</en>
-                                </div>
-                                <div class="col-lg-1 text-center">
-                                    <cn>时长</cn>
-                                    <en>Duration</en>
                                 </div>
                                 <div class="col-lg-1 text-center">
                                     <cn>启用</cn>
@@ -292,7 +289,7 @@
                                         <div class="col-lg-2">
                                             <input type="text" class="form-control" v-model.trim.lazy="item.des">
                                         </div>
-                                        <div class="col-lg-2">
+                                        <div class="col-lg-3">
                                             <input type="text" class="form-control" v-model.trim.lazy="item.server">
                                         </div>
                                         <div class="col-lg-3">
@@ -306,9 +303,6 @@
                                         </div>
                                         <div class="col-lg-1 text-center">
                                             {{item.speed}} kb/s
-                                        </div>
-                                        <div class="col-lg-1 text-center">
-                                            {{formatPushTimeCount(item.duration)}}
                                         </div>
                                         <div class="col-lg-1 lp-align-center">
                                             <bs-switch v-model="item.enable"></bs-switch>
@@ -348,7 +342,7 @@
                                     <cn>模式</cn>
                                     <en>Mode</en>
                                 </div>
-                                <div class="col text-center">
+                                <div class="col-2 text-center">
                                     IP
                                 </div>
                                 <div class="col text-center">
@@ -369,10 +363,6 @@
                                 <div class="col-lg-1 text-center">
                                     <cn>速度</cn>
                                     <en>Speed</en>
-                                </div>
-                                <div class="col-lg-1 text-center">
-                                    <cn>时长</cn>
-                                    <en>Duration</en>
                                 </div>
                                 <div class="col-lg-1 text-center">
                                     <cn>启用</cn>
@@ -397,7 +387,7 @@
                                                 <option value="rendezvous">rendezvous</option>
                                             </select>
                                         </div>
-                                        <div class="col">
+                                        <div class="col-2">
                                             <input type="text" class="form-control" v-model.trim.lazy="item.ip">
                                         </div>
                                         <div class="col">
@@ -414,9 +404,6 @@
                                         </div>
                                         <div class="col-lg-1 text-center">
                                             {{item.speed}} kb/s
-                                        </div>
-                                        <div class="col-lg-1 text-center">
-                                            {{formatPushTimeCount(item.duration)}}
                                         </div>
                                         <div class="col-lg-1 lp-align-center">
                                             <bs-switch v-model="item.enable"></bs-switch>
@@ -461,10 +448,6 @@
                                     <en>Speed</en>
                                 </div>
                                 <div class="col-lg-1 text-center">
-                                    <cn>时长</cn>
-                                    <en>Duration</en>
-                                </div>
-                                <div class="col-lg-1 text-center">
                                     <cn>启用</cn>
                                     <en>Enable</en>
                                 </div>
@@ -485,9 +468,6 @@
                                         </div>
                                         <div class="col-lg-1 text-center">
                                             {{item.speed}} kb/s
-                                        </div>
-                                        <div class="col-lg-1 text-center">
-                                            {{formatPushTimeCount(item.duration)}}
                                         </div>
                                         <div class="col-lg-1 lp-align-center">
                                             <bs-switch v-model="item.enable"></bs-switch>
@@ -532,10 +512,6 @@
                                     <en>Speed</en>
                                 </div>
                                 <div class="col-lg-1 text-center">
-                                    <cn>时长</cn>
-                                    <en>Duration</en>
-                                </div>
-                                <div class="col-lg-1 text-center">
                                     <cn>启用</cn>
                                     <en>Enable</en>
                                 </div>
@@ -556,9 +532,6 @@
                                         </div>
                                         <div class="col-lg-1 text-center">
                                             {{item.speed}} kb/s
-                                        </div>
-                                        <div class="col-lg-1 text-center">
-                                            {{formatPushTimeCount(item.duration)}}
                                         </div>
                                         <div class="col-lg-1 lp-align-center">
                                             <bs-switch v-model="item.enable"></bs-switch>
@@ -650,8 +623,8 @@
 
             const unwatch = watchEffect(()=>{
                 if(Object.keys(pushConf).length > 0) {
+                    state.hadAudio.value = (-1 !== parseInt(pushConf.srcA));
                     defaultConf.forEach(item => {
-                        state.hadAudio.value = -1 !== parseInt(pushConf.srcA);
                         if(item.id === pushConf.srcV) {
                             if(pushConf.srcV_chn === "sub" && item.enable2)
                                 state.playerCodec.value = item.encv2.codec;
@@ -835,7 +808,7 @@
                     let s = Math.floor( diff % 60 );
                     return fix(h) + ":" + fix( m ) + ":" + fix( s );
                 }
-                return "--:--:--";
+                return "[--:--:--]";
             }
             
             const onPushStart = () => {
@@ -904,8 +877,8 @@
                         else
                             state.playerCodec.value = item.encv.codec;
                     }
-                    state.hadAudio.value = -1 !== parseInt(pushConf.srcA);
                 });
+                state.hadAudio.value = (-1 !== parseInt(pushConf.srcA));
 
                 updatePushConf().then(()=>{
                     func("/system/setPushCrontab",state.pushCron).then(data => {
