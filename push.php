@@ -159,7 +159,7 @@
                                             </div>
                                             <div class="row">
                                                 <div class="col-lg-12 text-center">
-                                                    <button type="button" class="btn border-3 btn-primary px-4" @click="savePushConf">
+                                                    <button type="button" class="btn border-3 btn-primary px-4" @click="savePushConf" style="width: 95px;">
                                                         <cn>保存</cn>
                                                         <en>Save</en>
                                                     </button>
@@ -168,13 +168,13 @@
                                             <div class="row">
                                                 <div class="col-lg-10 offset-lg-1 lp-align-center">
                                                     <div class="push-bar w-100">
-                                                        <strong style="margin-right: 50px;font-size: 15px;">{{formatPushTimeCount(pushState.duration)}}</strong>
+                                                        <strong style="margin-right: 44px;font-size: 15px;">{{formatPushTimeCount(pushState.duration)}}</strong>
                                                         <button type="button" :class="['btn border-3 px-4',{'btn-primary':!pushState.pushing},{'btn-default disabled':pushState.pushing}]" @click="onPushStart">
                                                             <i class="fa-solid fa-video me-1"></i>
                                                             <cn>推流</cn>
                                                             <en>Push</en>
                                                         </button>
-                                                        <button type="button" :class="['btn border-3 ms-2 px-4',{'btn-primary':pushState.pushing},{'btn-default disabled':!pushState.pushing}]" @click="onPushStop">
+                                                        <button type="button" :class="['btn border-3 ms-3 px-4',{'btn-primary':pushState.pushing},{'btn-default disabled':!pushState.pushing}]" @click="onPushStop">
                                                             <i class="fa-solid fa-stop me-1"></i>
                                                             <cn>停止</cn>
                                                             <en>Stop</en>
