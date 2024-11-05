@@ -27,8 +27,8 @@
                                 <div class="col-lg-12">
                                     <h5-player v-show="hadPlayed" :url="playUrl" :codec="playerCodec" :audio="hadAudio" :canplay="hadPlayed"></h5-player>
                                     <div v-show="!hadPlayed" class="lp-aspect-ratio">
-                                        <div class="aspect-ratio-content lp-align-center" style="background: #555">
-                                            <label class="text-white" style="font-size: 3.5rem">
+                                        <div class="aspect-ratio-content lp-align-center push-tips">
+                                            <label style="font-size: 3.5rem">
                                                 <cn style="letter-spacing: 10px">停止推流</cn>
                                                 <en>STOP PUSH</en>
                                             </label>

@@ -588,6 +588,16 @@
     color: var(--bs-default-active-bg-color);
 }
 
+[data-bs-theme=dark] .push .push-tips {
+    background: #343a40;
+    color: var(--bs-body-color-semi);
+}
+
+[data-bs-theme=dark] .push .push-bar {
+    background: #343a40;
+    color: var(--bs-body-color-semi);
+}
+
 [data-bs-theme=dark] .mix .lay-border {
     border: 1px solid #999;
 }

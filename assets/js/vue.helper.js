@@ -2885,7 +2885,7 @@ export const themeActiveColorComponent = {
 export const captureOptionComponent = {
     template: `<a :class="['nav-link',{'active':captureConf.enable}]" style="font-size: 14px;font-weight: 600" @click="onClickCaptureBtn">
                     <cn>Cap</cn>
-                    <en>VC</en>
+                    <en>Cap</en>
                 </a>`,
     setup(props, context) {
 

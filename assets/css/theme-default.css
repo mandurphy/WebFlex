@@ -478,6 +478,16 @@
     color: var(--bs-default-active-bg-color);
 }
 
+[data-bs-theme=default] .push .push-tips {
+    background: #555555;
+    color: #ffffff;
+}
+
+[data-bs-theme=default] .push .push-bar {
+    background: #555555;
+    color: #ffffff;
+}
+
 [data-bs-theme=default] .overlay .card-img-content .card-img-background {
     background: var(--bs-body-bg-color);
 }
