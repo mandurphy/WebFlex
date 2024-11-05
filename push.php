@@ -168,7 +168,7 @@
                                             <div class="row">
                                                 <div class="col-lg-10 offset-lg-1 lp-align-center">
                                                     <div class="push-bar w-100">
-                                                        <strong style="margin-right: 44px;font-size: 15px;">{{formatPushTimeCount(pushState.duration)}}</strong>
+                                                        <strong style="margin-right: 45px;font-size: 15px;">{{formatPushTimeCount(pushState.duration)}}</strong>
                                                         <button type="button" :class="['btn border-3 px-4',{'btn-primary':!pushState.pushing},{'btn-default disabled':pushState.pushing}]" @click="onPushStart">
                                                             <i class="fa-solid fa-video me-1"></i>
                                                             <cn>推流</cn>
