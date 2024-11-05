@@ -880,7 +880,7 @@
                 });
                 state.hadAudio.value = (-1 !== parseInt(pushConf.srcA));
 
-                updatePushConf().then(()=>{
+                updatePushConf("noTip").then(()=>{
                     func("/system/setPushCrontab",state.pushCron).then(data => {
                         if(data.status === "success")
                             alertMsg('<cn>保存设置成功</cn><en>Save config success!</en>', 'success');

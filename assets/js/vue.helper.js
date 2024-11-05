@@ -6,7 +6,7 @@ import * as noUiSlider from "../plugins/nouislider/js/nouislider.esm.js";
 import mutationObserver from '../plugins/polyfill/mutationobserver.esm.js'
 import {md5} from "../plugins/md5/js.md5.esm.js";
 import {alertMsg, axios_post, clearReactiveArray, confirm, formatTime, func, getUrlParam, isEmpty, rebootConfirm} from './lp.utils.js'
-import {useDiskConf, useLedConf, useThemeConf} from "./vue.hooks.js";
+import {useDiskConf, useLedConf, useThemeConf,useCaptureConf} from "./vue.hooks.js";
 import {shirtFlagComponent} from "./vue.flags.js"
 
 const {ref, reactive, toRefs, watch, watchEffect, computed, onMounted, nextTick, defineAsyncComponent} = vue;
@@ -2879,5 +2879,30 @@ export const themeActiveColorComponent = {
         }
 
         return {themeConf,themeColor,themeTxtColor,updateThemeActiveConf,updateThemeConf}
+    }
+}
+
+export const captureOptionComponent = {
+    template: `<a :class="['nav-link',{'active':captureConf.enable}]" style="font-size: 14px;font-weight: 600" @click="onClickCaptureBtn">
+                    <cn>Cap</cn>
+                    <en>VC</en>
+                </a>`,
+    setup(props, context) {
+
+        const { captureConf,updateCaptureConf } = useCaptureConf();
+        const onClickCaptureBtn = () => {
+            captureConf.enable = !captureConf.enable;
+            updateCaptureConf("noTip").then(data => {
+                if(data) {
+                    if(captureConf.enable)
+                        alertMsg("<cn>采集卡模式已启用</cn><en>Capture card mode is enabled</en>", "success");
+                    else
+                        alertMsg("<cn>采集卡模式已关闭</cn><en>Capture card mode is disabled</en>", "success");
+                } else {
+                    alertMsg('<cn>保存设置失败</cn><en>Save config failed!</en>', 'error');
+                }
+            });
+        }
+        return {captureConf,onClickCaptureBtn}
     }
 }

@@ -457,13 +457,15 @@ export const usePushConf = () => {
                 delete item.speed;
             })
             rpc("push.update", [ JSON.stringify( push_conf, null, 2 ) ]).then(data => {
-                if ( typeof ( data.error ) !== "undefined" ) {
+                if (!data) {
+                    reject();
                     if(tip !== "noTip")
                         alertMsg('<cn>保存设置失败</cn><en>Save config failed!</en>', 'error');
-                    reject();
-                    return;
+                } else {
+                    resolve();
+                    if(tip !== "noTip")
+                        alertMsg('<cn>保存设置成功</cn><en>Save config successfully!</en>', 'success');
                 }
-                resolve();
             });
         })
     }
@@ -1413,6 +1415,37 @@ export const useNdiReciveConf = () => {
     }
     onMounted(handleNdiReciveConf);
     return {ndiReciveConf,updateNdiReciveConf}
+}
+
+export const useCaptureConf = () => {
+    const captureConf = reactive({});
+    const handleCaptureConf = () => {
+        checkFileExists("config/misc/capture.json").then(exists => {
+            if(exists) {
+                queryData("config/misc/capture.json").then((conf) => {
+                    clearReactiveObject(captureConf);
+                    Object.assign(captureConf,conf);
+                });
+            }
+        })
+    }
+    const updateCaptureConf = (tip= "tip") => {
+        return new Promise((resolve,reject)=>{
+            rpc("capture.update", [captureConf]).then(data => {
+                if (!data) {
+                    reject(data);
+                    if(tip !== "noTip")
+                        alertMsg('<cn>保存设置失败</cn><en>Save config failed!</en>', 'error');
+                } else {
+                    resolve(data);
+                    if(tip !== "noTip")
+                        alertMsg('<cn>保存设置成功</cn><en>Save config successfully!</en>', 'success');
+                }
+            });
+        })
+    }
+    onMounted(handleCaptureConf);
+    return {captureConf,updateCaptureConf}
 }
 
 

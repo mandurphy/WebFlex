@@ -273,4 +273,10 @@ class System extends Basic
             return $this->handleRet(true,'success','执行完成','exec successfully');
         return $this->handleRet(false,'success','执行完成','exec successfully');
     }
+
+    function hadCapture() {
+        if(file_exists("/link/config/misc/capture.json"))
+            return $this->handleRet(true,'success','执行完成','exec successfully');
+        return $this->handleRet(false,'success','执行完成','exec successfully');
+    }
 }

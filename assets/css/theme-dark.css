@@ -116,6 +116,11 @@
     border: 1px solid var(--bs-border-color-translucent);
 }
 
+[data-bs-theme=dark] .top-header .navbar .top-right-menu .nav-item .nav-link.active {
+    background-color: var(--bs-default-active-bg-color) !important;
+    color: var(--dark-bs-default-txt-color) !important;
+}
+
 [data-bs-theme=dark] .search-bar input[disabled] {
     background-color: var(--bs-body-bg);
     border: 1px solid var(--bs-border-color-translucent);

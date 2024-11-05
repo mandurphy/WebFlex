@@ -24,6 +24,9 @@
                             <i class="fa-solid fa-arrow-right-arrow-left"></i>
                         </a>
                     </li>
+                    <li class="nav-item" v-if="hadCap">
+                        <capture-option></capture-option>
+                    </li>
                     <li class="nav-item" v-if="hadLed">
                         <led-option></led-option>
                     </li>
@@ -247,7 +250,7 @@
     import Metismenu from '../assets/plugins/metismenu/js/metisMenu.esm.js';
     import { func,updateSysLanguage,confirm } from "../assets/js/lp.utils.js";
     import { useThemeConf,useHardwareConf,useWebVerConf } from "../assets/js/vue.hooks.js"
-    import { ignoreCustomElementPlugin,usbOptionComponent,searchSettingComponent,ledOptionComponent,themeActiveColorComponent } from "../assets/js/vue.helper.js"
+    import { ignoreCustomElementPlugin,usbOptionComponent,searchSettingComponent,ledOptionComponent,themeActiveColorComponent,captureOptionComponent } from "../assets/js/vue.helper.js"
     import mutationObserver from '../assets/plugins/polyfill/mutationobserver.esm.js';
 
     const { createApp,ref,reactive,watchEffect,watch,nextTick,onMounted } = vue;
@@ -256,7 +259,8 @@
             "usb-option": usbOptionComponent,
             "led-option": ledOptionComponent,
             "search-setting": searchSettingComponent,
-            "theme-color": themeActiveColorComponent
+            "theme-color": themeActiveColorComponent,
+            "capture-option": captureOptionComponent
         },
         setup() {
            const { themeConf,updateThemeConf } = useThemeConf();
@@ -268,6 +272,7 @@
                metismenuEle: ref(null),
                isMenuToggled : ref(false),
                hadLed: ref(false),
+               hadCap: ref(false),
                simplebar: null,
            }
 
@@ -370,6 +375,7 @@
            onMounted(()=>{
                state.isMenuToggled.value = localStorage.getItem("menu-toggled") ? JSON.parse(localStorage.getItem("menu-toggled")) : false;
                func("/system/hadLedDevice").then(ret => state.hadLed.value = ret.data);
+               func("/system/hadCapture").then(ret => state.hadCap.value = ret.data);
            });
 
            return {...state,hardwareConf,themeConf,webVerConf,updateThemeConf,onHrefDash,onLogout,
