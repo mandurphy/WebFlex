@@ -583,8 +583,8 @@
                         </div>
                         <div class="row mt-3">
                             <div class="col-lg-12 tips">
-                                <cn>1、设备作为流媒体服务器使用，可以接收其他设备推送的 RTMP 流。</cn>
-                                <en>1. The device is used as a streaming media server and can receive RTMP streams pushed by other devices.</en>
+                                <cn>1、设备作为流媒体服务器使用，可以接收其他设备推送的 SRT 流。</cn>
+                                <en>1. The device is used as a streaming media server and can receive SRT streams pushed by other devices.</en>
                             </div>
                             <div class="col-lg-12 tips">
                                 <cn>2、设置解码频道后，保存时会自动把该频道的拉流地址替换为对应的解码地址。</cn>
@@ -658,8 +658,8 @@
                         </div>
                         <div class="row mt-3">
                             <div class="col-lg-12 tips">
-                                <cn>1、设备作为流媒体服务器使用，可以接收其他设备推送的 RTMP 流。</cn>
-                                <en>1. The device is used as a streaming media server and can receive RTMP streams pushed by other devices.</en>
+                                <cn>1、设备可以扫描并发现网络内的 NDI 流。</cn>
+                                <en>1. The device can scan and discover NDI streams on the network.</en>
                             </div>
                             <div class="col-lg-12 tips">
                                 <cn>2、设置解码频道后，保存时会自动把该频道的拉流地址替换为对应的解码地址。</cn>
