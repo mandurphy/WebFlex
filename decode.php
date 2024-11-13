@@ -985,11 +985,8 @@
                             auth = auth.length > 16 ? auth.substring(0, 16) : auth;
                             textarea.value = urlObject.pathname.split('/').pop() + urlObject.search + '?Auth=' + auth;
                         }
-                    } else {
-                        textarea.value = `${urlObject.protocol}${urlObject.pathname.split('/').slice(0, -1).join('/')}`;
-                        textarea.value = textarea.value.replace("127.0.0.1",window.location.hostname);
-                    }
-
+                    } else
+                        textarea.value = `${urlObject.protocol}//${window.location.hostname}${urlObject.pathname.split('/').slice(0, -1).join('/')}`;
                 }
                 if(state.tabType.value === 'srt')
                     textarea.value = srtPushConf[index].url
