@@ -1537,3 +1537,17 @@ input[type="password"]::-ms-reveal{
 .fac .btn.checkEdid {
     min-width: 60px;
 }
+
+.logger .xterm-aspect-ratio {
+    position: relative;
+    padding-top: 65%;
+}
+.logger .xterm-aspect-ratio .xterm-aspect-content {
+    position: absolute;
+    top: 8px;
+    left: 0;
+    padding: 0;
+    margin: 0;
+    width: 100%;
+    height: 100%;
+}

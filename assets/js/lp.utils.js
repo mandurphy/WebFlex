@@ -146,7 +146,7 @@ export const rpc5 = (func, params = []) => {
     })
 }
 
-// monitor
+//monitor
 export const rpc6 = (func, params = []) => {
     return new Promise((resolve,reject)=>{
         let jsonrpc = new JsonRpcClient({ ajaxUrl: '/RPC6' });
@@ -154,6 +154,21 @@ export const rpc6 = (func, params = []) => {
     })
 }
 
+//oled
+export const rpc7 = (func, params = []) => {
+    return new Promise((resolve,reject)=>{
+        let jsonrpc = new JsonRpcClient({ ajaxUrl: '/RPC7' });
+        jsonrpc.call(func, params, data => { resolve(data); }, error =>{ console.log(error);reject(error); });
+    })
+}
+
+//logger
+export const rpc8 = (func, params = []) => {
+    return new Promise((resolve,reject)=>{
+        let jsonrpc = new JsonRpcClient({ ajaxUrl: '/RPC8' });
+        jsonrpc.call(func, params, data => { resolve(data); }, error =>{ console.log(error);reject(error); });
+    })
+}
 
 export const checkFileExists = (url) => {
     return new Promise((resolve, reject) => {

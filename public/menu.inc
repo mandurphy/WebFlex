@@ -224,6 +224,12 @@
                                     <div class="menu-title"><cn>同步调节</cn><en>Synchronization</en></div>
                                 </a>
                             </li>
+                            <li>
+                                <a href="logger.php">
+                                    <i class="fa-solid fa-circle-nodes"></i>
+                                    <div class="menu-title"><cn>系统日志</cn><en>System Log</en></div>
+                                </a>
+                            </li>
                         </ul>
                     </li>
                 </ul>

@@ -1,7 +1,7 @@
 import {alertMsg, checkFileExists, clearReactiveArray, clearReactiveObject, deepCopy, func, isEmpty, queryData, rpc, rpc2, rpc3, rpc4,loadStyle} from "./lp.utils.js";
 import vue from "./vue.build.js";
 
-const { ref,reactive,onMounted } = vue;
+const { ref,reactive,onMounted,onUnmounted } = vue;
 
 export const useDefaultConf = () => {
     const defaultConf = reactive([]);
@@ -1446,6 +1446,78 @@ export const useCaptureConf = () => {
     }
     onMounted(handleCaptureConf);
     return {captureConf,updateCaptureConf}
+}
+
+export const useWebSocket = (url, options = {}) => {
+    const {
+        autoConnect = true,
+        reconnectInterval = 3000,
+        reconnectAttempts = 5,
+    } = options;
+
+    const socket = ref(null);
+    const isConnected = ref(false);
+    const message = ref(null);
+    const error = ref(null);
+    let reconnectCount = 0;
+
+    const connect = () => {
+        if (socket.value) close();
+
+        socket.value = new WebSocket(url);
+
+        socket.value.onopen = () => {
+            isConnected.value = true;
+            error.value = null;
+            reconnectCount = 0;
+            console.log("WebSocket connected");
+        };
+
+        socket.value.onmessage = (event) => {
+            message.value = event.data;
+        };
+
+        socket.value.onerror = (event) => {
+            error.value = event;
+            console.error("WebSocket error:", event);
+        };
+
+        socket.value.onclose = () => {
+            isConnected.value = false;
+            console.log("WebSocket disconnected");
+            if (reconnectAttempts && reconnectCount < reconnectAttempts) {
+                setTimeout(() => {
+                    reconnectCount++;
+                    console.log(`WebSocket reconnect attempt ${reconnectCount}`);
+                    connect();
+                }, reconnectInterval);
+            }
+        };
+    };
+
+    const sendMessage = (data) => {
+        if (isConnected.value) {
+            socket.value.send(data);
+        } else {
+            console.error("WebSocket is not connected");
+        }
+    };
+
+    const close = () => {
+        if (socket.value) {
+            socket.value.close();
+        }
+    };
+
+    if (autoConnect) {
+        connect();
+    }
+
+    onUnmounted(() => {
+        close();
+    });
+
+    return {isConnected, message, error, sendMessage, close, connect};
 }
 
 
