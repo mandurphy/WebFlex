@@ -38,7 +38,9 @@
                             <div class="row">
                                 <div class="col-lg-12 mt-2 mb-2">
                                     <div class="xterm-aspect-ratio">
-                                        <div class="xterm-aspect-content" ref="xtermEle"></div>
+                                        <div class="xterm-aspect-content">
+                                            <div class="xterm" ref="xtermEle"></div>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -64,7 +66,7 @@
     const app = createApp({
         setup(props,context) {
 
-            const { isConnected, message,sendMessage } = useWebSocket(`ws://${location.hostname}/logger.io`);
+            const { isConnected, message,sendMessage } = useWebSocket(`ws://${location.host}/logger.io`);
             const state = {
                 selEle: ref(null),
                 xtermEle: ref(null),
@@ -100,13 +102,16 @@
             }
 
             const initTerminal = () => {
+                const html = document.querySelector('html');
+                const useTheme = html.getAttribute("data-bs-theme");
+                const termThemes = {
+                    default: { background: '#212529', foreground: '#ffffff' },
+                    dark: { background: '#000000', foreground: '#ffffff' },
+                };
                 state.terminal = new Terminal({
                     cursorBlink: false,
                     disableStdin: true,
-                    theme: {
-                        background: "#212529",
-                        foreground: '#ffffff',
-                    },
+                    theme: termThemes[useTheme],
                 });
                 state.fitAddon = new FitAddon.FitAddon();
                 state.terminal.loadAddon(state.fitAddon);
@@ -133,7 +138,7 @@
                 })
             }
 
-            onMounted(() => {
+            const onListenSizeChange = () => {
                 const observer = new resizeObserver(entries => {
                     entries.forEach(entry => {
                         const { width, height } = entry.contentRect;
@@ -151,6 +156,10 @@
                 const aspectRatioElement = document.querySelector('.xterm-aspect-ratio').parentElement;
                 if (aspectRatioElement)
                     observer.observe(aspectRatioElement);
+            }
+
+            onMounted(() => {
+                onListenSizeChange();
             });
             
             return { ...state,onChangeLogType,onDownloadLogs }

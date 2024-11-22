@@ -1540,14 +1540,37 @@ input[type="password"]::-ms-reveal{
 
 .logger .xterm-aspect-ratio {
     position: relative;
-    padding-top: 65%;
+    padding-top: 56.25%;
 }
+
 .logger .xterm-aspect-ratio .xterm-aspect-content {
     position: absolute;
-    top: 8px;
+    top: 0;
     left: 0;
     padding: 0;
     margin: 0;
     width: 100%;
     height: 100%;
+}
+
+.logger .xterm-aspect-ratio .xterm-aspect-content .xterm {
+    width: 100%;
+    height: 100%;
+}
+
+.logger .xterm .xterm-viewport::-webkit-scrollbar {
+    width: 8px;
+}
+
+.logger .xterm .xterm-viewport::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.logger .xterm .xterm-viewport::-webkit-scrollbar-thumb {
+    background: #555;
+    border-radius: 4px;
+}
+
+.logger .xterm .xterm-viewport::-webkit-scrollbar-thumb:hover {
+    background: #777;
 }
