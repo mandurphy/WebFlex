@@ -14,6 +14,7 @@ export const useDefaultConf = () => {
     const updateDefaultConf = (tip= "tip") => {
         return new Promise((resolve,reject)=>{
             func("/conf/updateDefaultConf",defaultConf).then(data => {
+                console.log(data);
                 if ( data.status !== "success" ) {
                     reject();
                     if(tip !== "noTip")

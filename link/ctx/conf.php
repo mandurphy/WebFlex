@@ -218,11 +218,28 @@ class Conf extends Basic
         return $this->handleRet("",'success','保存成功','save successfully');
     }
 
+    function buildLess($build1, $build2)
+    {
+        $build1 = str_replace(".","",$build1);
+        $build2 = str_replace(".","",$build2);
+        if((int)$build1 < (int)$build2)
+            return true;
+        return false;
+    }
+
     function updateDefaultConf($param)
     {
-        file_put_contents( '/link/config/config.json', json_encode($param,JSON_UNESCAPED_SLASHES|JSON_UNESCAPED_UNICODE|JSON_PRETTY_PRINT));
+        $version = json_decode(file_get_contents("/link/config/version.json"),true);
+        $sys_ary = explode(" ",$version["sys"]);
+        $build=$sys_ary[0];
         $client = new RpcClient();
-        $client->reload_conf();
+        if(!$this->buildLess($build,"3.6.0"))
+        {
+            file_put_contents( '/link/config/config.json', json_encode($param,JSON_UNESCAPED_SLASHES|JSON_UNESCAPED_UNICODE|JSON_PRETTY_PRINT));
+            $client->reload_conf();
+        }
+        else
+            $client->update_enc($param);
         return $this->handleRet("",'success','保存成功','save successfully');
     }
 }
