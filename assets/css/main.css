@@ -584,6 +584,10 @@ a {
 	font-size: 30px !important;
 }
 
+.z-9 {
+    z-index: 9!important
+}
+
 /*.btn-option {*/
 /*	background-color: transparent;*/
 /*    border: 0px solid rgb(255 255 255 / 0%);*/

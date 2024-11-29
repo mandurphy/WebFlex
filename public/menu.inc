@@ -1,7 +1,7 @@
 <div id="menu">
     <menu class="menu">
         <header class="top-header">
-            <nav class="navbar navbar-expand justify-content-between">
+            <nav class="navbar navbar-expand justify-content-between z-9">
                 <div class="btn-toggle-menu" @click="onToggleMenu">
                     <i class="fa-solid fa-bars"></i>
                 </div>

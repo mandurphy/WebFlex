@@ -599,7 +599,7 @@
 }
 
 [data-bs-theme=dark] .mix .lay-border {
-    border: 1px solid #999;
+    border: 1px solid #666;
 }
 
 [data-bs-theme=dark] .mix .card-img-content .card-img-background {
@@ -634,10 +634,10 @@
     color: var(--bs-body-color-semi);
 }
 
-[data-bs-theme=dark] .mix .lp-aspect-ratio .aspect-ratio-content button.btn-default {
-    background-color: var(--bs-default-bg-color);
-    border-color: var(--bs-default-bg-color);
-    color: var(--bs-body-color-semi);
+[data-bs-theme=dark] .mix button.btn-default {
+    background-color: #555D61 !important;
+    border-color: #525A5E !important;
+    color: #AAAAAA !important;
 }
 
 [data-bs-theme=dark] .record .rec-bar {

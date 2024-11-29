@@ -118,4 +118,11 @@ class RpcClient
         $client->send();
         return $ret;
     }
+
+    public function reload_conf()
+    {
+        $client = new Client(self::enc_url);
+        $client->query('enc.reloadConf',[]);
+        $client->send();
+    }
 }

@@ -3,6 +3,8 @@
 namespace Link\Ctx;
 
 use Link\Basic;
+use Link\Rpc\RpcClient;
+use Exception;
 class Conf extends Basic
 {
     public function updateLangConf($param)
@@ -213,6 +215,14 @@ class Conf extends Basic
     function updateNdiReciveConf($param)
     {
         file_put_contents( '/link/config/misc/ndiRecive.json', json_encode($param,JSON_UNESCAPED_SLASHES|JSON_UNESCAPED_UNICODE|JSON_PRETTY_PRINT));
+        return $this->handleRet("",'success','保存成功','save successfully');
+    }
+
+    function updateDefaultConf($param)
+    {
+        file_put_contents( '/link/config/config.json', json_encode($param,JSON_UNESCAPED_SLASHES|JSON_UNESCAPED_UNICODE|JSON_PRETTY_PRINT));
+        $client = new RpcClient();
+        $client->reload_conf();
         return $this->handleRet("",'success','保存成功','save successfully');
     }
 }

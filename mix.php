@@ -78,8 +78,8 @@
                                                         </select>
                                                     </div>
                                                     <div class="flex-grow-0">
-                                                        <button :class="['btn',{'btn-default':handleActiveVolume(index)},{'px-2 btn-primary':!handleActiveVolume(index)}]" @click="onUpdateActiveVolume(defaultConf[mixIndex].srcV[index])">
-                                                            <i :class="['fa-solid',{'fa-volume-off':handleActiveVolume(index)},{'fa-volume-high':!handleActiveVolume(index)}]"></i>
+                                                        <button :class="['btn',{'btn-default':!handleActiveVolume(index)},{'px-2 btn-primary':handleActiveVolume(index)}]" @click="onUpdateActiveVolume(defaultConf[mixIndex].srcV[index])">
+                                                            <i :class="['fa-solid',{'fa-volume-off':!handleActiveVolume(index)},{'fa-volume-high':handleActiveVolume(index)}]"></i>
                                                         </button>
                                                     </div>
                                                 </div>
@@ -150,7 +150,7 @@
                 return (chnId) => {
                     let srcV = defaultConf[state.mixIndex.value].srcV;
                     return defaultConf.filter((item,index)=>{
-                        return !(srcV.indexOf(item.id) > -1 && item.id !== chnId);
+                        return !((srcV.indexOf(item.id) > -1 && item.id !== chnId) ||  item.type === "ndi");
                     });
                 };
             });
@@ -158,7 +158,7 @@
             const handleActiveVolume = index => {
                 if(index < defaultConf[state.mixIndex.value].srcV.length) {
                     const idx = defaultConf[state.mixIndex.value].srcV[index].toString();
-                    return !defaultConf[state.mixIndex.value].srcA.includes(idx) && !defaultConf[state.mixIndex.value].srcA.includes(Number(idx));
+                    return defaultConf[state.mixIndex.value].srcA.includes(idx) || defaultConf[state.mixIndex.value].srcA.includes(Number(idx));
                 }
             };
             
@@ -300,17 +300,13 @@
                     option.textContent = option.getAttribute('cn');
                 });
             }
-            
+
             const handleLayBackColor = (idx) => {
-                let color = 0;
-                if(state.curTheme.value !== "dark") {
-                    if(idx % 2 === 0)
-                        color = 128 + 25 * (idx / 2);
-                    else
-                        color = 128 - 25 * (idx / 2 + 1);
-                } else
-                    color = 85 - 15 * (idx / 2 + 1);
-                return "rgb(" + color + "," + color + "," + color + ")";
+                let baseColor = state.curTheme.value !== "dark" ? [100, 100, 100] : [63, 69, 75];
+                let colorDecreaseStep = state.curTheme.value !== "dark" ? [5, 5, 5] : [3, 3, 3];
+                //let colorDecreaseStep = [5, 5, 5];
+                let adjustedColor = baseColor.map((value, index) => Math.max(0, value - (idx * colorDecreaseStep[index])));
+                return `rgb(${adjustedColor[0]},${adjustedColor[1]},${adjustedColor[2]})`;
             }
 
             onMounted(()=>{

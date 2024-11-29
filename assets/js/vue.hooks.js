@@ -13,17 +13,17 @@ export const useDefaultConf = () => {
     }
     const updateDefaultConf = (tip= "tip") => {
         return new Promise((resolve,reject)=>{
-            rpc( "enc.update", [ JSON.stringify( defaultConf, null, 2 ) ]).then(data => {
-                if ( typeof ( data.error ) != "undefined" ) {
+            func("/conf/updateDefaultConf",defaultConf).then(data => {
+                if ( data.status !== "success" ) {
                     reject();
                     if(tip !== "noTip")
                         alertMsg('<cn>保存设置失败</cn><en>Save config failed!</en>', 'error');
                 } else {
-                    if(tip !== "noTip")
-                        alertMsg('<cn>保存设置成功</cn><en>Save config success!</en>', 'success');
                     resolve();
+                    if(tip !== "noTip")
+                        alertMsg('<cn>保存设置成功</cn><en>Save config successfully!</en>', 'success');
                 }
-            });
+            })
         })
     }
     onMounted(handleDefaultConf);

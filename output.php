@@ -16,7 +16,7 @@
                         <div class="p-2 mb-0 d-flex align-items-end">
                             <cn>输出</cn>
                             <en>Output</en>
-                            <div v-if="hardwareConf.fac !== 'ENC1Pro' && hardwareConf.fac !== 'ENC1V3' && hardwareConf.fac !== 'ENC2V3'">1</div>
+                            <div v-if="hardwareConf.fac !== 'ENC1Pro' && hardwareConf.fac !== 'ENC1V3' && hardwareConf.fac !== 'REC1' && hardwareConf.fac !== 'ENC2V3'">1</div>
                             <div v-if="hardwareConf.fac === 'ENC2V3'">2</div>
                         </div>
                     </div>
@@ -113,13 +113,13 @@
                         <div class="row mt-4">
                             <div class="col-lg-3 offset-lg-1 lp-align-center">
                                 <label>
-                                    <cn>视频源</cn>
+                                    <cn>音视频源</cn>
                                     <en>video source</en>
                                 </label>
                             </div>
                             <div class="col-lg-6">
                                 <select class="form-select" v-model="defaultConf[mixIndex].output.src">
-                                    <option v-for="(item,index) in defaultConf" :key="item.id" :value="item.id">{{item.name}}</option>
+                                    <option v-for="(item,index) in handleAllowChnConf" :key="item.id" :value="item.id">{{item.name}}</option>
                                 </select>
                             </div>
                         </div>
@@ -201,7 +201,7 @@
                     </div>
                 </div>
             </div>
-            <div class="col-lg-6 lp-equal-height-container" v-if="hardwareConf.fac !== 'ENC1Pro' && hardwareConf.fac !== 'ENC1V3'">
+            <div class="col-lg-6 lp-equal-height-container" v-if="hardwareConf.fac !== 'ENC1Pro' && hardwareConf.fac !== 'ENC1V3' && hardwareConf.fac !== 'REC1'">
                 <div class="card lp-equal-height-item">
                     <div class="card-header bg-transparent">
                         <div class="p-2 mb-0 d-flex align-items-end">
@@ -293,13 +293,13 @@
                         <div class="row mt-4">
                             <div class="col-lg-3 offset-lg-1 lp-align-center">
                                 <label>
-                                    <cn>视频源</cn>
+                                    <cn>音视频源</cn>
                                     <en>video source</en>
                                 </label>
                             </div>
                             <div class="col-lg-6">
                                 <select class="form-select" v-model="defaultConf[mixIndex].output2.src">
-                                    <option v-for="(item,index) in defaultConf" :key="item.id" :value="item.id">{{item.name}}</option>
+                                    <option v-for="(item,index) in handleAllowChnConf" :key="item.id" :value="item.id">{{item.name}}</option>
                                 </select>
                             </div>
                         </div>
@@ -381,6 +381,61 @@
                     </div>
                 </div>
             </div>
+            <div class="col-lg-6">
+                <div class="card">
+                    <div class="card-header bg-transparent">
+                        <div class="p-2 mb-0 d-flex align-items-end">
+                            <cn>Line Output</cn>
+                            <en>Line Output<</en>
+                        </div>
+                    </div>
+                    <div class="card-body pb-4">
+                        <div class="row mt-4">
+                            <div class="col-lg-3 offset-lg-1 lp-align-center">
+                                <label>
+                                    <cn>音频源</cn>
+                                    <en>audio source</en>
+                                </label>
+                            </div>
+                            <div class="col-lg-6">
+                                <select class="form-select" v-model="defaultConf[mixIndex].outputLine.src">
+                                    <option value="line">Line</option>
+                                    <option v-for="(item,index) in handleAllowChnConf" :key="item.id" :value="item.id">{{item.name}}</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="row mt-4">
+                            <div class="col-lg-3 offset-lg-1 lp-align-center">
+                                <label>
+                                    <cn>增益</cn>
+                                    <en>gain</en>
+                                </label>
+                            </div>
+                            <div class="col-lg-6">
+                                <select class="form-select" v-model="defaultConf[mixIndex].outputLine.gain">
+                                    <option value="24">+24dB</option>
+                                    <option value="18">+18dB</option>
+                                    <option value="12">+12dB</option>
+                                    <option value="6">+6dB</option>
+                                    <option value="0">+0dB</option>
+                                    <option value="-6">-6dB</option>
+                                    <option value="-12">-12dB</option>
+                                    <option value="-18">-18dB</option>
+                                    <option value="-24">-24dB</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="row mt-4">
+                            <div class="col-lg-12 text-center">
+                                <button type="button" class="btn border-3 btn-primary px-4 me-3" @click="updateDefaultConf">
+                                    <cn>保存</cn>
+                                    <en>Save</en>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     </main>
 </div>
@@ -415,13 +470,19 @@
                     for(let i=0;i<defaultConf.length;i++) {
                         if(defaultConf[i].type !== "mix")
                             continue;
+                        if(!defaultConf[i].hasOwnProperty("outputLine"))
+                            defaultConf[i]["outputLine"] = {"src":0,"gain":0}
                         state.mixIndex.value = i;
                     }
                     unwatch();
                 }
             })
 
-            return {...state,defaultConf,hardwareConf,boardConf,updateDefaultConf}
+            const handleAllowChnConf = computed(() => {
+                return defaultConf.filter(item => item.type !== 'ndi');
+            });
+
+            return {...state,defaultConf,hardwareConf,boardConf,updateDefaultConf,handleAllowChnConf}
         }
     });
     app.use(ignoreCustomElementPlugin);
