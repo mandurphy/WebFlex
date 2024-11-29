@@ -10,13 +10,13 @@
 <div data-simplebar>
     <main class="page-content output" id="app" v-cloak>
         <div v-if="Object.keys(hardwareConf).length > 0" :class="['row',{'lp-display-hide':!hardwareConf.function.videoOut}]">
-            <div class="col-lg-6 lp-equal-height-container" v-if="hardwareConf.fac !== 'ENCS1' && hardwareConf.fac !== 'VGA1'">
+            <div :class="[{'col-lg-4': (output1 && output2)},{'col-lg-6': (!output1 || !output2)},'lp-equal-height-container']" v-if="output1">
                 <div class="card lp-equal-height-item">
                     <div class="card-header bg-transparent">
                         <div class="p-2 mb-0 d-flex align-items-end">
                             <cn>输出</cn>
                             <en>Output</en>
-                            <div v-if="hardwareConf.fac !== 'ENC1Pro' && hardwareConf.fac !== 'ENC1V3' && hardwareConf.fac !== 'REC1' && hardwareConf.fac !== 'ENC2V3'">1</div>
+                            <div v-if="output2 && hardwareConf.fac !== 'ENC2V3'">1</div>
                             <div v-if="hardwareConf.fac === 'ENC2V3'">2</div>
                         </div>
                     </div>
@@ -26,7 +26,7 @@
                                 <cn>HDMI输出</cn>
                                 <en>HDMI Output</en>
                             </div>
-                            <div class="col-lg-6">
+                            <div :class="[{'col-lg-7': (output1 && output2)},{'col-lg-6': (!output1 || !output2)}]">
                                 <bs-switch v-model="defaultConf[mixIndex].output.enable" :size="'normal'"></bs-switch>
                             </div>
                         </div>
@@ -37,7 +37,7 @@
                                     <en>Interface</en>
                                 </label>
                             </div>
-                            <div class="col-lg-6">
+                            <div :class="[{'col-lg-7': (output1 && output2)},{'col-lg-6': (!output1 || !output2)}]">
                                 <select class="form-select" v-model="defaultConf[mixIndex].output.type">
                                     <option value="hdmi">HDMI</option>
                                     <option value="dvi">DVI</option>
@@ -51,7 +51,7 @@
                                     <en>resolution</en>
                                 </label>
                             </div>
-                            <div class="col-lg-6">
+                            <div :class="[{'col-lg-7': (output1 && output2)},{'col-lg-6': (!output1 || !output2)}]">
                                 <select class="form-select" v-model="defaultConf[mixIndex].output.output">
                                     <option v-if="Object.keys(hardwareConf).length > 0 && hardwareConf.capability.maxOutput === '4K60'" value="3840x2160_60">4K60</option>
                                     <option v-if="Object.keys(hardwareConf).length > 0 && hardwareConf.capability.maxOutput === '4K60'" value="3840x2160_50">4K50</option>
@@ -90,7 +90,7 @@
                                     <en>rotate</en>
                                 </label>
                             </div>
-                            <div class="col-lg-6">
+                            <div :class="[{'col-lg-7': (output1 && output2)},{'col-lg-6': (!output1 || !output2)}]">
                                 <select class="form-select" v-model="defaultConf[mixIndex].output.rotate">
                                     <option value="0">0</option>
                                     <option value="90">90</option>
@@ -106,7 +106,7 @@
                                     <en>mirror</en>
                                 </label>
                             </div>
-                            <div class="col-lg-6">
+                            <div :class="[{'col-lg-7': (output1 && output2)},{'col-lg-6': (!output1 || !output2)}]">
                                 <bs-switch v-model="defaultConf[mixIndex].output.mirror" :size="'normal'"></bs-switch>
                             </div>
                         </div>
@@ -117,7 +117,7 @@
                                     <en>video source</en>
                                 </label>
                             </div>
-                            <div class="col-lg-6">
+                            <div :class="[{'col-lg-7': (output1 && output2)},{'col-lg-6': (!output1 || !output2)}]">
                                 <select class="form-select" v-model="defaultConf[mixIndex].output.src">
                                     <option v-for="(item,index) in handleAllowChnConf" :key="item.id" :value="item.id">{{item.name}}</option>
                                 </select>
@@ -130,7 +130,7 @@
                                     <en>low latency</en>
                                 </label>
                             </div>
-                            <div class="col-lg-6">
+                            <div :class="[{'col-lg-7': (output1 && output2)},{'col-lg-6': (!output1 || !output2)}]">
                                 <bs-switch v-model="defaultConf[mixIndex].output.lowLatency" :size="'normal'"></bs-switch>
                             </div>
                         </div>
@@ -141,7 +141,7 @@
                                     <en>CSC</en>
                                 </label>
                             </div>
-                            <div class="col-lg-6">
+                            <div :class="[{'col-lg-7': (output1 && output2)},{'col-lg-6': (!output1 || !output2)}]">
                                 <select class="form-select" v-model="defaultConf[mixIndex].output.csc.matrix">
                                     <option value="identity" cn="不转换" en="Identity" v-language-option></option>
                                     <option value="601_709">601 to 709</option>
@@ -156,7 +156,7 @@
                                     <en>luma</en>
                                 </label>
                             </div>
-                            <div class="col-lg-6">
+                            <div :class="[{'col-lg-7': (output1 && output2)},{'col-lg-6': (!output1 || !output2)}]">
                                 <noui-slider v-model="defaultConf[mixIndex].output.csc.luma" :min="0" :max="100" :step="1" :fix="0"></noui-slider>
                             </div>
                         </div>
@@ -167,7 +167,7 @@
                                     <en>contrast</en>
                                 </label>
                             </div>
-                            <div class="col-lg-6">
+                            <div :class="[{'col-lg-7': (output1 && output2)},{'col-lg-6': (!output1 || !output2)}]">
                                 <noui-slider v-model="defaultConf[mixIndex].output.csc.contrast" :min="0" :max="100" :step="1" :fix="0"></noui-slider>
                             </div>
                         </div>
@@ -178,7 +178,7 @@
                                     <en>saturation</en>
                                 </label>
                             </div>
-                            <div class="col-lg-6">
+                            <div :class="[{'col-lg-7': (output1 && output2)},{'col-lg-6': (!output1 || !output2)}]">
                                 <noui-slider v-model="defaultConf[mixIndex].output.csc.saturation" :min="0" :max="100" :step="1" :fix="0"></noui-slider>
                             </div>
                         </div>
@@ -189,7 +189,7 @@
                                     <en>hue</en>
                                 </label>
                             </div>
-                            <div class="col-lg-6">
+                            <div :class="[{'col-lg-7': (output1 && output2)},{'col-lg-6': (!output1 || !output2)}]">
                                 <noui-slider v-model="defaultConf[mixIndex].output.csc.hue" :min="0" :max="100" :step="1" :fix="0"></noui-slider>
                             </div>
                         </div>
@@ -201,13 +201,13 @@
                     </div>
                 </div>
             </div>
-            <div class="col-lg-6 lp-equal-height-container" v-if="hardwareConf.fac !== 'ENC1Pro' && hardwareConf.fac !== 'ENC1V3' && hardwareConf.fac !== 'REC1'">
+            <div :class="[{'col-lg-4': (output1 && output2)},{'col-lg-6': (!output1 || !output2)},'lp-equal-height-container']" v-if="output2">
                 <div class="card lp-equal-height-item">
                     <div class="card-header bg-transparent">
                         <div class="p-2 mb-0 d-flex align-items-end">
                             <cn>输出</cn>
                             <en>Output</en>
-                            <div v-if="hardwareConf.fac !== 'ENCS1' && hardwareConf.fac !== 'VGA1' && hardwareConf.fac !== 'ENC2V3'">2</div>
+                            <div v-if="output1 && hardwareConf.fac !== 'ENC2V3'">2</div>
                             <div v-if="hardwareConf.fac === 'ENC2V3'">1</div>
                         </div>
                     </div>
@@ -220,7 +220,7 @@
                                     <en>enable</en>
                                 </label>
                             </div>
-                            <div class="col-lg-6">
+                            <div :class="[{'col-lg-7': (output1 && output2)},{'col-lg-6': (!output1 || !output2)}]">
                                 <bs-switch v-model="defaultConf[mixIndex].output2.enable" :size="'normal'"></bs-switch>
                             </div>
                         </div>
@@ -231,7 +231,7 @@
                                     <en>Interface</en>
                                 </label>
                             </div>
-                            <div class="col-lg-6">
+                            <div :class="[{'col-lg-7': (output1 && output2)},{'col-lg-6': (!output1 || !output2)}]">
                                 <select v-if="Object.keys(hardwareConf).length > 0 && Object.keys(boardConf).length > 0" class="form-select" v-model="defaultConf[mixIndex].output2.type">
                                     <option v-if="hardwareConf.chip === 'SS626V100' && ('HDMI-OUT2' in boardConf.interfaceA)" value="hdmi1">HDMI</option>
                                     <option v-if="hardwareConf.chip !== 'SS626V100' && ('HDMI-OUT2' in boardConf.interfaceA)" value="bt1120">HDMI</option>
@@ -247,7 +247,7 @@
                                     <en>resolution</en>
                                 </label>
                             </div>
-                            <div class="col-lg-6">
+                            <div :class="[{'col-lg-7': (output1 && output2)},{'col-lg-6': (!output1 || !output2)}]">
                                 <select v-if="Object.keys(hardwareConf).length > 0 && Object.keys(boardConf).length > 0" class="form-select" v-model="defaultConf[mixIndex].output2.output">
                                     <option v-if="hardwareConf.chip=== 'SS626V100' && ('HDMI-OUT2' in boardConf.interfaceA)" value="3840x2160_60">4K60</option>
                                     <option v-if="hardwareConf.chip=== 'SS626V100' && ('HDMI-OUT2' in boardConf.interfaceA)" value="3840x2160_50">4K50</option>
@@ -270,7 +270,7 @@
                                     <en>rotate</en>
                                 </label>
                             </div>
-                            <div class="col-lg-6">
+                            <div :class="[{'col-lg-7': (output1 && output2)},{'col-lg-6': (!output1 || !output2)}]">
                                 <select class="form-select" v-model="defaultConf[mixIndex].output2.rotate">
                                     <option value="0">0</option>
                                     <option value="90">90</option>
@@ -286,7 +286,7 @@
                                     <en>mirror</en>
                                 </label>
                             </div>
-                            <div class="col-lg-6">
+                            <div :class="[{'col-lg-7': (output1 && output2)},{'col-lg-6': (!output1 || !output2)}]">
                                 <bs-switch v-model="defaultConf[mixIndex].output2.mirror" :size="'normal'"></bs-switch>
                             </div>
                         </div>
@@ -297,7 +297,7 @@
                                     <en>video source</en>
                                 </label>
                             </div>
-                            <div class="col-lg-6">
+                            <div :class="[{'col-lg-7': (output1 && output2)},{'col-lg-6': (!output1 || !output2)}]">
                                 <select class="form-select" v-model="defaultConf[mixIndex].output2.src">
                                     <option v-for="(item,index) in handleAllowChnConf" :key="item.id" :value="item.id">{{item.name}}</option>
                                 </select>
@@ -310,7 +310,7 @@
                                     <en>low latency</en>
                                 </label>
                             </div>
-                            <div class="col-lg-6">
+                            <div :class="[{'col-lg-7': (output1 && output2)},{'col-lg-6': (!output1 || !output2)}]">
                                 <bs-switch v-model="defaultConf[mixIndex].output2.lowLatency" :size="'normal'"></bs-switch>
                             </div>
                         </div>
@@ -321,7 +321,7 @@
                                     <en>CSC</en>
                                 </label>
                             </div>
-                            <div class="col-lg-6">
+                            <div :class="[{'col-lg-7': (output1 && output2)},{'col-lg-6': (!output1 || !output2)}]">
                                 <select class="form-select" v-model="defaultConf[mixIndex].output2.csc.matrix">
                                     <option value="identity" cn="不转换" en="Identity" v-language-option></option>
                                     <option value="601_709">601 to 709</option>
@@ -336,7 +336,7 @@
                                     <en>luma</en>
                                 </label>
                             </div>
-                            <div class="col-lg-6">
+                            <div :class="[{'col-lg-7': (output1 && output2)},{'col-lg-6': (!output1 || !output2)}]">
                                 <noui-slider v-model="defaultConf[mixIndex].output2.csc.luma" :min="0" :max="100" :step="1" :fix="0"></noui-slider>
                             </div>
                         </div>
@@ -347,7 +347,7 @@
                                     <en>contrast</en>
                                 </label>
                             </div>
-                            <div class="col-lg-6">
+                            <div :class="[{'col-lg-7': (output1 && output2)},{'col-lg-6': (!output1 || !output2)}]">
                                 <noui-slider v-model="defaultConf[mixIndex].output2.csc.contrast" :min="0" :max="100" :step="1" :fix="0"></noui-slider>
                             </div>
                         </div>
@@ -358,7 +358,7 @@
                                     <en>saturation</en>
                                 </label>
                             </div>
-                            <div class="col-lg-6">
+                            <div :class="[{'col-lg-7': (output1 && output2)},{'col-lg-6': (!output1 || !output2)}]">
                                 <noui-slider v-model="defaultConf[mixIndex].output2.csc.saturation" :min="0" :max="100" :step="1" :fix="0"></noui-slider>
                             </div>
                         </div>
@@ -369,7 +369,7 @@
                                     <en>hue</en>
                                 </label>
                             </div>
-                            <div class="col-lg-6">
+                            <div :class="[{'col-lg-7': (output1 && output2)},{'col-lg-6': (!output1 || !output2)}]">
                                 <noui-slider v-model="defaultConf[mixIndex].output2.csc.hue" :min="0" :max="100" :step="1" :fix="0"></noui-slider>
                             </div>
                         </div>
@@ -381,7 +381,7 @@
                     </div>
                 </div>
             </div>
-            <div class="col-lg-6">
+            <div :class="[{'col-lg-4': (output1 && output2)},{'col-lg-6': (!output1 || !output2)}]">
                 <div class="card">
                     <div class="card-header bg-transparent">
                         <div class="p-2 mb-0 d-flex align-items-end">
@@ -397,7 +397,7 @@
                                     <en>audio source</en>
                                 </label>
                             </div>
-                            <div class="col-lg-6">
+                            <div :class="[{'col-lg-7': (output1 && output2)},{'col-lg-6': (!output1 || !output2)}]">
                                 <select class="form-select" v-model="defaultConf[mixIndex].outputLine.src">
                                     <option value="line">Line</option>
                                     <option v-for="(item,index) in handleAllowChnConf" :key="item.id" :value="item.id">{{item.name}}</option>
@@ -411,7 +411,7 @@
                                     <en>gain</en>
                                 </label>
                             </div>
-                            <div class="col-lg-6">
+                            <div :class="[{'col-lg-7': (output1 && output2)},{'col-lg-6': (!output1 || !output2)}]">
                                 <select class="form-select" v-model="defaultConf[mixIndex].outputLine.gain">
                                     <option value="24">+24dB</option>
                                     <option value="18">+18dB</option>
@@ -463,10 +463,12 @@
 
             const state = {
                 mixIndex: ref(-1),
+                output1: ref(true),
+                output2: ref(false)
             }
 
             const unwatch = watchEffect(()=>{
-                if(defaultConf.length > 0) {
+                if(defaultConf.length > 0 && Object.keys(hardwareConf).length > 0) {
                     for(let i=0;i<defaultConf.length;i++) {
                         if(defaultConf[i].type !== "mix")
                             continue;
@@ -474,6 +476,11 @@
                             defaultConf[i]["outputLine"] = {"src":0,"gain":0}
                         state.mixIndex.value = i;
                     }
+                    const fac = hardwareConf.fac;
+                    state.output1.value = !(fac === "ENCS1" || fac === "VGA1");
+                    state.output2.value = !(fac === "ENC1V3" || fac === "ENC1Pro" || fac === "REC1");
+
+                    console.log(state.output1.value,state.output2.value);
                     unwatch();
                 }
             })
