@@ -221,7 +221,7 @@
                                 </div>
                             </a>
                         </li>
-                        <li class="nav-item" role="presentation" @click="tabType = 'webrtc'">
+                        <li class="nav-item" role="presentation" @click="tabType = 'webrtc'" v-if="Object.keys(hardwareConf).length > 0 && hardwareConf.chip !== 'HI3520DV400' && hardwareConf.chip !== 'HI3521DV100' && hardwareConf.chip !== 'HI3531DV100'">
                             <a class="nav-link" data-bs-toggle="tab" href="#tab3" role="tab" aria-selected="false">
                                 <div class="d-flex align-items-center">
                                     <div class="tab-icon">
@@ -581,7 +581,7 @@
 <?php include ("./public/foot.inc") ?>
 <script type="module">
     import {rpc, func, alertMsg, isEmpty, extend} from "./assets/js/lp.utils.js";
-    import { useDefaultConf,usePushConf } from "./assets/js/vue.hooks.js";
+    import { useDefaultConf,useHardwareConf,usePushConf } from "./assets/js/vue.hooks.js";
     import { ignoreCustomElementPlugin,filterKeywordPlugin,bootstrapSwitchComponent,h5PlayerComponent,timepickerComponent,languageOptionDirective } from "./assets/js/vue.helper.js"
     import vue from "./assets/js/vue.build.js";
 
@@ -598,6 +598,7 @@
         setup(props,context) {
 
             const { defaultConf } = useDefaultConf();
+            const { hardwareConf } = useHardwareConf();
             const { pushConf,updatePushConf } = usePushConf();
 
             const state = {
@@ -893,7 +894,7 @@
                 handlePushState();
             })
             
-            return {...state,pushConf,handleRtmpConf,handleEnableRtmp,handleSrtConf,handleEnableSrt,handleWebRtcConf,handleEnableWebRtc,
+            return {...state,hardwareConf,pushConf,handleRtmpConf,handleEnableRtmp,handleSrtConf,handleEnableSrt,handleWebRtcConf,handleEnableWebRtc,
                 handleCustomConf,handleEnableCustom,formatPushTimeCount,onChangeSrcV,onPushStart,onPushStop,addPushUrl,delPushUrl,handleEnableConf,savePushConf}
         }
     });

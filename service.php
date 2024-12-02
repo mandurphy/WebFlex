@@ -39,7 +39,7 @@
                     </div>
                 </div>
             </div>
-            <div class="col-lg-6">
+            <div class="col-lg-6" v-if="Object.keys(hardwareConf).length > 0 && hardwareConf.chip !== 'HI3520DV400' && hardwareConf.chip !== 'HI3521DV100' && hardwareConf.chip !== 'HI3531DV100'">
                 <div class="card">
                     <div class="card-header bg-transparent">
                         <div class="p-2 mb-0 d-flex align-items-end">
@@ -188,7 +188,7 @@
 
 <script type="module">
     import { alertMsg } from "./assets/js/lp.utils.js";
-    import { useServiceConf,useSlsConf,useRtmpConf,useNdiConf,useFrpEnableConf,useFrpcConf,useWebRTCConf } from "./assets/js/vue.hooks.js";
+    import { useHardwareConf,useServiceConf,useSlsConf,useRtmpConf,useNdiConf,useFrpEnableConf,useFrpcConf,useWebRTCConf } from "./assets/js/vue.hooks.js";
     import { ignoreCustomElementPlugin,filterKeywordPlugin,bootstrapSwitchComponent } from "./assets/js/vue.helper.js";
     import vue from "./assets/js/vue.build.js";
 
@@ -199,6 +199,7 @@
         },
         setup(props,context) {
 
+            const { hardwareConf } = useHardwareConf();
             const { serviceConf,updateServiceConf } = useServiceConf();
             const { slsConf,updateSlsConf } = useSlsConf();
             const { rtmpConf,updateRtmpConf } = useRtmpConf();
@@ -233,7 +234,7 @@
                 });
             }
             
-            return {serviceConf,slsConf,rtmpConf,updateRtmpConf,ndiConf,updateNdiConf,
+            return {hardwareConf,serviceConf,slsConf,rtmpConf,updateRtmpConf,ndiConf,updateNdiConf,
                 frpEnableConf,frpcConf,saveSrtConf,saveFrpConf,webrtcConf,updateWebRTCConf}
         }
     });

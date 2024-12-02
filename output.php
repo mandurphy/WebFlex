@@ -479,8 +479,6 @@
                     const fac = hardwareConf.fac;
                     state.output1.value = !(fac === "ENCS1" || fac === "VGA1");
                     state.output2.value = !(fac === "ENC1V3" || fac === "ENC1Pro" || fac === "REC1");
-
-                    console.log(state.output1.value,state.output2.value);
                     unwatch();
                 }
             })
