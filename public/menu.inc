@@ -182,43 +182,43 @@
                             </li>
                         </ul>
                     </li>
-                    <li v-if="Object.keys(hardwareConf).length > 0 && hardwareConf.chip !== 'HI3516CV610'">
+                    <li v-if="Object.keys(hardwareConf).length > 0">
                         <a href="javascript:;" class="has-arrow">
                             <div class="parent-icon"><i class="fa-solid fa-flask"></i></div>
                             <div class="menu-title"><cn>实验功能</cn><en>Laboratory</en></div>
                         </a>
                         <ul class="ps-3">
-                            <li>
+                            <li v-if="hardwareConf.chip !== 'HI3516CV610'">
                                 <a href="gb28181.php">
                                     <i class="fa-solid fa-cloud"></i>
                                     <div class="menu-title"><cn>GB28181</cn><en>GB28181</en></div>
                                 </a>
                             </li>
-                            <li>
+                            <li v-if="hardwareConf.chip !== 'HI3516CV610'">
                                 <a href="roi.php">
                                     <i class="fa-solid fa-circle-user"></i>
                                     <div class="menu-title"><cn>ROI</cn><en>ROI</en></div>
                                 </a>
                             </li>
-                            <li>
+                            <li v-if="hardwareConf.chip !== 'HI3516CV610'">
                                 <a href="insta360.php">
                                     <i class="fa-solid fa-camera"></i>
                                     <div class="menu-title"><cn>Insta360 Link</cn><en>Insta360 Link</en></div>
                                 </a>
                             </li>
-                            <li>
+                            <li v-if="hardwareConf.chip !== 'HI3516CV610'">
                                 <a href="onvif.php">
                                     <i class="fa fa-video-camera"></i>
                                     <div class="menu-title"><cn>Onvif PTZ</cn><en>Onvif PTZ</en></div>
                                 </a>
                             </li>
-                            <li>
+                            <li v-if="hardwareConf.chip !== 'HI3516CV610'">
                                 <a href="colorKey.php">
                                     <i class="fa fa-cut"></i>
                                     <div class="menu-title"><cn>抠像</cn><en>ColorKey</en></div>
                                 </a>
                             </li>
-                            <li>
+                            <li v-if="hardwareConf.chip !== 'HI3516CV610'">
                                 <a href="sync.php">
                                     <i class="fa-solid fa-bars-staggered"></i>
                                     <div class="menu-title"><cn>同步调节</cn><en>Synchronization</en></div>
