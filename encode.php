@@ -213,6 +213,7 @@
                                             <div class="col">
                                                 <select class="form-select" v-model="globalConf.enca.codec">
                                                     <option value="aac">AAC</option>
+                                                    <option value="aache">AAC-HE</option>
                                                     <option value="pcma">PCMA</option>
                                                     <option value="mp2">MPEG2</option>
                                                     <option value="mp3">MP3</option>
