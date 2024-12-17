@@ -218,7 +218,7 @@ class System extends Basic
             $output = shell_exec("ls /dev/sd*");
         $arys = explode("\n",$output);
 
-        if($chip == "SS524V100" || $chip == "SS528V100" || $chip == "HI3531DV200" || $chip == "SS626V100")
+        if($chip != "HI3520DV400" && $chip != "HI3521DV100" && $chip != "HI3531DV100")
             $arys[] = "/dev/mmcblk0p6";
 
         $retList = array();

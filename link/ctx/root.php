@@ -20,6 +20,18 @@ class Root extends Basic
     function scanUsbDir($dir)
     {
         $result = array();
+
+        $conf = $this->load_conf('/link/config/config.json');
+        $loopRecDir = array();
+        for($i=0;$i<count($conf);$i++)
+        {
+            $item = $conf[$i];
+            if(isset($item["rdir"]))
+                $loopRecDir[] = $item["rdir"];
+            else
+                $loopRecDir[] = strtoupper($item["type"]) . $item["id"];
+        }
+
         $cdir = array_reverse(scandir($dir));
         foreach ($cdir as $key => $value)
         {
@@ -27,7 +39,7 @@ class Root extends Basic
             {
                 if($dir . DIRECTORY_SEPARATOR == "/root/usb/")
                 {
-                    if(!is_dir($dir . DIRECTORY_SEPARATOR . $value) || !preg_match("/\d{4}-\d{2}-\d{2}_\d{6}/",$value))
+                    if(!is_dir($dir . DIRECTORY_SEPARATOR . $value) || (!preg_match("/\d{4}-\d{2}-\d{2}_\d{6}/",$value) && !in_array($value,$loopRecDir)))
                         continue;
                     $result[$value] = $this->scanUsbDir($dir . DIRECTORY_SEPARATOR . $value);
                 }

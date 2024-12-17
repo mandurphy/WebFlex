@@ -788,15 +788,41 @@ export const useRecordConf = () => {
 }
 
 export const useRecordFiles = () => {
-    const recordFiles = reactive({});
+    const recordFilesNormal = reactive({});
+    const recordFilesLoop = reactive({});
+
+    const groupFilesByPrefix = fileList => {
+        const result = {};
+        fileList.forEach((file) => {
+            const match = file.match(/(rec_\d{5})/);
+            if (match) {
+                const key = match[1];
+                if (!result[key]) {
+                    result[key] = [];
+                }
+                result[key].push(file);
+            }
+        });
+        return result;
+    }
+
     const handleRecordFiles = () => {
         func("/root/getRecordFiles").then(conf => {
-            clearReactiveObject(recordFiles);
-            Object.assign(recordFiles,conf.data);
+            clearReactiveObject(recordFilesNormal);
+            clearReactiveObject(recordFilesLoop);
+            const regex = /\d{4}-\d{2}-\d{2}_\d{6}/;
+            Object.keys(conf.data).forEach(item => {
+                if(regex.test(item))
+                    recordFilesNormal[item] = conf.data[item];
+                else
+                    recordFilesLoop[item] = groupFilesByPrefix(conf.data[item]);
+            })
+
+            console.log(recordFilesLoop)
         })
     }
     onMounted(handleRecordFiles);
-    return { recordFiles,handleRecordFiles }
+    return { recordFilesNormal,recordFilesLoop,handleRecordFiles }
 }
 
 export const useGb28181Conf = () => {
