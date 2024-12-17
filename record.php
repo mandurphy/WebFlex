@@ -106,9 +106,9 @@
                         <hr class="my-3">
                         <div class="row">
                             <div class="col-lg-12 text-center">
-                                <button type="button" class="btn btn-primary border-3 px-3" @click="updateRecordConf">
-                                    <cn>保存参数</cn>
-                                    <en>Save config</en>
+                                <button type="button" class="btn btn-primary border-3 px-5" @click="updateRecordConf">
+                                    <cn>保存</cn>
+                                    <en>Save</en>
                                 </button>
                             </div>
                         </div>
@@ -138,6 +138,23 @@
                                     <option value="normal" cn="常规录制" en="normal" v-language-option></option>
                                     <option value="loop" cn="循环录制" en="loop" v-language-option></option>
                                 </select>
+                            </div>
+                        </div>
+                        <div class="row mt-3" v-if="recordConf.type === 'loop'">
+                            <div class="col-lg-4 lp-align-right pe-4">
+                                <label>
+                                    <cn>删除阈值</cn>
+                                    <en>delete limit</en>
+                                </label>
+                            </div>
+                            <div class="col-lg-6">
+                                <div class="input-group">
+                                    <input class="form-control" type="text" v-model.trim.lazy="recordConf.limit">
+                                    <span class="input-group-text input-group-addon lp-cursor-pointer">
+                                        <cn>Mb</cn>
+                                        <en>Mb</en>
+                                    </span>
+                                </div>
                             </div>
                         </div>
                         <div class="row mt-3">
@@ -219,9 +236,9 @@
                         <hr class="my-3">
                         <div class="row">
                             <div class="col-lg-12 text-center">
-                                <button type="button" class="btn btn-primary border-3 px-3" @click="updateRecordConf">
-                                    <cn>保存参数</cn>
-                                    <en>Save config</en>
+                                <button type="button" class="btn btn-primary border-3 px-5" @click="updateRecordConf">
+                                    <cn>保存</cn>
+                                    <en>Save</en>
                                 </button>
                             </div>
                         </div>
@@ -399,6 +416,9 @@
                                                                 </ul>
                                                             </div>
                                                         </div>
+                                                        <div class="flex-grow-0 ms-2 lp-cursor-pointer" @click="delRecordFileByName(dir+'/'+item)">
+                                                            <i class="fa-solid fa-trash-can font-14"></i>
+                                                        </div>
                                                     </div>
                                                     <div class="card-body">
                                                         <div class="row">
@@ -453,6 +473,9 @@
                                                                     </li>
                                                                 </ul>
                                                             </div>
+                                                        </div>
+                                                        <div class="flex-grow-0 ms-2 lp-cursor-pointer" @click="delRecordFileByName(dir+'/'+item)">
+                                                            <i class="fa-solid fa-trash-can font-14"></i>
                                                         </div>
                                                     </div>
                                                     <div class="card-body">

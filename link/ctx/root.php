@@ -13,7 +13,7 @@ class Root extends Basic
     }
 
     function delRecordFile($param) {
-        exec( 'rm /root/usb/'. $param['name'].' -r');
+        exec( 'rm /root/usb/'. $param['name'].'* -r');
         return $this->handleRet('','success','删除成功','Delete file successful');
     }
 
